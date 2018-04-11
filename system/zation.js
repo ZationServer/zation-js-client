@@ -2445,17 +2445,7 @@ class ZationHttp
     }
 }
 
-//Exports
-if(typeof exports==="object"&&typeof module!=="undefined")
-{
-    module.exports.version = '1.0.0';
-    module.exports.ZationSocket = ZationSocket;
-    module.exports.ZationHttp   = ZationHttp;
-    module.exports.RequestRespond = RequestRespond;
-    module.exports.ChannelRespond = ChannelRespond;
-    module.exports.Result = Result;
-    module.exports.Box = Box;
-}
+
 
 //WebApi
 
@@ -2507,3 +2497,15 @@ class ZationFile extends RequestAble
 
 
 //SOCKET CLUSTER DATA
+
+//Exports
+if(typeof exports==="object"&&typeof module!=="undefined")
+{
+    module.exports.version = '1.0.0';
+    module.exports.ZationSocket = ZationSocket;
+    module.exports.ZationHttp   = ZationHttp;
+    module.exports.RequestRespond = RequestRespond;
+    module.exports.ChannelRespond = ChannelRespond;
+    module.exports.Result = Result;
+    module.exports.Box = Box;
+}
