@@ -5,7 +5,10 @@ const derequire       = require('gulp-derequire');
 const insert          = require('gulp-insert');
 const rename          = require('gulp-rename');
 const source          = require('vinyl-source-stream');
-const uglify          = require('gulp-uglify');
+const uglifyes        = require('uglify-es');
+const composer        = require('gulp-uglify/composer');
+const ignore          = require('browserify-ignore-code');
+const uglify          = composer(uglifyes, console);
 const convertNewline  = require('gulp-convert-newline');
 
 const DIST = './';
@@ -17,22 +20,28 @@ const HEADER = (
     ' */\n');
 
 gulp.task('browserify', function() {
-    let stream = browserify({
-        builtins: ['_process', 'events', 'buffer', 'querystring'],
-        entries: 'index.js',
-        standalone: 'zation'
-    })
-        .ignore('_process')
-        .bundle();
+    return new Promise(((resolve, reject) =>
+    {
+        let stream = browserify({
+            transform: [[ignore]],
+            builtins: ['_process', 'events', 'buffer', 'querystring'],
+            entries: 'index.js',
+            standalone: 'zation'
+        })
+            .ignore('_process')
+            .ignore('zationReader.js')
+            .bundle();
 
-    return stream.pipe(source('zation.js'))
-        .pipe(convertNewline({
-            newline: 'lf',
-            encoding: 'utf8'
-        }))
-        .pipe(derequire())
-        .pipe(insert.prepend(HEADER))
-        .pipe(gulp.dest(DIST));
+        stream.pipe(source('zation.js'))
+            .pipe(convertNewline({
+                newline: 'lf',
+                encoding: 'utf8'
+            }))
+            .pipe(derequire())
+            .pipe(insert.prepend(HEADER))
+            .pipe(gulp.dest(DIST));
+        resolve();
+    }));
 });
 
 gulp.task('minify', function() {
@@ -50,3 +59,5 @@ gulp.task('minify', function() {
         }))
         .pipe(gulp.dest(DIST))
 });
+
+//npm i -g gulp-cli

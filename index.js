@@ -4,12 +4,12 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-const Zation         = require('./src/api/zation');
-const Request        = require('./src/api/request');
-const Result         = require('./src/api/result');
-const ChannelRespond = require('./src/api/channelRespond');
-const RequestRespond = require('./src/api/resultRespond');
-const RequestAble    = require('./src/api/requestAble');
+const Zation         = require('./lib/api/zation');
+const Request        = require('./lib/api/request');
+const Result         = require('./lib/api/response');
+const ChannelRespond = require('./lib/api/channelRespond');
+const RequestRespond = require('./lib/api/resultRespond');
+const RequestAble    = require('./lib/api/requestAble');
 
 //Api Classes
 module.exports.create = (settings) =>
@@ -24,3 +24,8 @@ module.exports.ChannelRespond = ChannelRespond;
 module.exports.RequestRespond = RequestRespond;
 module.exports.RequestAble    = RequestAble;
 
+// browserify-ignore-start
+//support for zation-server
+const ZationReader            = require('./lib/reader/zationReader');
+module.exports.ZationReader   = ZationReader;
+// browserify-ignore-end
