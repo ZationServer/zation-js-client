@@ -2,56 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="76638f38-4a15-47c2-ad03-534e2aa2a298" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/reader/zationReader.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gulpFile.js" beforeDir="false" afterPath="$PROJECT_DIR$/gulpFile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/socketcluster-client/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/bower.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/socketcluster-client/bower.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/socketcluster-client/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/lib/scsocket.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/lib/scsocketcreator.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/lib/sctransport.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/socketcluster-client/lib/sctransport.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/socketcluster-client/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/socketcluster.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/socketcluster-client/socketcluster.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/socketcluster.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/socketcluster-client/socketcluster.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/test/integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/socketcluster-client/test/integration.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ultron/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ultron/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ultron/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ultron/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/ws/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/ws/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/lib/BufferUtil.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/lib/Constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/ws/lib/Constants.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/lib/ErrorCodes.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/lib/EventTarget.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/lib/Extensions.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/lib/PerMessageDeflate.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/lib/Receiver.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/ws/lib/Receiver.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/lib/Sender.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/ws/lib/Sender.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/lib/Validation.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/ws/lib/Validation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/lib/WebSocket.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/ws/lib/WebSocket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/lib/WebSocketServer.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/ws/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/channelRespond.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api/channelRespond.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/request.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api/request.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/requestAble.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api/requestAble.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/result.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api/response.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/resultRespond.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api/resultRespond.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/zation.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api/zation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/helper/box/box.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/helper/box/box.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/helper/constants/constWrapper.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/helper/constants/constWrapper.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/helper/constants/errorTypes.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/helper/constants/errorTypes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/helper/constants/settings.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/helper/constants/settings.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/helper/constants/systemController.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/helper/constants/systemController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/helper/filter/filter.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/helper/filter/filter.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/helper/respond/respond.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/helper/respond/respond.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/helper/tools/conBackup.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/helper/tools/conBackup.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/helper/tools/zationTools.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/helper/tools/zationTools.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zation.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/zation.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -68,7 +20,7 @@
       <file leaf-file-name="box.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/helper/box/box.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2816">
+            <state relative-caret-position="252">
               <caret line="16" column="28" selection-start-line="16" selection-start-column="28" selection-end-line="16" selection-end-column="28" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
@@ -92,7 +44,7 @@
       <file leaf-file-name="zation.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/zation.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-42">
+            <state relative-caret-position="21">
               <caret line="6" selection-start-line="6" selection-end-line="6" />
             </state>
           </provider>
@@ -119,7 +71,7 @@
       <file leaf-file-name="channelRespond.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/api/channelRespond.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="861">
+            <state relative-caret-position="2247">
               <caret line="111" column="28" selection-start-line="111" selection-start-column="28" selection-end-line="111" selection-end-column="28" />
             </state>
           </provider>
@@ -128,7 +80,7 @@
       <file leaf-file-name="constWrapper.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/helper/constants/constWrapper.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="336">
+            <state relative-caret-position="252">
               <caret line="16" column="14" selection-start-line="16" selection-start-column="14" selection-end-line="16" selection-end-column="14" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
@@ -140,8 +92,8 @@
       <file leaf-file-name="zation.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/api/zation.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="525">
-              <caret line="31" column="37" lean-forward="true" selection-start-line="31" selection-start-column="37" selection-end-line="31" selection-end-column="37" />
+            <state relative-caret-position="567">
+              <caret line="31" column="37" selection-start-line="31" selection-start-column="37" selection-end-line="31" selection-end-column="37" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -152,7 +104,7 @@
       <file leaf-file-name="response.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/api/response.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="691">
+            <state relative-caret-position="465">
               <caret line="175" column="5" selection-start-line="175" selection-start-column="5" selection-end-line="175" selection-end-column="5" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
@@ -164,7 +116,7 @@
       <file leaf-file-name="resultRespond.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/api/resultRespond.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2961">
+            <state relative-caret-position="2877">
               <caret line="141" column="44" selection-start-line="141" selection-start-column="44" selection-end-line="141" selection-end-column="44" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
@@ -251,10 +203,10 @@
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="22" />
-    <option name="width" value="1936" />
-    <option name="height" value="1066" />
+    <option name="x" value="-9" />
+    <option name="y" value="21" />
+    <option name="width" value="1937" />
+    <option name="height" value="1067" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -385,11 +337,12 @@
       <workItem from="1529879026518" duration="600000" />
       <workItem from="1529918984878" duration="11208000" />
       <workItem from="1529961692580" duration="1380000" />
+      <workItem from="1529967736557" duration="1199000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32713000" />
+    <option name="totallyTimeSpent" value="33912000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -401,20 +354,19 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="22" width="1936" height="1066" extended-state="6" />
-    <editor active="true" />
+    <frame x="-7" y="33" width="1550" height="838" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24920969" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24917382" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3297414" />
-      <window_info anchor="bottom" id="Statistic" />
+      <window_info anchor="bottom" id="Statistic" order="7" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.15409483" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.3297414" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.15384616" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.2349138" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -482,9 +434,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3234">
           <caret line="158" column="24" selection-start-line="158" selection-start-column="24" selection-end-line="158" selection-end-column="24" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -516,9 +465,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="252">
           <caret line="16" column="3" selection-start-line="16" selection-start-column="3" selection-end-line="16" selection-end-column="3" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -636,13 +582,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/readable-stream/lib/_stream_writable.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="427" column="63" selection-start-line="427" selection-start-column="63" selection-end-line="427" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/readable-stream/lib/_stream_writable.js" />
     <entry file="file://$PROJECT_DIR$/gulpFile.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="326">
@@ -654,9 +594,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="473">
           <caret line="24" column="44" selection-start-line="24" selection-start-column="44" selection-end-line="24" selection-end-column="44" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -685,9 +622,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="399">
           <caret line="23" selection-start-line="23" selection-end-line="23" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -709,9 +643,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="838">
           <caret line="100" column="5" selection-start-line="100" selection-start-column="5" selection-end-line="100" selection-end-column="5" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -748,14 +679,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/zation.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-42">
+        <state relative-caret-position="21">
           <caret line="6" selection-start-line="6" selection-end-line="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/helper/box/box.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2816">
+        <state relative-caret-position="252">
           <caret line="16" column="28" selection-start-line="16" selection-start-column="28" selection-end-line="16" selection-end-column="28" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
@@ -765,7 +696,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/helper/constants/constWrapper.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
+        <state relative-caret-position="252">
           <caret line="16" column="14" selection-start-line="16" selection-start-column="14" selection-end-line="16" selection-end-column="14" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
@@ -775,7 +706,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/api/channelRespond.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="861">
+        <state relative-caret-position="2247">
           <caret line="111" column="28" selection-start-line="111" selection-start-column="28" selection-end-line="111" selection-end-column="28" />
         </state>
       </provider>
@@ -796,8 +727,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/api/zation.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="31" column="37" lean-forward="true" selection-start-line="31" selection-start-column="37" selection-end-line="31" selection-end-column="37" />
+        <state relative-caret-position="567">
+          <caret line="31" column="37" selection-start-line="31" selection-start-column="37" selection-end-line="31" selection-end-column="37" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
@@ -806,7 +737,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/api/resultRespond.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2961">
+        <state relative-caret-position="2877">
           <caret line="141" column="44" selection-start-line="141" selection-start-column="44" selection-end-line="141" selection-end-column="44" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
@@ -816,7 +747,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/api/response.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="691">
+        <state relative-caret-position="465">
           <caret line="175" column="5" selection-start-line="175" selection-start-column="5" selection-end-line="175" selection-end-column="5" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
