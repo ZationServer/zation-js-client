@@ -87,7 +87,7 @@ abstract class ZationRequest extends SendAble
                 if(data[key] instanceof RequestAble) {
                     promises.push(new Promise<void>(async (resolve) =>
                     {
-                        res[key] = await data[key].toRequestData();
+                        res[key] = await this.compileRequestAble(data[key]);
                         resolve();
                     }));
                 }
@@ -105,6 +105,11 @@ abstract class ZationRequest extends SendAble
         }
         await Promise.all(promises);
         return res;
+    }
+
+    private async compileRequestAble(requestAble : RequestAble) : Promise<object>
+    {
+        return await requestAble.toRequestData(this.type);
     }
 }
 

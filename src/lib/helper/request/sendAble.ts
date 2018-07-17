@@ -12,4 +12,6 @@ export abstract class SendAble
     abstract async getSendData(zation : Zation) : Promise<object>;
     // noinspection JSMethodCanBeStatic
     abstract getProtocol() : ProtocolType;
+
+    abstract getOnProgressHandler() 
 }

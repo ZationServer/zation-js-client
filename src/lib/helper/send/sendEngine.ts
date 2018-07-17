@@ -10,6 +10,7 @@ import ConnectionNeededError = require("../error/connectionNeededError");
 import ResultIsMissingError = require("../error/resultIsMissingError");
 import {ProtocolType} from "../constants/protocolType";
 import nodeFetch = require("node-fetch");
+import fetchProgress from 'fetch-progress';
 
 class SendEngine
 {
