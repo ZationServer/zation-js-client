@@ -9,6 +9,7 @@ import Response = require("../../api/response");
 import ConnectionNeededError = require("../error/connectionNeededError");
 import ResultIsMissingError = require("../error/resultIsMissingError");
 import {ProtocolType} from "../constants/protocolType";
+import nodeFetch = require("node-fetch");
 
 class SendEngine
 {
@@ -24,7 +25,6 @@ class SendEngine
 
                     if(res !== undefined) {
                         let response = new Response(res,ProtocolType.WebSocket);
-                        await zation._triggerResponseReactions(response);
                         resolve(response);
                     }
                     else {
@@ -39,11 +39,16 @@ class SendEngine
         });
     }
 
-    static httpSend()
+    static async httpSend(zation : Zation,data : object) : Promise<Response>
     {
+        if(typeof fetch === 'function')
+        {
 
-
-
+        }
+        else
+        {
+            nodeFetch.
+        }
     }
 }
 

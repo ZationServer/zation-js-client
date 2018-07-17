@@ -4,37 +4,23 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import AuthEngine          = require("../helper/auth/authEngine");
-const SocketClusterClient  = require('socketcluster-client');
-import Const               = require('../helper/constants/constWrapper');
-import ChannelEngine       = require("../helper/channel/channelEngine");
-import Box                 = require("../helper/box/box");
-import Emitter             = require('emitter');
+import AuthEngine = require("../helper/auth/authEngine");
+import Const = require('../helper/constants/constWrapper');
+import ChannelEngine = require("../helper/channel/channelEngine");
+import Box = require("../helper/box/box");
+import Emitter = require('emitter');
 import ResponseReactionBox = require("./responseReactionBox");
-import ChannelReactionBox  = require("./channelReactionBox");
-import ReactionBox         = require("../helper/react/reactionBox");
-import ConfigTools         = require("../helper/tools/configTools");
-import {SendAble}            from "../helper/request/sendAble";
-import ConBackup           = require("../helper/connection/conBackup");
-import {ProtocolType}        from "../helper/constants/protocolType";
-import WsRequest           = require("./wsRequest");
-import Response            = require("./response");
-
-interface ZationOptions {
-    system ?: string;
-    version ?: number;
-    hostname ?: string;
-    path ?: string;
-    port ?: number;
-    secure ?: boolean;
-    rejectUnauthorized ?: boolean;
-    postKeyWord ?: string;
-    debug ?: boolean;
-    reactions ?:
-        ResponseReactionBox | ChannelReactionBox | (ResponseReactionBox | ChannelReactionBox)[] |
-        Record<string,ResponseReactionBox | ChannelReactionBox>;
-}
-
+import ChannelReactionBox = require("./channelReactionBox");
+import ReactionBox = require("../helper/react/reactionBox");
+import ConfigTools = require("../helper/tools/configTools");
+import ConBackup = require("../helper/connection/conBackup");
+import WsRequest = require("./wsRequest");
+import Response = require("./response");
+import SendEngine = require("../helper/send/sendEngine");
+const SocketClusterClient  = require('socketcluster-client');
+import {SendAble} from "../helper/request/sendAble";
+import {ProtocolType} from "../helper/constants/protocolType";
+import {ZationOptions} from "./zationOptions";
 
 class Zation
 {
@@ -310,10 +296,20 @@ class Zation
     }
 
     //Part Send
-    async send(sendAble : SendAble)
+    async send(sendAble : SendAble) : Promise<Response>
     {
         let jsonObj = await sendAble.getSendData(this);
-        return await this._emitZationRequest(data,reaction);
+
+        if(sendAble.getProtocol() === ProtocolType.WebSocket) {
+            const response = await SendEngine.wsSend(this,jsonObj);
+            await this.triggerResponseReactions(response);
+            return response;
+        }
+        else {
+            const response = await SendEngine.httpSend(this,jsonObj);
+            await this.triggerResponseReactions(response);
+            return response;
+        }
     };
 
     // Part Connection
@@ -379,7 +375,7 @@ class Zation
 
     //Part trigger RequestResponds
 
-    async _triggerResponseReactions(response : Response) : Promise<void>
+    private async triggerResponseReactions(response : Response) : Promise<void>
     {
         await this.responseReactionMainBox.forEach(async (responseReaction) =>
         {

@@ -23,4 +23,4 @@ class ZationReader
     }
 }
 
-exports = ZationReader;
+export = ZationReader;

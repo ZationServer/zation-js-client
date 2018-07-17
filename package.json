@@ -41,7 +41,8 @@
     "fs": "0.0.1-security",
     "path": "0.12.7",
     "emitter": "0.0.5",
-    "@types/node": "10.5.2"
+    "@types/node": "10.5.2",
+    "node-fetch": "2.1.2"
   },
   "devDependencies": {
     "babel-core": "6.26.3",
