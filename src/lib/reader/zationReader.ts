@@ -7,20 +7,20 @@ GitHub: LucaCode
 const zationClientMinFile          = __dirname + './../../zation.min.js';
 const zationClientFile             = __dirname + './../../zation.js';
 
-const fs   = require('fs');
-const path = require('path');
+import fs   = require('fs');
+import path = require('path');
 
 class ZationReader
 {
-    static getZationMinifyClient()
+    static getZationMinifyClient() : string
     {
         return fs.readFileSync(path.resolve(zationClientMinFile), "utf8");
     }
 
-    static getZationClient()
+    static getZationClient() : string
     {
         return fs.readFileSync(path.resolve(zationClientFile), "utf8");
     }
 }
 
-module.exports = ZationReader;
+exports = ZationReader;

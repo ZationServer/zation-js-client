@@ -1,4 +1,5 @@
 const gulp            = require('gulp');
+const typescript      = require('gulp-typescript');
 const browserify      = require('browserify');
 const babel           = require('gulp-babel');
 const derequire       = require('gulp-derequire');
@@ -10,17 +11,30 @@ const composer        = require('gulp-uglify/composer');
 const ignore          = require('browserify-ignore-code');
 const uglify          = composer(uglifyes, console);
 const convertNewline  = require('gulp-convert-newline');
-
-const DIST = './';
-const VERSION = require('./package.json').version;
+const tscConfig       = require('./tsconfig.json');
+const DIST            = './dist/';
+const VERSION         = require('./package.json').version;
 
 const HEADER = (
     '/**\n' +
     ' * Zation JavaScript client version:' + VERSION + '\n' +
     ' */\n');
 
+gulp.task('ts', function () {
+    return gulp
+        .src('src/**/*.ts')
+        .pipe(typescript(tscConfig.compilerOptions))
+        .pipe(gulp.dest('dist'));
+});
+
+gulp.task('cof', function() {
+    return gulp
+        .src(['src/**/*','!src/**/*.ts','!src/**/*.scss'])
+        .pipe(gulp.dest('dist'));
+});
+
 gulp.task('browserify', function() {
-    return new Promise(((resolve, reject) =>
+    return new Promise(((resolve) =>
     {
         let stream = browserify({
             transform: [[ignore]],
@@ -60,4 +74,23 @@ gulp.task('minify', function() {
         .pipe(gulp.dest(DIST))
 });
 
-//npm i -g gulp-cli
+gulp.task('compile', ['cof','ts'], () =>
+{
+    // noinspection JSUnresolvedFunction
+    gulp.start('browserVersion');
+
+});
+
+gulp.task('browserVersion', ['browserify'], () =>
+{
+    // noinspection JSUnresolvedFunction
+    gulp.start('minify');
+
+});
+
+gulp.task('default', ['compile', 'watch']);
+
+gulp.task('watch', function() {
+    gulp.watch('src/**/*.ts', ['ts']);
+    gulp.watch(['src/**/*','!src/**/*.ts','!src/**/*.scss'], ['cof']);
+});
