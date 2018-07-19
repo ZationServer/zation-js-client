@@ -21,6 +21,9 @@ const SocketClusterClient  = require('socketcluster-client');
 import {SendAble} from "../helper/request/sendAble";
 import {ProtocolType} from "../helper/constants/protocolType";
 import {ZationOptions} from "./zationOptions";
+import {ProgressHandler} from "../helper/request/progressHandler";
+import ZationRequest = require("../helper/request/zationRequest");
+import RequestBuilder = require("../helper/request/requestBuilder");
 
 class Zation
 {
@@ -295,18 +298,30 @@ class Zation
         return await this.authIn(authData);
     }
 
+    buildReq() : RequestBuilder {
+        return new RequestBuilder(this);
+    }
+
     //Part Send
-    async send(sendAble : SendAble) : Promise<Response>
+    async send(sendAble : SendAble, progressHandler ?: ProgressHandler) : Promise<Response>
     {
+        let ph : undefined | ProgressHandler = undefined;
+        if(!!progressHandler) {
+            ph = progressHandler;
+        }
+        else if(sendAble instanceof ZationRequest) {
+            ph = sendAble.getPogressHandler();
+        }
+
         let jsonObj = await sendAble.getSendData(this);
 
         if(sendAble.getProtocol() === ProtocolType.WebSocket) {
-            const response = await SendEngine.wsSend(this,jsonObj);
+            const response = await SendEngine.wsSend(this,jsonObj,ph);
             await this.triggerResponseReactions(response);
             return response;
         }
         else {
-            const response = await SendEngine.httpSend(this,jsonObj);
+            const response = await SendEngine.httpSend(this,jsonObj,ph);
             await this.triggerResponseReactions(response);
             return response;
         }

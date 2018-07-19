@@ -11,10 +11,11 @@ import ResultIsMissingError = require("../error/resultIsMissingError");
 import {ProtocolType} from "../constants/protocolType";
 import nodeFetch = require("node-fetch");
 import fetchProgress from 'fetch-progress';
+import {ProgressHandler} from "../request/progressHandler";
 
 class SendEngine
 {
-    static wsSend(zation : Zation,data : object) : Promise<Response>
+    static wsSend(zation : Zation,data : object,progressHandler : ProgressHandler) : Promise<Response>
     {
         return new Promise(async (resolve, reject)=>
         {
@@ -40,7 +41,7 @@ class SendEngine
         });
     }
 
-    static async httpSend(zation : Zation,data : object) : Promise<Response>
+    static async httpSend(zation : Zation,data : object,progressHandler : ProgressHandler) : Promise<Response>
     {
         if(typeof fetch === 'function')
         {

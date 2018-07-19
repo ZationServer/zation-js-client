@@ -7,6 +7,7 @@ GitHub: LucaCode
 import {RequestAble}         from "../../api/requestAble";
 import {ProtocolType}        from "../constants/protocolType";
 import {SendAble}            from "./sendAble";
+import {ProgressHandler}     from "./progressHandler";
 
 abstract class ZationRequest extends SendAble
 {
@@ -14,6 +15,7 @@ abstract class ZationRequest extends SendAble
     private readonly type: ProtocolType;
 
     private compiledData : object | any[];
+    private progressHandler: ProgressHandler | undefined = undefined;
 
     protected constructor(data : object | any[], type : ProtocolType)
     {
@@ -25,6 +27,16 @@ abstract class ZationRequest extends SendAble
     getProtocol() : ProtocolType
     {
         return this.type;
+    }
+
+    setProgressHandler(pogressHandler : ProgressHandler) : void
+    {
+        this.progressHandler = pogressHandler;
+    }
+
+    getPogressHandler() : ProgressHandler | undefined
+    {
+        return this.progressHandler;
     }
 
     async preCompile()

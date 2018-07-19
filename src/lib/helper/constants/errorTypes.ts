@@ -14,8 +14,7 @@ class ErrorTypes {
     static readonly TOKEN_ERROR          = 'TOKEN_ERROR';            //Client can  handle
     static readonly DATABASE_ERROR       = 'DATABASE_ERROR';         //Client cant handle
     static readonly COMPATIBILITY_ERROR  = 'COMPATIBILITY_ERROR';    //Client can  handle
-    static readonly REACT                = 'REACT';                  //Client muss  handle
-    static readonly WAITING              = 'WAITING';                //Client wait..
+    static readonly TIME_ERROR           = 'TIME_ERROR';                //Client wait..
     //User
     static readonly NORMAL_ERROR         = 'NORMAL_ERROR';
 }
