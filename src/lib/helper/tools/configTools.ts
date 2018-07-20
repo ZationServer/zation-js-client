@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import ReactionBox = require("../react/reactionBox");
+import ReactionBox = require("../react/box/reactionBox");
 
 type AddFunction = (reactionBox : ReactionBox, key ?: string) => void;
 

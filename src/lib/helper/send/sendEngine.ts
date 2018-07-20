@@ -8,9 +8,8 @@ import Zation = require("../../api/zation");
 import Response = require("../../api/response");
 import ConnectionNeededError = require("../error/connectionNeededError");
 import ResultIsMissingError = require("../error/resultIsMissingError");
-import {ProtocolType} from "../constants/protocolType";
 import nodeFetch = require("node-fetch");
-import fetchProgress from 'fetch-progress';
+import {ProtocolType} from "../constants/protocolType";
 import {ProgressHandler} from "../request/progressHandler";
 
 class SendEngine
@@ -45,11 +44,28 @@ class SendEngine
     {
         if(typeof fetch === 'function')
         {
-
+            const response  = await fetch(zation.getServerAddress(),
+                {
+                    method : "POST",
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                    },
+                    body : JSON.stringify(data)
+                });
+            return new Response((await response.json()),ProtocolType.Http);
         }
         else
         {
-            nodeFetch.
+            // @ts-ignore
+            const response  = await nodeFetch(zation.getServerAddress(),
+                {
+                    method : "POST",
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                    },
+                    body : JSON.stringify(data)
+                });
+            return new Response((await response.json()),ProtocolType.Http);
         }
     }
 }

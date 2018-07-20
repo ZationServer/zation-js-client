@@ -11,7 +11,7 @@ import Box = require("../helper/box/box");
 import Emitter = require('emitter');
 import ResponseReactionBox = require("./responseReactionBox");
 import ChannelReactionBox = require("./channelReactionBox");
-import ReactionBox = require("../helper/react/reactionBox");
+import ReactionBox = require("../helper/react/box/reactionBox");
 import ConfigTools = require("../helper/tools/configTools");
 import ConBackup = require("../helper/connection/conBackup");
 import WsRequest = require("./wsRequest");
@@ -42,6 +42,11 @@ class Zation
     private secure : boolean = false;
     private rejectUnauthorized : boolean = false;
     private postKeyWord : string = 'zation';
+
+    private autoAllChSub : boolean = true;
+    private autoUserChSub : boolean = true;
+    private autoDefaultUserGroupChSub : boolean = true;
+    private autoAuthUserGroupChSub : boolean = true;
 
     private emitter : Emitter;
 
@@ -78,8 +83,8 @@ class Zation
 
         this.emitter = new Emitter();
 
-        this.authEngine = new AuthEngine(this);
         this.channelEngine = new ChannelEngine(this);
+        this.authEngine = new AuthEngine(this,this.channelEngine);
 
         //Responds
         this.responseReactionMainBox = new Box<ResponseReactionBox>();
@@ -179,18 +184,6 @@ class Zation
 
     private createSystemReactions()
     {
-        requestResp.onError(
-            "authOut",
-            () =>
-            {
-                this.authOut();
-            },
-            {
-                name : 'clientAuthOut',
-                type : ZationConst.ERROR_TYP_REACT
-            }
-        );
-
         channelResp.onUserCh(ZationConst.USER_CHANNEL_AUTH_OUT,() =>
         {
             this.authOut();
@@ -303,6 +296,7 @@ class Zation
     }
 
     //Part Send
+    async send(sendAble : SendAble, responseReactionBox : ResponseReactionBox ,progressHandler ?: ProgressHandler) : Promise<Response>
     async send(sendAble : SendAble, progressHandler ?: ProgressHandler) : Promise<Response>
     {
         let ph : undefined | ProgressHandler = undefined;
@@ -384,8 +378,6 @@ class Zation
 
                 this._emitEvent('connected',this.socket);
         });
-
-
     }
 
     //Part trigger RequestResponds
@@ -397,342 +389,6 @@ class Zation
             responseReaction._trigger(response);
         });
     }
-
-
-
-    // PART OLD
-    _setNewAuthId(id)
-    {
-        if (this._currentUserId !== id)
-        {
-            this.unregisterUserChannel();
-
-            this._currentUserId = id;
-
-            if(this._userChannelAutoRegistration)
-            {
-                this.registerUserChannel();
-            }
-        }
-    }
-
-    _setNewAuthGroup(group)
-    {
-        if (this._currentUserAuthGroup !== group)
-        {
-            if (group !== undefined && group !== '')
-            {
-                this.unregisterDefaultGroupChannel();
-                this.unregisterAuthGroupChannel();
-
-                this._currentUserAuthGroup = group;
-
-                if(this._authGroupChannelAutoRegistration)
-                {
-                    this.registerAuthGroupChannel();
-                }
-
-                if(this.debug)
-                {
-                    ZationTools._printInfo(`User is Login with id -> ${this._currentUserId} in Group
-                 -> ${this._currentUserAuthGroup}`);
-                }
-            }
-            else
-            {
-                this.unregisterAuthGroupChannel();
-
-                this._currentUserAuthGroup = group;
-
-                if(this._defaultGroupChannelAutoRegistration)
-                {
-                    this.registerDefaultGroupChannel();
-                }
-            }
-        }
-    }
-
-    _updateAuthInfo(token)
-    {
-        if(token !== null)
-        {
-            if(token[ZationConst.CLIENT_AUTH_ID] !== undefined)
-            {
-                this._setNewAuthId(token[ZationConst.CLIENT_AUTH_ID]);
-            }
-
-            if(token[ZationConst.CLIENT_AUTH_GROUP] !== undefined)
-            {
-                this._setNewAuthGroup(token[ZationConst.CLIENT_AUTH_GROUP]);
-            }
-        }
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    _socketIsAuthOut()
-    {
-        this._setNewAuthGroup('');
-        this._setNewAuthId(undefined);
-    }
-
-    reAuth()
-    {
-        this._isReAuth = true;
-        this._authOutWithAuto();
-    }
-
-    _authOutWithAuto()
-    {
-        this._socket.deauthenticate((e) =>
-        {
-            if(e)
-            {
-                this._socket.disconnect();
-            }
-            else
-            {
-                this._socketIsAuthOut();
-            }
-        });
-    }
-
-    authOut()
-    {
-        this._isAuthOut = true;
-        this._authOutWithAuto();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    async authInOld(respond, authData)
-    {
-        if(authData !== undefined)
-        {
-            this._authData = authData;
-        }
-        else
-        {
-            authData = this._authData;
-        }
-
-        let data = ZationTools._buildAuthRequestData(authData, this.system, this.version);
-        await this._emitZationRequest(data,respond);
-        return this.isAuthIn();
-    }
-
-    //Part Channel
-
-    // noinspection JSUnusedGlobalSymbols
-    registerUserChannel()
-    {
-        if(this._currentUserId !== undefined)
-        {
-            this._registerZationChannel(ZationConst.CHANNEL_USER_CHANNEL_PREFIX,this._currentUserId);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    unregisterUserChannel()
-    {
-        if(this._currentUserId !== undefined)
-        {
-            this._unregisterZationChannel(ZationConst.CHANNEL_USER_CHANNEL_PREFIX + this._currentUserId);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    registerAuthGroupChannel()
-    {
-        if(ZationTools._isAuthIn(this._currentUserAuthGroup))
-        {
-            this._registerZationChannel(ZationConst.CHANNEL_AUTH_GROUP_PREFIX, this._currentUserAuthGroup);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    unregisterAuthGroupChannel()
-    {
-        if(ZationTools._isAuthIn(this._currentUserAuthGroup))
-        {
-            this._unregisterZationChannel(ZationConst.CHANNEL_AUTH_GROUP_PREFIX + this._currentUserAuthGroup);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    registerDefaultGroupChannel()
-    {
-        if(!ZationTools._isAuthIn(this._currentUserAuthGroup))
-        {
-            this._registerZationChannel(ZationConst.CHANNEL_DEFAULT_GROUP);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    unregisterDefaultGroupChannel()
-    {
-        if(!ZationTools._isAuthIn(this._currentUserAuthGroup))
-        {
-            this._unregisterZationChannel(ZationConst.CHANNEL_DEFAULT_GROUP);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    registerAllChannel()
-    {
-        this._registerZationChannel(ZationConst.CHANNEL_ALL);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    unregisterAllChannel()
-    {
-        this._unregisterZationChannel(ZationConst.CHANNEL_ALL);
-    }
-
-    _registerZationChannel(channel,id = '')
-    {
-        let fullChannel = channel + id;
-        this._socket.subscribe(fullChannel,{});
-
-        let watcher = (input) =>
-        {
-            this.channelReactionMainBox.forEach((respond) =>
-            {
-                respond._trigger(
-                    {
-                        channel : channel,
-                        isSpecial : false,
-                        event : input['e'],
-                        data : input['d']
-                    });
-            });
-        };
-        this._socket.unwatch(fullChannel);
-        this._socket.watch(fullChannel,watcher);
-    }
-
-    _unregisterZationChannel(channel)
-    {
-        if(this._socket !== undefined && this._socket.isSubscribed(channel))
-        {
-            this._socket.destroyChannel(channel);
-        }
-    }
-
-    //Part Special Channel
-
-    // noinspection JSUnusedGlobalSymbols
-    subscribeSpecialCh(channel,id)
-    {
-        let channelName = ZationConst.CHANNEL_SPECIAL_CHANNEL_PREFIX + channel + ZationConst.CHANNEL_SPECIAL_CHANNEL_ID + id;
-        this._socket.subscribe(channelName);
-
-        let watcher = (input) =>
-        {
-            this.channelReactionMainBox.forEach((respond) =>
-            {
-                respond._trigger(
-                    {
-                        channel : channel,
-                        id : id,
-                        isSpecial : true,
-                        event : input['e'],
-                        data : input['d']
-                    });
-            });
-        };
-        this._socket.unwatch(channelName);
-        this._socket.watch(channelName,watcher);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    subscribeNewSpecialChannelId(channel,id)
-    {
-        this.unsubscribeSpecialCh(channel);
-        this.subscribeSpecialCh(channel,id);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    isSubscribeSpecialCh(channel,id)
-    {
-        let channelName = ZationTools.getSpecialChannelName(channel,id);
-        let subs = this._socket.subscriptions();
-        let found = false;
-
-        for(let i = 0; i < subs.length; i++)
-        {
-            if(subs[i].indexOf(channelName) !== -1)
-            {
-                found = true;
-            }
-        }
-        return found;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    static getSpecialChannelName(channel,id)
-    {
-        let channelName = ZationConst.CHANNEL_SPECIAL_CHANNEL_PREFIX;
-
-        if(channel !== undefined)
-        {
-            channelName+= id;
-            if(id !== undefined)
-            {
-                channelName += ZationConst.CHANNEL_SPECIAL_CHANNEL_ID + id;
-            }
-        }
-
-        return channelName;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    unsubscribeSpecialCh(channel,id)
-    {
-        let channelName = ZationTools.getSpecialChannelName(channel,id);
-
-        let subs = this._socket.subscriptions();
-        let isUnsubscribeAChannel = false;
-
-        for(let i = 0; i < subs.length; i++)
-        {
-            if(subs[i].indexOf(channelName) !== -1)
-            {
-                this._socket.destroyChannel(subs[i]);
-                isUnsubscribeAChannel = true;
-            }
-        }
-        return isUnsubscribeAChannel;
-    }
-
 
     // noinspection JSUnusedGlobalSymbols
     getRejectUnauthorized()
@@ -771,23 +427,16 @@ class Zation
     };
 
     // noinspection JSUnusedGlobalSymbols
-    getServerAddress()
+    isDebug()
     {
-        return this.hostname + ':' + this.settings.port;
+        return this.debug;
     };
 
-
-    //Part Connection
-
     // noinspection JSUnusedGlobalSymbols
-    _refreshChannelRegistration()
+    getServerAddress()
     {
-        this.registerAllChannel();
-        this.registerDefaultGroupChannel();
-        this.registerUserChannel();
-        this.registerAuthGroupChannel();
-    }
-
+        return `${this.hostname}:${this.port}/${this.path}`;
+    };
 
 }
 

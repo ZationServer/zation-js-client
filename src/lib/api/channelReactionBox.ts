@@ -5,7 +5,7 @@ GitHub: LucaCode
  */
 
 
-import ReactionBox = require("../helper/react/reactionBox");
+import ReactionBox = require("../helper/react/box/reactionBox");
 
 class ChannelReactionBox extends ReactionBox
 {

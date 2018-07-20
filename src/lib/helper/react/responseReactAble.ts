@@ -3,18 +3,15 @@ Author: Luca Scaringella
 GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
-import Response = require("./../../api/response");
 
-class ResponseReactAble
+import {ReactionOnError, ReactionOnSuccessful} from "./reactionHandler";
+
+abstract class ResponseReactAble
 {
-    private response : Response;
-
-    constructor(response : Response)
-    {
-        this.response = response;
-    }
-
-
+    abstract onError(reaction : ReactionOnError,filter ?: object) : any;
+    abstract onAllError(reaction : ReactionOnError,filter ?: object) : any;
+    abstract onSuccessful(reaction : ReactionOnSuccessful,filter ?: object) : any;
+    abstract onAllSuccessful(reaction : ReactionOnSuccessful,filter ?: object) : any;
 }
 
 export = ResponseReactAble;

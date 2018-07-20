@@ -8,30 +8,30 @@ import Zation = require("../../api/zation");
 class ConBackup
 {
     private socket : any;
+    private readonly zation : Zation;
 
     //BackUpStore
-    private wasAuthIn : boolean = false;
-    private restoredChannels : object = {};
+    private savedWasAuthIn : boolean = false;
+    private savedChannels : object = {};
 
-    private restoreMode : boolean = false;
+    private restoreSavedMode : boolean = false;
     private saveMode : boolean = true;
 
     constructor(zation : Zation)
     {
+        this.zation = zation;
         this.socket = zation.getSocket();
 
-        this.wasAuthIn = false;
-        this.restoredChannels = {};
+        this.savedWasAuthIn = false;
+        this.savedChannels = {};
 
-        this.restoreMode = false;
+        this.restoreSavedMode = false;
         this.saveMode = true;
-
 
         this.socket.on('close',() =>
         {
-            if(!this.restoreMode)
-            {
-                this.restoredChannels = this.socket.channels;
+            if(!this.saveMode) {
+                this.savedChannels = this.socket.channels;
             }
 
             this.socket.channels = {};
@@ -40,33 +40,40 @@ class ConBackup
 
         this.socket.on('authenticate',() =>
         {
-            if(this.saveMode)
-            {
-                this.wasAuthIn = true;
+            if(this.saveMode) {
+                this.savedWasAuthIn = true;
             }
 
-            if(this.restoreMode)
-            {
-                this._loadOldChannels();
-                this.restoreMode = false;
+            if(!this.saveMode) {
+                this.loadOldChannels();
+                this.restoreSavedMode = false;
                 this.saveMode = true;
             }
         });
 
         this.socket.on('deauthenticate',() =>
         {
-            if(this.saveMode)
-            {
-                this.wasAuthIn = false;
+            if(this.saveMode) {
+                this.savedWasAuthIn = false;
             }
+
         });
+
+        this.socket.on('connect',() =>
+        {
+            if(this.saveMode) {
+                this.savedWasAuthIn = false;
+            }
+
+        });
+
     }
 
-    _loadOldChannels()
+    private loadOldChannels()
     {
-        for(let k in this.restoredChannels)
+        for(let k in this.savedChannels)
         {
-            if(this.restoredChannels.hasOwnProperty(k))
+            if(this.savedChannels.hasOwnProperty(k))
             {
                 this.socket.subscribe(k,{});
             }
@@ -75,16 +82,13 @@ class ConBackup
 
     async restoreBackup()
     {
-        this.restoreMode = true;
+        this.saveMode = false;
 
-        if(this.wasAuthIn)
-        {
-            await this._zation.authIn();
+        if(this.savedWasAuthIn) {
+            await this.zation.getAuthEngine().authIn();
         }
-        else
-        {
-            this._loadOldChannels();
-            this.restoreMode = false;
+        else {
+            this.loadOldChannels();
             this.saveMode = true;
         }
     }

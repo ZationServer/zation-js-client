@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import Response = require("../../api/response");
+import Response = require("../../../api/response");
 
 class RespTriggerEngine
 {

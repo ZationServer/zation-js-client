@@ -7,4 +7,4 @@ GitHub: LucaCode
 import Response = require("../../api/response");
 
 export type ReactionOnSuccessful = (response : Response) => void;
-export type ReactionOnError      = (response : Response) => void;
+export type ReactionOnError      = (filteredErrors : object[], response : Response) => void;
