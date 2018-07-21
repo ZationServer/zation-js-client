@@ -17,7 +17,7 @@ import ConBackup = require("../helper/connection/conBackup");
 import WsRequest = require("./wsRequest");
 import Response = require("./response");
 import SendEngine = require("../helper/send/sendEngine");
-const SocketClusterClient  = require('socketcluster-client');
+const  SocketClusterClient  = require('socketcluster-client');
 import {SendAble} from "../helper/request/sendAble";
 import {ProtocolType} from "../helper/constants/protocolType";
 import {ZationOptions} from "./zationOptions";
@@ -30,18 +30,18 @@ class Zation
     //Var
     private readonly settings : object;
 
-    private authEngine : AuthEngine;
-    private channelEngine : ChannelEngine;
+    private readonly authEngine : AuthEngine;
+    private readonly channelEngine : ChannelEngine;
 
     private debug : boolean = false;
     private system : string = 'W';
     private version : number = 1.0;
     private hostname : string = 'localhost';
-    private path : string = '';
+    private path : string = 'zation';
     private port : number = 3000;
     private secure : boolean = false;
     private rejectUnauthorized : boolean = false;
-    private postKeyWord : string = 'zation';
+    private postKeyWord : string = '/zation';
 
     private autoAllChSub : boolean = true;
     private autoUserChSub : boolean = true;
@@ -56,32 +56,22 @@ class Zation
 
     //system reactionBoxes
     private readonly syResponseReactionBox : ResponseReactionBox;
-    private readonly syChannelReactionBox : ResponseReactionBox;
+    private readonly syChannelReactionBox : ChannelReactionBox;
 
     private readonly userResponseReactionBox : ResponseReactionBox;
-    private readonly userChannelReactionBox : ResponseReactionBox;
+    private readonly userChannelReactionBox : ChannelReactionBox;
 
     //webSockets
     private socket : any;
     private conBackup : ConBackup;
 
     
-    constructor(settings : ZationOptions)
+    constructor(settings : ZationOptions = {})
     {
         //Var
         this.settings = settings;
 
-        this.debug = false;
-        this.system = 'W';
-        this.version = 1.0;
-        this.hostname = 'localhost';
-        this.path = '';
-        this.port = 3000;
-        this.secure = false;
-        this.rejectUnauthorized = false;
-        this.postKeyWord = 'zation';
-
-        this.emitter = new Emitter();
+        //this.emitter = new Emitter();
 
         this.channelEngine = new ChannelEngine(this);
         this.authEngine = new AuthEngine(this,this.channelEngine);
@@ -97,8 +87,8 @@ class Zation
         //system reactionBoxes
         this.syResponseReactionBox = new ResponseReactionBox();
         this.userResponseReactionBox = new ResponseReactionBox();
-        this.syChannelReactionBox = new ResponseReactionBox();
-        this.userChannelReactionBox = new ResponseReactionBox();
+        this.syChannelReactionBox = new ChannelReactionBox();
+        this.userChannelReactionBox = new ChannelReactionBox();
 
         this.responseReactionMainBox.addFixedItem(this.syResponseReactionBox);
         this.responseReactionMainBox.addFixedItem(this.userResponseReactionBox);
@@ -108,7 +98,6 @@ class Zation
         //Init
         this.addRespondsFromSettings();
         this.createSystemReactions();
-        this.buildWsConnection();
     }
 
     //Part Main Config
@@ -169,6 +158,18 @@ class Zation
         if (!!this.settings['rejectUnauthorized']) {
             this.rejectUnauthorized = this.settings['rejectUnauthorized'];
         }
+        if (!!this.settings['autoAllChSub']) {
+            this.autoAllChSub = this.settings['autoAllChSub'];
+        }
+        if (!!this.settings['autoUserChSub']) {
+            this.autoUserChSub = this.settings['autoUserChSub'];
+        }
+        if (!!this.settings['autoDefaultUserGroupChSub']) {
+            this.autoDefaultUserGroupChSub = this.settings['autoDefaultUserGroupChSub'];
+        }
+        if (!!this.settings['autoAuthUserGroupChSub']) {
+            this.autoAuthUserGroupChSub = this.settings['autoAuthUserGroupChSub'];
+        }
     }
 
     private addRespondsFromSettings()
@@ -176,54 +177,40 @@ class Zation
         let resp = this.settings['responds'];
         if (resp !== undefined)
         {
-           ConfigTools.addJsonReactionBox(((reactionBox, key) => {
-               this.addReactionBox(reactionBox,key);
+           ConfigTools.addJsonReactionBox(((reactionBox) => {
+               this.addReactionBox(reactionBox);
            }),resp);
         }
     }
 
     private createSystemReactions()
     {
-        channelResp.onUserCh(ZationConst.USER_CHANNEL_AUTH_OUT,() =>
-        {
-            this.authOut();
+        this.syChannelReactionBox.onUserCh(Const.Settings.USER_CHANNEL.AUTH_OUT,() => {
+            this.authEngine.authOut();
         });
 
-        channelResp.onUserCh(ZationConst.USER_CHANNEL_RE_AUTH,() =>
-        {
-            this.reAuth();
+        this.syChannelReactionBox.onUserCh(Const.Settings.USER_CHANNEL.RE_AUTH,() => {
+            this.authEngine.reAuth();
         });
     }
 
     //Part Responds
 
     // noinspection JSUnusedGlobalSymbols
-    getResponseReactionBox(key : string) : ResponseReactionBox
-    {
-        return this.responseReactionMainBox.getKeyItem(key);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    getChannelReactionBox(key : string) : ChannelReactionBox
-    {
-        return this.channelReactionMainBox.getKeyItem(key);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    removeReactionBoxItems() : void
+    removeAllReactionBoxes() : void
     {
         this.responseReactionMainBox.removeAllItems();
         this.channelReactionMainBox.removeAllItems();
     }
 
     // noinspection JSUnusedGlobalSymbols
-    addReactionBox(reactionBox : ReactionBox,key ?: string,overwrite : boolean = true) : boolean
+    addReactionBox(reactionBox : ReactionBox) : boolean
     {
         if(reactionBox instanceof ResponseReactionBox) {
-            return this.responseReactionMainBox.addItem(reactionBox,key,overwrite);
+            return this.responseReactionMainBox.addItem(reactionBox);
         }
         else if(reactionBox instanceof ChannelReactionBox) {
-            return this.channelReactionMainBox.addItem(reactionBox,key,overwrite);
+            return this.channelReactionMainBox.addItem(reactionBox);
         }
         else {
             return false;
@@ -233,9 +220,22 @@ class Zation
     // noinspection JSUnusedGlobalSymbols
     addReactionBoxes(...reactionBoxes : ReactionBox[]) : void
     {
-        for(let i = 0; i < reactionBoxes.length; i++)
-        {
+        for(let i = 0; i < reactionBoxes.length; i++) {
             this.addReactionBox(reactionBoxes[i]);
+        }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    removeReactionBox(reactionBox : ReactionBox) : boolean
+    {
+        if(reactionBox instanceof ResponseReactionBox) {
+            return this.responseReactionMainBox.removeItem(reactionBox);
+        }
+        else if(reactionBox instanceof ChannelReactionBox) {
+            return this.channelReactionMainBox.removeItem(reactionBox);
+        }
+        else {
+            return false;
         }
     }
 
@@ -262,6 +262,7 @@ class Zation
 
     //Part Events
 
+    /*
     on(event : string,reaction : Function = () => {}) : void
     {
        this.emitter.on(event,reaction);
@@ -271,17 +272,20 @@ class Zation
     {
        this.emitter.emit(event,...data);
     }
+    */
 
     //Part Auth
 
-    getAuthEngine() : AuthEngine
-    {
+    getAuthEngine() : AuthEngine {
         return this.authEngine;
     }
 
-    async authIn(authData : object,protocolType : ProtocolType = ProtocolType.WebSocket) : Promise<Response>
-    {
+    async authIn(authData : object,protocolType : ProtocolType = ProtocolType.WebSocket) : Promise<Response> {
         return await this.authEngine.authIn(authData,protocolType);
+    }
+
+    authOut() : void {
+        this.authEngine.authOut();
     }
 
     //Part Easy
@@ -296,8 +300,7 @@ class Zation
     }
 
     //Part Send
-    async send(sendAble : SendAble, responseReactionBox : ResponseReactionBox ,progressHandler ?: ProgressHandler) : Promise<Response>
-    async send(sendAble : SendAble, progressHandler ?: ProgressHandler) : Promise<Response>
+    async send(sendAble : SendAble, progressHandler ?: ProgressHandler, responseReactionBox ?: ResponseReactionBox) : Promise<Response>
     {
         let ph : undefined | ProgressHandler = undefined;
         if(!!progressHandler) {
@@ -309,16 +312,22 @@ class Zation
 
         let jsonObj = await sendAble.getSendData(this);
 
+        let response : Response;
+
         if(sendAble.getProtocol() === ProtocolType.WebSocket) {
-            const response = await SendEngine.wsSend(this,jsonObj,ph);
-            await this.triggerResponseReactions(response);
-            return response;
+            response = await SendEngine.wsSend(this,jsonObj,ph);
+            await this._triggerResponseReactions(response);
         }
         else {
-            const response = await SendEngine.httpSend(this,jsonObj,ph);
-            await this.triggerResponseReactions(response);
-            return response;
+            response = await SendEngine.httpSend(this,jsonObj,ph);
+            await this._triggerResponseReactions(response);
         }
+
+        if(!!responseReactionBox) {
+            responseReactionBox.trigger(response);
+        }
+
+        return response;
     };
 
     // Part Connection
@@ -349,6 +358,7 @@ class Zation
 
                 this.socket.on('connect',() =>
                 {
+                    this.authEngine.initAuthEngine();
                     resolve();
                 });
             }
@@ -362,8 +372,7 @@ class Zation
             port: this.port,
             secure: this.secure,
             rejectUnauthorized: this.rejectUnauthorized,
-            autoReconnect: true,
-            path : this.path
+            autoReconnect: true
         };
     }
 
@@ -376,18 +385,146 @@ class Zation
 
         this.socket.on('connect', async () => {
 
-                this._emitEvent('connected',this.socket);
+
+                //this._emitEvent('connected',this.socket);
         });
+    }
+
+    //Part Subscribe
+
+    // noinspection JSUnusedGlobalSymbols
+    subUserCh() : boolean {
+        return this.authEngine.subUserCh();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    unsubUserCh() : boolean {
+        return this.authEngine.unsubUserCh();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    subAuthUserGroupCh() : boolean {
+        return this.authEngine.subAuthUserGroupCh();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    unsubAuthUserGroupCh() : boolean {
+        return this.authEngine.unsubAuthUserGroupCh();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    subDefaultUserGroupCh() : boolean {
+        return this.authEngine.subDefaultUserGroupCh();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    unsubDefaultUserGroupCh() {
+        return this.authEngine.unsubDefaultUserGroupCh();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    subAllCh() {
+        this.channelEngine.registerAllChannel();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    unsubAllCh() {
+        this.channelEngine.unregisterAllChannel();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    subCustomCh(chName : string) {
+        this.channelEngine.registerCustomCh(chName);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    isSubCustomCh(chName ?: string) : boolean {
+        return this.channelEngine.isSubCustomCh(chName);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    unsubCustomCh(chName ?: string) : string[] {
+        return this.channelEngine.unsubscribeCustomCh(chName);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    getSubscribedCustomCh(chName ?: string) : string[] {
+        return this.channelEngine.getSubCustomCh(chName);
+    }
+
+    subCustomIdCh(chName : string, chId : string) {
+        this.channelEngine.registerCustomIdCh(chName,chId);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    isSubCustomIdCh(chName ?: string, chId ?: string) : boolean {
+        return this.channelEngine.isSubCustomIdCh(chName,chId);
+    }
+
+    unsubCustomIdCh(chName ?: string, chId ?: string) : string[] {
+        return this.channelEngine.unsubscribeCustomIdCh(chName,chId);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    getSubscribedCustomIdCh(chName ?: string, chId ?: string) : string[] {
+        return this.channelEngine.getSubCustomIdCh(chName,chId);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    switchCustomIdCh(channel,id)
+    {
+        this.unsubCustomIdCh(channel,id);
+        this.subCustomIdCh(channel,id);
     }
 
     //Part trigger RequestResponds
 
-    private async triggerResponseReactions(response : Response) : Promise<void>
+    private async _triggerResponseReactions(response : Response) : Promise<void>
     {
-        await this.responseReactionMainBox.forEach(async (responseReaction) =>
-        {
-            responseReaction._trigger(response);
+        await this.responseReactionMainBox.forEach(async (responseReactionBox : ResponseReactionBox) => {
+            responseReactionBox.trigger(response);
         });
+    }
+
+    //Part Getter/Setter
+
+    // noinspection JSUnusedGlobalSymbols
+    isAutoAllChSub() : boolean {
+        return this.autoAllChSub;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    setAutoAllChSub(value : boolean) : void {
+        this.autoAllChSub = value;
+    }
+
+    isAutoUserChSub() : boolean {
+        return this.autoUserChSub;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    setAutoUserChSub(value : boolean) : void {
+        this.autoUserChSub = value;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    isAutoDefaultUserGroupChSub() : boolean {
+        return this.autoDefaultUserGroupChSub;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    setAutoDefaultUserGroupChSub(value : boolean) : void {
+        this.autoDefaultUserGroupChSub = value;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    isAutoAuthUserGroupChSub() : boolean {
+        return this.autoAuthUserGroupChSub;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    setAutoAuthUserGroupChSub(value : boolean) : void {
+        this.autoAuthUserGroupChSub = value;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -435,8 +572,17 @@ class Zation
     // noinspection JSUnusedGlobalSymbols
     getServerAddress()
     {
-        return `${this.hostname}:${this.port}/${this.path}`;
+        if(!!this.path) {
+            return `${this.hostname}:${this.port}`;
+        }
+        else {
+            return `${this.hostname}:${this.port}${this.path}`;
+        }
     };
+
+    _getChannelReactionMainBox() : Box<ChannelReactionBox> {
+        return this.channelReactionMainBox;
+    }
 
 }
 

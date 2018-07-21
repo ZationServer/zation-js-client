@@ -39,7 +39,7 @@ gulp.task('browserify', function() {
         let stream = browserify({
             transform: [[ignore]],
             builtins: ['_process', 'events', 'buffer', 'querystring'],
-            entries: 'index.js',
+            entries: 'dist/index.js',
             standalone: 'zation'
         })
             .ignore('_process')

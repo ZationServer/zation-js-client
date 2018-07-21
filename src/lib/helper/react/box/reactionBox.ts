@@ -7,7 +7,7 @@ GitHub: LucaCode
 class ReactionBox
 {
 
-    private active : boolean;
+    protected active : boolean;
 
     constructor()
     {

@@ -6,6 +6,8 @@ GitHub: LucaCode
 
 import Const = require("../constants/constWrapper");
 import Zation = require("../../api/zation");
+import ChannelReactionBox = require("../../api/channelReactionBox");
+import {ChannelType} from "./channelType";
 
 class ChannelEngine
 {
@@ -18,7 +20,7 @@ class ChannelEngine
 
     // noinspection JSUnusedGlobalSymbols
     registerUserChannel(userId : string | number) {
-        this.registerChannel(Const.Settings.CHANNEL.USER_CHANNEL_PREFIX + userId);
+        this.registerZationChannel(Const.Settings.CHANNEL.USER_CHANNEL_PREFIX + userId,ChannelType.USER);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -27,28 +29,28 @@ class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    registerAuthGroupChannel(authGroup : string) {
-        this.registerChannel(Const.Settings.CHANNEL.AUTH_USER_GROUP_PREFIX + authGroup);
+    registerAuthUserGroupChannel(authGroup : string) {
+        this.registerZationChannel(Const.Settings.CHANNEL.AUTH_USER_GROUP_PREFIX + authGroup,ChannelType.AUTH_USER_GROUP);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    unregisterAuthGroupChannel(authGroup : string) {
+    unregisterAuthUserGroupChannel(authGroup : string) {
         this.destroyChannel(Const.Settings.CHANNEL.AUTH_USER_GROUP_PREFIX + authGroup);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    registerDefaultGroupChannel() {
-        this.registerChannel(Const.Settings.CHANNEL.DEFAULT_USER_GROUP);
+    registerDefaultUserGroupChannel() {
+        this.registerZationChannel(Const.Settings.CHANNEL.DEFAULT_USER_GROUP,ChannelType.DEFAULT_USER_GROUP);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    unregisterDefaultGroupChannel() {
+    unregisterDefaultUserGroupChannel() {
         this.destroyChannel(Const.Settings.CHANNEL.DEFAULT_USER_GROUP);
     }
 
     // noinspection JSUnusedGlobalSymbols
     registerAllChannel() {
-        this.registerChannel(Const.Settings.CHANNEL.ALL);
+        this.registerZationChannel(Const.Settings.CHANNEL.ALL,ChannelType.ALL);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -56,25 +58,23 @@ class ChannelEngine
         this.destroyChannel(Const.Settings.CHANNEL.ALL);
     }
 
-    registerChannel(channel : string)
+    registerZationChannel(channel : string, type : ChannelType)
     {
         const socket = this.zation.getSocket();
         if(!!socket)
         {
             socket.subscribe(channel);
             socket.unwatch(channel);
-            socket.watch(channel,(data) =>
+            socket.watch(channel,async (input : any) =>
             {
-                this.channelReactionMainBox.forEach((respond) =>
+                let promises : Promise<void>[] = [];
+                promises.push(this.zation._getChannelReactionMainBox().forEach(async (channelReactionBox : ChannelReactionBox) =>
                 {
-                    respond._trigger(
-                        {
-                            channel : channel,
-                            isSpecial : false,
-                            event : input['e'],
-                            data : input['d']
-                        });
-                });
+                    const event : string = input['e'];
+                    const data : any = input['d'];
+                    await channelReactionBox._triggerZationCh(type,event,data);
+                }));
+                await Promise.all(promises);
             });
         }
     }
@@ -91,87 +91,147 @@ class ChannelEngine
     //Part Custom Channel
 
     // noinspection JSUnusedGlobalSymbols
-    subscribeSpecialCh(channel,id)
+    registerCustomCh(channel : string)
     {
-        let channelName = ZationConst.CHANNEL_SPECIAL_CHANNEL_PREFIX + channel + ZationConst.CHANNEL_SPECIAL_CHANNEL_ID + id;
-        this._socket.subscribe(channelName);
-
-        let watcher = (input) =>
+        const fullChannel = Const.Settings.CHANNEL.CUSTOM_CHANNEL_PREFIX + channel;
+        const socket = this.zation.getSocket();
+        if(!!socket)
         {
-            this.channelReactionMainBox.forEach((respond) =>
+            socket.subscribe(fullChannel);
+            socket.unwatch(fullChannel);
+            socket.watch(fullChannel,async (input : any) =>
             {
-                respond._trigger(
-                    {
-                        channel : channel,
-                        id : id,
-                        isSpecial : true,
-                        event : input['e'],
-                        data : input['d']
-                    });
+                let promises : Promise<void>[] = [];
+                promises.push(this.zation._getChannelReactionMainBox().forEach(async (channelReactionBox : ChannelReactionBox) =>
+                {
+                    const event : string = input['e'];
+                    const data : any = input['d'];
+                    await channelReactionBox._triggerCustomCh(channel,event,data);
+                }));
+                await Promise.all(promises);
             });
-        };
-        this._socket.unwatch(channelName);
-        this._socket.watch(channelName,watcher);
+        }
     }
 
     // noinspection JSUnusedGlobalSymbols
-    subscribeNewSpecialChannelId(channel,id)
+    registerCustomIdCh(channel : string, id : string)
     {
-        this.unsubscribeSpecialCh(channel);
-        this.subscribeSpecialCh(channel,id);
-    }
+        const fullChannel =
+            Const.Settings.CHANNEL.CUSTOM_ID_CHANNEL_PREFIX + channel + Const.Settings.CHANNEL.CUSTOM_CHANNEL_ID + id ;
 
-    // noinspection JSUnusedGlobalSymbols
-    isSubscribeSpecialCh(channel,id)
-    {
-        let channelName = ZationTools.getSpecialChannelName(channel,id);
-        let subs = this._socket.subscriptions();
-        let found = false;
-
-        for(let i = 0; i < subs.length; i++)
+        const socket = this.zation.getSocket();
+        if(!!socket)
         {
-            if(subs[i].indexOf(channelName) !== -1)
+            socket.subscribe(fullChannel);
+            socket.unwatch(fullChannel);
+            socket.watch(fullChannel,async (input : any) =>
             {
-                found = true;
+                let promises : Promise<void>[] = [];
+                promises.push(this.zation._getChannelReactionMainBox().forEach(async (channelReactionBox : ChannelReactionBox) =>
+                {
+                    const event : string = input['e'];
+                    const data : any = input['d'];
+                    await channelReactionBox._triggerCustomIdCh(channel,id,event,data);
+                }));
+                await Promise.all(promises);
+            });
+        }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    static getCustomIdChName(channel ?: string, id ?: string)
+    {
+        let res = Const.Settings.CHANNEL.CUSTOM_ID_CHANNEL_PREFIX;
+
+        if(channel !== undefined) {
+            res += channel;
+
+            if(id !== undefined) {
+                res += Const.Settings.CHANNEL.CUSTOM_CHANNEL_ID;
+                res += id;
             }
         }
-        return found;
+        return res;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    static getSpecialChannelName(channel,id)
+    static getCustomChName(channel ?: string)
     {
-        let channelName = ZationConst.CHANNEL_SPECIAL_CHANNEL_PREFIX;
+        let res = Const.Settings.CHANNEL.CUSTOM_CHANNEL_PREFIX;
 
-        if(channel !== undefined)
-        {
-            channelName+= id;
-            if(id !== undefined)
-            {
-                channelName += ZationConst.CHANNEL_SPECIAL_CHANNEL_ID + id;
-            }
+        if(channel !== undefined) {
+            res += channel;
         }
 
-        return channelName;
+        return res;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    unsubscribeSpecialCh(channel,id)
+    unsubscribeCustomIdCh(channel ?: string,id ?: string) : string[]
     {
-        let channelName = ZationTools.getSpecialChannelName(channel,id);
+        return this.unsubscribeWithIndex(ChannelEngine.getCustomIdChName(channel,id));
+    }
 
-        let subs = this._socket.subscriptions();
-        let isUnsubscribeAChannel = false;
+    getSubCustomIdCh(channel ?: string,id ?: string) : string[]
+    {
+        return this.getSubsWithIndex(ChannelEngine.getCustomIdChName(channel,id));
+    }
 
-        for(let i = 0; i < subs.length; i++)
-        {
-            if(subs[i].indexOf(channelName) !== -1)
-            {
-                this._socket.destroyChannel(subs[i]);
-                isUnsubscribeAChannel = true;
+    isSubCustomIdCh(channel ?: string,id ?: string) : boolean
+    {
+        return this.getSubCustomIdCh(channel,id).length > 0;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    unsubscribeCustomCh(channel ?: string) : string[]
+    {
+        return this.unsubscribeWithIndex(ChannelEngine.getCustomChName(channel));
+    }
+
+    getSubCustomCh(channel ?: string) : string[]
+    {
+        return this.getSubsWithIndex(ChannelEngine.getCustomChName(channel));
+    }
+
+    isSubCustomCh(channel ?: string) : boolean
+    {
+        return this.getSubCustomCh(channel).length > 0;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    unsubscribeWithIndex(channelName : string) : string[]
+    {
+        const socket = this.zation.getSocket();
+        let unsubscribedChannels : string[] = [];
+
+        if(!!socket) {
+            const subs = socket.subscriptions();
+
+            for(let i = 0; i < subs.length; i++) {
+                if(subs[i].indexOf(channelName) !== -1) {
+                    socket.destroyChannel(subs[i]);
+                    unsubscribedChannels.push(subs[i]);
+                }
             }
         }
-        return isUnsubscribeAChannel;
+        return unsubscribedChannels;
+    }
+
+    getSubsWithIndex(channelName : string) : string[]
+    {
+        const socket = this.zation.getSocket();
+        let foundSubs : string[] = [];
+
+        if(!!socket) {
+            const subs = socket.subscriptions();
+
+            for(let i = 0; i < subs.length; i++) {
+                if(subs[i].indexOf(channelName) !== -1) {
+                    foundSubs.push(subs[i]);
+                }
+            }
+        }
+        return foundSubs;
     }
 
 }

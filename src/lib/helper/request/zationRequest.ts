@@ -103,7 +103,7 @@ abstract class ZationRequest extends SendAble
                         resolve();
                     }));
                 }
-                else if(typeof data === 'object') {
+                else if(typeof data[key] === 'object') {
                     promises.push(new Promise<void>(async (resolve) =>
                     {
                         res[key] = await this.compileObjectData(data[key]);

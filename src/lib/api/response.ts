@@ -4,10 +4,9 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import ResponseReactAble = require("../helper/react/responseReactAble");
 import {ProtocolType}    from "../helper/constants/protocolType";
 import Const             = require("../helper/constants/constWrapper");
-import ResponseReact = require("../helper/react/responseReact");
+import ResponseReact     = require("../helper/react/responseReact");
 
 class Response
 {
@@ -15,15 +14,13 @@ class Response
 
     private readonly type : ProtocolType;
 
-    private resultValues = [];
-    private resultPairs = {};
+    private result : any;
+    private statusCode : string | number | undefined;
     private erros = [];
 
-    private filteredErrors = [];
-    private filteredResValues = [];
-    private filteredResPairs = {};
+    private zationInfo : string[] = [];
 
-    private filteredErrorsCache = [];
+    private notCatchedErrors : object[] = [];
 
     //Part Token (ONLY HTTP)
     private newSignedToken : string | undefined = undefined;
@@ -32,106 +29,42 @@ class Response
     constructor(data,type : ProtocolType)
     {
         this.successful = false;
-        this.resultValues = [];
-        this.resultPairs = {};
         this.erros = [];
         this.type = type;
 
         this.readData(data);
-        this.resetFiltered();
+        this.resetNotCatchedErrors();
     }
 
     //Part Result Value
 
     // noinspection JSUnusedGlobalSymbols
-    getMainResult(useFiltered : boolean = true) : any
+    getResult() : any
     {
-        if(useFiltered) {
-            return this.filteredResValues[0];
-        }
-        else {
-            return this.resultValues[0];
-        }
+        return this.result;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    hasMainResult(useFiltered : boolean = true) : boolean
+    hasResult() : boolean
     {
-        if(useFiltered) {
-            return this.filteredResValues[0] !== undefined;
-        }
-        else {
-            return this.resultValues[0] !== undefined;
-        }
+       return this.result !== undefined;
+    }
+
+    //Part StatusCode
+
+    // noinspection JSUnusedGlobalSymbols
+    getStatusCode() : string | number | undefined
+    {
+       return this.statusCode;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    getValueResults(useFiltered : boolean = true) : any[]
+    hasStatusCode() : boolean
     {
-        if(useFiltered) {
-            return this.filteredResValues;
-        }
-        else {
-            return this.resultValues;
-        }
+        return this.statusCode !== undefined;
     }
 
-    // noinspection JSUnusedGlobalSymbols
-    getValueResult(index : number,useFiltered : boolean = true) : any
-    {
-        if(useFiltered) {
-            return this.filteredResValues[index];
-        }
-        else {
-            return this.resultValues[index];
-        }
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    hasValueResult(index : number,useFiltered : boolean = true)
-    {
-        if(useFiltered) {
-            return this.filteredResValues[index] !== undefined;
-        }
-        else {
-            return this.resultValues[index] !== undefined;
-        }
-    }
-
-    //Part Result KeyValue
-
-    // noinspection JSUnusedGlobalSymbols
-    getPairResults(useFiltered : boolean = true) : object
-    {
-        if(useFiltered) {
-            return this.filteredResPairs;
-        }
-        else {
-            return this.resultPairs;
-        }
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    getPairResult(key : string,useFiltered : boolean = true) : any
-    {
-        if(useFiltered) {
-            return this.filteredResPairs[key];
-        }
-        else {
-            return this.resultPairs[key];
-        }
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    hasPairResult(key : string,useFiltered : boolean = true) : boolean
-    {
-        if(useFiltered) {
-            return this.filteredResPairs[key] !== undefined;
-        }
-        else {
-            return this.resultPairs[key] !== undefined;
-        }
-    }
+    //Part Successful
 
     // noinspection JSUnusedGlobalSymbols
     isSuccessful() : boolean
@@ -164,7 +97,7 @@ class Response
     getErrors(useFiltered : boolean = true)
     {
         if(useFiltered) {
-            return this.filteredErrors;
+            return this.notCatchedErrors;
         }
         else {
             return this.erros;
@@ -175,7 +108,7 @@ class Response
     hasErrors(useFiltered : boolean = true)
     {
         if(useFiltered) {
-            return this.filteredErrors.length > 0;
+            return this.notCatchedErrors.length > 0;
         }
         else {
             return this.erros.length > 0;
@@ -186,7 +119,7 @@ class Response
     hasError(index : number,useFiltered : boolean = true)
     {
         if(useFiltered) {
-            return this.filteredErrors[index] !== undefined;
+            return this.notCatchedErrors[index] !== undefined;
         }
         else {
             return this.erros[index] !== undefined;
@@ -197,7 +130,7 @@ class Response
     errorCount(useFiltered : boolean = true)
     {
         if(useFiltered) {
-            return this.filteredErrors.length;
+            return this.notCatchedErrors.length;
         }
         else {
             return this.erros.length;
@@ -208,6 +141,12 @@ class Response
     react() : ResponseReact
     {
         return new ResponseReact(this);
+    }
+
+    //Part Zation Http info
+    hasZationInfo(key : string) : boolean
+    {
+        return this.zationInfo.indexOf(key) !== -1;
     }
 
     //Part Type
@@ -228,11 +167,23 @@ class Response
 
     //Part CatchOut
 
-    resetFiltered() : void
+    resetNotCatchedErrors() : void {
+        this.notCatchedErrors = this.erros;
+    }
+
+    _getNotCatchedErrors() : object[] {
+        return this.notCatchedErrors;
+    }
+
+    _errorsAreCatched(errors : object[])
     {
-        this.filteredErrors = this.erros;
-        this.filteredResPairs = this.resultPairs;
-        this.filteredResValues = this.resultValues;
+        errors.forEach((error) =>
+        {
+            const index = this.notCatchedErrors.indexOf(error);
+            if (index > -1) {
+                this.notCatchedErrors.splice(index, 1);
+            }
+        });
     }
 
     //Part main system
@@ -247,20 +198,27 @@ class Response
 
             const res = data[Const.Settings.RESPONSE.RESULT];
 
-            if (Array.isArray(res[Const.Settings.RESPONSE.RESULT_VALUES]))
+            if (res[Const.Settings.RESPONSE.RESULT_MAIN] !== undefined)
             {
-                this.resultValues = res[Const.Settings.RESPONSE.RESULT_VALUES];
+                this.result = res[Const.Settings.RESPONSE.RESULT_MAIN];
             }
 
-            if (typeof res[Const.Settings.RESPONSE.RESULT_PAIRS] === 'object')
+            if (typeof res[Const.Settings.RESPONSE.RESULT_STATUS] === 'string' ||
+                typeof res[Const.Settings.RESPONSE.RESULT_STATUS] === 'number'
+            )
             {
-                this.resultPairs = res[Const.Settings.RESPONSE.RESULT_PAIRS];
+                this.statusCode = res[Const.Settings.RESPONSE.RESULT_STATUS];
             }
         }
 
         if (Array.isArray(data[Const.Settings.RESPONSE.ERRORS]))
         {
             this.erros = data[Const.Settings.RESPONSE.ERRORS];
+        }
+
+        if (Array.isArray(data[Const.Settings.RESPONSE.ZATION_INFO]))
+        {
+            this.zationInfo = data[Const.Settings.RESPONSE.ZATION_INFO];
         }
 
         if(this.isHttpProtocolType() && typeof data[Const.Settings.RESPONSE.TOKEN] === 'object')

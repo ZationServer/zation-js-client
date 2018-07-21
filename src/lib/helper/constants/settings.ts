@@ -31,6 +31,20 @@ class REQUEST_INPUT
     static readonly TOKEN                        = 'to';
 }
 
+class RESPONSE_ERROR
+{
+    static readonly Name                         = 'n';
+    static readonly TYPE                         = 't';
+    static readonly FROM_ZATION_SYSTEM           = 'zs';
+    static readonly DESCRIPTION                  = 'd';
+    static readonly INFO                         = 'i';
+}
+
+class ZATION_HTTP_INFO
+{
+    static readonly AUTH_OUT                     = 'authOut';
+}
+
 class RESPONSE
 {
     static readonly ERRORS                       = 'e';
@@ -42,8 +56,10 @@ class RESPONSE
     static readonly TOKEN_SIGNED                 = 'st';
     static readonly TOKEN_PLAIN                  = 'pt';
 
-    static readonly RESULT_PAIRS                 = 'kv';
-    static readonly RESULT_VALUES                = 'v';
+    static readonly RESULT_MAIN                  = 'r';
+    static readonly RESULT_STATUS                = 's';
+
+    static readonly ERROR                        = RESPONSE_ERROR;
 }
 
 class VALIDATION_REQUEST_INPUT
@@ -98,6 +114,7 @@ class Settings
     static readonly CHANNEL = CHANNEL;
     static readonly USER_CHANNEL = USER_CHANNEL;
     static readonly RESPONSE = RESPONSE;
+    static readonly ZATION_HTTP_INFO = ZATION_HTTP_INFO;
 }
 
 export = Settings;

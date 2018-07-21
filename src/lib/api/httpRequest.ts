@@ -26,7 +26,7 @@ class HttpRequest extends MainRequest
         const compiledData = await this.getCompiledData();
         let signToken : undefined | string = undefined;
 
-        if(this.useAuth) {
+        if(this.useAuth && zation.getAuthEngine().hasSignToken()) {
             signToken = zation.getAuthEngine().getSignToken();
         }
 

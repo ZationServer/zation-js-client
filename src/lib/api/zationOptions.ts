@@ -20,4 +20,8 @@ export interface ZationOptions {
     reactions ?:
         ResponseReactionBox | ChannelReactionBox | (ResponseReactionBox | ChannelReactionBox)[] |
         Record<string,ResponseReactionBox | ChannelReactionBox>;
+    autoAllChSub ?: boolean;
+    autoUserChSub ?: boolean;
+    autoDefaultUserGroupChSub ?: boolean;
+    autoAuthUserGroupChSub ?: boolean;
 }

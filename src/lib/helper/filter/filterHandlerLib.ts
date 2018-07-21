@@ -11,22 +11,35 @@ class FilterHandlerLib
         return v1 === v2;
     }
 
-    static objHasOneValueMulti(object : object, v2 : any) : boolean
+    static objValuesAre(object : object, v2 : any) : boolean
     {
         if(Array.isArray(v2))
         {
-            for(let i = 0; i < v2.length; i++)
-            {
-                if(! FilterHandlerLib.objectHasValue(object,v2[i]))
-                {
+            for(let i = 0; i < v2.length; i++) {
+                if(!FilterHandlerLib.objectHasValue(object,v2[i])) {
                     return false;
                 }
             }
             return true;
         }
-        else
-        {
+        else {
             return FilterHandlerLib.objectHasValue(object,v2);
+        }
+    }
+
+    static objKeysAre(object : object, v2 : any) : boolean
+    {
+        if(Array.isArray(v2))
+        {
+            for(let i = 0; i < v2.length; i++) {
+                if(!object.hasOwnProperty(v2[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        else {
+            return object.hasOwnProperty(v2);
         }
     }
 
@@ -40,43 +53,12 @@ class FilterHandlerLib
         return false;
     }
 
-    static objHasOneKeyMulti(object : object, v2 : any) : boolean
-    {
-        if(Array.isArray(v2)) {
-            for(let i = 0; i < v2.length; i++) {
-                if(!object.hasOwnProperty(v2[i])) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        else {
-            return object.hasOwnProperty(v2);
-        }
-    }
-
-    static arrayHasOneValueMulti(array : any, v2 : any) : boolean
-    {
-        if(Array.isArray(v2)) {
-            for(let i = 0; i < v2.length; i++) {
-                if(!array.includes(v2[i])) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        else {
-            return array.includes(v2);
-        }
-    }
-
     static allParamsAreSame(v1 : object, v2 : object) : boolean
     {
         for (let k in v2) {
             if (v2.hasOwnProperty(k)) {
                 if(!(v1.hasOwnProperty(k) &&
-                    v2[k] === v1[k]))
-                {
+                    v2[k] === v1[k])) {
                     return false;
                 }
             }

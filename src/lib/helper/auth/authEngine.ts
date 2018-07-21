@@ -33,11 +33,22 @@ class AuthEngine
         this.currentUserId = undefined;
         this.currentUserAuthGroup = undefined;
 
+        /*
+        this.zation.('firstConnection', () =>
+        {
+
+        });
+        */
+    }
+
+    initAuthEngine()
+    {
+        //we have an socket!
         //reset on disconnection
         this.zation.getSocket().on('close',()=>
         {
-           this.currentUserId = undefined;
-           this.currentUserAuthGroup = undefined;
+            this.currentUserId = undefined;
+            this.currentUserAuthGroup = undefined;
         });
 
         //reset on disconnection
@@ -54,6 +65,7 @@ class AuthEngine
             this.refreshToken(undefined,undefined);
         });
     }
+
 
     refreshToken(plainToken : undefined | object,signToken : undefined | string)
     {
@@ -89,10 +101,28 @@ class AuthEngine
             this.currentUserId = id;
 
             //register new user channel
-            if(!!id) {
-                this.chEngine.registerUserChannel(id);
+            if(this.zation.isAutoUserChSub()) {
+                this.subUserCh();
             }
         }
+    }
+
+    subUserCh() : boolean
+    {
+        if(!!this.currentUserId) {
+            this.chEngine.registerUserChannel(this.currentUserId);
+            return true;
+        }
+        return false;
+    }
+
+    unsubUserCh() : boolean
+    {
+        if(!!this.currentUserId) {
+            this.chEngine.unregisterUserChannel(this.currentUserId);
+            return true;
+        }
+        return false;
     }
 
     updateAuthGroup(authGroup)
@@ -105,16 +135,15 @@ class AuthEngine
             {
                 //unregister old channels
                 if(!!this.currentUserAuthGroup) {
-                    this.chEngine.unregisterAuthGroupChannel(this.currentUserAuthGroup);
+                    this.chEngine.unregisterAuthUserGroupChannel(this.currentUserAuthGroup);
                 }
                 else {
-                    this.chEngine.unregisterDefaultGroupChannel();
+                    this.chEngine.unregisterDefaultUserGroupChannel();
                 }
 
                 this.currentUserAuthGroup = authGroup;
 
-                this.chEngine.registerAuthGroupChannel(authGroup);
-
+                this.subAuthUserGroupCh();
 
                 if(this.zation.isDebug())
                 {
@@ -125,13 +154,45 @@ class AuthEngine
             else {
                 //unregister old channels
                 if(!!this.currentUserAuthGroup) {
-                    this.chEngine.unregisterAuthGroupChannel(this.currentUserAuthGroup);
+                    this.chEngine.unregisterAuthUserGroupChannel(this.currentUserAuthGroup);
                 }
 
                 this.currentUserAuthGroup = authGroup;
-                this.chEngine.registerDefaultGroupChannel();
+                this.subDefaultUserGroupCh();
             }
         }
+    }
+
+    subAuthUserGroupCh() : boolean
+    {
+        if(!!this.currentUserAuthGroup) {
+            this.chEngine.registerAuthUserGroupChannel(this.currentUserAuthGroup);
+            return true;
+        }
+        return false;
+    }
+
+    unsubAuthUserGroupCh() : boolean
+    {
+        if(!!this.currentUserAuthGroup) {
+            this.chEngine.unregisterAuthUserGroupChannel(this.currentUserAuthGroup);
+            return true;
+        }
+        return false;
+    }
+
+    subDefaultUserGroupCh() : boolean
+    {
+        if(!this.currentUserAuthGroup) {
+            this.chEngine.registerDefaultUserGroupChannel();
+            return true;
+        }
+        return false;
+    }
+
+    unsubDefaultUserGroupCh()
+    {
+        this.chEngine.unregisterDefaultUserGroupChannel();
     }
 
     updateToken(token : object = {})
@@ -140,38 +201,26 @@ class AuthEngine
         this.updateAuthGroup(token[Const.Settings.CLIENT.AUTH_USER_GROUP]);
     }
 
-    // noinspection JSUnusedGlobalSymbols
-    _socketIsAuthOut()
-    {
-        this._setNewAuthGroup('');
-        this._setNewAuthId(undefined);
+    getSignToken() : string | undefined {
+        return this.signToken;
     }
 
-    reAuth()
-    {
-        this._isReAuth = true;
-        this._authOutWithAuto();
+    getPlainToken() : object | undefined {
+        return this.plainToken;
     }
 
-    _authOutWithAuto()
-    {
-        this._socket.deauthenticate((e) =>
-        {
-            if(e)
-            {
-                this._socket.disconnect();
-            }
-            else
-            {
-                this._socketIsAuthOut();
-            }
-        });
+    hasSignToken() : boolean {
+        return this.signToken !== undefined;
     }
 
     authOut()
     {
-        this._isAuthOut = true;
-        this._authOutWithAuto();
+
+    }
+
+    reAuth()
+    {
+
     }
 
     isAuthIn() : boolean

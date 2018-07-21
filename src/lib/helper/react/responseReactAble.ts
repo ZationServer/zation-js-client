@@ -6,12 +6,11 @@ GitHub: LucaCode
 
 import {ReactionOnError, ReactionOnSuccessful} from "./reactionHandler";
 
-abstract class ResponseReactAble
+interface ResponseReactAble
 {
-    abstract onError(reaction : ReactionOnError,filter ?: object) : any;
-    abstract onAllError(reaction : ReactionOnError,filter ?: object) : any;
-    abstract onSuccessful(reaction : ReactionOnSuccessful,filter ?: object) : any;
-    abstract onAllSuccessful(reaction : ReactionOnSuccessful,filter ?: object) : any;
+    catchError(reaction : ReactionOnError, filter ?: object) : any;
+    onError(reaction : ReactionOnError, filter ?: object) : any;
+    onSuccessful(reaction : ReactionOnSuccessful,statusCode ?: any) : any;
 }
 
 export = ResponseReactAble;

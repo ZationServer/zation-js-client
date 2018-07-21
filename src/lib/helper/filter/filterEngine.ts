@@ -6,66 +6,42 @@ GitHub: LucaCode
 
 class FilterEngine
 {
-    static _getWithOneOrMultiOr(array, input, prop, filter = Filter._filterEquals)
+    static getWhoHasOneOfInputVar(input : any[], filter : any[] | any, prop : string, searchFilter = FilterHandlerLib.equals) : any[]
     {
-        let res = [];
-        if(Array.isArray(input))
-        {
-            res = Filter._getWhoHasOneOf(array,input,prop,filter);
+        let res : any[] = [];
+        if(Array.isArray(filter)) {
+            res = FilterEngine.getWhoHasOneOf(input,filter,prop,searchFilter);
         }
-        else
-        {
-            res = Filter._getWhoHas(array,input,prop,filter);
+        else {
+            res = FilterEngine.getWhoHas(input,filter,prop,searchFilter);
         }
         return res;
     }
 
-    static _getWhoHas(array, value, prop, filter = Filter._filterEquals)
+    static getWhoHas(input : any[], filter : any, prop : string, searchFilter = FilterHandlerLib.equals) : object[]
     {
-        let filterObj = [];
-        for (let i = 0; i < array.length; i++) {
-            if (filter(array[i][prop], value)) {
-                filterObj.push(array[i]);
+        let filterObj : any[] = [];
+        for (let i = 0; i < input.length; i++) {
+            if (searchFilter(input[i][prop], filter)) {
+                filterObj.push(input[i]);
             }
         }
         return filterObj;
     }
 
-    static _getWhoHasOneOf(array, values, prop, filter = Filter._filterEquals)
+    static getWhoHasOneOf(input : any[], filter : any[], prop : string, searchFilter = FilterHandlerLib.equals) : object[]
     {
-        let filterObj = [];
-        for (let i = 0; i < array.length; i++) {
-            for (let j = 0; j < values.length; j++) {
-                if (filter(array[i][prop], values[j])) {
-                    filterObj.push(array[i]);
+        let filterObj : any[] = [];
+        for (let i = 0; i < input.length; i++) {
+            for (let j = 0; j < filter.length; j++) {
+                if (searchFilter(input[i][prop], filter[j])) {
+                    filterObj.push(input[i]);
                     break;
                 }
             }
         }
         return filterObj;
     }
-
-    // noinspection JSUnusedGlobalSymbols
-    static _getWhoHasAllOf(array, values, prop, filter = Filter._filterEquals)
-    {
-        let filterObj = [];
-        for (let i = 0; i < array.length; i++) {
-            let allFound = true;
-            for (let j = 0; j < values.length; j++) {
-                if (!filter(array[i][prop], values[j])) {
-                    allFound = false;
-                    break;
-                }
-            }
-            if (allFound) {
-                filterObj.push(array[i]);
-            }
-        }
-        return filterObj;
-    }
-
-
-
 }
 
 exports = FilterEngine;

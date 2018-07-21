@@ -8,13 +8,14 @@ import {OrBuilder} from "../statementBuilder/orBuilder";
 import {PairOrAndBuilder} from "../statementBuilder/pairOrAndBuilder";
 import {ReactionOnError} from "../reactionHandler";
 import ResponseReactAble = require("../responseReactAble");
+import {ErrorFilter} from "../../filter/errorFilter";
 
-export abstract class AbstractOnErrorBuilder<T extends ResponseReactAble>
+export abstract class AbstractErrorBuilderReaction<T extends ResponseReactAble>
 {
     protected readonly main : T;
 
-    private errorNameFilter : string[][] = [];
-    private errorTypeFilter : string[][] = [];
+    private errorNameFilter : string[] = [];
+    private errorTypeFilter : string[] = [];
     private errorInfoFilter : object[] = [];
     private errorInfoKeyFilter : string[][] = [];
     private errorInfoValueFilter : string[][] = [];
@@ -24,28 +25,28 @@ export abstract class AbstractOnErrorBuilder<T extends ResponseReactAble>
         this.main = main;
     }
 
-    errorNameIs(name : string) : AbstractOnErrorBuilder<T>
+    errorNameIs(name : string) : AbstractErrorBuilderReaction<T>
     {
-        this.errorNameFilter.push([name]);
+        this.errorNameFilter = [name];
         return this;
     }
 
-    hasErrorNames(...names : string[]) : OrBuilder<AbstractOnErrorBuilder<T>,string>
+    errorNameIsOneOf(...names : string[]) : AbstractErrorBuilderReaction<T>
     {
-        this.errorNameFilter.push(names);
-        return new OrBuilder<AbstractOnErrorBuilder<T>,string>(this,(res) => {this.errorNameFilter.push(res)});
-    }
-
-    errorTypeIs(errorType : string) : AbstractOnErrorBuilder<T>
-    {
-        this.errorTypeFilter.push([errorType]);
+        this.errorNameFilter = names;
         return this;
     }
 
-    hasErrorTypes(...names : string[]) : OrBuilder<AbstractOnErrorBuilder<T>,string>
+    errorTypeIs(errorType : string) : AbstractErrorBuilderReaction<T>
     {
-        this.errorTypeFilter.push(names);
-        return new OrBuilder<AbstractOnErrorBuilder<T>,string>(this,(res) => {this.errorTypeFilter.push(res)});
+        this.errorTypeFilter = [errorType];
+        return this;
+    }
+
+    errorTypeIsOneOf(...names : string[]) : AbstractErrorBuilderReaction<T>
+    {
+        this.errorTypeFilter = names;
+        return this;
     }
 
     errorInfoIs(obj : object)
@@ -53,9 +54,9 @@ export abstract class AbstractOnErrorBuilder<T extends ResponseReactAble>
         this.errorInfoFilter.push(obj);
     }
 
-    hasErrorInfo(key : string, value : any) : PairOrAndBuilder<AbstractOnErrorBuilder<T>>
+    hasErrorInfo(key : string, value : any) : PairOrAndBuilder<AbstractErrorBuilderReaction<T>>
     {
-        return new PairOrAndBuilder<AbstractOnErrorBuilder<T>>
+        return new PairOrAndBuilder<AbstractErrorBuilderReaction<T>>
         (
             this,
             (res : object[]) =>
@@ -69,25 +70,25 @@ export abstract class AbstractOnErrorBuilder<T extends ResponseReactAble>
         );
     }
 
-    hasErrorInfoKeys(...keys : string[]) : OrBuilder<AbstractOnErrorBuilder<T>,string>
+    ErrorInfoKeys(...keys : string[]) : OrBuilder<AbstractErrorBuilderReaction<T>,string>
     {
         this.errorInfoKeyFilter.push(keys);
-        return new OrBuilder<AbstractOnErrorBuilder<T>,string>(this,(res) => {this.errorInfoKeyFilter.push(res)});
+        return new OrBuilder<AbstractErrorBuilderReaction<T>,string>(this,(res) => {this.errorInfoKeyFilter.push(res)});
     }
 
-    errorInfoKeyIs(key : string) : AbstractOnErrorBuilder<T>
+    errorInfoKeyIs(key : string) : AbstractErrorBuilderReaction<T>
     {
         this.errorInfoKeyFilter.push([key]);
         return this;
     }
 
-    hasErrorInfoValues(...values : any[]) : OrBuilder<AbstractOnErrorBuilder<T>,string>
+    hasErrorInfoValues(...values : any[]) : OrBuilder<AbstractErrorBuilderReaction<T>,string>
     {
         this.errorInfoValueFilter.push(values);
-        return new OrBuilder<AbstractOnErrorBuilder<T>,string>(this,(res) => {this.errorInfoValueFilter.push(res)});
+        return new OrBuilder<AbstractErrorBuilderReaction<T>,string>(this,(res) => {this.errorInfoValueFilter.push(res)});
     }
 
-    errorInfoValueIs(value: any) : AbstractOnErrorBuilder<T>
+    errorInfoValueIs(value: any) : AbstractErrorBuilderReaction<T>
     {
         this.errorInfoValueFilter.push([value]);
         return this;
@@ -112,7 +113,7 @@ export abstract class AbstractOnErrorBuilder<T extends ResponseReactAble>
         }
     }
 
-    private _buildFilter() : object
+    private _buildFilter() : ErrorFilter
     {
         return {
             name : this.errorNameFilter,

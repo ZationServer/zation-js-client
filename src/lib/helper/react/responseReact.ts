@@ -4,47 +4,38 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import ResponseReactAble     = require("./responseReactAble");
-import {ReactionOnError, ReactionOnSuccessful} from "./reactionHandler";
-import {OnAllErrorBuilder}   from "./onErrorBuilder/onAllErrorBuilder";
-import {OnErrorBuilder}      from "./onErrorBuilder/onErrorBuilder";
-import Response              = require("../../api/response");
+import ResponseReactAble        = require("./responseReactAble");
+import {ReactionCatchError, ReactionOnError, ReactionOnSuccessful} from "./reactionHandler";
+import {OnErrorBuilder}         from "./onErrorBuilder/onErrorBuilder";
+import {CatchErrorBuilder}      from "./onErrorBuilder/catchErrorBuilder";
+import Response                 = require("../../api/response");
+import {ErrorFilter}            from "../filter/errorFilter";
+import {TriggerResponseEngine}  from "./responseReactionEngine/triggerResponseEngine";
+import FullReaction             = require("./fullReaction");
+import ResponseReactionBox = require("../../api/responseReactionBox");
 
-class ResponseReact extends ResponseReactAble
+class ResponseReact implements ResponseReactAble
 {
     private readonly response : Response;
 
     constructor(response : Response)
     {
-        super();
         this.response = response;
     }
 
-    getResponse() : Response
-    {
+    getResponse() : Response {
         return this.response;
     }
 
-    onAllError(reaction: ReactionOnError, filter?: object) : ResponseReact
+    onError(reaction: ReactionOnError, filter?: ErrorFilter) : ResponseReact
     {
-
+        TriggerResponseEngine.onError(this.response,new FullReaction<ReactionOnError>(reaction,filter));
         return this;
     }
 
-    buildOnAllError() : OnAllErrorBuilder<ResponseReact>
+    catchError(reaction: ReactionCatchError, filter?: ErrorFilter) : ResponseReact
     {
-        return new OnAllErrorBuilder<ResponseReact>(this);
-    }
-
-    onAllSuccessful(reaction: ReactionOnSuccessful, filter?: object) : ResponseReact
-    {
-
-        return this;
-    }
-
-    onError(reaction: ReactionOnError, filter?: object) : ResponseReact
-    {
-
+        TriggerResponseEngine.catchError(this.response,new FullReaction<ReactionCatchError>(reaction,filter));
         return this;
     }
 
@@ -53,10 +44,24 @@ class ResponseReact extends ResponseReactAble
         return new OnErrorBuilder<ResponseReact>(this);
     }
 
-    onSuccessful(reaction: ReactionOnSuccessful, filter?: object) : ResponseReact
+    buildCatchError() : CatchErrorBuilder<ResponseReact>
     {
+        return new CatchErrorBuilder<ResponseReact>(this);
+    }
+
+    onSuccessful(reaction: ReactionOnSuccessful, statusCode ?: number | string) : ResponseReact
+    {
+        TriggerResponseEngine.
+        onSuccessful(this.response,new FullReaction<ReactionOnSuccessful>(reaction,{statusCode : statusCode}));
 
         return this;
+    }
+
+    reactWith(...respReactionBoxes : ResponseReactionBox[])
+    {
+        respReactionBoxes.forEach((box : ResponseReactionBox) => {
+            box.trigger(this.response);
+        });
     }
 }
 

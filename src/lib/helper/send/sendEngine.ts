@@ -14,7 +14,7 @@ import {ProgressHandler} from "../request/progressHandler";
 
 class SendEngine
 {
-    static wsSend(zation : Zation,data : object,progressHandler : ProgressHandler) : Promise<Response>
+    static wsSend(zation : Zation,data : object,progressHandler ?: ProgressHandler) : Promise<Response>
     {
         return new Promise(async (resolve, reject)=>
         {
@@ -40,7 +40,7 @@ class SendEngine
         });
     }
 
-    static async httpSend(zation : Zation,data : object,progressHandler : ProgressHandler) : Promise<Response>
+    static async httpSend(zation : Zation,data : object,progressHandler ?: ProgressHandler) : Promise<Response>
     {
         if(typeof fetch === 'function')
         {
