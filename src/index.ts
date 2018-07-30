@@ -8,16 +8,26 @@ GitHub: LucaCode
 import Zation = require("./lib/api/zation");
 import {ZationOptions} from "./lib/api/zationOptions";
 
-const create = (options : ZationOptions) : Zation => {
+const create = (options : ZationOptions = {}) : Zation => {
     return new Zation(options);
 };
 
-const cca = async (options : ZationOptions,authData : object) : Promise<Zation> =>
+const cca = async (options : ZationOptions = {},authData : object = {}) : Promise<Zation> =>
 {
     const za = new Zation(options);
     await za.connect();
     await za.authIn(authData);
     return za;
+};
+
+type StartFunction = (zation : Zation) => Promise<void>;
+
+const start = (func : StartFunction,options : ZationOptions = {}) : void =>
+{
+    (async () => {
+        const za = create(options);
+        await func(za);
+    })();
 };
 
 import {RequestAble} from "./lib/api/requestAble";
@@ -30,22 +40,25 @@ import ChannelReactionBox = require("./lib/api/channelReactionBox");
 import Response = require("./lib/api/response");
 import ResponseReactionBox = require("./lib/api/responseReactionBox");
 
-module.exports.Zation = Zation;
-module.exports.create = create;
-module.exports.cca = cca;
-module.exports.RequestAble = RequestAble;
-module.exports.ZationFile = ZationFile;
-module.exports.WsRequest = WsRequest;
-module.exports.HttpRequest = HttpRequest;
-module.exports.AuthRequest = AuthRequest;
-module.exports.ValidationRequest = ValidationRequest;
-module.exports.ChannelReactionBox = ChannelReactionBox;
-module.exports.ResponseReactionBox = ResponseReactionBox;
-module.exports.Response = Response;
-
+export
+{
+    Zation,
+    create,
+    cca,
+    start,
+    RequestAble,
+    ZationFile,
+    WsRequest,
+    HttpRequest,
+    AuthRequest,
+    ValidationRequest,
+    ChannelReactionBox,
+    ResponseReactionBox,
+    Response
+};
 
 // browserify-ignore-start
 //support for zation-server
 import ZationReader  = require('./lib/reader/zationReader');
-module.exports.ZationReader = ZationReader;
+export {ZationReader};
 // browserify-ignore-end

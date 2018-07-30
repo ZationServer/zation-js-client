@@ -124,7 +124,7 @@ class RequestBuilder
             request = new AuthRequest(this._data,this._protocol)
         }
         else {
-            if(this._protocol = ProtocolType.WebSocket) {
+            if(this._protocol === ProtocolType.WebSocket) {
                 request = new WsRequest(this._controllerName,this._data);
             }
             else {

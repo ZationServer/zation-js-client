@@ -37,11 +37,11 @@ class Zation
     private system : string = 'W';
     private version : number = 1.0;
     private hostname : string = 'localhost';
-    private path : string = 'zation';
+    private path : string = '/zation';
     private port : number = 3000;
     private secure : boolean = false;
     private rejectUnauthorized : boolean = false;
-    private postKeyWord : string = '/zation';
+    private postKeyWord : string = 'zation';
 
     private autoAllChSub : boolean = true;
     private autoUserChSub : boolean = true;
@@ -372,7 +372,8 @@ class Zation
             port: this.port,
             secure: this.secure,
             rejectUnauthorized: this.rejectUnauthorized,
-            autoReconnect: true
+            autoReconnect: true,
+            path : this.path
         };
     }
 

@@ -8,7 +8,7 @@ import Zation = require("../../api/zation");
 import Response = require("../../api/response");
 import ConnectionNeededError = require("../error/connectionNeededError");
 import ResultIsMissingError = require("../error/resultIsMissingError");
-import nodeFetch = require("node-fetch");
+import whatwgFetch from "whatwg-fetch";
 import {ProtocolType} from "../constants/protocolType";
 import {ProgressHandler} from "../request/progressHandler";
 
@@ -42,8 +42,6 @@ class SendEngine
 
     static async httpSend(zation : Zation,data : object,progressHandler ?: ProgressHandler) : Promise<Response>
     {
-        if(typeof fetch === 'function')
-        {
             const response  = await fetch(zation.getServerAddress(),
                 {
                     method : "POST",
@@ -53,20 +51,6 @@ class SendEngine
                     body : JSON.stringify(data)
                 });
             return new Response((await response.json()),ProtocolType.Http);
-        }
-        else
-        {
-            // @ts-ignore
-            const response  = await nodeFetch(zation.getServerAddress(),
-                {
-                    method : "POST",
-                    headers: {
-                        "Content-Type": "application/json; charset=utf-8",
-                    },
-                    body : JSON.stringify(data)
-                });
-            return new Response((await response.json()),ProtocolType.Http);
-        }
     }
 }
 
