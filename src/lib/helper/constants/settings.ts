@@ -22,7 +22,6 @@ class ERROR
 
 class REQUEST_INPUT
 {
-    static readonly CONTROLLER                   = 'c';
     static readonly INPUT                        = 'i';
     static readonly TASK                         = 't';
     static readonly VERSION                      = 'v';
@@ -62,10 +61,15 @@ class RESPONSE
     static readonly ERROR                        = RESPONSE_ERROR;
 }
 
+class REQ_IN_C
+{
+    static readonly CONTROLLER        = 'c';
+    static readonly SYSTEM_CONTROLLER = 'sc';
+}
+
 class VALIDATION_REQUEST_INPUT
 {
     static readonly MAIN              = 'v';
-    static readonly CONTROLLER        = 'c';
     static readonly INPUT             = 'i';
     static readonly KEY_PATH          = 'kp';
     static readonly VALUE             = 'v';
@@ -115,6 +119,7 @@ class Settings
     static readonly USER_CHANNEL = USER_CHANNEL;
     static readonly RESPONSE = RESPONSE;
     static readonly ZATION_HTTP_INFO = ZATION_HTTP_INFO;
+    static readonly REQ_IN_C = REQ_IN_C;
 }
 
 export = Settings;

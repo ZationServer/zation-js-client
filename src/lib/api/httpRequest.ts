@@ -13,12 +13,14 @@ class HttpRequest extends MainRequest
 {
     private readonly controllerName : string;
     private readonly useAuth : boolean;
+    private readonly isSystemController : boolean;
 
-    constructor(controllerName : string,data : object = {},useAuth : boolean = true)
+    constructor(controllerName : string,data : object = {},useAuth : boolean = true,isSystemController : boolean = false)
     {
         super(data,ProtocolType.Http);
         this.controllerName = controllerName;
         this.useAuth = useAuth;
+        this.isSystemController = isSystemController;
     }
 
     async getSendData(zation: Zation): Promise<object>
@@ -33,6 +35,7 @@ class HttpRequest extends MainRequest
         return RequestJsonBuilder.buildRequestData(
             compiledData,
             this.controllerName,
+            this.isSystemController,
             zation.getSystem(),
             zation.getVersion(),
             signToken

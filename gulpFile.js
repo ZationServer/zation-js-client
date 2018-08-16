@@ -74,23 +74,13 @@ gulp.task('minify', function() {
         .pipe(gulp.dest(DIST))
 });
 
-gulp.task('compile', ['cof','ts'], () =>
-{
-    // noinspection JSUnresolvedFunction
-    gulp.start('browserVersion');
+gulp.task('browserVersion', gulp.series('browserify','minify'));
 
-});
-
-gulp.task('browserVersion', ['browserify'], () =>
-{
-    // noinspection JSUnresolvedFunction
-    gulp.start('minify');
-
-});
-
-gulp.task('default', ['compile', 'watch']);
+gulp.task('compile', gulp.series(gulp.parallel('cof','ts'),'browserVersion'));
 
 gulp.task('watch', function() {
-    gulp.watch('src/**/*.ts', ['ts']);
-    gulp.watch(['src/**/*','!src/**/*.ts','!src/**/*.scss'], ['cof']);
+    gulp.watch('src/**/*.ts', gulp.parallel('ts'));
+    gulp.watch(['src/**/*','!src/**/*.ts','!src/**/*.scss'], gulp.parallel('cof'));
 });
+
+gulp.task('default', gulp.series('compile', 'watch'));

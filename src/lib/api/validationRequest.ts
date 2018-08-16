@@ -18,11 +18,13 @@ interface ValidationCheck
 class ValidationRequest extends ZationRequest
 {
     private readonly controllerName : string;
+    private readonly isSystemController : boolean;
 
-    constructor(controllerName : string,input : ValidationCheck[])
+    constructor(controllerName : string,input : ValidationCheck[],isSystemController : boolean = false)
     {
         super(input,ProtocolType.Http);
         this.controllerName = controllerName;
+        this.isSystemController = isSystemController;
     }
 
     async getSendData(zation: Zation): Promise<object>
@@ -31,7 +33,8 @@ class ValidationRequest extends ZationRequest
 
         return RequestJsonBuilder.buildValidationRequestData(
             compiledData,
-            this.controllerName
+            this.controllerName,
+            this.isSystemController
         )
     }
 }

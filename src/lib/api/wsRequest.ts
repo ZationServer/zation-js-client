@@ -12,11 +12,13 @@ import RequestJsonBuilder = require("../helper/tools/requestJsonBuilder");
 class WsRequest extends ZationRequest
 {
     private readonly controllerName : string;
+    private readonly isSystemController : boolean;
 
-    constructor(controllerName : string,data : object = {})
+    constructor(controllerName : string,data : object = {},isSystemController : boolean = false)
     {
         super(data,ProtocolType.WebSocket);
         this.controllerName = controllerName;
+        this.isSystemController = isSystemController;
     }
 
     async getSendData(zation: Zation): Promise<object>
@@ -26,6 +28,7 @@ class WsRequest extends ZationRequest
         return RequestJsonBuilder.buildRequestData(
             compiledData,
             this.controllerName,
+            this.isSystemController,
             zation.getSystem(),
             zation.getVersion()
         )

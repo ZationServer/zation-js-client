@@ -7,14 +7,27 @@ import Const = require("../constants/constWrapper");
 
 class RequestJsonBuilder
 {
-    static buildRequestData(data : object,controllerName : string,system : string, version : number,signToken ?: string)
+    static buildRequestData
+    (
+        data : object,
+        controllerName : string,
+        isSystemController : boolean,
+        system : string,
+        version : number,
+        signToken ?: string
+    )
     {
+
+        const controllerKey = !isSystemController ?
+            Const.Settings.REQ_IN_C.CONTROLLER :
+            Const.Settings.REQ_IN_C.SYSTEM_CONTROLLER;
+
         let res = {
             [Const.Settings.REQUEST_INPUT.VERSION] : version,
             [Const.Settings.REQUEST_INPUT.SYSTEM] : system,
             [Const.Settings.REQUEST_INPUT.TASK] :
                 {
-                    [Const.Settings.REQUEST_INPUT.CONTROLLER] : controllerName,
+                    [controllerKey] : controllerName,
                     [Const.Settings.REQUEST_INPUT.INPUT] : data,
                 }
         };
@@ -44,18 +57,20 @@ class RequestJsonBuilder
         return res;
     }
 
-    static buildValidationRequestData(input : object,constrollerName : string)
+    static buildValidationRequestData(input : object,constrollerName : string,isSystemController : boolean)
     {
+        const controllerKey = !isSystemController ?
+            Const.Settings.REQ_IN_C.CONTROLLER :
+            Const.Settings.REQ_IN_C.SYSTEM_CONTROLLER;
+
         return {
             [Const.Settings.VALIDATION_REQUEST_INPUT.MAIN] :
                 {
                     [Const.Settings.VALIDATION_REQUEST_INPUT.INPUT] : input,
-                    [Const.Settings.VALIDATION_REQUEST_INPUT.CONTROLLER] : constrollerName,
+                    [controllerKey] : constrollerName,
                 }
         };
     }
-
-
 }
 
 export = RequestJsonBuilder;
