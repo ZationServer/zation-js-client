@@ -19,7 +19,7 @@ class SendEngine
         return new Promise(async (resolve, reject)=>
         {
             if(zation.isSocketConnected()) {
-                zation.getSocket().emit('zationRequest',data,async (err,res) => {
+                zation.getSocket().emit('ZATION.SERVER.REQUEST',data,async (err,res) => {
                     if(err) {
                         reject(err);
                     }
