@@ -8,7 +8,6 @@ import Zation = require("../../api/zation");
 import Response = require("../../api/response");
 import ConnectionNeededError = require("../error/connectionNeededError");
 import ResultIsMissingError = require("../error/resultIsMissingError");
-import whatwgFetch from "whatwg-fetch";
 import {ProtocolType} from "../constants/protocolType";
 import {ProgressHandler} from "../request/progressHandler";
 
