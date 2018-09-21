@@ -10,7 +10,9 @@ const uglifyes        = require('uglify-es');
 const composer        = require('gulp-uglify/composer');
 const ignore          = require('browserify-ignore-code');
 const uglify          = composer(uglifyes, console);
+const print           = require('gulp-print').default;
 const convertNewline  = require('gulp-convert-newline');
+const path            = require('path');
 const tscConfig       = require('./tsconfig.json');
 const DIST            = './dist/';
 const VERSION         = require('./package.json').version;
@@ -24,35 +26,37 @@ gulp.task('ts', function () {
     return gulp
         .src('src/**/*.ts')
         .pipe(typescript(tscConfig.compilerOptions))
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest(DIST));
 });
 
 gulp.task('cof', function() {
     return gulp
         .src(['src/**/*','!src/**/*.ts','!src/**/*.scss'])
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest(DIST));
 });
 
 gulp.task('browserify', function() {
     return new Promise(((resolve) =>
     {
-        let stream = browserify({
+        const stream = browserify({
             transform: [[ignore]],
             builtins: ['_process', 'events', 'buffer', 'querystring'],
-            entries: 'dist/index.js',
+            entries: DIST+'index.js',
             standalone: 'zation'
         })
             .ignore('_process')
             .ignore('zationReader.js')
             .bundle();
 
-        stream.pipe(source('zation.js'))
+        stream.pipe(source(DIST + 'index.js'))
+            .pipe(print())
             .pipe(convertNewline({
                 newline: 'lf',
                 encoding: 'utf8'
             }))
             .pipe(derequire())
             .pipe(insert.prepend(HEADER))
+            .pipe(rename('zation.js'))
             .pipe(gulp.dest(DIST));
         resolve();
     }));
@@ -74,9 +78,9 @@ gulp.task('minify', function() {
         .pipe(gulp.dest(DIST))
 });
 
-gulp.task('browserVersion', gulp.series('browserify','minify'));
+gulp.task('browserVersion', gulp.series('browserify'));
 
-gulp.task('compile', gulp.series(gulp.parallel('cof','ts'),'browserVersion'));
+gulp.task('compile', gulp.series(gulp.parallel('cof','ts'),'browserVersion','minify'));
 
 gulp.task('watch', function() {
     gulp.watch('src/**/*.ts', gulp.parallel('ts'));

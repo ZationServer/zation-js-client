@@ -15,7 +15,7 @@ export class CatchErrorBuilder<T extends ResponseReactAble> extends AbstractErro
         super(main);
     }
 
-    save(reaction : ReactionOnError,filter : object) : void
+    _save(reaction : ReactionOnError, filter : object) : void
     {
         this.main.catchError(reaction,filter);
     }

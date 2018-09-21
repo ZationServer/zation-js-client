@@ -135,8 +135,7 @@ class ChannelReactionBox extends ReactionBox
 
     async _triggerZationCh(type : ChannelType,event : string,data : any)
     {
-        const sameEventFilter : ValidChecker = (filter : object) : boolean =>
-        {
+        const sameEventFilter : ValidChecker = (filter : object) : boolean => {
             return filter['event'] === event;
         };
 

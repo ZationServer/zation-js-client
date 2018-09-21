@@ -12,13 +12,11 @@ import path = require('path');
 
 class ZationReader
 {
-    static getZationMinifyClient() : string
-    {
+    static getZationMinifyClient() : string {
         return fs.readFileSync(path.resolve(zationClientMinFile), "utf8");
     }
 
-    static getZationClient() : string
-    {
+    static getZationClient() : string {
         return fs.readFileSync(path.resolve(zationClientFile), "utf8");
     }
 }

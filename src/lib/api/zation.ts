@@ -8,7 +8,6 @@ import AuthEngine = require("../helper/auth/authEngine");
 import Const = require('../helper/constants/constWrapper');
 import ChannelEngine = require("../helper/channel/channelEngine");
 import Box = require("../helper/box/box");
-import Emitter = require('emitter');
 import ResponseReactionBox = require("./responseReactionBox");
 import ChannelReactionBox = require("./channelReactionBox");
 import ReactionBox = require("../helper/react/box/reactionBox");
@@ -24,6 +23,7 @@ import {ZationOptions} from "./zationOptions";
 import {ProgressHandler} from "../helper/request/progressHandler";
 import ZationRequest = require("../helper/request/zationRequest");
 import RequestBuilder = require("../helper/request/requestBuilder");
+import ConnectionAbortError = require("../helper/error/connectionAbortError");
 
 class Zation
 {
@@ -48,7 +48,6 @@ class Zation
     private autoDefaultUserGroupChSub : boolean = true;
     private autoAuthUserGroupChSub : boolean = true;
 
-    private emitter : Emitter;
 
     //Responds
     private responseReactionMainBox : Box<ResponseReactionBox>;
@@ -337,30 +336,47 @@ class Zation
         return this.socket;
     }
 
-    isSocketConnected() : boolean
-    {
-        return this.socket !== undefined && this.socket.state === this.socket.OPEN
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns if the socket is connected to the server
+     */
+    isSocketConnected() : boolean {
+        return this.socket !== undefined && this.socket.state === this.socket.OPEN;
     }
 
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Connect to the server
+     * Promises will be resolve on connection
+     * Or throw an ConnectionAbortError by connectAbort
+     * @throws ConnectionAbortError
+     */
     connect() : Promise<void>
     {
-        return new Promise<void>((resolve)=>
+        return new Promise<void>((resolve,reject)=>
         {
-            if(this.isSocketConnected())
-            {
+            if(this.isSocketConnected()) {
                 resolve();
             }
-            else
-            {
+            else {
                 if(this.socket === undefined) {
                     this.buildWsConnection();
                 }
 
-                this.socket.on('connect',() =>
-                {
+                //register
+                this.socket.on('connect',() => {
                     this.authEngine.initAuthEngine();
                     resolve();
                 });
+
+                this.socket.on('connectAbort',(err) => {
+                   reject(new ConnectionAbortError(err));
+                });
+
+                //start connection
+                this.socket.connect();
             }
         })
     }
@@ -373,7 +389,8 @@ class Zation
             secure: this.secure,
             rejectUnauthorized: this.rejectUnauthorized,
             autoReconnect: true,
-            path : this.path
+            path : this.path,
+            autoConnect : false
         };
     }
 

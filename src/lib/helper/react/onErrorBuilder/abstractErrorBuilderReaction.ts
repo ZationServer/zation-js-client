@@ -96,11 +96,11 @@ export abstract class AbstractErrorBuilderReaction<T extends ResponseReactAble>
 
     react(...reactions : ReactionOnError[]) : T
     {
-        this.save(this._mergeReaction(reactions),this._buildFilter());
+        this._save(this._mergeReaction(reactions),this._buildFilter());
         return this.main;
     }
 
-    abstract save(reaction : ReactionOnError,filter : object) : void;
+    protected abstract _save(reaction : ReactionOnError, filter : object) : void;
 
     private _mergeReaction(reactions : ReactionOnError[]) : ReactionOnError
     {

@@ -14,7 +14,7 @@ export class OnErrorBuilder<T extends ResponseReactAble> extends AbstractErrorBu
         super(main);
     }
 
-    save(reaction : ReactionOnError,filter : object) : void
+    _save(reaction : ReactionOnError, filter : object) : void
     {
         this.main.onError(reaction,filter);
     }

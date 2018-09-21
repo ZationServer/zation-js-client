@@ -107,10 +107,10 @@ class AuthEngine
         }
     }
 
-    subUserCh() : boolean
+    async subUserCh() : Promise<void>
     {
         if(!!this.currentUserId) {
-            this.chEngine.registerUserChannel(this.currentUserId);
+            await this.chEngine.registerUserChannel(this.currentUserId);
             return true;
         }
         return false;
