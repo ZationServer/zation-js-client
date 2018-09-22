@@ -2,135 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="76638f38-4a15-47c2-ad03-534e2aa2a298" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/lib/helper/error/connectionAbortError.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/lib/helper/error/missingAuthUserGroupError.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/lib/helper/error/missingUserIdError.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/lib/helper/error/subscribeFailError.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gulpFile.js" beforeDir="false" afterPath="$PROJECT_DIR$/gulpFile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/.bin/uuid" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/.bin/uuid.cmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/async-limiter/.travis.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/async-limiter/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/async-limiter/coverage/coverage.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/async-limiter/coverage/lcov-report/async-throttle/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/async-limiter/coverage/lcov-report/async-throttle/index.js.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/async-limiter/coverage/lcov-report/base.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/async-limiter/coverage/lcov-report/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/async-limiter/coverage/lcov-report/prettify.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/async-limiter/coverage/lcov-report/prettify.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/async-limiter/coverage/lcov-report/sort-arrow-sprite.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/async-limiter/coverage/lcov-report/sorter.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/async-limiter/coverage/lcov.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/async-limiter/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/async-limiter/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/async-limiter/readme.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/base-64/LICENSE-MIT.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/base-64/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/base-64/base64.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/base-64/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/clone/.npmignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/clone/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/clone/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/clone/clone.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/clone/clone.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/clone/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/component-emitter/History.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/component-emitter/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/component-emitter/Readme.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/component-emitter/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/component-emitter/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/linked-list/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/linked-list/Makefile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/linked-list/Readme.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/linked-list/_source/linked-list.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/linked-list/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/linked-list/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/querystring/.travis.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/querystring/History.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/querystring/License.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/querystring/Readme.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/querystring/decode.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/querystring/encode.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/querystring/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/querystring/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/querystring/test/common-index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/querystring/test/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/querystring/test/tap-index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/safe-buffer/.travis.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/safe-buffer/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/safe-buffer/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/safe-buffer/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/safe-buffer/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/safe-buffer/test.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/sc-channel/.npmignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/sc-channel/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/sc-channel/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/sc-channel/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/sc-errors/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/sc-errors/decycle.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/sc-errors/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/sc-errors/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/sc-formatter/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/sc-formatter/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/sc-formatter/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/sc-formatter/test/all.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/bower.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/browserify-build.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/gulp-build.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/gulpfile.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/lib/auth.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/lib/response.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/lib/sctransport.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/lib/ws-browser.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/socketcluster.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/socketcluster.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/test/integration.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uuid/.eslintrc.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uuid/AUTHORS" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uuid/CHANGELOG.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uuid/LICENSE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uuid/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uuid/README_js.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uuid/bin/uuid" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uuid/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uuid/lib/bytesToUuid.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uuid/lib/md5-browser.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uuid/lib/md5.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uuid/lib/rng-browser.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uuid/lib/rng.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uuid/lib/sha1-browser.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uuid/lib/sha1.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uuid/lib/v35.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uuid/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uuid/v1.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uuid/v3.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uuid/v4.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uuid/v5.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/lib/Constants.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/lib/Receiver.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/lib/Sender.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/lib/Validation.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/lib/WebSocket.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ws/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api/channelReactionBox.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/api/channelReactionBox.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api/zation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/api/zation.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/auth/authEngine.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/auth/authEngine.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/channel/channelEngine.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/channel/channelEngine.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/abstractErrorBuilderReaction.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/abstractErrorBuilderReaction.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/catchErrorBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/catchErrorBuilder.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/onErrorBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/onErrorBuilder.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/requestBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/request/requestBuilder.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/reader/zationReader.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/reader/zationReader.ts" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -239,6 +111,7 @@
     <session id="-1255380925">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
+          <entry key="project.closed" value="1" />
           <entry key="project.open.time.1" value="1" />
           <entry key="project.opened" value="1" />
         </counts>
@@ -789,12 +662,12 @@
       <workItem from="1535102302316" duration="678000" />
       <workItem from="1535185026720" duration="624000" />
       <workItem from="1535276389205" duration="620000" />
-      <workItem from="1537296646792" duration="16193000" />
+      <workItem from="1537296646792" duration="16494000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="172546000" />
+    <option name="totallyTimeSpent" value="172847000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
