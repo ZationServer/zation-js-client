@@ -11,6 +11,9 @@ import {ProtocolType}   from "../constants/protocolType";
 import ChannelEngine  = require("../channel/channelEngine");
 import Logger         = require("../Logger/logger");
 import Const          = require("../constants/constWrapper");
+import MissingUserIdError = require("../error/missingUserIdError");
+import MissingAuthUserGroupError = require("../error/missingAuthUserGroupError");
+import NotAuthenticatedNeededError = require("../error/NotAuthenticatedNeededError");
 
 class AuthEngine
 {
@@ -111,18 +114,17 @@ class AuthEngine
     {
         if(!!this.currentUserId) {
             await this.chEngine.registerUserChannel(this.currentUserId);
-            return true;
         }
-        return false;
+        else{
+            throw new MissingUserIdError('To subscribe an user channel.');
+        }
     }
 
-    unsubUserCh() : boolean
+    unsubUserCh() : void
     {
         if(!!this.currentUserId) {
             this.chEngine.unregisterUserChannel(this.currentUserId);
-            return true;
         }
-        return false;
     }
 
     updateAuthGroup(authGroup)
@@ -163,34 +165,34 @@ class AuthEngine
         }
     }
 
-    subAuthUserGroupCh() : boolean
+    async subAuthUserGroupCh() : Promise<void>
     {
         if(!!this.currentUserAuthGroup) {
-            this.chEngine.registerAuthUserGroupChannel(this.currentUserAuthGroup);
-            return true;
+            await this.chEngine.registerAuthUserGroupChannel(this.currentUserAuthGroup);
         }
-        return false;
+        else{
+            throw new MissingAuthUserGroupError('To subscribe the auth user group channel.');
+        }
     }
 
-    unsubAuthUserGroupCh() : boolean
+    unsubAuthUserGroupCh() : void
     {
         if(!!this.currentUserAuthGroup) {
             this.chEngine.unregisterAuthUserGroupChannel(this.currentUserAuthGroup);
-            return true;
         }
-        return false;
     }
 
-    subDefaultUserGroupCh() : boolean
+    async subDefaultUserGroupCh() : Promise<void>
     {
         if(!this.currentUserAuthGroup) {
-            this.chEngine.registerDefaultUserGroupChannel();
-            return true;
+            await this.chEngine.registerDefaultUserGroupChannel();
         }
-        return false;
+        else{
+            throw new NotAuthenticatedNeededError('To subscribe the default user group channel');
+        }
     }
 
-    unsubDefaultUserGroupCh()
+    unsubDefaultUserGroupCh() : void
     {
         this.chEngine.unregisterDefaultUserGroupChannel();
     }
@@ -211,16 +213,6 @@ class AuthEngine
 
     hasSignToken() : boolean {
         return this.signToken !== undefined;
-    }
-
-    authOut()
-    {
-
-    }
-
-    reAuth()
-    {
-
     }
 
     isAuthIn() : boolean

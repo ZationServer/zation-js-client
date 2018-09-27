@@ -95,7 +95,7 @@ class ChannelEngine
     {
        await this.registerChannel(channel,async (input : any) =>
        {
-           let promises : Promise<void>[] = [];
+           const promises : Promise<void>[] = [];
            promises.push(this.zation._getChannelReactionMainBox().forEach(async (channelReactionBox : ChannelReactionBox) =>
            {
                const event : string = input['e'];

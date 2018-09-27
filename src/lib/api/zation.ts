@@ -24,30 +24,13 @@ import {ProgressHandler} from "../helper/request/progressHandler";
 import ZationRequest = require("../helper/request/zationRequest");
 import RequestBuilder = require("../helper/request/requestBuilder");
 import ConnectionAbortError = require("../helper/error/connectionAbortError");
+import ZationConfig = require("../helper/config/ZationConfig");
 
 class Zation
 {
-    //Var
-    private readonly settings : object;
-
     private readonly authEngine : AuthEngine;
     private readonly channelEngine : ChannelEngine;
-
-    private debug : boolean = false;
-    private system : string = 'W';
-    private version : number = 1.0;
-    private hostname : string = 'localhost';
-    private path : string = '/zation';
-    private port : number = 3000;
-    private secure : boolean = false;
-    private rejectUnauthorized : boolean = false;
-    private postKeyWord : string = 'zation';
-
-    private autoAllChSub : boolean = true;
-    private autoUserChSub : boolean = true;
-    private autoDefaultUserGroupChSub : boolean = true;
-    private autoAuthUserGroupChSub : boolean = true;
-
+    private readonly zc : ZationConfig;
 
     //Responds
     private responseReactionMainBox : Box<ResponseReactionBox>;
@@ -67,8 +50,8 @@ class Zation
     
     constructor(settings : ZationOptions = {})
     {
-        //Var
-        this.settings = settings;
+        //config
+        this.zc = new ZationConfig(settings);
 
         //this.emitter = new Emitter();
 
@@ -78,10 +61,6 @@ class Zation
         //Responds
         this.responseReactionMainBox = new Box<ResponseReactionBox>();
         this.channelReactionMainBox = new Box<ChannelReactionBox>();
-
-        //readConfig
-        this.readServerGeneratedSettings();
-        this.readSettings();
 
         //system reactionBoxes
         this.syResponseReactionBox = new ResponseReactionBox();
@@ -97,78 +76,6 @@ class Zation
         //Init
         this.addRespondsFromSettings();
         this.createSystemReactions();
-    }
-
-    //Part Main Config
-
-    private readServerGeneratedSettings()
-    {
-        // @ts-ignore
-        if(typeof ZATION_SERVER_SETTINGS === 'object')
-        {
-            // noinspection JSUnresolvedVariable
-            // @ts-ignore
-            let zss = ZATION_SERVER_SETTINGS;
-
-            if(!!zss['HOSTNAME']) {
-                this.hostname = zss['HOSTNAME'];
-            }
-            if(!!zss['PORT']) {
-                this.port = zss['PORT'];
-            }
-            if(!!zss['PATH']) {
-                this.path = zss['PATH'];
-            }
-            if(!!zss['SECURE']) {
-                this.secure = zss['SECURE'];
-            }
-            if(!!zss['POST_KEY_WORD']) {
-                this.postKeyWord = zss['POST_KEY_WORD'];
-            }
-        }
-    }
-
-    private readSettings()
-    {
-        if (!!this.settings['debug']) {
-            this.debug = this.settings['debug'];
-        }
-        if (!!this.settings['system']) {
-            this.system = this.settings['system'];
-        }
-        if (!!this.settings['version']) {
-            this.version = this.settings['version'];
-        }
-        if (!!this.settings['hostname']) {
-            this.hostname = this.settings['hostname'];
-        }
-        if (!!this.settings['path']) {
-            this.path = this.settings['path'];
-        }
-        if (!!this.settings['port']) {
-            this.port = this.settings['port'];
-        }
-        if (!!this.settings['postKeyWord']) {
-            this.postKeyWord = this.settings['postKeyWord'];
-        }
-        if (!!this.settings['secure']) {
-            this.secure = this.settings['secure'];
-        }
-        if (!!this.settings['rejectUnauthorized']) {
-            this.rejectUnauthorized = this.settings['rejectUnauthorized'];
-        }
-        if (!!this.settings['autoAllChSub']) {
-            this.autoAllChSub = this.settings['autoAllChSub'];
-        }
-        if (!!this.settings['autoUserChSub']) {
-            this.autoUserChSub = this.settings['autoUserChSub'];
-        }
-        if (!!this.settings['autoDefaultUserGroupChSub']) {
-            this.autoDefaultUserGroupChSub = this.settings['autoDefaultUserGroupChSub'];
-        }
-        if (!!this.settings['autoAuthUserGroupChSub']) {
-            this.autoAuthUserGroupChSub = this.settings['autoAuthUserGroupChSub'];
-        }
     }
 
     private addRespondsFromSettings()
@@ -411,38 +318,38 @@ class Zation
     //Part Subscribe
 
     // noinspection JSUnusedGlobalSymbols
-    subUserCh() : boolean {
-        return this.authEngine.subUserCh();
+    async subUserCh() : Promise<void> {
+        await this.authEngine.subUserCh();
     }
 
     // noinspection JSUnusedGlobalSymbols
-    unsubUserCh() : boolean {
-        return this.authEngine.unsubUserCh();
+    unsubUserCh() : void {
+        this.authEngine.unsubUserCh();
     }
 
     // noinspection JSUnusedGlobalSymbols
-    subAuthUserGroupCh() : boolean {
-        return this.authEngine.subAuthUserGroupCh();
+    async subAuthUserGroupCh() : Promise<void> {
+        await this.authEngine.subAuthUserGroupCh();
     }
 
     // noinspection JSUnusedGlobalSymbols
-    unsubAuthUserGroupCh() : boolean {
-        return this.authEngine.unsubAuthUserGroupCh();
+    unsubAuthUserGroupCh() : void {
+        this.authEngine.unsubAuthUserGroupCh();
     }
 
     // noinspection JSUnusedGlobalSymbols
-    subDefaultUserGroupCh() : boolean {
-        return this.authEngine.subDefaultUserGroupCh();
+    async subDefaultUserGroupCh() : Promise<void> {
+        await this.authEngine.subDefaultUserGroupCh();
     }
 
     // noinspection JSUnusedGlobalSymbols
-    unsubDefaultUserGroupCh() {
-        return this.authEngine.unsubDefaultUserGroupCh();
+    unsubDefaultUserGroupCh() : void {
+        this.authEngine.unsubDefaultUserGroupCh();
     }
 
     // noinspection JSUnusedGlobalSymbols
-    subAllCh() {
-        this.channelEngine.registerAllChannel();
+    async subAllCh() : Promise<void> {
+        await this.channelEngine.registerAllChannel();
     }
 
     // noinspection JSUnusedGlobalSymbols
