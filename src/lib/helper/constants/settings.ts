@@ -75,7 +75,7 @@ class VALIDATION_REQUEST_INPUT
     static readonly VALUE             = 'v';
 }
 
-class CLIENT
+class TOKEN
 {
     static readonly AUTH_USER_GROUP             = 'zationAuthUserGroup';
     static readonly USER_ID                     = 'zationUserId';
@@ -114,7 +114,7 @@ class Settings
     static readonly ERROR = ERROR;
     static readonly REQUEST_INPUT = REQUEST_INPUT;
     static readonly VALIDATION_REQUEST_INPUT = VALIDATION_REQUEST_INPUT;
-    static readonly CLIENT = CLIENT;
+    static readonly TOKEN = TOKEN;
     static readonly CHANNEL = CHANNEL;
     static readonly USER_CHANNEL = USER_CHANNEL;
     static readonly RESPONSE = RESPONSE;

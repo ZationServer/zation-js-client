@@ -10,7 +10,6 @@ import ChannelEngine          = require("../helper/channel/channelEngine");
 import Box                    = require("../helper/box/box");
 import ResponseReactionBox    = require("./responseReactionBox");
 import ChannelReactionBox     = require("./channelReactionBox");
-import ConBackup              = require("../helper/connection/conBackup");
 import WsRequest              = require("./wsRequest");
 import Response               = require("./response");
 import SendEngine             = require("../helper/send/sendEngine");
@@ -24,8 +23,9 @@ import RequestBuilder         = require("../helper/request/requestBuilder");
 import ConnectionAbortError   = require("../helper/error/connectionAbortError");
 import ZationConfig           = require("../helper/config/ZationConfig");
 import EventReactionBox       = require("./eventReactionBox");
-import {Socket}                 from "../helper/sc/socket";
+import {OnHandlerFunction, ResponseFunction, Socket} from "../helper/sc/socket";
 import ObjectPath             = require("../helper/tools/objectPath");
+import ConnectionNeededError  = require("../helper/error/connectionNeededError");
 
 class Zation
 {
@@ -49,7 +49,6 @@ class Zation
 
     //webSockets
     private socket : Socket;
-    private conBackup : ConBackup;
 
     constructor(settings : ZationOptions = {},...reactionBox : (ResponseReactionBox | ChannelReactionBox)[])
     {
@@ -237,7 +236,7 @@ class Zation
      * and returns the Response from the authentication.
      * @example
      * await conAndAuth({userName : 'Tim', password : 'opqdjß2jdp1d'});
-     * @throws ConnectionNeededError, ConnectionAbortError
+     * @throws connectionAbortError
      */
     async conAuth(authData : object) : Promise<Response>
     {
@@ -326,7 +325,6 @@ class Zation
                 //register
                 this.socket.on('connect',() => {
                     this.authEngine.initAuthEngine();
-                    this.conBackup = new ConBackup(this);
                     this._registerSocketEvents();
                     resolve();
                 });
@@ -463,7 +461,7 @@ class Zation
      * @description
      * Subscribe the default user group channel.
      * Can be useful if auto sub is disabled.
-     * @throws ConnectionNeededError, SubscribeFailError, NotAuthenticatedNeededError
+     * @throws ConnectionNeededError, SubscribeFailError, DeauthenticationNeededError
      */
     async subDefaultUserGroupCh() : Promise<void> {
         await this.authEngine.subDefaultUserGroupCh();
@@ -523,17 +521,30 @@ class Zation
      * @description
      * Subscribe a custom channel.
      * @throws ConnectionNeededError, SubscribeFailError
+     * @param chName
      */
     async subCustomCh(chName : string) : Promise<void> {
         await this.channelEngine.registerCustomCh(chName);
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns if the socket is subscribes the custom channel.
+     * @param chName if not provided it checks
+     * if the socket is subscribe any custom channel
+     */
     isSubCustomCh(chName ?: string) : boolean {
         return this.channelEngine.isSubCustomCh(chName);
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Unsubscribes custom channel.
+     * @param chName if not provided it will unsubscribe all custom channel.
+     * @param andDestroy
+     */
     unsubCustomCh(chName ?: string,andDestroy : boolean = true) : string[] {
         return this.channelEngine.unsubscribeCustomCh(chName,andDestroy);
     }
@@ -567,6 +578,139 @@ class Zation
         this.unsubCustomIdCh(channel,id);
         await this.subCustomIdCh(channel,id);
     }
+
+    //Part CustomTokenVar
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Has a custom token variable with object path
+     * You can access this variables on client and server side
+     * @example
+     * hasCustomTokenVar('person.email');
+     * @param path
+     * @throws AuthenticationNeededError
+     */
+    hasCustomTokenVar(path ?: string | string[]) : boolean {
+        return ObjectPath.has(this.authEngine.getCustomTokenVar(),path);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Get a custom token variable with object path
+     * You can protocolAccess this variables on client and server side
+     * @example
+     * getCustomTokenVar('person.email');
+     * @param path
+     * @throws AuthenticationNeededError
+     */
+    getCustomTokenVar(path ?: string | string[]) : any {
+        return ObjectPath.get(this.authEngine.getCustomTokenVar(),path);
+    }
+
+    //Part Token
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns token id of the token form the sc.
+     * @throws AuthenticationNeededError
+     */
+    getTokenId() : string
+    {
+        return this.authEngine.getTokenVar(Const.Settings.TOKEN.TOKEN_ID);
+
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the expire of the token from the sc.
+     * @throws AuthenticationNeededError
+     */
+    getTokenExpire() : number
+    {
+        return this.authEngine.getTokenVar(Const.Settings.TOKEN.EXPIRE);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the panel access of the token from the sc.
+     * @throws AuthenticationNeededError
+     */
+    getTokenPanelAccess() : boolean
+    {
+        return this.authEngine.getTokenVar(Const.Settings.TOKEN.PANEL_ACCESS);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns if the socket is authenticated (token with auth user group).
+     */
+    isAuthenticated() : boolean
+    {
+        return this.authEngine.isAuthenticated();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the auth user group.
+     * Is undefined if socket is not authenticated.
+     */
+    getAuthUserGroup() : string | undefined
+    {
+        return this.authEngine.getAuthUserGroup();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the user id.
+     * Is undefined if socket is not authenticated or has not a userId.
+     */
+    getUserId() : string | number | undefined
+    {
+        return this.authEngine.getUserId()
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Set on event when server is emit an event.
+     * @throws ConnectionNeededError
+     */
+    on(event : string,handler : OnHandlerFunction) : void
+    {
+        if(this.isSocketConnected()) {
+            this.socket.on(event,handler);
+        }
+        else {
+            throw new ConnectionNeededError('To set on event');
+
+        }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Emit to server. You can react on the server side
+     * by setting an on handler on the server socket. (use socket event)
+     * @throws ConnectionNeededError
+     */
+    emit(event : string,data : any,callback ?: ResponseFunction) : void
+    {
+        if(this.isSocketConnected()) {
+            this.socket.emit(event,data,callback)
+        }
+        else {
+            throw new ConnectionNeededError('To set on event');
+
+        }
+    }
+
 
     //Part Getter/Setter
     // noinspection JSUnusedGlobalSymbols
@@ -668,66 +812,6 @@ class Zation
             responseReactionBox.trigger(response);
         });
     }
-
-    //Part CustomTokenVar
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Has a custom token variable with object path
-     * You can access this variables on client and server side
-     * @example
-     * hasCustomTokenVar('person.email');
-     * @param path
-     */
-    hasCustomTokenVar(path ?: string | string[]) : boolean {
-        return ObjectPath.has(this.tokenEngine.getCustomTokenVar(),path);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Get a custom token variable with object path
-     * You can protocolAccess this variables on client and server side
-     * @example
-     * getCustomTokenVar('person.email');
-     * @param path
-     */
-    getCustomTokenVar(path ?: string | string[]) : any {
-        return ObjectPath.get(this.tokenEngine.getCustomTokenVar(),path);
-    }
-
-    //Part Token
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns token id of the token form the sc.
-     */
-    getTokenId() : string | undefined
-    {
-        return this.tokenEngine.getTokenVariable(Const.Settings.TOKEN.TOKEN_ID);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns the expire of the token from the sc.
-     */
-    getTokenExpire() : string | undefined
-    {
-        return this.tokenEngine.getTokenVariable(Const.Settings.TOKEN.EXPIRE);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Checks if the current request has a token.
-     */
-    hasToken() : boolean
-    {
-        return this.shBridge.getTokenBridge().getToken() !==  undefined;
-    }
-
 
 
 }

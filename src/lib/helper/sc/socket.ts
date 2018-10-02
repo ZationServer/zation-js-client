@@ -6,6 +6,9 @@ GitHub: LucaCode
 
 import {Channel} from "./channel";
 
+export type OnHandlerFunction = (data : any, response : ResponseFunction) => void
+export type ResponseFunction = (err : any | number, responseData : any) => void
+
 export interface Socket
 {
     id : string;
@@ -29,8 +32,8 @@ export interface Socket
     getAuthToken() : null | object;
     getSignedAuthToken() : null | string;
     disconnect(code ?: number, data ?: string | object) : void;
-    emit(event : string,data : any, callback ?: Function) : void;
-    on(event : string, handler : Function) : void;
+    emit(event : string,data : any, callback ?: ResponseFunction) : void;
+    on(event : string, handler : OnHandlerFunction) : void;
     off(event ?: string, handler ?: Function) : void;
     send(data : any, options ?: object) : void;
     authenticate(encryptedTokenString : string,callback ?: Function) : void;

@@ -31,7 +31,7 @@ class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    unsubUserChannel(userId : string | number,andDestroy : boolean) {
+    unsubUserChannel(userId : string | number,andDestroy : boolean = true) {
        this.unsubChannel(Const.Settings.CHANNEL.USER_CHANNEL_PREFIX + userId,andDestroy);
     }
 
@@ -46,7 +46,7 @@ class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    unsubAuthUserGroupChannel(authGroup : string,andDestroy : boolean) {
+    unsubAuthUserGroupChannel(authGroup : string,andDestroy : boolean = true) {
         this.unsubChannel(Const.Settings.CHANNEL.AUTH_USER_GROUP_PREFIX + authGroup,andDestroy);
     }
 
@@ -61,7 +61,7 @@ class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    unsubDefaultUserGroupChannel(andDestroy : boolean) {
+    unsubDefaultUserGroupChannel(andDestroy : boolean = true) {
         this.unsubChannel(Const.Settings.CHANNEL.DEFAULT_USER_GROUP,andDestroy);
     }
 
@@ -76,7 +76,7 @@ class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    unsubAllChannel(andDestroy : boolean) {
+    unsubAllChannel(andDestroy : boolean = true) {
         this.unsubChannel(Const.Settings.CHANNEL.ALL,andDestroy);
     }
 

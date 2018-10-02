@@ -13,7 +13,8 @@ import Logger         = require("../Logger/logger");
 import Const              = require("../constants/constWrapper");
 import MissingUserIdError = require("../error/missingUserIdError");
 import MissingAuthUserGroupError   = require("../error/missingAuthUserGroupError");
-import NotAuthenticatedNeededError = require("../error/NotAuthenticatedNeededError");
+import NotAuthenticatedNeededError = require("../error/deauthenticationNeededError");
+import AuthenticationNeededError   = require("../error/authenticationNeeded");
 
 class AuthEngine
 {
@@ -35,13 +36,6 @@ class AuthEngine
 
         this.currentUserId = undefined;
         this.currentUserAuthGroup = undefined;
-
-        /*
-        this.zation.('firstConnection', () =>
-        {
-
-        });
-        */
     }
 
     initAuthEngine()
@@ -55,24 +49,24 @@ class AuthEngine
         });
 
         //reset on disconnection
-        this.zation.getSocket().on('authenticate',()=> {
+        this.zation.getSocket().on('authenticate',async ()=> {
             const authToken = this.zation.getSocket().getAuthToken();
             const signToken = this.zation.getSocket().getSignedAuthToken();
-            this.refreshToken(authToken,signToken);
+            await this.refreshToken(authToken,signToken);
         });
 
         //update token on change
-        this.zation.getSocket().on('deauthenticate',()=> {
-            this.refreshToken(null,null);
+        this.zation.getSocket().on('deauthenticate',async ()=> {
+            await this.refreshToken(null,null);
         });
     }
 
 
-    refreshToken(plainToken : null | object,signToken : null | string)
+    async refreshToken(plainToken : null | object,signToken : null | string)
     {
         this.plainToken = plainToken;
         this.signToken = signToken;
-        this.updateToken(plainToken);
+        await this.updateToken(plainToken);
     }
 
     async authenticate(authData ?: object, protocolType : ProtocolType = ProtocolType.WebSocket) : Promise<Response>
@@ -103,7 +97,7 @@ class AuthEngine
         });
     }
 
-    updateUserId(id)
+    async updateUserId(id)
     {
         //check if id is changed
         if (this.currentUserId !== id) {
@@ -116,12 +110,12 @@ class AuthEngine
 
             //register new user channel
             if(this.zation.isAutoUserChSub()) {
-                this.subUserCh();
+                await this.subUserCh();
             }
         }
     }
 
-    updateAuthGroup(authGroup)
+    async updateAuthGroup(authGroup)
     {
         //check authGroup changed
         if (this.currentUserAuthGroup !== authGroup)
@@ -139,7 +133,7 @@ class AuthEngine
 
                 this.currentUserAuthGroup = authGroup;
 
-                this.subAuthUserGroupCh();
+                await this.subAuthUserGroupCh();
 
                 if(this.zation.isDebug())
                 {
@@ -154,7 +148,7 @@ class AuthEngine
                 }
 
                 this.currentUserAuthGroup = authGroup;
-                this.subDefaultUserGroupCh();
+                await this.subDefaultUserGroupCh();
             }
         }
     }
@@ -223,9 +217,10 @@ class AuthEngine
         this.chEngine.unsubDefaultUserGroupChannel(andDestroy);
     }
 
-    updateToken(token : object = {}) {
-        this.updateUserId(token[Const.Settings.CLIENT.USER_ID]);
-        this.updateAuthGroup(token[Const.Settings.CLIENT.AUTH_USER_GROUP]);
+    async updateToken(token : object | null) {
+        if(token === null) {token = {};}
+        await this.updateUserId(token[Const.Settings.TOKEN.USER_ID]);
+        await this.updateAuthGroup(token[Const.Settings.TOKEN.AUTH_USER_GROUP]);
     }
 
     getSignToken() : string | null {
@@ -236,12 +231,47 @@ class AuthEngine
         return this.plainToken;
     }
 
+    getTokenVar(key : string) : any
+    {
+        if(this.plainToken !== null) {
+            return this.plainToken[key];
+        }
+        else {
+            throw new AuthenticationNeededError('To get access to token variable');
+        }
+    }
+
     hasSignToken() : boolean {
         return this.signToken !== null;
     }
 
-    isAuthIn() : boolean {
+    hasPlainToken() : boolean {
+        return this.plainToken !== null;
+    }
+
+    isAuthenticated() : boolean {
         return this.currentUserAuthGroup !== undefined;
+    }
+
+    getCustomTokenVar() : object
+    {
+        if(this.plainToken !== null) {
+            return this.plainToken;
+        }
+        else {
+            throw new AuthenticationNeededError('To get access to customTokenVar');
+        }
+
+    }
+
+    getAuthUserGroup() : string | undefined
+    {
+        return this.currentUserAuthGroup;
+    }
+
+    getUserId() : number | string | undefined
+    {
+        return this.currentUserId;
     }
 
 }
