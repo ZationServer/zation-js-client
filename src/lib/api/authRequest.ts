@@ -21,8 +21,8 @@ class AuthRequest extends ZationRequest
         const compiledData = await this.getCompiledData();
         let signToken : undefined | string = undefined;
 
-        if(this.getProtocol() === ProtocolType.Http && zation.getAuthEngine().hasSignToken()) {
-            signToken = zation.getAuthEngine().getSignToken();
+        if(this.getProtocol() === ProtocolType.Http && zation._getAuthEngine().hasSignToken()) {
+            signToken = zation._getAuthEngine().getSignToken();
         }
 
         return RequestJsonBuilder.buildAuthRequestData(

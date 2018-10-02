@@ -10,9 +10,9 @@ import AuthRequest    = require("../../api/authRequest");
 import {ProtocolType}   from "../constants/protocolType";
 import ChannelEngine  = require("../channel/channelEngine");
 import Logger         = require("../Logger/logger");
-import Const          = require("../constants/constWrapper");
+import Const              = require("../constants/constWrapper");
 import MissingUserIdError = require("../error/missingUserIdError");
-import MissingAuthUserGroupError = require("../error/missingAuthUserGroupError");
+import MissingAuthUserGroupError   = require("../error/missingAuthUserGroupError");
 import NotAuthenticatedNeededError = require("../error/NotAuthenticatedNeededError");
 
 class AuthEngine
@@ -20,8 +20,8 @@ class AuthEngine
     private currentUserId : number | string | undefined = undefined;
     private currentUserAuthGroup : string | undefined = undefined;
 
-    private signToken : string | undefined = undefined;
-    private plainToken : object | undefined = undefined;
+    private signToken : string | null = null;
+    private plainToken : object | null = null;
 
     private readonly zation : Zation;
     private readonly chEngine : ChannelEngine;
@@ -47,49 +47,60 @@ class AuthEngine
     initAuthEngine()
     {
         //we have an socket!
+
         //reset on disconnection
-        this.zation.getSocket().on('close',()=>
-        {
+        this.zation.getSocket().on('close',()=> {
             this.currentUserId = undefined;
             this.currentUserAuthGroup = undefined;
         });
 
         //reset on disconnection
-        this.zation.getSocket().on('authenticate',()=>
-        {
+        this.zation.getSocket().on('authenticate',()=> {
             const authToken = this.zation.getSocket().getAuthToken();
             const signToken = this.zation.getSocket().getSignedAuthToken();
             this.refreshToken(authToken,signToken);
         });
 
         //update token on change
-        this.zation.getSocket().on('deauthenticate',()=>
-        {
-            this.refreshToken(undefined,undefined);
+        this.zation.getSocket().on('deauthenticate',()=> {
+            this.refreshToken(null,null);
         });
     }
 
 
-    refreshToken(plainToken : undefined | object,signToken : undefined | string)
+    refreshToken(plainToken : null | object,signToken : null | string)
     {
         this.plainToken = plainToken;
         this.signToken = signToken;
         this.updateToken(plainToken);
     }
 
-    async authIn(authData ?: object,protocolType : ProtocolType = ProtocolType.WebSocket) : Promise<Response>
+    async authenticate(authData ?: object, protocolType : ProtocolType = ProtocolType.WebSocket) : Promise<Response>
     {
         let loginData = {};
-        if(authData !== undefined) {
+        if(typeof authData === 'object') {
             loginData = authData;
             this.authData = authData;
         }
-        else if(this.authData !== undefined) {
+        else if(typeof this.authData === 'object') {
             loginData = this.authData;
         }
 
         const authReq = new AuthRequest(loginData,protocolType);
         return await this.zation.send(authReq)
+    }
+
+    deauthenticate() : Promise<void> {
+        return new Promise<void>((resolve, reject) =>
+        {
+            this.zation.getSocket().deauthenticate((e => {
+                if(e){
+                    reject(e);
+                } else {
+                    resolve();
+                }
+            }));
+        });
     }
 
     updateUserId(id)
@@ -98,7 +109,7 @@ class AuthEngine
         if (this.currentUserId !== id) {
             //unregsiter old user channel
             if(!!this.currentUserId) {
-                this.chEngine.unregisterUserChannel(this.currentUserId);
+                this.chEngine.unsubUserChannel(this.currentUserId);
             }
 
             this.currentUserId = id;
@@ -107,23 +118,6 @@ class AuthEngine
             if(this.zation.isAutoUserChSub()) {
                 this.subUserCh();
             }
-        }
-    }
-
-    async subUserCh() : Promise<void>
-    {
-        if(!!this.currentUserId) {
-            await this.chEngine.registerUserChannel(this.currentUserId);
-        }
-        else{
-            throw new MissingUserIdError('To subscribe an user channel.');
-        }
-    }
-
-    unsubUserCh() : void
-    {
-        if(!!this.currentUserId) {
-            this.chEngine.unregisterUserChannel(this.currentUserId);
         }
     }
 
@@ -137,10 +131,10 @@ class AuthEngine
             {
                 //unregister old channels
                 if(!!this.currentUserAuthGroup) {
-                    this.chEngine.unregisterAuthUserGroupChannel(this.currentUserAuthGroup);
+                    this.chEngine.unsubAuthUserGroupChannel(this.currentUserAuthGroup);
                 }
                 else {
-                    this.chEngine.unregisterDefaultUserGroupChannel();
+                    this.chEngine.unsubDefaultUserGroupChannel();
                 }
 
                 this.currentUserAuthGroup = authGroup;
@@ -156,7 +150,7 @@ class AuthEngine
             else {
                 //unregister old channels
                 if(!!this.currentUserAuthGroup) {
-                    this.chEngine.unregisterAuthUserGroupChannel(this.currentUserAuthGroup);
+                    this.chEngine.unsubAuthUserGroupChannel(this.currentUserAuthGroup);
                 }
 
                 this.currentUserAuthGroup = authGroup;
@@ -165,58 +159,88 @@ class AuthEngine
         }
     }
 
-    async subAuthUserGroupCh() : Promise<void>
+    async subUserCh() : Promise<void>
     {
+        if(!!this.currentUserId) {
+            await this.chEngine.subUserChannel(this.currentUserId);
+        }
+        else{
+            throw new MissingUserIdError('To subscribe user channel.');
+        }
+    }
+
+    isSubUserCh() : boolean
+    {
+        if(!!this.currentUserId) {
+            return this.chEngine.isSubUserChannel(this.currentUserId)
+        }
+        else{
+            throw new MissingUserIdError('To check if socket is subscribe user channel.');
+        }
+    }
+
+    unsubUserCh(andDestroy : boolean) : void
+    {
+        if(!!this.currentUserId) {
+            this.chEngine.unsubUserChannel(this.currentUserId,andDestroy);
+        }
+    }
+
+    async subAuthUserGroupCh() : Promise<void> {
         if(!!this.currentUserAuthGroup) {
-            await this.chEngine.registerAuthUserGroupChannel(this.currentUserAuthGroup);
+            await this.chEngine.subAuthUserGroupChannel(this.currentUserAuthGroup);
         }
         else{
             throw new MissingAuthUserGroupError('To subscribe the auth user group channel.');
         }
     }
 
-    unsubAuthUserGroupCh() : void
-    {
+    isSubAuthUserGroupCh() : boolean {
         if(!!this.currentUserAuthGroup) {
-            this.chEngine.unregisterAuthUserGroupChannel(this.currentUserAuthGroup);
+            return this.chEngine.isSubAuthUserGroupChannel(this.currentUserAuthGroup);
+        }
+        else{
+            throw new MissingAuthUserGroupError('To check if socket is subscribe the auth user group channel.');
         }
     }
 
-    async subDefaultUserGroupCh() : Promise<void>
-    {
+    unsubAuthUserGroupCh(andDestroy : boolean) : void {
+        if(!!this.currentUserAuthGroup) {
+            this.chEngine.unsubAuthUserGroupChannel(this.currentUserAuthGroup,andDestroy);
+        }
+    }
+
+    async subDefaultUserGroupCh() : Promise<void> {
         if(!this.currentUserAuthGroup) {
-            await this.chEngine.registerDefaultUserGroupChannel();
+            await this.chEngine.subDefaultUserGroupChannel();
         }
         else{
             throw new NotAuthenticatedNeededError('To subscribe the default user group channel');
         }
     }
 
-    unsubDefaultUserGroupCh() : void
-    {
-        this.chEngine.unregisterDefaultUserGroupChannel();
+    unsubDefaultUserGroupCh(andDestroy : boolean) : void {
+        this.chEngine.unsubDefaultUserGroupChannel(andDestroy);
     }
 
-    updateToken(token : object = {})
-    {
+    updateToken(token : object = {}) {
         this.updateUserId(token[Const.Settings.CLIENT.USER_ID]);
         this.updateAuthGroup(token[Const.Settings.CLIENT.AUTH_USER_GROUP]);
     }
 
-    getSignToken() : string | undefined {
+    getSignToken() : string | null {
         return this.signToken;
     }
 
-    getPlainToken() : object | undefined {
+    getPlainToken() : object | null {
         return this.plainToken;
     }
 
     hasSignToken() : boolean {
-        return this.signToken !== undefined;
+        return this.signToken !== null;
     }
 
-    isAuthIn() : boolean
-    {
+    isAuthIn() : boolean {
         return this.currentUserAuthGroup !== undefined;
     }
 

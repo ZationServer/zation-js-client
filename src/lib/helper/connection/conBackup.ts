@@ -3,6 +3,7 @@ Author: Luca Scaringella
 GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
+
 import Zation = require("../../api/zation");
 
 class ConBackup
@@ -14,7 +15,6 @@ class ConBackup
     private savedWasAuthIn : boolean = false;
     private savedChannels : object = {};
 
-    private restoreSavedMode : boolean = false;
     private saveMode : boolean = true;
 
     constructor(zation : Zation)
@@ -25,15 +25,13 @@ class ConBackup
         this.savedWasAuthIn = false;
         this.savedChannels = {};
 
-        this.restoreSavedMode = false;
         this.saveMode = true;
 
         this.socket.on('close',() =>
         {
-            if(!this.saveMode) {
+            if(this.saveMode) {
                 this.savedChannels = this.socket.channels;
             }
-
             this.socket.channels = {};
             this.saveMode = false;
         });
@@ -43,10 +41,8 @@ class ConBackup
             if(this.saveMode) {
                 this.savedWasAuthIn = true;
             }
-
-            if(!this.saveMode) {
+            else {
                 this.loadOldChannels();
-                this.restoreSavedMode = false;
                 this.saveMode = true;
             }
         });
@@ -64,18 +60,17 @@ class ConBackup
             if(this.saveMode) {
                 this.savedWasAuthIn = false;
             }
-
+            else{
+                this.
+            }
         });
-
     }
 
     private loadOldChannels()
     {
-        for(let k in this.savedChannels)
-        {
-            if(this.savedChannels.hasOwnProperty(k))
-            {
-                this.socket.subscribe(k,{});
+        for(let k in this.savedChannels) {
+            if(this.savedChannels.hasOwnProperty(k)) {
+                this.socket.subscribe(this.savedChannels[k]);
             }
         }
     }
@@ -85,7 +80,7 @@ class ConBackup
         this.saveMode = false;
 
         if(this.savedWasAuthIn) {
-            await this.zation.getAuthEngine().authIn();
+            await this.zation._getAuthEngine().authenticate();
         }
         else {
             this.loadOldChannels();

@@ -28,8 +28,8 @@ class HttpRequest extends MainRequest
         const compiledData = await this.getCompiledData();
         let signToken : undefined | string = undefined;
 
-        if(this.useAuth && zation.getAuthEngine().hasSignToken()) {
-            signToken = zation.getAuthEngine().getSignToken();
+        if(this.useAuth && zation._getAuthEngine().hasSignToken()) {
+            signToken = zation._getAuthEngine().getSignToken();
         }
 
         return RequestJsonBuilder.buildRequestData(

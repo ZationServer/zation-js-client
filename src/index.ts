@@ -16,7 +16,7 @@ const cca = async (options : ZationOptions = {},authData : object = {}) : Promis
 {
     const za = new Zation(options);
     await za.connect();
-    await za.authIn(authData);
+    await za.authenticate(authData);
     return za;
 };
 

@@ -4,8 +4,6 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import ResponseReactionBox = require("./responseReactionBox");
-import ChannelReactionBox = require("./channelReactionBox");
 import Const              = require("../helper/constants/constWrapper");
 
 export interface ZationOptions {
@@ -24,8 +22,4 @@ export interface ZationOptions {
     [Const.Config.AUTO_USER_CH_SUB] ?: boolean;
     [Const.Config.AUTO_DEFAULT_USER_GROUP_CH_SUB] ?: boolean;
     [Const.Config.AUTO_AUTH_USER_GROUP_CH_SUB] ?: boolean;
-
-    reactions ?:
-        ResponseReactionBox | ChannelReactionBox | (ResponseReactionBox | ChannelReactionBox)[] |
-        Record<string,ResponseReactionBox | ChannelReactionBox>;
 }

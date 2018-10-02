@@ -21,61 +21,78 @@ class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    async registerUserChannel(userId : string | number) {
-        await this.registerZationChannel(Const.Settings.CHANNEL.USER_CHANNEL_PREFIX + userId,ChannelType.USER);
+    async subUserChannel(userId : string | number) {
+        await this.subZationChannel(Const.Settings.CHANNEL.USER_CHANNEL_PREFIX + userId,ChannelType.USER);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    unregisterUserChannel(userId : string | number) {
-       this.unregisterChannel(Const.Settings.CHANNEL.USER_CHANNEL_PREFIX + userId);
+    isSubUserChannel(userId : string | number) : boolean  {
+        return this.isSubChannel(Const.Settings.CHANNEL.USER_CHANNEL_PREFIX + userId);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    async registerAuthUserGroupChannel(authGroup : string) {
-        await this.registerZationChannel(Const.Settings.CHANNEL.AUTH_USER_GROUP_PREFIX + authGroup,ChannelType.AUTH_USER_GROUP);
+    unsubUserChannel(userId : string | number,andDestroy : boolean) {
+       this.unsubChannel(Const.Settings.CHANNEL.USER_CHANNEL_PREFIX + userId,andDestroy);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    unregisterAuthUserGroupChannel(authGroup : string) {
-        this.unregisterChannel(Const.Settings.CHANNEL.AUTH_USER_GROUP_PREFIX + authGroup);
+    async subAuthUserGroupChannel(authGroup : string) {
+        await this.subZationChannel(Const.Settings.CHANNEL.AUTH_USER_GROUP_PREFIX + authGroup,ChannelType.AUTH_USER_GROUP);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    async registerDefaultUserGroupChannel() {
-        await this.registerZationChannel(Const.Settings.CHANNEL.DEFAULT_USER_GROUP,ChannelType.DEFAULT_USER_GROUP);
+    isSubAuthUserGroupChannel(authGroup : string) : boolean  {
+        return this.isSubChannel(Const.Settings.CHANNEL.AUTH_USER_GROUP_PREFIX + authGroup);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    unregisterDefaultUserGroupChannel() {
-        this.unregisterChannel(Const.Settings.CHANNEL.DEFAULT_USER_GROUP);
+    unsubAuthUserGroupChannel(authGroup : string,andDestroy : boolean) {
+        this.unsubChannel(Const.Settings.CHANNEL.AUTH_USER_GROUP_PREFIX + authGroup,andDestroy);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    async registerAllChannel() {
-        await this.registerZationChannel(Const.Settings.CHANNEL.ALL,ChannelType.ALL);
+    async subDefaultUserGroupChannel() {
+        await this.subZationChannel(Const.Settings.CHANNEL.DEFAULT_USER_GROUP,ChannelType.DEFAULT_USER_GROUP);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    unregisterAllChannel() {
-        this.unregisterChannel(Const.Settings.CHANNEL.ALL);
+    isSubDefaultUserGroupChannel() : boolean {
+        return this.isSubChannel(Const.Settings.CHANNEL.DEFAULT_USER_GROUP);
     }
 
-    registerChannel(channel : string, watcher : Function) : Promise<void>
+    // noinspection JSUnusedGlobalSymbols
+    unsubDefaultUserGroupChannel(andDestroy : boolean) {
+        this.unsubChannel(Const.Settings.CHANNEL.DEFAULT_USER_GROUP,andDestroy);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    async subAllChannel() {
+        await this.subZationChannel(Const.Settings.CHANNEL.ALL,ChannelType.ALL);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    isSubAllChannel() : boolean {
+        return this.isSubChannel(Const.Settings.CHANNEL.ALL);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    unsubAllChannel(andDestroy : boolean) {
+        this.unsubChannel(Const.Settings.CHANNEL.ALL,andDestroy);
+    }
+
+    subChannel(channel : string, watcher : Function) : Promise<void>
     {
         return new Promise((resolve, reject) => {
-            const socket : any = this.zation.getSocket();
+            const socket = this.zation.getSocket();
             if(!!socket && this.zation.isSocketConnected())
             {
-                // noinspection TypeScriptValidateJSTypes
                 const ch = socket.channel(channel);
 
                 //register
                 ch.on('subscribe',() => {
                     //watcher
                     ch.unwatch();
-                    // noinspection TypeScriptValidateJSTypes
                     ch.watch(watcher);
-
                     resolve();
                 });
 
@@ -91,9 +108,9 @@ class ChannelEngine
     }
 
 
-    async registerZationChannel(channel : string, type : ChannelType) : Promise<void>
+    async subZationChannel(channel : string, type : ChannelType) : Promise<void>
     {
-       await this.registerChannel(channel,async (input : any) =>
+       await this.subChannel(channel,async (input : any) =>
        {
            const promises : Promise<void>[] = [];
            promises.push(this.zation._getChannelReactionMainBox().forEach(async (channelReactionBox : ChannelReactionBox) =>
@@ -106,12 +123,23 @@ class ChannelEngine
        });
     }
 
-    unregisterChannel(channel) : void
+    unsubChannel(channel : string,andDestroy : boolean = true) : void
+    {
+        const socket = this.zation.getSocket();
+        if(!!socket) {
+            if(andDestroy) {
+                socket.destroyChannel(channel);
+            }
+            else {
+                socket.unsubscribe(channel);
+            }
+        }
+    }
+
+    isSubChannel(channel) : boolean
     {
         const socket : any = this.zation.getSocket();
-        if(!!socket && socket.isSubscribed(channel)) {
-            socket.destroyChannel(channel);
-        }
+        return !!(!!socket && socket.isSubscribed(channel));
     }
 
     //Part Custom Channel
@@ -119,7 +147,7 @@ class ChannelEngine
     // noinspection JSUnusedGlobalSymbols
     async registerCustomCh(channel : string) : Promise<void>
     {
-        await this.registerChannel(Const.Settings.CHANNEL.CUSTOM_CHANNEL_PREFIX + channel,async (input : any) => {
+        await this.subChannel(Const.Settings.CHANNEL.CUSTOM_CHANNEL_PREFIX + channel,async (input : any) => {
             let promises : Promise<void>[] = [];
             promises.push(this.zation._getChannelReactionMainBox().forEach(async (channelReactionBox : ChannelReactionBox) =>
             {
@@ -134,7 +162,7 @@ class ChannelEngine
     // noinspection JSUnusedGlobalSymbols
     async registerCustomIdCh(channel : string, id : string) : Promise<void>
     {
-        await this.registerChannel
+        await this.subChannel
         (Const.Settings.CHANNEL.CUSTOM_ID_CHANNEL_PREFIX + channel + Const.Settings.CHANNEL.CUSTOM_CHANNEL_ID + id,
             async (input : any) => {
                 let promises : Promise<void>[] = [];
@@ -173,9 +201,9 @@ class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    unsubscribeCustomIdCh(channel ?: string,id ?: string) : string[]
+    unsubscribeCustomIdCh(channel ?: string,id ?: string,andDestroy : boolean = true) : string[]
     {
-        return this.unsubscribeWithIndex(ChannelEngine.getCustomIdChName(channel,id));
+        return this.unsubscribeWithIndex(ChannelEngine.getCustomIdChName(channel,id),andDestroy);
     }
 
     getSubCustomIdCh(channel ?: string,id ?: string) : string[]
@@ -189,9 +217,9 @@ class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    unsubscribeCustomCh(channel ?: string) : string[]
+    unsubscribeCustomCh(channel ?: string,andDestroy : boolean = true) : string[]
     {
-        return this.unsubscribeWithIndex(ChannelEngine.getCustomChName(channel));
+        return this.unsubscribeWithIndex(ChannelEngine.getCustomChName(channel),andDestroy);
     }
 
     getSubCustomCh(channel ?: string) : string[]
@@ -205,15 +233,15 @@ class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    unsubscribeWithIndex(channelName : string) : string[]
+    unsubscribeWithIndex(channelName : string, andDestroy : boolean) : string[]
     {
         const socket = this.zation.getSocket();
         let unsubscribedChannels : string[] = [];
         if(!!socket) {
-            const subs = socket.subscriptions();
+            const subs = socket.subscriptions(false);
             for(let i = 0; i < subs.length; i++) {
                 if(subs[i].indexOf(channelName) !== -1) {
-                    this.unregisterChannel(subs[i]);
+                    this.unsubChannel(subs[i],andDestroy);
                     unsubscribedChannels.push(subs[i]);
                 }
             }
@@ -226,7 +254,7 @@ class ChannelEngine
         const socket = this.zation.getSocket();
         let foundSubs : string[] = [];
         if(!!socket) {
-            const subs = socket.subscriptions();
+            const subs = socket.subscriptions(false);
             for(let i = 0; i < subs.length; i++) {
                 if(subs[i].indexOf(channelName) !== -1) {
                     foundSubs.push(subs[i]);

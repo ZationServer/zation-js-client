@@ -48,6 +48,11 @@ class ZationConfig
         return this.config[key];
     }
 
+    setConfig(key : any,value : any) : void
+    {
+        this.config[key] = value;
+    }
+
     isConfig(key : any) : boolean
     {
         return this.config[key] !== undefined;

@@ -166,7 +166,6 @@ class Response
     }
 
     //Part CatchOut
-
     resetNotCatchedErrors() : void {
         this.notCatchedErrors = this.erros;
     }
