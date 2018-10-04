@@ -7,7 +7,7 @@ GitHub: LucaCode
 import {Channel} from "./channel";
 
 export type OnHandlerFunction = (data : any, response : ResponseFunction) => void
-export type ResponseFunction = (err : any | number, responseData : any) => void
+export type ResponseFunction = (err ?: any | number, responseData ?: any) => void
 
 export interface Socket
 {

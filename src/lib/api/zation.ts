@@ -812,8 +812,6 @@ class Zation
             responseReactionBox.trigger(response);
         });
     }
-
-
 }
 
 export = Zation;
