@@ -26,7 +26,7 @@ class HttpRequest extends MainRequest
     async getSendData(zation: Zation): Promise<object>
     {
         const compiledData = await this.getCompiledData();
-        let signToken : undefined | string = undefined;
+        let signToken : null | string = null;
 
         if(this.useAuth && zation._getAuthEngine().hasSignToken()) {
             signToken = zation._getAuthEngine().getSignToken();

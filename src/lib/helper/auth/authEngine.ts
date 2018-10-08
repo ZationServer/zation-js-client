@@ -14,7 +14,10 @@ import Const              = require("../constants/constWrapper");
 import MissingUserIdError = require("../error/missingUserIdError");
 import MissingAuthUserGroupError   = require("../error/missingAuthUserGroupError");
 import NotAuthenticatedNeededError = require("../error/deauthenticationNeededError");
-import AuthenticationNeededError   = require("../error/authenticationNeeded");
+import AuthenticationNeededError   = require("../error/authenticationNeededError");
+import DeauthenticationFailError   = require("../error/deauthenticationFailError");
+import ConnectionNeededError       = require("../error/connectionNeededError");
+import SignAuthenticationFailError = require("../error/signAuthenticationFailError");
 
 class AuthEngine
 {
@@ -84,16 +87,38 @@ class AuthEngine
         return await this.zation.send(authReq)
     }
 
+    signAuthenticate(signToken : string) : Promise<void>
+    {
+        return new Promise<void>((resolve, reject) => {
+            if(this.zation.isSocketConnected()) {
+                this.zation.getSocket().authenticate(signToken,(err,authState)=>
+                {
+                    if(err){
+                        reject(new SignAuthenticationFailError(err));
+                    }
+                    else if(authState.authError){
+                        reject(new SignAuthenticationFailError(authState.authError));
+                    }
+                    else {
+                        resolve();
+                    }
+                });
+            }
+            else {
+                reject(new ConnectionNeededError('To authenticate with sign token!'));
+            }
+        });
+    }
+
     deauthenticate() : Promise<void> {
         return new Promise<void>((resolve, reject) =>
         {
             this.zation.getSocket().deauthenticate((e => {
                 if(e){
-                    reject(e);
+                    reject(new DeauthenticationFailError(e));
                 } else {
                     resolve();
-                }
-            }));
+                }}));
         });
     }
 
@@ -227,6 +252,7 @@ class AuthEngine
         return this.signToken;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     getPlainToken() : object | null {
         return this.plainToken;
     }
@@ -245,6 +271,7 @@ class AuthEngine
         return this.signToken !== null;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     hasPlainToken() : boolean {
         return this.plainToken !== null;
     }
@@ -256,12 +283,12 @@ class AuthEngine
     getCustomTokenVar() : object
     {
         if(this.plainToken !== null) {
-            return this.plainToken;
+            return typeof this.plainToken[Const.Settings.TOKEN.CUSTOM_VARIABLES] === 'object' ?
+                this.plainToken[Const.Settings.TOKEN.CUSTOM_VARIABLES] : {};
         }
         else {
             throw new AuthenticationNeededError('To get access to customTokenVar');
         }
-
     }
 
     getAuthUserGroup() : string | undefined

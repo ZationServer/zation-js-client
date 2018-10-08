@@ -26,10 +26,6 @@ class ReactionBox
         this.active = false;
     }
 
-    _trigger(data : any)
-    {
-    };
-
 }
 
 export = ReactionBox;

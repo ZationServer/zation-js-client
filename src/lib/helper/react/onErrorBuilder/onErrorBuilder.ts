@@ -4,8 +4,8 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import {ReactionOnError} from "../reactionHandler";
-import ResponseReactAble = require("../responseReactAble");
+import {ReactionOnError} from "../reaction/reactionHandler";
+import ResponseReactAble = require("../responseReactionEngine/responseReactAble");
 import {AbstractErrorBuilderReaction} from "./abstractErrorBuilderReaction";
 
 export class OnErrorBuilder<T extends ResponseReactAble> extends AbstractErrorBuilderReaction<T>

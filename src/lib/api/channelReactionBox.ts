@@ -4,11 +4,11 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import ReactionBox = require("../helper/react/box/reactionBox");
-import Box = require("../helper/box/box");
-import FullReaction = require("../helper/react/fullReaction");
-import {ReactionOnCustomCh, ReactionOnCustomIdCh, ReactionOnZationCh} from "../helper/react/reactionHandler";
-import {ChannelType} from "../helper/channel/channelType";
+import ReactionBox    = require("../helper/react/box/reactionBox");
+import Box            = require("../helper/box/box");
+import FullReaction   = require("../helper/react/reaction/fullReaction");
+import {ReactionOnCustomCh, ReactionOnCustomIdCh, ReactionOnZationCh} from "../helper/react/reaction/reactionHandler";
+import {ChannelType}                                                  from "../helper/channel/channelType";
 
 type ValidChecker = (filter : object) => boolean;
 
@@ -38,102 +38,90 @@ class ChannelReactionBox extends ReactionBox
     }
 
     // noinspection JSUnusedGlobalSymbols
-    onUserCh(event : string,reaction : ReactionOnZationCh) : FullReaction<ReactionOnZationCh> {
+    onUserChData(event : string,reaction : ReactionOnZationCh) : FullReaction<ReactionOnZationCh> {
         const fullReaction = new FullReaction<ReactionOnZationCh>(reaction,{event : event});
         this.userChReactionBox.addItem(fullReaction);
         return fullReaction;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    removeOnUserCh(fullReaction : FullReaction<ReactionOnZationCh>) : boolean {
+    offUserChData(fullReaction : FullReaction<ReactionOnZationCh>) : boolean {
         return this.userChReactionBox.removeItem(fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    onAuthUserGroupCh(event : string,reaction : ReactionOnZationCh) : FullReaction<ReactionOnZationCh> {
+    onAuthUserGroupChData(event : string,reaction : ReactionOnZationCh) : FullReaction<ReactionOnZationCh> {
         const fullReaction = new FullReaction<ReactionOnZationCh>(reaction,{event : event});
         this.authUGChReactionBox.addItem(fullReaction);
         return fullReaction;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    removeOnAuthUserGroupCh(fullReaction : FullReaction<ReactionOnZationCh>) : boolean {
+    offAuthUserGroupChData(fullReaction : FullReaction<ReactionOnZationCh>) : boolean {
         return this.authUGChReactionBox.removeItem(fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    onDefaultGroupCh(event : string,reaction : ReactionOnZationCh) : FullReaction<ReactionOnZationCh> {
+    onDefaultGroupChData(event : string,reaction : ReactionOnZationCh) : FullReaction<ReactionOnZationCh> {
         const fullReaction = new FullReaction<ReactionOnZationCh>(reaction,{event : event});
         this.defaultUGChReactionBox.addItem(fullReaction);
         return fullReaction;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    removeOnDefaultAuthGroupCh(fullReaction : FullReaction<ReactionOnZationCh>) : boolean {
+    offDefaultAuthGroupChData(fullReaction : FullReaction<ReactionOnZationCh>) : boolean {
         return this.defaultUGChReactionBox.removeItem(fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    onAllCh(event : string,reaction : ReactionOnZationCh) : FullReaction<ReactionOnZationCh> {
+    onAllChData(event : string,reaction : ReactionOnZationCh) : FullReaction<ReactionOnZationCh> {
         const fullReaction = new FullReaction<ReactionOnZationCh>(reaction,{event : event});
         this.allChReactionBox.addItem(fullReaction);
         return fullReaction;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    removeOnAllCh(fullReaction : FullReaction<ReactionOnZationCh>) : boolean {
+    offAllChData(fullReaction : FullReaction<ReactionOnZationCh>) : boolean {
         return this.allChReactionBox.removeItem(fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    onCustomCh(chName : string,event : string,reaction : ReactionOnCustomCh) : FullReaction<ReactionOnCustomCh> {
+    onCustomChData(chName : string,event : string,reaction : ReactionOnCustomCh) : FullReaction<ReactionOnCustomCh> {
         const fullReaction = new FullReaction<ReactionOnCustomCh>(reaction,{chName : chName,event : event});
         this.customChReactionBox.addItem(fullReaction);
         return fullReaction;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    removeOnCustomCh(fullReaction : FullReaction<ReactionOnCustomCh>) : boolean {
+    offCustomChData(fullReaction : FullReaction<ReactionOnCustomCh>) : boolean {
         return this.customChReactionBox.removeItem(fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    onCustomIdCh(chName : string,event : string,reaction : ReactionOnCustomIdCh,id ?: string) : FullReaction<ReactionOnCustomIdCh> {
+    onCustomIdChData(chName : string,event : string,reaction : ReactionOnCustomIdCh,id ?: string) : FullReaction<ReactionOnCustomIdCh> {
         const fullReaction = new FullReaction<ReactionOnCustomIdCh>(reaction,{chName : chName,event : event, id : id});
         this.customIdChReactionBox.addItem(fullReaction);
         return fullReaction;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    removeOnCustomIdCh(fullReaction : FullReaction<ReactionOnCustomIdCh>) : boolean {
+    offCustomIdChData(fullReaction : FullReaction<ReactionOnCustomIdCh>) : boolean {
         return this.customIdChReactionBox.removeItem(fullReaction);
     }
 
-    async _triggerDataEventBox(box : Box<FullReaction<ReactionOnZationCh | ReactionOnCustomCh>>, valid : ValidChecker, data : any)
+    private async _triggerDataEventBox(box : Box<any>, valid : ValidChecker, ...data : any[])
     {
         let promises : Promise<void>[] = [];
-        promises.push(box.forEach(async (reaction : FullReaction<ReactionOnZationCh | ReactionOnCustomCh>) =>
+        promises.push(box.forEach(async (reaction : FullReaction<any>) =>
         {
             if(valid(reaction.getFilter())) {
-                await reaction.getReactionHandler()(data);
+                await reaction.getReactionHandler()(...data);
             }
         }));
         await Promise.all(promises);
     }
 
-    async _triggerDataIdEventBox(box : Box<FullReaction<ReactionOnCustomIdCh>>, valid : ValidChecker, data : any, id : string)
-    {
-        let promises : Promise<void>[] = [];
-        promises.push(box.forEach(async (reaction : FullReaction<ReactionOnCustomIdCh>) =>
-        {
-            if(valid(reaction.getFilter())) {
-                await reaction.getReactionHandler()(data,id);
-            }
-        }));
-        await Promise.all(promises);
-    }
-
-    async _triggerZationCh(type : ChannelType,event : string,data : any)
+    async _triggerZationChData(type : ChannelType, event : string, data : any, ssid ?: string)
     {
         const sameEventFilter : ValidChecker = (filter : object) : boolean => {
             return filter['event'] === event;
@@ -144,22 +132,22 @@ class ChannelReactionBox extends ReactionBox
             switch (type)
             {
                 case ChannelType.USER:
-                    await this._triggerDataEventBox(this.userChReactionBox,sameEventFilter,data);
+                    await this._triggerDataEventBox(this.userChReactionBox,sameEventFilter,data,ssid);
                     break;
                 case ChannelType.AUTH_USER_GROUP:
-                    await this._triggerDataEventBox(this.authUGChReactionBox,sameEventFilter,data);
+                    await this._triggerDataEventBox(this.authUGChReactionBox,sameEventFilter,data,ssid);
                     break;
                 case ChannelType.DEFAULT_USER_GROUP:
-                    await this._triggerDataEventBox(this.defaultUGChReactionBox,sameEventFilter,data);
+                    await this._triggerDataEventBox(this.defaultUGChReactionBox,sameEventFilter,data,ssid);
                     break;
                 case ChannelType.ALL:
-                    await this._triggerDataEventBox(this.allChReactionBox,sameEventFilter,data);
+                    await this._triggerDataEventBox(this.allChReactionBox,sameEventFilter,data,ssid);
                     break;
             }
         }
     }
 
-    async _triggerCustomCh(chName : string,event : string,data : any)
+    async _triggerCustomChData(chName : string, event : string, data : any, ssid ?: string)
     {
         if(this.active)
         {
@@ -168,11 +156,11 @@ class ChannelReactionBox extends ReactionBox
                 return filter['event'] === event && filter['chName'] === chName;
             };
 
-            await this._triggerDataEventBox(this.customChReactionBox,sameEventAndChFilter,data);
+            await this._triggerDataEventBox(this.customChReactionBox,sameEventAndChFilter,data,chName,ssid);
         }
     }
 
-    async _triggerCustomIdCh(chName : string,id : string,event : string,data : any)
+    async _triggerCustomIdChData(chName : string, id : string, event : string, data : any, ssid ?: string)
     {
         if(this.active)
         {
@@ -186,7 +174,7 @@ class ChannelReactionBox extends ReactionBox
                         )
                     );
             };
-            await this._triggerDataIdEventBox(this.customIdChReactionBox,sameEventChOrIdFilter,data,id);
+            await this._triggerDataEventBox(this.customIdChReactionBox,sameEventChOrIdFilter,data,chName,id,ssid);
         }
     }
 

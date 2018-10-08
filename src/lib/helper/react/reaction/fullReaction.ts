@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-class FullReaction<T>
+class FullReaction<T extends Function>
 {
     private readonly reactionHandler : T;
     private readonly filter : object;

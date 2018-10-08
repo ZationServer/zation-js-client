@@ -77,7 +77,31 @@ class Zation
         this.channelReactionMainBox.addFixedItem(this.userChannelReactionBox);
         this.eventReactionMainBox.addFixedItem(this.syEventReactionBox);
         this.eventReactionMainBox.addFixedItem(this.userEventReactionBox);
+        this._addSystemReactions();
         this.addReactionBox(...reactionBox);
+    }
+
+    private _addSystemReactions()
+    {
+        //response for update new token by http req
+        this.syResponseReactionBox.onSuccessful(async (result, response) => {
+            if(response.hasNewToken())
+            {
+                const signToken = response.getNewSignedToken();
+                const plainToken = response.getNewPlainToken();
+                if(!!signToken && !!plainToken) {
+                    if(this.isSocketConnected()) {
+                        try{
+                            await this.signAuthenticate(signToken);
+                        }
+                        catch(e){}
+                    }
+                    else{
+                        await this.authEngine.refreshToken(plainToken,signToken);
+                    }
+                }
+            }
+        });
     }
 
     //Part Responds
@@ -96,7 +120,7 @@ class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Add a reactionBox or more reactionBoxes
+     * Add a reactionBox or more reactionBoxes.
      * @example
      * addReactionBox(myResponseReactionBox,myChannelReactionBox,myEventReactionBox);
      * @param reactionBox
@@ -123,7 +147,7 @@ class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Remove a reactionBox or more reactionBoxes
+     * Remove a reactionBox or more reactionBoxes.
      * @example
      * removeReactionBox(myResponseReactionBox,myChannelReactionBox,myEventReactionBox);
      * @param reactionBox
@@ -151,7 +175,7 @@ class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the system fixed user channel reaction box
+     * Returns the system fixed user channel reaction box.
      */
     channelReact() : ChannelReactionBox {
         return this.userChannelReactionBox;
@@ -160,7 +184,7 @@ class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the system fixed user response reaction box
+     * Returns the system fixed user response reaction box.
      */
     responseReact() : ResponseReactionBox {
         return this.userResponseReactionBox;
@@ -169,7 +193,7 @@ class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the system fixed user event reaction box
+     * Returns the system fixed user event reaction box.
      */
     eventReact() : EventReactionBox {
         return this.userEventReactionBox;
@@ -181,7 +205,7 @@ class Zation
     /**
      * @description
      * Send a ping request to the server
-     * and returns the ping time
+     * and returns the ping time.
      * @example
      * const ping = await ping();
      * @throws ConnectionNeededError
@@ -199,7 +223,7 @@ class Zation
     /**
      * @description
      * Don't use this method,
-     * it is used internal and returns the auth engine
+     * it is used internal and returns the auth engine.
      */
     _getAuthEngine() : AuthEngine {
         return this.authEngine;
@@ -212,7 +236,7 @@ class Zation
      * with authentication data and returns the response.
      * @example
      * await authenticate({userName : 'Tim', password : 'opqdjß2jdp1d'});
-     * @throws ConnectionNeededError
+     * @throws ConnectionNeededError(if using protocol type webSocket)
      */
     async authenticate(authData : object, protocolType : ProtocolType = ProtocolType.WebSocket) : Promise<Response> {
         return await this.authEngine.authenticate(authData,protocolType);
@@ -221,11 +245,21 @@ class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Deauthenticate the connection
-     * if it is authenticated
+     * Authenticate this connection by using an signed token.
+     * @throws ConnectionNeededError, SignAuthenticationFailError
      */
-    deauthenticate() : void {
-        //...
+    async signAuthenticate(signToken : string) : Promise<void> {
+        await this.authEngine.signAuthenticate(signToken);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Deauthenticate the connection if it is authenticated.
+     * @throws DeauthenticationFailError
+     */
+    async deauthenticate() : Promise<void> {
+        await this.authEngine.deauthenticate();
     }
 
     //Part Easy
@@ -247,6 +281,21 @@ class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
+     * Deauthenticate and disconnect the client.
+     * @example
+     * @throws ConnectionNeededError, DeauthenticationFailError
+     * @param code error code (disconnection)
+     * @param data reason code for disconnection
+     */
+    async deauthDis(code ?: number, data ?: object | string) : Promise<void>
+    {
+        await this.deauthenticate();
+        await this.disconnect(code,data);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
      * Returns request builder.
      * Where you can easy build an request.
      */
@@ -255,6 +304,14 @@ class Zation
     }
 
     //Part Send
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Send a sendAble object.
+     * Optional you can add a progressHandler and responseReactionBox.
+     * @throws ConnectionNeededError
+     * @return Response
+     */
     async send(sendAble : SendAble, progressHandler ?: ProgressHandler, responseReactionBox ?: ResponseReactionBox) : Promise<Response>
     {
         let ph : undefined | ProgressHandler = undefined;
@@ -265,21 +322,20 @@ class Zation
             ph = sendAble.getPogressHandler();
         }
 
-        let jsonObj = await sendAble.getSendData(this);
+        const jsonObj = await sendAble.getSendData(this);
 
         let response : Response;
-
         if(sendAble.getProtocol() === ProtocolType.WebSocket) {
             response = await SendEngine.wsSend(this,jsonObj,ph);
-            await this._triggerResponseReactions(response);
         }
         else {
             response = await SendEngine.httpSend(this,jsonObj,ph);
-            await this._triggerResponseReactions(response);
         }
 
+        await this._triggerResponseReactions(response);
+
         if(!!responseReactionBox) {
-            responseReactionBox.trigger(response);
+            responseReactionBox._trigger(response);
         }
 
         return response;
@@ -296,7 +352,7 @@ class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns if the socket is connected to the server
+     * Returns if the socket is connected to the server.
      */
     isSocketConnected() : boolean {
         return this.socket !== undefined && this.socket.state === this.socket.OPEN;
@@ -305,9 +361,9 @@ class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Connect to the server
+     * Connect to the server.
      * Promises will be resolve on connection
-     * Or throw an ConnectionAbortError by connectAbort
+     * or throw an ConnectionAbortError by connectAbort.
      * @throws ConnectionAbortError
      */
     connect() : Promise<void>
@@ -356,7 +412,7 @@ class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Reconnect the socket
+     * Reconnect the socket.
      * @param code error code (disconnection)
      * @param data reason code for disconnection
      */
@@ -524,7 +580,7 @@ class Zation
      * @param chName
      */
     async subCustomCh(chName : string) : Promise<void> {
-        await this.channelEngine.registerCustomCh(chName);
+        await this.channelEngine.subCustomCh(chName);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -532,7 +588,7 @@ class Zation
      * @description
      * Returns if the socket is subscribes the custom channel.
      * @param chName if not provided it checks
-     * if the socket is subscribe any custom channel
+     * if the socket is subscribe any custom channel.
      */
     isSubCustomCh(chName ?: string) : boolean {
         return this.channelEngine.isSubCustomCh(chName);
@@ -542,7 +598,7 @@ class Zation
     /**
      * @description
      * Unsubscribes custom channel.
-     * @param chName if not provided it will unsubscribe all custom channel.
+     * @param chName if not provided it will unsubscribe all custom channels.
      * @param andDestroy
      */
     unsubCustomCh(chName ?: string,andDestroy : boolean = true) : string[] {
@@ -550,32 +606,77 @@ class Zation
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns all subscribed custom channels in an string array.
+     * @param chName if not provided it will return all custom channels which subscribed.
+     */
     getSubscribedCustomCh(chName ?: string) : string[] {
         return this.channelEngine.getSubCustomCh(chName);
     }
 
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Subscribe a custom id channel.
+     * @throws ConnectionNeededError, SubscribeFailError
+     * @param chName
+     * @param chId
+     */
     async subCustomIdCh(chName : string, chId : string) : Promise<void> {
-        await this.channelEngine.registerCustomIdCh(chName,chId);
+        await this.channelEngine.subCustomIdCh(chName,chId);
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns if the socket is subscribes the custom id channel.
+     * @param chName if not provided it checks
+     * if the socket is subscribe any custom channel.
+     * @param chId if not provided it checks
+     * if the socket is subscribe any custom channel with channel name.
+     */
     isSubCustomIdCh(chName ?: string, chId ?: string) : boolean {
         return this.channelEngine.isSubCustomIdCh(chName,chId);
     }
 
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Unsubscribes custom id channel.
+     * @param chName if not provided it will unsubscribe all custom id channels.
+     * @param chId if not provided it will unsubscribe all custom id channels with name.
+     * @param andDestroy
+     */
     unsubCustomIdCh(chName ?: string, chId ?: string,andDestroy : boolean = true) : string[] {
         return this.channelEngine.unsubscribeCustomIdCh(chName,chId,andDestroy);
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns all subscribed custom id channels in an string array.
+     * @param chName if not provided it will return all custom id channels which subscribed.
+     * @param chId if not provided it will return all custom id channels which subscribed and have the
+     * same channel name.
+     */
     getSubscribedCustomIdCh(chName ?: string, chId ?: string) : string[] {
         return this.channelEngine.getSubCustomIdCh(chName,chId);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    async switchCustomIdCh(channel,id) : Promise<void>
+    /**
+     * @description
+     * Switch the custom id channel subscribtion to another id.
+     * By unsubscribe the all custom id channels with ch name and
+     * subscribe the new one.
+     * @throws ConnectionNeededError, SubscribeFailError
+     * @param channel
+     * @param id
+     */
+    async switchCustomIdCh(channel : string,id : string) : Promise<void>
     {
-        this.unsubCustomIdCh(channel,id);
+        this.unsubCustomIdCh(channel);
         await this.subCustomIdCh(channel,id);
     }
 
@@ -583,8 +684,8 @@ class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Has a custom token variable with object path
-     * You can access this variables on client and server side
+     * Has a custom token variable with object path.
+     * You can access this variables on client and server side.
      * @example
      * hasCustomTokenVar('person.email');
      * @param path
@@ -597,8 +698,8 @@ class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Get a custom token variable with object path
-     * You can protocolAccess this variables on client and server side
+     * Get a custom token variable with object path.
+     * You can protocolAccess this variables on client and server side.
      * @example
      * getCustomTokenVar('person.email');
      * @param path
@@ -697,7 +798,7 @@ class Zation
     /**
      * @description
      * Emit to server. You can react on the server side
-     * by setting an on handler on the server socket. (use socket event)
+     * by setting an on handler on the server socket. (use socket event).
      * @throws ConnectionNeededError
      */
     emit(event : string,data : any,callback ?: ResponseFunction) : void
@@ -805,11 +906,11 @@ class Zation
         return this.channelReactionMainBox;
     }
 
-    //Part trigger RequestResponds
+    //Part _trigger RequestResponds
     private async _triggerResponseReactions(response : Response) : Promise<void>
     {
         await this.responseReactionMainBox.forEach(async (responseReactionBox : ResponseReactionBox) => {
-            responseReactionBox.trigger(response);
+            responseReactionBox._trigger(response);
         });
     }
 }

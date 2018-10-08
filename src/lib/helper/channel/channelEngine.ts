@@ -117,7 +117,8 @@ class ChannelEngine
            {
                const event : string = input['e'];
                const data : any = input['d'];
-               await channelReactionBox._triggerZationCh(type,event,data);
+               const ssid : string | undefined = input['ssi'];
+               await channelReactionBox._triggerZationChData(type,event,data,ssid);
            }));
            await Promise.all(promises);
        });
@@ -145,7 +146,7 @@ class ChannelEngine
     //Part Custom Channel
 
     // noinspection JSUnusedGlobalSymbols
-    async registerCustomCh(channel : string) : Promise<void>
+    async subCustomCh(channel : string) : Promise<void>
     {
         await this.subChannel(Const.Settings.CHANNEL.CUSTOM_CHANNEL_PREFIX + channel,async (input : any) => {
             let promises : Promise<void>[] = [];
@@ -153,14 +154,15 @@ class ChannelEngine
             {
                 const event : string = input['e'];
                 const data : any = input['d'];
-                await channelReactionBox._triggerCustomCh(channel,event,data);
+                const ssid : string | undefined = input['ssi'];
+                await channelReactionBox._triggerCustomChData(channel,event,data,ssid);
             }));
             await Promise.all(promises);
         });
     }
 
     // noinspection JSUnusedGlobalSymbols
-    async registerCustomIdCh(channel : string, id : string) : Promise<void>
+    async subCustomIdCh(channel : string, id : string) : Promise<void>
     {
         await this.subChannel
         (Const.Settings.CHANNEL.CUSTOM_ID_CHANNEL_PREFIX + channel + Const.Settings.CHANNEL.CUSTOM_CHANNEL_ID + id,
@@ -170,7 +172,8 @@ class ChannelEngine
                 {
                     const event : string = input['e'];
                     const data : any = input['d'];
-                    await channelReactionBox._triggerCustomIdCh(channel,id,event,data);
+                    const ssid : string | undefined = input['ssi'];
+                    await channelReactionBox._triggerCustomIdChData(channel,id,event,data,ssid);
                 }));
                 await Promise.all(promises);
         });

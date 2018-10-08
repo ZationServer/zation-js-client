@@ -24,29 +24,24 @@ abstract class ZationRequest extends SendAble
         this.type = type;
     }
 
-    getProtocol() : ProtocolType
-    {
+    getProtocol() : ProtocolType {
         return this.type;
     }
 
-    setProgressHandler(pogressHandler : ProgressHandler) : void
-    {
+    setProgressHandler(pogressHandler : ProgressHandler) : void {
         this.progressHandler = pogressHandler;
     }
 
-    getPogressHandler() : ProgressHandler | undefined
-    {
+    getPogressHandler() : ProgressHandler | undefined {
         return this.progressHandler;
     }
 
     async preCompile()
     {
-        if(Array.isArray(this.data))
-        {
+        if(Array.isArray(this.data)) {
             this.compiledData = await this.compileArrayData(this.data);
         }
-        else
-        {
+        else {
             this.compiledData = await this.compileObjectData(this.data);
         }
     }

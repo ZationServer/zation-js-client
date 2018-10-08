@@ -6,11 +6,11 @@ GitHub: LucaCode
 
 export interface ErrorFilter
 {
-    name : string[] | string,
-    type : string[] | string,
-    info : object[] | object,
-    infoKey : string[] | string[][]
-    infoValue : string[] | string[][]
+    name ?: string[] | string,
+    type ?: string[] | string,
+    info ?: object[] | object,
+    infoKey ?: (string | string[] )[] | string
+    infoValue ?: (string | string[] )[] | string
 }
 
 

@@ -5,9 +5,10 @@ GitHub: LucaCode
  */
 
 import Response = require("../../../api/response");
-import FullReaction = require("../fullReaction");
-import {ReactionCatchError, ReactionOnError, ReactionOnSuccessful} from "../reactionHandler";
+import FullReaction = require("../reaction/fullReaction");
+import {ReactionCatchError, ReactionOnError, ReactionOnSuccessful} from "../reaction/reactionHandler";
 import {ErrorFilterEngine} from "./ErrorFilterEngine";
+import {TaskError} from "../taskError/taskError";
 
 export class TriggerResponseEngine
 {
@@ -23,7 +24,7 @@ export class TriggerResponseEngine
 
     static onError(response : Response,fullReaction : FullReaction<ReactionOnError>)
     {
-        const fErrors : object[] = ErrorFilterEngine.filterErrors(response.getErrors(),fullReaction.getFilter());
+        const fErrors : TaskError[] = ErrorFilterEngine.filterErrors(response.getErrors(),fullReaction.getFilter());
         if(fErrors.length > 0) {
             fullReaction.getReactionHandler()(fErrors,response);
         }
@@ -31,7 +32,7 @@ export class TriggerResponseEngine
 
     static catchError(response : Response,fullReaction : FullReaction<ReactionCatchError>)
     {
-        const fErrors : object[] = ErrorFilterEngine.filterErrors(response._getNotCatchedErrors(),fullReaction.getFilter());
+        const fErrors : TaskError[] = ErrorFilterEngine.filterErrors(response._getNotCatchedErrors(),fullReaction.getFilter());
         if(fErrors.length > 0) {
             response._errorsAreCatched(fErrors);
             fullReaction.getReactionHandler()(fErrors,response);

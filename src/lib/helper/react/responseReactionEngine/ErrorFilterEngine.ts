@@ -4,12 +4,13 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import Const = require("../../constants/constWrapper");
+import {TaskError}   from "../taskError/taskError";
+import {ErrorFilter} from "../../filter/errorFilter";
 
 export class ErrorFilterEngine
 {
 
-    static filterErrors(errors : object[],filter : object) : object[]
+    static filterErrors(errors : TaskError[],filter : ErrorFilter) : TaskError[]
     {
         if(filter === {}) {
             return errors;
@@ -20,17 +21,19 @@ export class ErrorFilterEngine
         if(Array.isArray(filter['name']) || typeof filter['name'] === 'string')
         {
             cachedFilterErrors =
-                FilterEngine.getWhoHasOneOfInputVar(cachedFilterErrors,filter['name'],Const.Settings.RESPONSE.ERROR.Name);
+                FilterEngine.getWhoHasOneOfInputVar<TaskError>(cachedFilterErrors,filter['name'],
+                    (te) => {return te.getName();});
 
             if(cachedFilterErrors.length === 0) {
                 return [];
             }
         }
 
-        if(Array.isArray(filter['type']) || typeof filter['name'] === 'string')
+        if(Array.isArray(filter['type']) || typeof filter['type'] === 'string')
         {
             cachedFilterErrors =
-                FilterEngine.getWhoHasOneOfInputVar(cachedFilterErrors,filter['type'],Const.Settings.RESPONSE.ERROR.TYPE);
+                FilterEngine.getWhoHasOneOfInputVar<TaskError>(cachedFilterErrors,filter['type'],
+                    (te) => {return te.getType();});
 
             if(cachedFilterErrors.length === 0) {
                 return [];
@@ -40,11 +43,11 @@ export class ErrorFilterEngine
         if(Array.isArray(filter['info']) || typeof filter['info'] === "object")
         {
             cachedFilterErrors =
-                FilterEngine.getWhoHasOneOfInputVar
+                FilterEngine.getWhoHasOneOfInputVar<TaskError>
                 (
                     cachedFilterErrors,
                     filter['info'],
-                    Const.Settings.RESPONSE.ERROR.INFO,
+                    (te) => {return te.getInfo();},
                     FilterHandlerLib.allParamsAreSame
                 );
 
@@ -56,11 +59,11 @@ export class ErrorFilterEngine
         if(Array.isArray(filter['infoKey']))
         {
             cachedFilterErrors =
-                FilterEngine.getWhoHasOneOfInputVar
+                FilterEngine.getWhoHasOneOfInputVar<TaskError>
                 (
                     cachedFilterErrors,
                     filter['infoKey'],
-                    Const.Settings.RESPONSE.ERROR.INFO,
+                    (te) => {return te.getInfo();},
                     FilterHandlerLib.objValuesAre
                 );
 
@@ -72,11 +75,11 @@ export class ErrorFilterEngine
         if(Array.isArray(filter['infoValue']))
         {
             cachedFilterErrors =
-                FilterEngine.getWhoHasOneOfInputVar
+                FilterEngine.getWhoHasOneOfInputVar<TaskError>
                 (
                     cachedFilterErrors,
                     filter['infoValue'],
-                    Const.Settings.RESPONSE.ERROR.INFO,
+                    (te) => {return te.getInfo();},
                     FilterHandlerLib.objKeysAre
                 );
 

@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import {ReactionOnError, ReactionOnSuccessful} from "./reactionHandler";
+import {ReactionOnError, ReactionOnSuccessful} from "../reaction/reactionHandler";
 
 interface ResponseReactAble
 {

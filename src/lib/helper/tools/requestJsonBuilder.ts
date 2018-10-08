@@ -14,7 +14,7 @@ class RequestJsonBuilder
         isSystemController : boolean,
         system : string,
         version : number,
-        signToken ?: string
+        signToken ?: string | null
     )
     {
 
@@ -39,7 +39,7 @@ class RequestJsonBuilder
         return res;
     }
 
-    static buildAuthRequestData(data : object,system : string, version : number,signToken ?: string)
+    static buildAuthRequestData(data : object,system : string, version : number,signToken ?: string | null)
     {
         let res = {
             [Const.Settings.REQUEST_INPUT.VERSION] : version,

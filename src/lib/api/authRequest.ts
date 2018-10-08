@@ -19,7 +19,7 @@ class AuthRequest extends ZationRequest
     async getSendData(zation: Zation): Promise<object>
     {
         const compiledData = await this.getCompiledData();
-        let signToken : undefined | string = undefined;
+        let signToken : null | string = null;
 
         if(this.getProtocol() === ProtocolType.Http && zation._getAuthEngine().hasSignToken()) {
             signToken = zation._getAuthEngine().getSignToken();

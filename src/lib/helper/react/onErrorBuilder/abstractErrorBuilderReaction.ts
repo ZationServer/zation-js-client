@@ -6,8 +6,8 @@ GitHub: LucaCode
 
 import {OrBuilder} from "../statementBuilder/orBuilder";
 import {PairOrAndBuilder} from "../statementBuilder/pairOrAndBuilder";
-import {ReactionOnError} from "../reactionHandler";
-import ResponseReactAble = require("../responseReactAble");
+import {ReactionOnError} from "../reaction/reactionHandler";
+import ResponseReactAble = require("../responseReactionEngine/responseReactAble");
 import {ErrorFilter} from "../../filter/errorFilter";
 
 export abstract class AbstractErrorBuilderReaction<T extends ResponseReactAble>
@@ -70,7 +70,7 @@ export abstract class AbstractErrorBuilderReaction<T extends ResponseReactAble>
         );
     }
 
-    ErrorInfoKeys(...keys : string[]) : OrBuilder<AbstractErrorBuilderReaction<T>,string>
+    errorInfoKeys(...keys : string[]) : OrBuilder<AbstractErrorBuilderReaction<T>,string>
     {
         this.errorInfoKeyFilter.push(keys);
         return new OrBuilder<AbstractErrorBuilderReaction<T>,string>(this,(res) => {this.errorInfoKeyFilter.push(res)});

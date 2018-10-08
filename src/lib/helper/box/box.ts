@@ -4,25 +4,19 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-type ValidatorFunction<T> = (item : T) => boolean;
 type ForEeachFunction<T> = (item : T) => Promise<void>;
 type ForEeachFunctionSync<T> = (item : T) => void;
 
 class Box<T>
 {
-    private readonly validator : ValidatorFunction<T>;
-
     private items : T[] = [] = [];
 
     private fixedItems : T[] = [];
     
-    constructor(validator : ValidatorFunction<T> = () => {return true;})
-    {
-        this.validator = validator;
-    }
+    constructor() {}
 
     // noinspection JSUnusedGlobalSymbols
-    async forEach(func : ForEeachFunction<T>)
+    async forEach(func : ForEeachFunction<T>) : Promise<void>
     {
         let promise : Promise<void>[] = [];
 
@@ -36,7 +30,7 @@ class Box<T>
         await Promise.all(promise);
     }
 
-    forEachSync(func : ForEeachFunctionSync<T>)
+    forEachSync(func : ForEeachFunctionSync<T>) : void
     {
         for(let i = 0; i < this.items.length; i++) {
             func(this.items[i]);
@@ -49,39 +43,26 @@ class Box<T>
     //Part Items
 
     // noinspection JSUnusedGlobalSymbols
-    addItem(item : T)
+    addItem(item : T) : void
     {
-        if(this.validator(item)) {
-            this.items.push(item);
-            return true;
-        }
-        else {
-            return false;
-        }
+        this.items.push(item);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    removeItem(item : T) : boolean
+    removeItem(item : T) : void
     {
         const index = this.items.indexOf(item);
         if (index > -1) {
             this.items.splice(index, 1);
-            return true;
         }
-        return false;
     }
 
     //Part Fixed Items
 
     // noinspection JSUnusedGlobalSymbols
-    addFixedItem(item : T)
+    addFixedItem(item : T) : void
     {
-        if(this.validator(item)) {
-            return this.fixedItems.push(item) -1;
-        }
-        else {
-            return false;
-        }
+        this.fixedItems.push(item)
     }
 
     //Part Remove All

@@ -50,7 +50,6 @@ class RESPONSE
     static readonly SUCCESSFUL                   = 's';
     static readonly RESULT                       = 'r';
     static readonly TOKEN                        = 't';
-    static readonly ZATION_INFO                  = 'zi';
 
     static readonly TOKEN_SIGNED                 = 'st';
     static readonly TOKEN_PLAIN                  = 'pt';
@@ -82,6 +81,7 @@ class TOKEN
     static readonly TOKEN_ID                    = 'zationTokenId';
     static readonly PANEL_ACCESS                = 'zationPanelAccess';
     static readonly EXPIRE                      = 'exp';
+    static readonly CUSTOM_VARIABLES            = 'zationCustomVariables';
 }
 
 

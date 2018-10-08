@@ -10,6 +10,7 @@ import ConnectionNeededError  = require("../error/connectionNeededError");
 import ResultIsMissingError   = require("../error/resultIsMissingError");
 import {ProtocolType}           from "../constants/protocolType";
 import {ProgressHandler}        from "../request/progressHandler";
+import fetchProgress            from 'fetch-progress';
 
 class SendEngine
 {
@@ -18,11 +19,20 @@ class SendEngine
         return new Promise(async (resolve, reject)=>
         {
             if(zation.isSocketConnected()) {
-                zation.getSocket().emit('ZATION.SERVER.REQUEST',data,async (err,res) => {
+
+                if (!!progressHandler) {
+                    progressHandler(0);
+                }
+
+                zation.getSocket().emit('ZATION.SERVER.REQUEST',data,async (err,res) =>
+                {
+                    if (!!progressHandler) {
+                        progressHandler(100);
+                    }
+
                     if(err) {
                         reject(err);
                     }
-
                     if(res !== undefined) {
                         let response = new Response(res,ProtocolType.WebSocket);
                         resolve(response);
@@ -41,15 +51,27 @@ class SendEngine
 
     static async httpSend(zation : Zation,data : object,progressHandler ?: ProgressHandler) : Promise<Response>
     {
-            const response  = await fetch(zation.getServerAddress(),
+        return new Promise<Response>((resolve) => {
+            fetch(zation.getServerAddress(),
                 {
                     method : "POST",
                     headers: {
                         "Content-Type": "application/json; charset=utf-8",
                     },
                     body : JSON.stringify(data)
+                }).then(
+                fetchProgress(
+                    {
+                        onProgress(progress) {
+                            if (!!progressHandler) {
+                                progressHandler(progress.percentage);
+                            }
+                        },
+                    })
+                ).then(async (res) => {
+                    resolve(new Response(await res.json(),ProtocolType.Http));
                 });
-            return new Response((await response.json()),ProtocolType.Http);
+        });
     }
 }
 
