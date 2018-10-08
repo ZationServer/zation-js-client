@@ -7,7 +7,12 @@ GitHub: LucaCode
 import ReactionBox       = require("../helper/react/box/reactionBox");
 import {OnErrorBuilder}    from "../helper/react/onErrorBuilder/onErrorBuilder";
 import {CatchErrorBuilder} from "../helper/react/onErrorBuilder/catchErrorBuilder";
-import {ReactionCatchError, ReactionOnError, ReactionOnSuccessful} from "../helper/react/reaction/reactionHandler";
+import {
+    ReactionCatchError,
+    ReactionOnError,
+    ReactionOnResponse,
+    ReactionOnSuccessful
+} from "../helper/react/reaction/reactionHandler";
 import FullReaction      = require("../helper/react/reaction/fullReaction");
 import Box               = require("../helper/box/box");
 import ResponseReactAble = require("../helper/react/responseReactionEngine/responseReactAble");
@@ -26,6 +31,9 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
 
     private readonly successfulReactionBox : Box<FullReaction<ReactionOnSuccessful>>
         = new Box<FullReaction<ReactionOnSuccessful>>();
+
+    private readonly responseReactionBox : Box<FullReaction<ReactionOnResponse>>
+        = new Box<FullReaction<ReactionOnResponse>>();
 
     constructor()
     {
@@ -204,6 +212,34 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      */
     offSuccessful(fullReaction : FullReaction<ReactionOnSuccessful>) : void {
         this.successfulReactionBox.removeItem(fullReaction);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * React on an response
+     * It does not matter if the response is successful or has errors.
+     * @example
+     * onResponse((response) => {});
+     * @param reaction
+     * @return
+     * It returns a FullReaction, you can use it to remove the onResponse Reaction from the box.
+     */
+    onResponse(reaction: ReactionOnResponse) : FullReaction<ReactionOnResponse>
+    {
+        const fullReaction = new FullReaction<ReactionOnResponse>(reaction);
+        this.responseReactionBox.addItem(fullReaction);
+        return fullReaction;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Remove an onResponse reaction with the FullReaction.
+     * @param fullReaction
+     */
+    offResponse(fullReaction : FullReaction<ReactionOnResponse>) : void {
+        this.responseReactionBox.removeItem(fullReaction);
     }
 
     _trigger(response : Response)

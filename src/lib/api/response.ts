@@ -19,6 +19,8 @@ class Response
     private readonly erros : TaskError[] = [];
     private notCatchedErrors : TaskError[] = [];
 
+    private zationInfo : string[] = [];
+
     //Part Token (ONLY HTTP)
     private newSignedToken : string | undefined = undefined;
     private newPlainToken : object | undefined = undefined;
@@ -217,6 +219,29 @@ class Response
         return this.type === ProtocolType.Http;
     }
 
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns if key is in zation http info.
+     * This makes only sense by an http request.
+     * @param key
+     */
+    hasZationHttpInfo(key : string) : boolean
+    {
+        return this.zationInfo.indexOf(key) !== -1;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the zation http info.
+     * This makes only sense by an http request.
+     */
+    getZationHttpInfo() : string[]
+    {
+        return this.zationInfo;
+    }
+
     //Part CatchOut
 
     // noinspection JSUnusedGlobalSymbols
@@ -272,6 +297,10 @@ class Response
                     this.erros.push(new TaskError(errors[i]));
                 }
             }
+        }
+
+        if(Array.isArray(data[Const.Settings.RESPONSE.ZATION_HTTP_INFO])) {
+            this.zationInfo = data[Const.Settings.RESPONSE.ZATION_HTTP_INFO];
         }
 
         if(this.isHttpProtocolType() && typeof data[Const.Settings.RESPONSE.TOKEN] === 'object')

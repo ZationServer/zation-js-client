@@ -41,7 +41,7 @@ class RESPONSE_ERROR
 
 class ZATION_HTTP_INFO
 {
-    static readonly AUTH_OUT                     = 'authOut';
+    static readonly DEAUTHENTICATE               = 'deauthenticate';
 }
 
 class RESPONSE
@@ -50,6 +50,7 @@ class RESPONSE
     static readonly SUCCESSFUL                   = 's';
     static readonly RESULT                       = 'r';
     static readonly TOKEN                        = 't';
+    static readonly ZATION_HTTP_INFO             = 'zhi';
 
     static readonly TOKEN_SIGNED                 = 'st';
     static readonly TOKEN_PLAIN                  = 'pt';
@@ -87,14 +88,15 @@ class TOKEN
 
 class CHANNEL
 {
+    //Zation Main Channels
     static readonly USER_CHANNEL_PREFIX       = 'ZATION.USER.';
     static readonly AUTH_USER_GROUP_PREFIX    = 'ZATION.AUTH_USER_GROUP.';
     static readonly DEFAULT_USER_GROUP        = 'ZATION.DEFAULT_USER_GROUP';
     static readonly ALL                       = 'ZATION.ALL';
-    static readonly PANEL                     = 'ZATION.PANEL';
-    static readonly ALL_WORKER                = 'ZATION.ALL_WORKER';
-    static readonly ALL_WORKER_LEADER         = 'ZATION.ALL_WORKER_LEADER';
+    static readonly PANEL_IN                  = 'ZATION.PANEL_IN';
+    static readonly PANEL_OUT                 = 'ZATION.PANEL_OUT';
 
+    //Custom Channels
     static readonly CUSTOM_ID_CHANNEL_PREFIX  = 'ZATION.CUSTOM_ID_CHANNEL.';
     static readonly CUSTOM_CHANNEL_ID         = '.CH_ID.';
 

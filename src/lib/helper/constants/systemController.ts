@@ -5,7 +5,6 @@ GitHub: LucaCode
  */
 
 class SystemController {
-    static readonly LOG_OUT         = 'zation/system/logOut';
     static readonly PING            = 'zation/system/ping';
 }
 

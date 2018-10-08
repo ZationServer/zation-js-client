@@ -8,7 +8,7 @@ import ReactionBox    = require("../helper/react/box/reactionBox");
 import Box            = require("../helper/box/box");
 import FullReaction   = require("../helper/react/reaction/fullReaction");
 import {ReactionOnCustomCh, ReactionOnCustomIdCh, ReactionOnZationCh} from "../helper/react/reaction/reactionHandler";
-import {ChannelType}                                                  from "../helper/channel/channelType";
+import {ZationChannelType}                                                  from "../helper/channel/zationChannelType";
 
 type ValidChecker = (filter : object) => boolean;
 
@@ -121,7 +121,7 @@ class ChannelReactionBox extends ReactionBox
         await Promise.all(promises);
     }
 
-    async _triggerZationChData(type : ChannelType, event : string, data : any, ssid ?: string)
+    async _triggerZationChData(type : ZationChannelType, event : string, data : any, ssid ?: string)
     {
         const sameEventFilter : ValidChecker = (filter : object) : boolean => {
             return filter['event'] === event;
@@ -131,16 +131,16 @@ class ChannelReactionBox extends ReactionBox
         {
             switch (type)
             {
-                case ChannelType.USER:
+                case ZationChannelType.USER:
                     await this._triggerDataEventBox(this.userChReactionBox,sameEventFilter,data,ssid);
                     break;
-                case ChannelType.AUTH_USER_GROUP:
+                case ZationChannelType.AUTH_USER_GROUP:
                     await this._triggerDataEventBox(this.authUGChReactionBox,sameEventFilter,data,ssid);
                     break;
-                case ChannelType.DEFAULT_USER_GROUP:
+                case ZationChannelType.DEFAULT_USER_GROUP:
                     await this._triggerDataEventBox(this.defaultUGChReactionBox,sameEventFilter,data,ssid);
                     break;
-                case ChannelType.ALL:
+                case ZationChannelType.ALL:
                     await this._triggerDataEventBox(this.allChReactionBox,sameEventFilter,data,ssid);
                     break;
             }

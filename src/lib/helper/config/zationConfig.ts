@@ -13,6 +13,7 @@ class ZationConfig
     constructor(config : object)
     {
         this.loadDefaults();
+        this.loadSettingsFromClientPrepare();
         this.addToConfig(config,true);
     }
 
@@ -41,6 +42,33 @@ class ZationConfig
         this.config[Const.Config.AUTO_USER_CH_SUB] = true;
         this.config[Const.Config.AUTO_DEFAULT_USER_GROUP_CH_SUB] = true;
         this.config[Const.Config.AUTO_AUTH_USER_GROUP_CH_SUB] = true;
+    }
+
+    loadSettingsFromClientPrepare()
+    {
+        // @ts-ignore
+        if(typeof ZATION_SERVER_SETTINGS === 'object')
+        {
+            // noinspection JSUnresolvedVariable
+            // @ts-ignore
+            let zss = ZATION_SERVER_SETTINGS;
+
+            if(!!zss['HOSTNAME']) {
+                this.config[Const.Config.HOSTNAME] = zss['HOSTNAME'];
+            }
+            if(!!zss['PORT']) {
+                this.config[Const.Config.PORT] = zss['PORT'];
+            }
+            if(!!zss['PATH']) {
+                this.config[Const.Config.PATH] = zss['PATH'];
+            }
+            if(!!zss['SECURE']) {
+                this.config[Const.Config.SECURE] = zss['SECURE'];
+            }
+            if(!!zss['POST_KEY']) {
+                this.config[Const.Config.POST_KEY] = zss['POST_KEY'];
+            }
+        }
     }
 
     getConfig(key : any) : any

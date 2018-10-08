@@ -7,9 +7,10 @@ GitHub: LucaCode
 import Const = require("../constants/constWrapper");
 import Zation = require("../../api/zation");
 import ChannelReactionBox = require("../../api/channelReactionBox");
-import {ChannelType} from "./channelType";
+import {ZationChannelType} from "./zationChannelType";
 import ConnectionNeededError = require("../error/connectionNeededError");
 import SubscribeFailError = require("../error/subscribeFailError");
+import PublishFailError = require("../error/publishFailError");
 
 class ChannelEngine
 {
@@ -22,7 +23,7 @@ class ChannelEngine
 
     // noinspection JSUnusedGlobalSymbols
     async subUserChannel(userId : string | number) {
-        await this.subZationChannel(Const.Settings.CHANNEL.USER_CHANNEL_PREFIX + userId,ChannelType.USER);
+        await this.subZationChannel(Const.Settings.CHANNEL.USER_CHANNEL_PREFIX + userId,ZationChannelType.USER);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -37,7 +38,7 @@ class ChannelEngine
 
     // noinspection JSUnusedGlobalSymbols
     async subAuthUserGroupChannel(authGroup : string) {
-        await this.subZationChannel(Const.Settings.CHANNEL.AUTH_USER_GROUP_PREFIX + authGroup,ChannelType.AUTH_USER_GROUP);
+        await this.subZationChannel(Const.Settings.CHANNEL.AUTH_USER_GROUP_PREFIX + authGroup,ZationChannelType.AUTH_USER_GROUP);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -52,7 +53,7 @@ class ChannelEngine
 
     // noinspection JSUnusedGlobalSymbols
     async subDefaultUserGroupChannel() {
-        await this.subZationChannel(Const.Settings.CHANNEL.DEFAULT_USER_GROUP,ChannelType.DEFAULT_USER_GROUP);
+        await this.subZationChannel(Const.Settings.CHANNEL.DEFAULT_USER_GROUP,ZationChannelType.DEFAULT_USER_GROUP);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -67,7 +68,7 @@ class ChannelEngine
 
     // noinspection JSUnusedGlobalSymbols
     async subAllChannel() {
-        await this.subZationChannel(Const.Settings.CHANNEL.ALL,ChannelType.ALL);
+        await this.subZationChannel(Const.Settings.CHANNEL.ALL,ZationChannelType.ALL);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -80,11 +81,26 @@ class ChannelEngine
         this.unsubChannel(Const.Settings.CHANNEL.ALL,andDestroy);
     }
 
-    subChannel(channel : string, watcher : Function) : Promise<void>
+    // noinspection JSUnusedGlobalSymbols
+    async subPanelOutChannel() {
+        await this.subZationChannel(Const.Settings.CHANNEL.PANEL_OUT,ZationChannelType.PANEL_OUT);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    isSubPanelOutChannel() : boolean {
+        return this.isSubChannel(Const.Settings.CHANNEL.PANEL_OUT);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    unsubPanelOutChannel(andDestroy : boolean = true) {
+        this.unsubChannel(Const.Settings.CHANNEL.PANEL_OUT,andDestroy);
+    }
+
+    subChannel(channel : string, watcher : Function, options ?: object) : Promise<void>
     {
         return new Promise((resolve, reject) => {
             const socket = this.zation.getSocket();
-            if(!!socket && this.zation.isSocketConnected())
+            if(!!socket)
             {
                 const ch = socket.channel(channel);
 
@@ -100,15 +116,14 @@ class ChannelEngine
                 ch.on('subscribeFail',(err) => {
                     reject(new SubscribeFailError(err));
                 });
-            }
-            else {
-                reject(new ConnectionNeededError());
+
+                ch.subscribe(options);
             }
         });
     }
 
 
-    async subZationChannel(channel : string, type : ChannelType) : Promise<void>
+    async subZationChannel(channel : string, type : ZationChannelType) : Promise<void>
     {
        await this.subChannel(channel,async (input : any) =>
        {
@@ -267,6 +282,51 @@ class ChannelEngine
         return foundSubs;
     }
 
+    static buildPubData(eventName : string,data : any) : object
+    {
+        return {
+            e : eventName,
+            d : data
+        };
+    }
+
+    publish(channelName : string,eventName : string,data : any) : Promise<void>
+    {
+        return new Promise<void>((resolve, reject) => {
+            if(this.zation.isSocketConnected())
+            {
+                this.zation.getSocket().publish(channelName,ChannelEngine.buildPubData(eventName,data),(err) =>
+                {
+                    if(err){
+                        reject(new PublishFailError(err));
+                    }
+                    else{
+                        resolve();
+                    }
+                });
+            }
+            else {
+                reject(new ConnectionNeededError('To publish data!'));
+            }
+        });
+    }
+
+    async pubPanelInCh(event : string, data : any) : Promise<void> {
+        await this.publish(Const.Settings.CHANNEL.PANEL_IN,event,data);
+    }
+
+    async pubCustomCh(chName : string,event : string, data : any) : Promise<void> {
+        await this.publish(Const.Settings.CHANNEL.CUSTOM_CHANNEL_PREFIX + chName,event,data);
+    }
+
+    async pubCustomIdCh(chName : string, id : string, event : string, data : any) : Promise<void> {
+        await this.publish
+        (
+            Const.Settings.CHANNEL.CUSTOM_ID_CHANNEL_PREFIX + chName + Const.Settings.CHANNEL.CUSTOM_CHANNEL_ID + id,
+            event,
+            data
+        );
+    }
 }
 
 export = ChannelEngine;

@@ -8,6 +8,7 @@ import Response = require("../../../api/response");
 import {TaskError} from "../taskError/taskError";
 
 export type ReactionOnSuccessful = (result : any,response : Response) => void | Promise<void>;
+export type ReactionOnResponse   = (response : Response) => void | Promise<void>;
 export type ReactionOnError      = (filteredErrors : TaskError[], response : Response) => void | Promise<void>;
 export type ReactionCatchError   = (catchedErrors : TaskError[], response : Response) => void | Promise<void>;
 

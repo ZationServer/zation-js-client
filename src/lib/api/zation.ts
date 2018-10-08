@@ -21,7 +21,7 @@ import {ProgressHandler}        from "../helper/request/progressHandler";
 import ZationRequest          = require("../helper/request/zationRequest");
 import RequestBuilder         = require("../helper/request/requestBuilder");
 import ConnectionAbortError   = require("../helper/error/connectionAbortError");
-import ZationConfig           = require("../helper/config/ZationConfig");
+import ZationConfig           = require("../helper/config/zationConfig");
 import EventReactionBox       = require("./eventReactionBox");
 import {OnHandlerFunction, ResponseFunction, Socket} from "../helper/sc/socket";
 import ObjectPath             = require("../helper/tools/objectPath");
@@ -84,7 +84,7 @@ class Zation
     private _addSystemReactions()
     {
         //response for update new token by http req
-        this.syResponseReactionBox.onSuccessful(async (result, response) => {
+        this.syResponseReactionBox.onResponse(async (response) => {
             if(response.hasNewToken())
             {
                 const signToken = response.getNewSignedToken();
@@ -100,6 +100,10 @@ class Zation
                         await this.authEngine.refreshToken(plainToken,signToken);
                     }
                 }
+            }
+
+            if(response.hasZationHttpInfo(Const.Settings.ZATION_HTTP_INFO.DEAUTHENTICATE)) {
+                await this.authEngine.deauthenticate();
             }
         });
     }
@@ -212,7 +216,7 @@ class Zation
      */
     async ping() : Promise<number>
     {
-        const req = new WsRequest(Const.SyController.PING);
+        const req = new WsRequest(Const.SyController.PING,{},true);
         const start = Date.now();
         await this.send(req);
         return Date.now() - start;
@@ -349,6 +353,12 @@ class Zation
         return this.socket;
     }
 
+    //socket interface
+    hasSocket() : boolean
+    {
+        return this.socket !== undefined;
+    }
+
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
@@ -453,7 +463,8 @@ class Zation
      * @description
      * Subscribe the user channel.
      * Can be useful if auto sub is disabled.
-     * @throws ConnectionNeededError, MissingUserIdError, SubscribeFailError
+     * Notice if the socket is not connected the resolve of the promise will wait for connection.
+     * @throws MissingUserIdError, SubscribeFailError
      */
     async subUserCh() : Promise<void> {
         await this.authEngine.subUserCh();
@@ -485,7 +496,8 @@ class Zation
      * @description
      * Subscribe the auth user group channel.
      * Can be useful if auto sub is disabled.
-     * @throws ConnectionNeededError, MissingAuthUserGroupError, SubscribeFailError
+     * Notice if the socket is not connected the resolve of the promise will wait for connection.
+     * @throws MissingAuthUserGroupError, SubscribeFailError
      */
     async subAuthUserGroupCh() : Promise<void> {
         await this.authEngine.subAuthUserGroupCh();
@@ -517,7 +529,8 @@ class Zation
      * @description
      * Subscribe the default user group channel.
      * Can be useful if auto sub is disabled.
-     * @throws ConnectionNeededError, SubscribeFailError, DeauthenticationNeededError
+     * Notice if the socket is not connected the resolve of the promise will wait for connection.
+     * @throws SubscribeFailError, DeauthenticationNeededError
      */
     async subDefaultUserGroupCh() : Promise<void> {
         await this.authEngine.subDefaultUserGroupCh();
@@ -547,7 +560,8 @@ class Zation
      * @description
      * Subscribe the all channel.
      * Can be useful if auto sub is disabled.
-     * @throws ConnectionNeededError, SubscribeFailError
+     * Notice if the socket is not connected the resolve of the promise will wait for connection.
+     * @throws SubscribeFailError
      */
     async subAllCh() : Promise<void> {
         await this.channelEngine.subAllChannel();
@@ -576,7 +590,8 @@ class Zation
     /**
      * @description
      * Subscribe a custom channel.
-     * @throws ConnectionNeededError, SubscribeFailError
+     * Notice if the socket is not connected the resolve of the promise will wait for connection.
+     * @throws SubscribeFailError
      * @param chName
      */
     async subCustomCh(chName : string) : Promise<void> {
@@ -600,6 +615,8 @@ class Zation
      * Unsubscribes custom channel.
      * @param chName if not provided it will unsubscribe all custom channels.
      * @param andDestroy
+     * @return
+     * An string array with all custom channels there are unsubscribed.
      */
     unsubCustomCh(chName ?: string,andDestroy : boolean = true) : string[] {
         return this.channelEngine.unsubscribeCustomCh(chName,andDestroy);
@@ -619,7 +636,8 @@ class Zation
     /**
      * @description
      * Subscribe a custom id channel.
-     * @throws ConnectionNeededError, SubscribeFailError
+     * Notice if the socket is not connected the resolve of the promise will wait for connection.
+     * @throws SubscribeFailError
      * @param chName
      * @param chId
      */
@@ -647,6 +665,8 @@ class Zation
      * @param chName if not provided it will unsubscribe all custom id channels.
      * @param chId if not provided it will unsubscribe all custom id channels with name.
      * @param andDestroy
+     * @return
+     * An string array with all custom id channels there are unsubscribed.
      */
     unsubCustomIdCh(chName ?: string, chId ?: string,andDestroy : boolean = true) : string[] {
         return this.channelEngine.unsubscribeCustomIdCh(chName,chId,andDestroy);
@@ -670,7 +690,8 @@ class Zation
      * Switch the custom id channel subscribtion to another id.
      * By unsubscribe the all custom id channels with ch name and
      * subscribe the new one.
-     * @throws ConnectionNeededError, SubscribeFailError
+     * Notice if the socket is not connected the resolve of the promise will wait for connection.
+     * @throws SubscribeFailError
      * @param channel
      * @param id
      */
@@ -678,6 +699,83 @@ class Zation
     {
         this.unsubCustomIdCh(channel);
         await this.subCustomIdCh(channel,id);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Subscribe the panel out channel.
+     * Notice if the socket is not connected the resolve of the promise will wait for connection.
+     * @throws SubscribeFailError
+     */
+    async subPanelOutCh() : Promise<void> {
+        await this.channelEngine.subPanelOutChannel();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns if the socket is subscribes the panel out channel.
+     */
+    isSubPanelOutCh() : boolean {
+        return this.channelEngine.isSubPanelOutChannel();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Unsubscribes panel out channel.
+     * @param andDestroy
+     */
+    unsubPanelOutCh(andDestroy : boolean = true) : void {
+        this.channelEngine.unsubPanelOutChannel(andDestroy);
+    }
+
+    //Part ClientPublish
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Publish in the panel in channel with this client.
+     * Notice the publish in middleware is used on server side.
+     * @throws ConnectionNeededError, PublishFailError
+     * @param event
+     * @param data
+     */
+    async pubPanelInCh(event : string, data : any) : Promise<void> {
+        await this.channelEngine.pubPanelInCh(event,data);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Publish in a custom channel with this client.
+     * Notice that the socket needs to have access for clientPublish.
+     * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
+     * This gives you better control over validation.
+     * @throws ConnectionNeededError, PublishFailError
+     * @param chName
+     * @param event
+     * @param data
+     */
+    async pubCustomCh(chName : string,event : string, data : any) : Promise<void> {
+        await this.channelEngine.pubCustomCh(chName,event,data);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Publish in a custom id channel with this client.
+     * Notice that the socket needs to have access for clientPublish.
+     * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
+     * This gives you better control over validation.
+     * @throws ConnectionNeededError, PublishFailError
+     * @param chName
+     * @param id
+     * @param event
+     * @param data
+     */
+    async pubCustomIdCh(chName : string,id : string,event : string, data : any) : Promise<void> {
+        await this.channelEngine.pubCustomIdCh(chName,id,event,data);
     }
 
     //Part CustomTokenVar
@@ -889,6 +987,10 @@ class Zation
     };
 
     // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the full server address with hostname, port and path.
+     */
     getServerAddress() : string
     {
         const path = this.zc.getConfig(Const.Config.PATH);

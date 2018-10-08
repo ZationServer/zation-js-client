@@ -58,6 +58,14 @@ class AuthEngine
             await this.refreshToken(authToken,signToken);
         });
 
+        this.zation.getSocket().on('connect',async () =>{
+            if(this.zation.getSocket().getSignedAuthToken() !== this.signToken &&
+            this.signToken !== null) {
+                try{await this.zation.signAuthenticate(this.signToken);}
+                catch (e) {}
+            }
+        });
+
         //update token on change
         this.zation.getSocket().on('deauthenticate',async ()=> {
             await this.refreshToken(null,null);
@@ -111,14 +119,20 @@ class AuthEngine
     }
 
     deauthenticate() : Promise<void> {
-        return new Promise<void>((resolve, reject) =>
+        return new Promise<void>(async (resolve, reject) =>
         {
-            this.zation.getSocket().deauthenticate((e => {
-                if(e){
-                    reject(new DeauthenticationFailError(e));
-                } else {
-                    resolve();
-                }}));
+            if(this.zation.hasSocket())
+            {
+                this.zation.getSocket().deauthenticate((e => {
+                    if(e){
+                        reject(new DeauthenticationFailError(e));
+                    } else {
+                        resolve();
+                    }}));
+            }
+            else {
+                await this.refreshToken(null,null);
+            }
         });
     }
 
