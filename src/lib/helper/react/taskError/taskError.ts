@@ -17,7 +17,7 @@ export class TaskError
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the name of the task error
+     * Returns the name of the task error.
      */
     getName() : string {
         return this.data[Const.Settings.RESPONSE.ERROR.Name];
@@ -26,7 +26,7 @@ export class TaskError
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the type of the task error
+     * Returns the type of the task error.
      */
     getType() : string {
         return this.data[Const.Settings.RESPONSE.ERROR.TYPE];
@@ -35,8 +35,8 @@ export class TaskError
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the description of the task error
-     * Is undefined if it was not sended
+     * Returns the description of the task error.
+     * Is undefined if it was not sended.
      */
     getDescription() : string | undefined {
         return this.data[Const.Settings.RESPONSE.ERROR.DESCRIPTION];
@@ -45,8 +45,8 @@ export class TaskError
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns if the task error is from zation system
-     * Is undefined if it was not sended
+     * Returns if the task error is from zation system.
+     * Is undefined if it was not sended.
      */
     isFromZationSystem() : boolean | undefined {
         return this.data[Const.Settings.RESPONSE.ERROR.FROM_ZATION_SYSTEM];
@@ -55,27 +55,28 @@ export class TaskError
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the info of the task error
-     * Is undefined if it was not sended
+     * Returns the info of the task error.
+     * Returns empty object if it was not sended.
      */
-    getInfo() : object | undefined {
-        return this.data[Const.Settings.RESPONSE.ERROR.INFO];
+    getInfo() : object {
+        return typeof this.data[Const.Settings.RESPONSE.ERROR.INFO] === 'object' ?
+            this.data[Const.Settings.RESPONSE.ERROR.INFO] : {};
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns if the task error has info object
+     * Returns if the task error has info object.
      */
     hasInfo() : boolean {
-        return !!this.data[Const.Settings.RESPONSE.ERROR.INFO];
+        return typeof this.data[Const.Settings.RESPONSE.ERROR.INFO] === 'object';
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the info value form a key
-     * Is undefined if it was not sended
+     * Returns the info value form a key.
+     * Is undefined if it was not sended.
      */
     getInfoValue(key : string) : any | undefined {
         const info = this.getInfo();

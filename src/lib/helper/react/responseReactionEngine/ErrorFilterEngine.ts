@@ -88,6 +88,21 @@ export class ErrorFilterEngine
             }
         }
 
+        if(typeof filter['fromZationSystem'] === 'boolean')
+        {
+            let filTemp : TaskError[] = [];
+            for(let i = 0; i < cachedFilterErrors.length; i++) {
+                if (cachedFilterErrors[i].isFromZationSystem() === filter['fromZationSystem']) {
+                    filTemp.push(cachedFilterErrors[i]);
+                }
+            }
+            cachedFilterErrors = filTemp;
+
+            if(cachedFilterErrors.length === 0) {
+                return [];
+            }
+        }
+
         return cachedFilterErrors;
     }
 

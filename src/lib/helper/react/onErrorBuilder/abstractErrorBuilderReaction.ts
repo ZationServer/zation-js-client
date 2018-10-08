@@ -19,6 +19,7 @@ export abstract class AbstractErrorBuilderReaction<T extends ResponseReactAble>
     private errorInfoFilter : object[] = [];
     private errorInfoKeyFilter : string[][] = [];
     private errorInfoValueFilter : string[][] = [];
+    private errorFromZationSystem : boolean | undefined = undefined;
 
     protected constructor(main : T)
     {
@@ -94,6 +95,24 @@ export abstract class AbstractErrorBuilderReaction<T extends ResponseReactAble>
         return this;
     }
 
+    errorIsFromZationSystem() : AbstractErrorBuilderReaction<T>
+    {
+        this.errorFromZationSystem = true;
+        return this;
+    }
+
+    errorIsNotFromZationSystem() : AbstractErrorBuilderReaction<T>
+    {
+        this.errorFromZationSystem = false;
+        return this;
+    }
+
+    errorCanFromZationSystemOrNot() : AbstractErrorBuilderReaction<T>
+    {
+        this.errorFromZationSystem = undefined;
+        return this;
+    }
+
     react(...reactions : ReactionOnError[]) : T
     {
         this._save(this._mergeReaction(reactions),this._buildFilter());
@@ -120,7 +139,8 @@ export abstract class AbstractErrorBuilderReaction<T extends ResponseReactAble>
             type : this.errorTypeFilter,
             info : this.errorInfoFilter,
             infoKey : this.errorInfoKeyFilter,
-            infoValue : this.errorInfoValueFilter
+            infoValue : this.errorInfoValueFilter,
+            fromZationSystem : this.errorFromZationSystem
         }
     }
 }

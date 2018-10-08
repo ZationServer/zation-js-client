@@ -66,6 +66,10 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * {infoValue : ['name','firstName']}
      * For errors with all of the info values:
      * {infoValue : [['value1','value2']]}
+     * For errors there from the zation system:
+     * {fromZationSystem : true}
+     * For errors there not from the zation system:
+     * {fromZationSystem : false}
      * You can combine all of this properties.
      * @param reaction
      * @param filter
@@ -134,6 +138,10 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * {infoValue : ['name','firstName']}
      * For errors with all of the info values:
      * {infoValue : [['value1','value2']]}
+     * For errors there from the zation system:
+     * {fromZationSystem : true}
+     * For errors there not from the zation system:
+     * {fromZationSystem : false}
      * You can combine all of this properties.
      * @param reaction
      * @param filter
