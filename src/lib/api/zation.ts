@@ -308,11 +308,11 @@ class Zation
     /**
      * @description
      * Send a sendAble object.
-     * Optional you can add a progressHandler and responseReactionBox.
+     * Optional you can add a progressHandler and responseReactionBox/es.
      * @throws ConnectionNeededError
      * @return Response
      */
-    async send(sendAble : SendAble, progressHandler ?: ProgressHandler, responseReactionBox ?: ResponseReactionBox) : Promise<Response>
+    async send(sendAble : SendAble, progressHandler ?: ProgressHandler, ...responseReactionBox : ResponseReactionBox[]) : Promise<Response>
     {
         let ph : undefined | ProgressHandler = undefined;
         if(!!progressHandler) {
@@ -334,8 +334,8 @@ class Zation
 
         await this._triggerResponseReactions(response);
 
-        if(!!responseReactionBox) {
-            responseReactionBox._trigger(response);
+        for(let i = 0; i < responseReactionBox.length; i++) {
+            responseReactionBox[i]._trigger(response);
         }
 
         return response;

@@ -15,12 +15,19 @@ class ReactionBox
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Activate the reaction box.
+     */
     activate() : void
     {
         this.active = true;
     }
 
-    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Deactivate the reaction box.
+     */
     deactivate() : void
     {
         this.active = false;

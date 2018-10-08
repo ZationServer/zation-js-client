@@ -21,10 +21,18 @@ class FullReaction<T extends Function>
         }
     }
 
+    /**
+     * @description
+     * Returns the reaction handler.
+     */
     getReactionHandler() : T {
         return this.reactionHandler;
     }
 
+    /**
+     * @description
+     * Returns the filter.
+     */
     getFilter() : object {
         return this.filter;
     }

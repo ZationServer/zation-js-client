@@ -16,7 +16,6 @@ import {CatchErrorBuilder} from "../react/onErrorBuilder/catchErrorBuilder";
 import {ErrorFilter} from "../filter/errorFilter";
 import WsRequest = require("../../api/wsRequest");
 import HttpRequest = require("../../api/httpRequest");
-import AuthenticationNeededError = require("../error/authenticationNeededError");
 
 class RequestBuilder
 {
@@ -24,7 +23,6 @@ class RequestBuilder
 
     private _protocol : ProtocolType = ProtocolType.WebSocket;
     private _useAuth : boolean = true;
-    private _needAuth : boolean = false;
     private _authRequest : boolean = false;
     private _controllerName : string = '';
     private _systemController : boolean = false;
@@ -105,18 +103,6 @@ class RequestBuilder
         return this;
     }
 
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Set if request need an authenticated client.
-     * Otherwise it will throw an AuthenticationNeededError.
-     * @default false
-     * @param needAuth
-     */
-    needAuth(needAuth : boolean) : RequestBuilder {
-        this._needAuth = needAuth;
-        return this;
-    }
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -309,16 +295,10 @@ class RequestBuilder
     /**
      * @description
      * Send the request and returns the response after trigger the reactions from the build.
-     * @throws ConnectionNeededError, AuthenticationNeededError (if needAuth is true)
+     * @throws ConnectionNeededError
      */
     async send() : Promise<Response>
     {
-
-        //check need auth
-        if(this._needAuth && !this.zation.isAuthenticated()) {
-            throw new AuthenticationNeededError('By sending an request with needed authentcation!');
-        }
-
         let request;
         //buildRequest
         if(this._authRequest) {

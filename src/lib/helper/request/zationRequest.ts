@@ -24,14 +24,30 @@ abstract class ZationRequest extends SendAble
         this.type = type;
     }
 
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the protocol type of the request.
+     */
     getProtocol() : ProtocolType {
         return this.type;
     }
 
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Set a progress handler for the request.
+     * @param pogressHandler
+     */
     setProgressHandler(pogressHandler : ProgressHandler) : void {
         this.progressHandler = pogressHandler;
     }
 
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the progress handler of the request.
+     */
     getPogressHandler() : ProgressHandler | undefined {
         return this.progressHandler;
     }

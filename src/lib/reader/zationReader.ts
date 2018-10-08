@@ -12,10 +12,12 @@ import path = require('path');
 
 class ZationReader
 {
+    // noinspection JSUnusedGlobalSymbols
     static getZationMinifyClient() : string {
         return fs.readFileSync(path.resolve(zationClientMinFile), "utf8");
     }
 
+    // noinspection JSUnusedGlobalSymbols
     static getZationClient() : string {
         return fs.readFileSync(path.resolve(zationClientFile), "utf8");
     }
