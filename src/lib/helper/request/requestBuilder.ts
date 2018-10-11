@@ -16,6 +16,7 @@ import {CatchErrorBuilder} from "../react/onErrorBuilder/catchErrorBuilder";
 import {ErrorFilter} from "../filter/errorFilter";
 import WsRequest = require("../../api/wsRequest");
 import HttpRequest = require("../../api/httpRequest");
+import Const = require("../constants/constWrapper");
 
 class RequestBuilder
 {
@@ -180,6 +181,10 @@ class RequestBuilder
      * {name : 'errorName1'}
      * For errors with the names:
      * {name : ['errorName1','errorName2']}
+     * For errors with the group:
+     * {group : 'errorGroup1'}
+     * For errors with the groups:
+     * {group : ['errorGroup1','errorGroup2']}
      * For errors with the type:
      * {type : 'errorType1'}
      * For errors with the types:
@@ -234,6 +239,10 @@ class RequestBuilder
      * {name : 'errorName1'}
      * For errors with the names:
      * {name : ['errorName1','errorName2']}
+     * For errors with the group:
+     * {group : 'errorGroup1'}
+     * For errors with the groups:
+     * {group : ['errorGroup1','errorGroup2']}
      * For errors with the type:
      * {type : 'errorType1'}
      * For errors with the types:
@@ -348,12 +357,37 @@ class RequestBuilder
         return resp;
     }
 
-    async buildGetRequest() : string
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Builds an get request.
+     * @return
+     * Returns the full get reuqest as an string.
+     */
+    buildGetRequest() : string
     {
-
-        //todo
-
-
+        //system
+        let params = `?${Const.Settings.HTTP_GET_REUQEST.SYSTEM}=${this.zation.getSystem()}`;
+        //version
+        params += `&${Const.Settings.HTTP_GET_REUQEST.VERSION}=${this.zation.getVersion()}`;
+        //input
+        params += `&${Const.Settings.HTTP_GET_REUQEST.INPUT}=${JSON.stringify(this._data)}`;
+        //add sign token
+        if(this._useAuth && this.zation._getAuthEngine().hasSignToken()) {
+            params += `&${Const.Settings.HTTP_GET_REUQEST.TOKEN}=${this.zation._getAuthEngine().getSignToken()}`;
+        }
+        if(this._authRequest) {
+            params += `&${Const.Settings.HTTP_GET_REUQEST.AUTH_REQ}=true`;
+        }
+        else{
+            if(this._systemController) {
+                params += `&${Const.Settings.HTTP_GET_REUQEST.SYSTEM_CONTROLLER}=${this._controllerName}`;
+            }
+            else {
+                params += `&${Const.Settings.HTTP_GET_REUQEST.CONTROLLER}=${this._controllerName}`;
+            }
+        }
+        return this.zation.getServerAddress()+params;
     }
 
 }

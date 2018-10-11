@@ -20,7 +20,25 @@ export class TaskError
      * Returns the name of the task error.
      */
     getName() : string {
-        return this.data[Const.Settings.RESPONSE.ERROR.Name];
+        return this.data[Const.Settings.RESPONSE.ERROR.NAME];
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the group of the task error.
+     */
+    getGroup() : string {
+        return this.data[Const.Settings.RESPONSE.ERROR.GROUP];
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns if the task error has a group.
+     */
+    hasGroup() : boolean {
+        return this.data[Const.Settings.RESPONSE.ERROR.GROUP] !== undefined;
     }
 
     // noinspection JSUnusedGlobalSymbols

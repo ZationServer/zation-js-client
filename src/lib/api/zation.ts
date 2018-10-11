@@ -996,12 +996,7 @@ class Zation
         const path = this.zc.getConfig(Const.Config.PATH);
         const hostname = this.zc.getConfig(Const.Config.HOSTNAME);
         const port = this.zc.getConfig(Const.Config.PORT);
-
-        if(path) {
-            return `${hostname}:${port}`;
-        } else {
-            return `${hostname}:${port}${path}`;
-        }
+        return `${hostname}:${port}${path}`;
     };
 
     _getChannelReactionMainBox() : Box<ChannelReactionBox> {

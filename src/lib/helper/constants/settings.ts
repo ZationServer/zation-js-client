@@ -12,6 +12,7 @@ class ERROR_INFO
 class ERROR
 {
     static readonly NAME                         = 'name';
+    static readonly GROUP                        = 'group';
     static readonly DESCRIPTION                  = 'description';
     static readonly TYPE                         = 'type';
     static readonly SEND_INFO                    = 'sendInfo';
@@ -32,11 +33,23 @@ class REQUEST_INPUT
 
 class RESPONSE_ERROR
 {
-    static readonly Name                         = 'n';
+    static readonly NAME                         = 'n';
+    static readonly GROUP                        = 'g';
     static readonly TYPE                         = 't';
     static readonly FROM_ZATION_SYSTEM           = 'zs';
     static readonly DESCRIPTION                  = 'd';
     static readonly INFO                         = 'i';
+}
+
+class HTTP_GET_REQ
+{
+    static readonly VERSION                      = 'v';
+    static readonly SYSTEM                       = 's';
+    static readonly AUTH_REQ                     = 'a';
+    static readonly CONTROLLER                   = 'c';
+    static readonly SYSTEM_CONTROLLER            = 'sc';
+    static readonly INPUT                        = 'i';
+    static readonly TOKEN                        = 't';
 }
 
 class ZATION_HTTP_INFO
@@ -122,6 +135,7 @@ class Settings
     static readonly RESPONSE = RESPONSE;
     static readonly ZATION_HTTP_INFO = ZATION_HTTP_INFO;
     static readonly REQ_IN_C = REQ_IN_C;
+    static readonly HTTP_GET_REUQEST = HTTP_GET_REQ;
 }
 
 export = Settings;

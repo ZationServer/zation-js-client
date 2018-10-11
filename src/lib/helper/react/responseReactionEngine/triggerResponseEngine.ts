@@ -7,7 +7,7 @@ GitHub: LucaCode
 import Response = require("../../../api/response");
 import FullReaction = require("../reaction/fullReaction");
 import {ReactionCatchError, ReactionOnError, ReactionOnSuccessful} from "../reaction/reactionHandler";
-import {ErrorFilterEngine} from "./ErrorFilterEngine";
+import {ErrorFilterEngine} from "./errorFilterEngine";
 import {TaskError} from "../taskError/taskError";
 
 export class TriggerResponseEngine

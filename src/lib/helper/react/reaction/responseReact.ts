@@ -46,6 +46,10 @@ class ResponseReact implements ResponseReactAble
      * {name : 'errorName1'}
      * For errors with the names:
      * {name : ['errorName1','errorName2']}
+     * For errors with the group:
+     * {group : 'errorGroup1'}
+     * For errors with the groups:
+     * {group : ['errorGroup1','errorGroup2']}
      * For errors with the type:
      * {type : 'errorType1'}
      * For errors with the types:
@@ -100,6 +104,10 @@ class ResponseReact implements ResponseReactAble
      * {name : 'errorName1'}
      * For errors with the names:
      * {name : ['errorName1','errorName2']}
+     * For errors with the group:
+     * {group : 'errorGroup1'}
+     * For errors with the groups:
+     * {group : ['errorGroup1','errorGroup2']}
      * For errors with the type:
      * {type : 'errorType1'}
      * For errors with the types:

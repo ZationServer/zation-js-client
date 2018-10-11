@@ -7,6 +7,7 @@ GitHub: LucaCode
 export interface ErrorFilter
 {
     name ?: string[] | string,
+    group ?: string[] | string,
     type ?: string[] | string,
     info ?: object[] | object,
     infoKey ?: (string | string[] )[] | string

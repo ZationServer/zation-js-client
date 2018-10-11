@@ -33,7 +33,7 @@ class FullReaction<T extends Function>
      * @description
      * Returns the filter.
      */
-    getFilter() : object {
+    getFilter() : any {
         return this.filter;
     }
 

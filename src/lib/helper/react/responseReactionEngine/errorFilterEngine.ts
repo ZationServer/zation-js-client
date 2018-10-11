@@ -42,6 +42,17 @@ export class ErrorFilterEngine
             }
         }
 
+        if(Array.isArray(filter['group']) || typeof filter['group'] === 'string')
+        {
+            cachedFilterErrors =
+                FilterEngine.getWhoHasOneOfInputVar<TaskError>(cachedFilterErrors,filter['group'],
+                    (te) => {return te.getGroup();});
+
+            if(cachedFilterErrors.length === 0) {
+                return [];
+            }
+        }
+
         if(Array.isArray(filter['type']) || typeof filter['type'] === 'string')
         {
             cachedFilterErrors =
