@@ -17,13 +17,25 @@ export class OrBuilder<T,R>
         this.orAdd = orAdd;
     }
 
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Link new values with in OR connection.
+     * @param searchValues
+     * The values are connected with AND.
+     */
     or(... searchValues : R[]) : OrBuilder<T,R>
     {
         this.orAdd(searchValues);
         return this;
     }
 
-    next() : T
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Continue with the builder before.
+     */
+    continue() : T
     {
         return this.main;
     }

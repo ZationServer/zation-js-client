@@ -6,16 +6,16 @@ GitHub: LucaCode
 
 import {ReactionOnError} from "../reaction/reactionHandler";
 import ResponseReactAble = require("../responseReactionEngine/responseReactAble");
-import {AbstractErrorBuilderReaction} from "./abstractErrorBuilderReaction";
+import {AbstractErrorFilterBuilder} from "./abstractErrorFilterBuilder";
 
-export class OnErrorBuilder<T extends ResponseReactAble> extends AbstractErrorBuilderReaction<T>
+export class OnErrorBuilder<T extends ResponseReactAble> extends AbstractErrorFilterBuilder<T>
 {
     constructor(main : T) {
         super(main);
     }
 
-    _save(reaction : ReactionOnError, filter : object) : void
+    _save(reaction : ReactionOnError, filter : object[]) : void
     {
-        this.main.onError(reaction,filter);
+        this.main.onError(reaction,...filter);
     }
 }

@@ -75,8 +75,13 @@ class ResponseReact implements ResponseReactAble
      * @param filter
      * The purpose of this param is to filter the task errors.
      * Look in the examples how you can use it.
+     * You also can add more than one filter.
+     * The filter are linked with OR so the filtered errors
+     * of each filter are countend together.
+     * If there is more than one error at the end,
+     * the reaction wil be triggerd with all filtered errors.
      */
-    onError(reaction: ReactionOnError, filter : ErrorFilter = {}) : ResponseReact
+    onError(reaction: ReactionOnError, ...filter : ErrorFilter[]) : ResponseReact
     {
         TriggerResponseEngine.onError(this.response,new FullReaction<ReactionOnError>(reaction,filter));
         return this;
@@ -124,8 +129,13 @@ class ResponseReact implements ResponseReactAble
      * @param filter
      * The purpose of this param is to filter the task errors.
      * Look in the examples how you can use it.
+     * You also can add more than one filter.
+     * The filter are linked with OR so the filtered errors
+     * of each filter are countend together.
+     * If there is more than one error at the end,
+     * the reaction wil be triggerd with all filtered errors.
      */
-    catchError(reaction: ReactionCatchError, filter : ErrorFilter = {}) : ResponseReact
+    catchError(reaction: ReactionCatchError, ...filter : ErrorFilter[]) : ResponseReact
     {
         TriggerResponseEngine.catchError(this.response,new FullReaction<ReactionCatchError>(reaction,filter));
         return this;

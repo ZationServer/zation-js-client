@@ -209,10 +209,15 @@ class RequestBuilder
      * @param filter
      * The purpose of this param is to filter the task errors.
      * Look in the examples how you can use it.
+     * You also can add more than one filter.
+     * The filter are linked with OR so the filtered errors
+     * of each filter are countend together.
+     * If there is more than one error at the end,
+     * the reaction wil be triggerd with all filtered errors.
      */
-    onError(reaction: ReactionOnError, filter?: ErrorFilter) : RequestBuilder
+    onError(reaction: ReactionOnError, ...filter: ErrorFilter[]) : RequestBuilder
     {
-        this._responseReactionBox.onError(reaction,filter);
+        this._responseReactionBox.onError(reaction,...filter);
         return this;
     }
 
@@ -258,10 +263,15 @@ class RequestBuilder
      * @param filter
      * The purpose of this param is to filter the task errors.
      * Look in the examples how you can use it.
+     * You also can add more than one filter.
+     * The filter are linked with OR so the filtered errors
+     * of each filter are countend together.
+     * If there is more than one error at the end,
+     * the reaction wil be triggerd with all filtered errors.
      */
-    catchError(reaction: ReactionOnError, filter?: ErrorFilter) : RequestBuilder
+    catchError(reaction: ReactionOnError, ...filter: ErrorFilter[]) : RequestBuilder
     {
-        this._responseReactionBox.catchError(reaction,filter);
+        this._responseReactionBox.catchError(reaction,...filter);
         return this;
     }
 
@@ -336,6 +346,14 @@ class RequestBuilder
         });
 
         return resp;
+    }
+
+    async buildGetRequest() : string
+    {
+
+        //todo
+
+
     }
 
 }

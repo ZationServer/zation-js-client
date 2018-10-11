@@ -24,6 +24,7 @@ export class TriggerResponseEngine
 
     static onError(response : Response,fullReaction : FullReaction<ReactionOnError>)
     {
+
         const fErrors : TaskError[] = ErrorFilterEngine.filterErrors(response.getErrors(),fullReaction.getFilter());
         if(fErrors.length > 0) {
             fullReaction.getReactionHandler()(fErrors,response);

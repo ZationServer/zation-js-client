@@ -10,7 +10,20 @@ import {ErrorFilter} from "../../filter/errorFilter";
 export class ErrorFilterEngine
 {
 
-    static filterErrors(errors : TaskError[],filter : ErrorFilter) : TaskError[]
+    static filterErrors(errors : TaskError[],filters : ErrorFilter[]) : TaskError[] {
+        if (filters.length === 0) {
+            return errors;
+        }
+        else {
+            let errors : TaskError[] = [];
+            for(let i = 0; i < filters.length; i++) {
+                errors = errors.concat(ErrorFilterEngine.filterError(errors,filters[i]));
+            }
+            return errors;
+        }
+    }
+
+    static filterError(errors : TaskError[],filter : ErrorFilter) : TaskError[]
     {
         if(filter === {}) {
             return errors;

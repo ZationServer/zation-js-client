@@ -83,10 +83,15 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * @param filter
      * The purpose of this param is to filter the task errors.
      * Look in the examples how you can use it.
+     * You also can add more than one filter.
+     * The filter are linked with OR so the filtered errors
+     * of each filter are countend together.
+     * If there is more than one error at the end,
+     * the reaction wil be triggerd with all filtered errors.
      * @return
      * It returns a FullReaction, you can use it to remove the on ErrorReaction from the box.
      */
-    onError(reaction: ReactionOnError, filter?: ErrorFilter) : FullReaction<ReactionOnError>
+    onError(reaction: ReactionOnError, ...filter: ErrorFilter[]) : FullReaction<ReactionOnError>
     {
         const fullReaction = new FullReaction<ReactionOnError>(reaction,filter);
         this.errorReactionBox.addItem(fullReaction);
@@ -155,10 +160,15 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * @param filter
      * The purpose of this param is to filter the task errors.
      * Look in the examples how you can use it.
+     * You also can add more than one filter.
+     * The filter are linked with OR so the filtered errors
+     * of each filter are countend together.
+     * If there is more than one error at the end,
+     * the reaction wil be triggerd with all filtered errors.
      * @return
      * It returns a FullReaction, you can use it to remove the catchError Reaction from the box.
      */
-    catchError(reaction: ReactionCatchError, filter?: ErrorFilter) : FullReaction<ReactionCatchError>
+    catchError(reaction: ReactionCatchError, ...filter: ErrorFilter[]) : FullReaction<ReactionCatchError>
     {
         const fullReaction = new FullReaction<ReactionCatchError>(reaction,filter);
         this.errorCatchReactionBox.addItem(fullReaction);
