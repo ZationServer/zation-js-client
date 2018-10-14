@@ -5,10 +5,11 @@ GitHub: LucaCode
  */
 
 import Const = require("../constants/constWrapper");
+import {ZationOptions} from "../../api/zationOptions";
 
 class ZationConfig
 {
-    private config : object = {};
+    private config : ZationOptions = {};
 
     constructor(config : object)
     {
@@ -28,20 +29,21 @@ class ZationConfig
 
     loadDefaults()
     {
-        this.config[Const.Config.DEBUG] = false;
-        this.config[Const.Config.SYSTEM] = 'W';
-        this.config[Const.Config.VERSION] = 1.0;
-        this.config[Const.Config.HOSTNAME] = 'localhost';
-        this.config[Const.Config.PATH] = '/zation';
-        this.config[Const.Config.PORT] = 3000;
-        this.config[Const.Config.SECURE] = false;
-        this.config[Const.Config.REJECT_UNAUTHORIZED] = false;
-        this.config[Const.Config.POST_KEY] = 'zation';
-
-        this.config[Const.Config.AUTO_ALL_CH_SUB] = true;
-        this.config[Const.Config.AUTO_USER_CH_SUB] = true;
-        this.config[Const.Config.AUTO_DEFAULT_USER_GROUP_CH_SUB] = true;
-        this.config[Const.Config.AUTO_AUTH_USER_GROUP_CH_SUB] = true;
+        this.config = {
+          debug : false,
+          system : 'W',
+          version : 1.0,
+          hostname : 'localhost',
+          path : '/zation',
+          port : 3000,
+          secure : false,
+          rejectUnauthorized : false,
+          postKey : 'zation',
+          autoAllChSub : true,
+          autoUserChSub : true,
+          autoDefaultUserGroupChSub : true,
+          autoAuthUserGroupChSub : true
+        };
     }
 
     loadSettingsFromClientPrepare()

@@ -49,11 +49,15 @@ class Box<T>
     }
 
     // noinspection JSUnusedGlobalSymbols
-    removeItem(item : T) : void
+    removeItem(item : T) : boolean
     {
         const index = this.items.indexOf(item);
-        if (index > -1) {
+        if (index != -1) {
             this.items.splice(index, 1);
+            return true;
+        }
+        else{
+            return false;
         }
     }
 

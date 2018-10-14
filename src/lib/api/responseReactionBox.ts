@@ -8,10 +8,10 @@ import ReactionBox       = require("../helper/react/box/reactionBox");
 import {OnErrorBuilder}    from "../helper/react/onErrorBuilder/onErrorBuilder";
 import {CatchErrorBuilder} from "../helper/react/onErrorBuilder/catchErrorBuilder";
 import {
-    ReactionCatchError,
-    ReactionOnError,
-    ReactionOnResponse,
-    ReactionOnSuccessful
+    ResponseReactionCatchError,
+    ResponseReactionOnError,
+    ResponseReactionOnResponse,
+    ResponseReactionOnSuccessful
 } from "../helper/react/reaction/reactionHandler";
 import FullReaction      = require("../helper/react/reaction/fullReaction");
 import Box               = require("../helper/box/box");
@@ -23,20 +23,25 @@ import {TriggerResponseEngine} from "../helper/react/responseReactionEngine/trig
 class ResponseReactionBox extends ReactionBox implements ResponseReactAble
 {
 
-    private readonly errorCatchReactionBox : Box<FullReaction<ReactionCatchError>>
-        = new Box<FullReaction<ReactionCatchError>>();
+    private readonly errorCatchReactionBox : Box<FullReaction<ResponseReactionCatchError>>
+        = new Box<FullReaction<ResponseReactionCatchError>>();
 
-    private readonly errorReactionBox : Box<FullReaction<ReactionOnError>>
-        = new Box<FullReaction<ReactionOnError>>();
+    private readonly errorReactionBox : Box<FullReaction<ResponseReactionOnError>>
+        = new Box<FullReaction<ResponseReactionOnError>>();
 
-    private readonly successfulReactionBox : Box<FullReaction<ReactionOnSuccessful>>
-        = new Box<FullReaction<ReactionOnSuccessful>>();
+    private readonly successfulReactionBox : Box<FullReaction<ResponseReactionOnSuccessful>>
+        = new Box<FullReaction<ResponseReactionOnSuccessful>>();
 
-    private readonly responseReactionBox : Box<FullReaction<ReactionOnResponse>>
-        = new Box<FullReaction<ReactionOnResponse>>();
+    private readonly responseReactionBox : Box<FullReaction<ResponseReactionOnResponse>>
+        = new Box<FullReaction<ResponseReactionOnResponse>>();
 
-    constructor()
-    {
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Creates a new ResponseReactionBox.
+     * This box can be linked to the zation client.
+     */
+    constructor() {
         super();
     }
 
@@ -95,9 +100,9 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * @return
      * It returns a FullReaction, you can use it to remove the on ErrorReaction from the box.
      */
-    onError(reaction: ReactionOnError, ...filter: ErrorFilter[]) : FullReaction<ReactionOnError>
+    onError(reaction: ResponseReactionOnError, ...filter: ErrorFilter[]) : FullReaction<ResponseReactionOnError>
     {
-        const fullReaction = new FullReaction<ReactionOnError>(reaction,filter);
+        const fullReaction = new FullReaction<ResponseReactionOnError>(reaction,filter);
         this.errorReactionBox.addItem(fullReaction);
         return fullReaction;
     }
@@ -118,7 +123,7 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * Remove an OnError reaction with the FullReaction.
      * @param fullReaction
      */
-    offError(fullReaction : FullReaction<ReactionOnError>) : void {
+    offError(fullReaction : FullReaction<ResponseReactionOnError>) : void {
         this.errorReactionBox.removeItem(fullReaction);
     }
 
@@ -176,9 +181,9 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * @return
      * It returns a FullReaction, you can use it to remove the catchError Reaction from the box.
      */
-    catchError(reaction: ReactionCatchError, ...filter: ErrorFilter[]) : FullReaction<ReactionCatchError>
+    catchError(reaction: ResponseReactionCatchError, ...filter: ErrorFilter[]) : FullReaction<ResponseReactionCatchError>
     {
-        const fullReaction = new FullReaction<ReactionCatchError>(reaction,filter);
+        const fullReaction = new FullReaction<ResponseReactionCatchError>(reaction,filter);
         this.errorCatchReactionBox.addItem(fullReaction);
         return fullReaction;
     }
@@ -199,7 +204,7 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * Remove an catchError reaction with the FullReaction.
      * @param fullReaction
      */
-    rmCatchError(fullReaction : FullReaction<ReactionCatchError>) : void {
+    rmCatchError(fullReaction : FullReaction<ResponseReactionCatchError>) : void {
         this.errorCatchReactionBox.removeItem(fullReaction);
     }
 
@@ -215,9 +220,9 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * @return
      * It returns a FullReaction, you can use it to remove the onSuccessful Reaction from the box.
      */
-    onSuccessful(reaction: ReactionOnSuccessful, statusCode ?: number | string) : FullReaction<ReactionOnSuccessful>
+    onSuccessful(reaction: ResponseReactionOnSuccessful, statusCode ?: number | string) : FullReaction<ResponseReactionOnSuccessful>
     {
-        const fullReaction = new FullReaction<ReactionOnSuccessful>(reaction,{statusCode : statusCode});
+        const fullReaction = new FullReaction<ResponseReactionOnSuccessful>(reaction,{statusCode : statusCode});
         this.successfulReactionBox.addItem(fullReaction);
         return fullReaction;
     }
@@ -228,7 +233,7 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * Remove an onSuccessful reaction with the FullReaction.
      * @param fullReaction
      */
-    offSuccessful(fullReaction : FullReaction<ReactionOnSuccessful>) : void {
+    offSuccessful(fullReaction : FullReaction<ResponseReactionOnSuccessful>) : void {
         this.successfulReactionBox.removeItem(fullReaction);
     }
 
@@ -243,9 +248,9 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * @return
      * It returns a FullReaction, you can use it to remove the onResponse Reaction from the box.
      */
-    onResponse(reaction: ReactionOnResponse) : FullReaction<ReactionOnResponse>
+    onResponse(reaction: ResponseReactionOnResponse) : FullReaction<ResponseReactionOnResponse>
     {
-        const fullReaction = new FullReaction<ReactionOnResponse>(reaction);
+        const fullReaction = new FullReaction<ResponseReactionOnResponse>(reaction);
         this.responseReactionBox.addItem(fullReaction);
         return fullReaction;
     }
@@ -256,27 +261,27 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * Remove an onResponse reaction with the FullReaction.
      * @param fullReaction
      */
-    offResponse(fullReaction : FullReaction<ReactionOnResponse>) : void {
+    offResponse(fullReaction : FullReaction<ResponseReactionOnResponse>) : void {
         this.responseReactionBox.removeItem(fullReaction);
     }
 
-    _trigger(response : Response)
+    async _trigger(response : Response)
     {
         if(this.activate)
         {
             if(response.isSuccessful()) {
-                this.successfulReactionBox.forEachSync(async (fullReaction : FullReaction<ReactionOnSuccessful>) =>
+                await this.successfulReactionBox.forEach(async (fullReaction : FullReaction<ResponseReactionOnSuccessful>) =>
                 {
-                    TriggerResponseEngine.onSuccessful(response,fullReaction);
+                    await TriggerResponseEngine.onSuccessful(response,fullReaction);
                 });
             }
             else {
-                this.errorCatchReactionBox.forEachSync((fullReaction : FullReaction<ReactionCatchError>) =>
+                await this.errorCatchReactionBox.forEach(async (fullReaction : FullReaction<ResponseReactionCatchError>) =>
                 {
-                    TriggerResponseEngine.catchError(response,fullReaction);
+                    await TriggerResponseEngine.catchError(response,fullReaction);
                 });
 
-                this.errorReactionBox.forEachSync((fullReaction : FullReaction<ReactionOnError>) =>
+                this.errorReactionBox.forEachSync(async (fullReaction : FullReaction<ResponseReactionOnError>) =>
                 {
                     TriggerResponseEngine.onError(response,fullReaction);
                 });

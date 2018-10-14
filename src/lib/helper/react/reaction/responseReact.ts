@@ -5,7 +5,7 @@ GitHub: LucaCode
  */
 
 import ResponseReactAble        = require("../responseReactionEngine/responseReactAble");
-import {ReactionCatchError, ReactionOnError, ReactionOnSuccessful} from "./reactionHandler";
+import {ResponseReactionCatchError, ResponseReactionOnError, ResponseReactionOnSuccessful} from "./reactionHandler";
 import {OnErrorBuilder}         from "../onErrorBuilder/onErrorBuilder";
 import {CatchErrorBuilder}      from "../onErrorBuilder/catchErrorBuilder";
 import Response                 = require("../../../api/response");
@@ -17,9 +17,11 @@ import ResponseReactionBox = require("../../../api/responseReactionBox");
 class ResponseReact implements ResponseReactAble
 {
     private readonly response : Response;
+    private preAction : Promise<void>;
 
     constructor(response : Response)
     {
+        this.preAction = Promise.resolve();
         this.response = response;
     }
 
@@ -85,9 +87,11 @@ class ResponseReact implements ResponseReactAble
      * If there is more than one error at the end,
      * the reaction wil be triggerd with all filtered errors.
      */
-    onError(reaction: ReactionOnError, ...filter : ErrorFilter[]) : ResponseReact
+    onError(reaction: ResponseReactionOnError, ...filter : ErrorFilter[]) : ResponseReact
     {
-        TriggerResponseEngine.onError(this.response,new FullReaction<ReactionOnError>(reaction,filter));
+        this.preAction = this.preAction.then(async () => {
+            await TriggerResponseEngine.onError(this.response,new FullReaction<ResponseReactionOnError>(reaction,filter));
+        });
         return this;
     }
 
@@ -143,9 +147,11 @@ class ResponseReact implements ResponseReactAble
      * If there is more than one error at the end,
      * the reaction wil be triggerd with all filtered errors.
      */
-    catchError(reaction: ReactionCatchError, ...filter : ErrorFilter[]) : ResponseReact
+    catchError(reaction: ResponseReactionCatchError, ...filter : ErrorFilter[]) : ResponseReact
     {
-        TriggerResponseEngine.catchError(this.response,new FullReaction<ReactionCatchError>(reaction,filter));
+        this.preAction = this.preAction.then(async () => {
+            await TriggerResponseEngine.catchError(this.response,new FullReaction<ResponseReactionCatchError>(reaction,filter));
+        });
         return this;
     }
 
@@ -180,10 +186,12 @@ class ResponseReact implements ResponseReactAble
      * @param statusCode
      * can be provided to filter on with an status code.
      */
-    onSuccessful(reaction: ReactionOnSuccessful, statusCode ?: number | string) : ResponseReact
+    onSuccessful(reaction: ResponseReactionOnSuccessful, statusCode ?: number | string) : ResponseReact
     {
-        TriggerResponseEngine.
-        onSuccessful(this.response,new FullReaction<ReactionOnSuccessful>(reaction,{statusCode : statusCode}));
+        this.preAction = this.preAction.then(async () => {
+            await TriggerResponseEngine.
+            onSuccessful(this.response,new FullReaction<ResponseReactionOnSuccessful>(reaction,{statusCode : statusCode}));
+        });
         return this;
     }
 
@@ -195,9 +203,22 @@ class ResponseReact implements ResponseReactAble
      */
     reactWith(...respReactionBoxes : ResponseReactionBox[]) : ResponseReact
     {
-        respReactionBoxes.forEach((box : ResponseReactionBox) => {
-            box._trigger(this.response);
+        this.preAction = this.preAction.then(async () => {
+            await respReactionBoxes.forEach(async (box : ResponseReactionBox) => {
+                await box._trigger(this.response);
+            });
         });
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Async wait for all reations are finshed and returns the ResponseReact.
+     */
+    async wait() : Promise<ResponseReact>
+    {
+        await this.preAction;
         return this;
     }
 }

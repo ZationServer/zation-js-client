@@ -6,37 +6,37 @@ GitHub: LucaCode
 
 import Response = require("../../../api/response");
 import FullReaction = require("../reaction/fullReaction");
-import {ReactionCatchError, ReactionOnError, ReactionOnSuccessful} from "../reaction/reactionHandler";
+import {ResponseReactionCatchError, ResponseReactionOnError, ResponseReactionOnSuccessful} from "../reaction/reactionHandler";
 import {ErrorFilterEngine} from "./errorFilterEngine";
 import {TaskError} from "../taskError/taskError";
 
 export class TriggerResponseEngine
 {
-    static onSuccessful(response : Response,fullReaction : FullReaction<ReactionOnSuccessful>)
+    static async onSuccessful(response : Response,fullReaction : FullReaction<ResponseReactionOnSuccessful>)
     {
         if(fullReaction.getFilter()['statusCode'] === undefined) {
-            fullReaction.getReactionHandler()(response.getResult(),response);
+            await fullReaction.getReactionHandler()(response.getResult(),response);
         }
         else if(fullReaction.getFilter()['statusCode'] === response.getStatusCode()) {
-            fullReaction.getReactionHandler()(response.getResult(),response);
+            await fullReaction.getReactionHandler()(response.getResult(),response);
         }
     }
 
-    static onError(response : Response,fullReaction : FullReaction<ReactionOnError>)
+    static async onError(response : Response,fullReaction : FullReaction<ResponseReactionOnError>)
     {
 
         const fErrors : TaskError[] = ErrorFilterEngine.filterErrors(response.getErrors(),fullReaction.getFilter());
         if(fErrors.length > 0) {
-            fullReaction.getReactionHandler()(fErrors,response);
+            await fullReaction.getReactionHandler()(fErrors,response);
         }
     }
 
-    static catchError(response : Response,fullReaction : FullReaction<ReactionCatchError>)
+    static async catchError(response : Response,fullReaction : FullReaction<ResponseReactionCatchError>)
     {
         const fErrors : TaskError[] = ErrorFilterEngine.filterErrors(response._getNotCatchedErrors(),fullReaction.getFilter());
         if(fErrors.length > 0) {
             response._errorsAreCatched(fErrors);
-            fullReaction.getReactionHandler()(fErrors,response);
+            await fullReaction.getReactionHandler()(fErrors,response);
         }
     }
 }

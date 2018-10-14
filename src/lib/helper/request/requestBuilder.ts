@@ -8,9 +8,10 @@ import Zation = require("../../api/zation");
 import ResponseReactionBox = require("../../api/responseReactionBox");
 import Response = require("../../api/response");
 import AuthRequest = require("../../api/authRequest");
+// noinspection TypeScriptPreferShortImport
 import {ProtocolType} from "../constants/protocolType";
 import {ProgressHandler} from "./progressHandler";
-import {ReactionOnError, ReactionOnSuccessful} from "../react/reaction/reactionHandler";
+import {ResponseReactionOnError, ResponseReactionOnSuccessful} from "../react/reaction/reactionHandler";
 import {OnErrorBuilder} from "../react/onErrorBuilder/onErrorBuilder";
 import {CatchErrorBuilder} from "../react/onErrorBuilder/catchErrorBuilder";
 import {ErrorFilter} from "../filter/errorFilter";
@@ -220,7 +221,7 @@ class RequestBuilder
      * If there is more than one error at the end,
      * the reaction wil be triggerd with all filtered errors.
      */
-    onError(reaction: ReactionOnError, ...filter: ErrorFilter[]) : RequestBuilder
+    onError(reaction: ResponseReactionOnError, ...filter: ErrorFilter[]) : RequestBuilder
     {
         this._responseReactionBox.onError(reaction,...filter);
         return this;
@@ -278,7 +279,7 @@ class RequestBuilder
      * If there is more than one error at the end,
      * the reaction wil be triggerd with all filtered errors.
      */
-    catchError(reaction: ReactionOnError, ...filter: ErrorFilter[]) : RequestBuilder
+    catchError(reaction: ResponseReactionOnError, ...filter: ErrorFilter[]) : RequestBuilder
     {
         this._responseReactionBox.catchError(reaction,...filter);
         return this;
@@ -313,7 +314,7 @@ class RequestBuilder
      * @param statusCode
      * can be provided to filter on with an status code.
      */
-    onSuccessful(reaction: ReactionOnSuccessful, statusCode ?: number | string) : RequestBuilder {
+    onSuccessful(reaction: ResponseReactionOnSuccessful, statusCode ?: number | string) : RequestBuilder {
         this._responseReactionBox.onSuccessful(reaction,statusCode);
         return this;
     }

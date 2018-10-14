@@ -15,6 +15,7 @@ import Response               = require("./response");
 import SendEngine             = require("../helper/send/sendEngine");
 const  SocketClusterClient    = require('socketcluster-client');
 import {SendAble}               from "../helper/request/sendAble";
+// noinspection TypeScriptPreferShortImport
 import {ProtocolType}           from "../helper/constants/protocolType";
 import {ZationOptions}          from "./zationOptions";
 import {ProgressHandler}        from "../helper/request/progressHandler";
@@ -26,6 +27,8 @@ import EventReactionBox       = require("./eventReactionBox");
 import {OnHandlerFunction, ResponseFunction, Socket} from "../helper/sc/socket";
 import ObjectPath             = require("../helper/tools/objectPath");
 import ConnectionNeededError  = require("../helper/error/connectionNeededError");
+import Logger = require("../helper/Logger/logger");
+import {Events} from "../helper/constants/events";
 
 class Zation
 {
@@ -50,7 +53,14 @@ class Zation
     //webSockets
     private socket : Socket;
 
-    constructor(settings : ZationOptions = {},...reactionBox : (ResponseReactionBox | ChannelReactionBox)[])
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Creates the main zation client.
+     * @param settings
+     * @param reactionBox
+     */
+    constructor(settings : ZationOptions = {},...reactionBox : (ResponseReactionBox | ChannelReactionBox | EventReactionBox)[])
     {
         //config
         this.zc = new ZationConfig(settings);
@@ -65,11 +75,17 @@ class Zation
 
         //system reactionBoxes
         this.syResponseReactionBox = new ResponseReactionBox();
+        this.syResponseReactionBox._link(this);
         this.userResponseReactionBox = new ResponseReactionBox();
+        this.userResponseReactionBox._link(this);
         this.syChannelReactionBox = new ChannelReactionBox();
+        this.syChannelReactionBox._link(this);
         this.userChannelReactionBox = new ChannelReactionBox();
+        this.userChannelReactionBox._link(this);
         this.syEventReactionBox = new EventReactionBox();
+        this.syEventReactionBox._link(this);
         this.userEventReactionBox = new EventReactionBox();
+        this.userEventReactionBox._link(this);
 
         this.responseReactionMainBox.addFixedItem(this.syResponseReactionBox);
         this.responseReactionMainBox.addFixedItem(this.userResponseReactionBox);
@@ -133,6 +149,7 @@ class Zation
     {
         for(let i = 0; i < reactionBox.length; i++) {
             const box = reactionBox[i];
+            box._link(this);
             if(box instanceof ResponseReactionBox) {
                 this.responseReactionMainBox.addItem(box);
             }
@@ -161,15 +178,22 @@ class Zation
         for(let i = 0; i < reactionBox.length; i++) {
             const box = reactionBox[i];
             if(box instanceof ResponseReactionBox) {
-                this.responseReactionMainBox.removeItem(box);
+                if(this.responseReactionMainBox.removeItem(box)){
+                    box._unlink();
+                }
             }
+
             else if(box instanceof ChannelReactionBox) {
-                this.channelReactionMainBox.removeItem(box);
+                if(this.channelReactionMainBox.removeItem(box)){
+                    box._unlink();
+                }
             }
             else {
                 // noinspection SuspiciousInstanceOfGuard
                 if(box instanceof EventReactionBox) {
-                    this.eventReactionMainBox.removeItem(box);
+                    if(this.eventReactionMainBox.removeItem(box)){
+                        box._unlink();
+                    }
                 }
             }
         }
@@ -339,7 +363,7 @@ class Zation
         await this._triggerResponseReactions(response);
 
         for(let i = 0; i < responseReactionBox.length; i++) {
-            responseReactionBox[i]._trigger(response);
+            await responseReactionBox[i]._trigger(response);
         }
 
         return response;
@@ -434,8 +458,12 @@ class Zation
 
     private _registerSocketEvents()
     {
-
-
+        this.socket.on('error', (err) =>
+        {
+            if(this.zc.getConfig(Const.Config.DEBUG)) {
+                Logger.printError(err);
+            }
+        });
     }
 
     private _buildScOptions()
@@ -1003,11 +1031,18 @@ class Zation
         return this.channelReactionMainBox;
     }
 
-    //Part _trigger RequestResponds
+    //Part trigger
     private async _triggerResponseReactions(response : Response) : Promise<void>
     {
         await this.responseReactionMainBox.forEach(async (responseReactionBox : ResponseReactionBox) => {
-            responseReactionBox._trigger(response);
+            await responseReactionBox._trigger(response);
+        });
+    }
+
+    private async _triggerEventReactions(event : Events,...arg : any[]) : Promise<void>
+    {
+        await this.eventReactionMainBox.forEach(async (eventReactionBox : EventReactionBox) => {
+            await eventReactionBox._trigger(event,...arg);
         });
     }
 }

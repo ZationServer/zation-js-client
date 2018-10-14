@@ -7,34 +7,40 @@ GitHub: LucaCode
 import ReactionBox    = require("../helper/react/box/reactionBox");
 import Box            = require("../helper/box/box");
 import FullReaction   = require("../helper/react/reaction/fullReaction");
-import {ReactionOnPubCustomCh, ReactionOnPubCustomIdCh, ReactionOnPubZationCh} from "../helper/react/reaction/reactionHandler";
+import {ChannelReactionOnPubCustomCh, ChannelReactionOnPubCustomIdCh, ChannelReactionOnPubZationCh} from "../helper/react/reaction/reactionHandler";
 import {ZationChannelType}                                                  from "../helper/channel/zationChannelType";
 
 type ValidChecker = (filter : object) => boolean;
 
 class ChannelReactionBox extends ReactionBox
 {
-    private readonly userChReactionBox : Box<FullReaction<ReactionOnPubZationCh>>
-        = new Box<FullReaction<ReactionOnPubZationCh>>();
+    private readonly userChReactionBox : Box<FullReaction<ChannelReactionOnPubZationCh>>
+        = new Box<FullReaction<ChannelReactionOnPubZationCh>>();
 
-    private readonly authUGChReactionBox : Box<FullReaction<ReactionOnPubZationCh>>
-        = new Box<FullReaction<ReactionOnPubZationCh>>();
+    private readonly authUGChReactionBox : Box<FullReaction<ChannelReactionOnPubZationCh>>
+        = new Box<FullReaction<ChannelReactionOnPubZationCh>>();
 
-    private readonly defaultUGChReactionBox : Box<FullReaction<ReactionOnPubZationCh>>
-        = new Box<FullReaction<ReactionOnPubZationCh>>();
+    private readonly defaultUGChReactionBox : Box<FullReaction<ChannelReactionOnPubZationCh>>
+        = new Box<FullReaction<ChannelReactionOnPubZationCh>>();
 
-    private readonly allChReactionBox : Box<FullReaction<ReactionOnPubZationCh>>
-        = new Box<FullReaction<ReactionOnPubZationCh>>();
+    private readonly allChReactionBox : Box<FullReaction<ChannelReactionOnPubZationCh>>
+        = new Box<FullReaction<ChannelReactionOnPubZationCh>>();
 
-    private readonly panelOutChReactionBox : Box<FullReaction<ReactionOnPubZationCh>>
-        = new Box<FullReaction<ReactionOnPubZationCh>>();
+    private readonly panelOutChReactionBox : Box<FullReaction<ChannelReactionOnPubZationCh>>
+        = new Box<FullReaction<ChannelReactionOnPubZationCh>>();
 
-    private readonly customIdChReactionBox : Box<FullReaction<ReactionOnPubCustomIdCh>>
-        = new Box<FullReaction<ReactionOnPubCustomIdCh>>();
+    private readonly customIdChReactionBox : Box<FullReaction<ChannelReactionOnPubCustomIdCh>>
+        = new Box<FullReaction<ChannelReactionOnPubCustomIdCh>>();
 
-    private readonly customChReactionBox : Box<FullReaction<ReactionOnPubCustomCh>>
-        = new Box<FullReaction<ReactionOnPubCustomCh>>();
+    private readonly customChReactionBox : Box<FullReaction<ChannelReactionOnPubCustomCh>>
+        = new Box<FullReaction<ChannelReactionOnPubCustomCh>>();
 
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Creates a new ChannelReactionBox.
+     * This box can be linked to the zation client.
+     */
     constructor()
     {
         super();
@@ -54,8 +60,8 @@ class ChannelReactionBox extends ReactionBox
      * @return
      * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
      */
-    onUserChPub(event : string | string[] | null,reaction : ReactionOnPubZationCh) : FullReaction<ReactionOnPubZationCh> {
-        const fullReaction = new FullReaction<ReactionOnPubZationCh>(reaction,{event : event});
+    onUserChPub(event : string | string[] | null,reaction : ChannelReactionOnPubZationCh) : FullReaction<ChannelReactionOnPubZationCh> {
+        const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction,{event : event});
         this.userChReactionBox.addItem(fullReaction);
         return fullReaction;
     }
@@ -66,7 +72,7 @@ class ChannelReactionBox extends ReactionBox
      * Remove on publish in the user channel reaction.
      * @param fullReaction
      */
-    offUserChPub(fullReaction : FullReaction<ReactionOnPubZationCh>) : void {
+    offUserChPub(fullReaction : FullReaction<ChannelReactionOnPubZationCh>) : void {
         this.userChReactionBox.removeItem(fullReaction);
     }
 
@@ -83,8 +89,8 @@ class ChannelReactionBox extends ReactionBox
      * @return
      * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
      */
-    onAuthUserGroupChPub(event : string | string[] | null,reaction : ReactionOnPubZationCh) : FullReaction<ReactionOnPubZationCh> {
-        const fullReaction = new FullReaction<ReactionOnPubZationCh>(reaction,{event : event});
+    onAuthUserGroupChPub(event : string | string[] | null,reaction : ChannelReactionOnPubZationCh) : FullReaction<ChannelReactionOnPubZationCh> {
+        const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction,{event : event});
         this.authUGChReactionBox.addItem(fullReaction);
         return fullReaction;
     }
@@ -95,7 +101,7 @@ class ChannelReactionBox extends ReactionBox
      * Remove on publish in the auth user group channel reaction.
      * @param fullReaction
      */
-    offAuthUserGroupChPub(fullReaction : FullReaction<ReactionOnPubZationCh>) : void {
+    offAuthUserGroupChPub(fullReaction : FullReaction<ChannelReactionOnPubZationCh>) : void {
         this.authUGChReactionBox.removeItem(fullReaction);
     }
 
@@ -112,8 +118,8 @@ class ChannelReactionBox extends ReactionBox
      * @return
      * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
      */
-    onDefaultUserGroupChPub(event : string | string[] | null,reaction : ReactionOnPubZationCh) : FullReaction<ReactionOnPubZationCh> {
-        const fullReaction = new FullReaction<ReactionOnPubZationCh>(reaction,{event : event});
+    onDefaultUserGroupChPub(event : string | string[] | null,reaction : ChannelReactionOnPubZationCh) : FullReaction<ChannelReactionOnPubZationCh> {
+        const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction,{event : event});
         this.defaultUGChReactionBox.addItem(fullReaction);
         return fullReaction;
     }
@@ -124,7 +130,7 @@ class ChannelReactionBox extends ReactionBox
      * Remove on publish in the default user group channel reaction.
      * @param fullReaction
      */
-    offDefaultUserGroupChPub(fullReaction : FullReaction<ReactionOnPubZationCh>) : void {
+    offDefaultUserGroupChPub(fullReaction : FullReaction<ChannelReactionOnPubZationCh>) : void {
         this.defaultUGChReactionBox.removeItem(fullReaction);
     }
 
@@ -141,8 +147,8 @@ class ChannelReactionBox extends ReactionBox
      * @return
      * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
      */
-    onAllChPub(event : string | string[] | null,reaction : ReactionOnPubZationCh) : FullReaction<ReactionOnPubZationCh> {
-        const fullReaction = new FullReaction<ReactionOnPubZationCh>(reaction,{event : event});
+    onAllChPub(event : string | string[] | null,reaction : ChannelReactionOnPubZationCh) : FullReaction<ChannelReactionOnPubZationCh> {
+        const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction,{event : event});
         this.allChReactionBox.addItem(fullReaction);
         return fullReaction;
     }
@@ -153,7 +159,7 @@ class ChannelReactionBox extends ReactionBox
      * Remove on publish in the all channel reaction.
      * @param fullReaction
      */
-    offAllChPub(fullReaction : FullReaction<ReactionOnPubZationCh>) : void {
+    offAllChPub(fullReaction : FullReaction<ChannelReactionOnPubZationCh>) : void {
         this.allChReactionBox.removeItem(fullReaction);
     }
 
@@ -170,8 +176,8 @@ class ChannelReactionBox extends ReactionBox
      * @return
      * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
      */
-    onPanelOutChPub(event : string | string[] | null,reaction : ReactionOnPubZationCh) : FullReaction<ReactionOnPubZationCh> {
-        const fullReaction = new FullReaction<ReactionOnPubZationCh>(reaction,{event : event});
+    onPanelOutChPub(event : string | string[] | null,reaction : ChannelReactionOnPubZationCh) : FullReaction<ChannelReactionOnPubZationCh> {
+        const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction,{event : event});
         this.panelOutChReactionBox.addItem(fullReaction);
         return fullReaction;
     }
@@ -182,7 +188,7 @@ class ChannelReactionBox extends ReactionBox
      * Remove on publish in the panel out channel reaction.
      * @param fullReaction
      */
-    offPanelOutChPub(fullReaction : FullReaction<ReactionOnPubZationCh>) : void {
+    offPanelOutChPub(fullReaction : FullReaction<ChannelReactionOnPubZationCh>) : void {
         this.panelOutChReactionBox.removeItem(fullReaction);
     }
 
@@ -198,26 +204,26 @@ class ChannelReactionBox extends ReactionBox
      * @return
      * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
      */
-    onCustomChPub(chName : string | string[] | null,event : string | string[] | null,reaction : ReactionOnPubCustomCh) : FullReaction<ReactionOnPubCustomCh> {
-        const fullReaction = new FullReaction<ReactionOnPubCustomCh>(reaction,{chName : chName,event : event});
+    onCustomChPub(chName : string | string[] | null,event : string | string[] | null,reaction : ChannelReactionOnPubCustomCh) : FullReaction<ChannelReactionOnPubCustomCh> {
+        const fullReaction = new FullReaction<ChannelReactionOnPubCustomCh>(reaction,{chName : chName,event : event});
         this.customChReactionBox.addItem(fullReaction);
         return fullReaction;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    offCustomChPub(fullReaction : FullReaction<ReactionOnPubCustomCh>) : boolean {
+    offCustomChPub(fullReaction : FullReaction<ChannelReactionOnPubCustomCh>) : boolean {
         return this.customChReactionBox.removeItem(fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    onCustomIdChData(chName : string, event : string, reaction : ReactionOnPubCustomIdCh, id ?: string) : FullReaction<ReactionOnPubCustomIdCh> {
-        const fullReaction = new FullReaction<ReactionOnPubCustomIdCh>(reaction,{chName : chName,event : event, id : id});
+    onCustomIdChData(chName : string, event : string, reaction : ChannelReactionOnPubCustomIdCh, id ?: string) : FullReaction<ChannelReactionOnPubCustomIdCh> {
+        const fullReaction = new FullReaction<ChannelReactionOnPubCustomIdCh>(reaction,{chName : chName,event : event, id : id});
         this.customIdChReactionBox.addItem(fullReaction);
         return fullReaction;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    offCustomIdChData(fullReaction : FullReaction<ReactionOnPubCustomIdCh>) : boolean {
+    offCustomIdChData(fullReaction : FullReaction<ChannelReactionOnPubCustomIdCh>) : boolean {
         return this.customIdChReactionBox.removeItem(fullReaction);
     }
 

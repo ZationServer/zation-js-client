@@ -6,7 +6,7 @@ GitHub: LucaCode
 
 import {OrBuilder} from "../statementBuilder/orBuilder";
 import {PairOrAndBuilder} from "../statementBuilder/pairOrAndBuilder";
-import {ReactionOnError} from "../reaction/reactionHandler";
+import {ResponseReactionOnError} from "../reaction/reactionHandler";
 import ResponseReactAble = require("../responseReactionEngine/responseReactAble");
 import {ErrorFilter} from "../../filter/errorFilter";
 import {PresetErrorFilter} from "./presetErrorFilter";
@@ -241,7 +241,7 @@ export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
      * @param reactions
      * You also can add more than one reaction.
      */
-    react(...reactions : ReactionOnError[]) : T
+    react(...reactions : ResponseReactionOnError[]) : T
     {
         //save last tmp
         this._pushTmpFilter();
@@ -388,9 +388,9 @@ export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
         return new PresetErrorFilter(this,pushPreset);
     }
 
-    protected abstract _save(reaction : ReactionOnError, filter : object[]) : void;
+    protected abstract _save(reaction : ResponseReactionOnError, filter : object[]) : void;
 
-    private _mergeReaction(reactions : ReactionOnError[]) : ReactionOnError
+    private _mergeReaction(reactions : ResponseReactionOnError[]) : ResponseReactionOnError
     {
         return (resp,filteredErrors) =>
         {
