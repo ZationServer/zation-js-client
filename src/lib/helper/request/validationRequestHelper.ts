@@ -91,6 +91,13 @@ class ValidationRequestHelper extends AbstractRequestHelper<ValidationRequestHel
         let params = `?${Const.Settings.HTTP_GET_REUQEST.INPUT}=${JSON.stringify(this._checks)}`;
         //vali req
         params += `&${Const.Settings.HTTP_GET_REUQEST.VALI_REQ}=true`;
+        //controller
+        if(this._systemController) {
+            params += `&${Const.Settings.HTTP_GET_REUQEST.SYSTEM_CONTROLLER}=${this._controllerName}`;
+        }
+        else {
+            params += `&${Const.Settings.HTTP_GET_REUQEST.CONTROLLER}=${this._controllerName}`;
+        }
         return this.zation.getServerAddress()+params;
     }
 
