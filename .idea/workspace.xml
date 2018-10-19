@@ -1,33 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="76638f38-4a15-47c2-ad03-534e2aa2a298" name="Default" comment="add ne async support for responseReaction&#10;add event reaction api structure">
+    <list default="true" id="76638f38-4a15-47c2-ad03-534e2aa2a298" name="Default" comment="improve api and documentation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/sc-errors/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/sc-errors/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/sc-errors/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/sc-errors/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/bower.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/socketcluster-client/bower.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/socketcluster-client/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/lib/sctransport.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/socketcluster-client/lib/sctransport.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/lib/ws-browser.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/socketcluster-client/lib/ws-browser.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/socketcluster-client/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/socketcluster.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/socketcluster-client/socketcluster.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/socketcluster.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/socketcluster-client/socketcluster.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socketcluster-client/test/integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/socketcluster-client/test/integration.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api/response.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/api/response.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api/responseReactionBox.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/api/responseReactionBox.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api/zation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/api/zation.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/auth/authEngine.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/auth/authEngine.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/abstractErrorFilterBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/abstractErrorFilterBuilder.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/catchErrorBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/catchErrorBuilder.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/onErrorBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/onErrorBuilder.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorFilter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorFilter.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/reaction/reactionHandler.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/react/reaction/reactionHandler.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/reaction/responseReact.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/react/reaction/responseReact.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/requestBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/request/requestHelper.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -44,7 +19,7 @@
         <entry file="file://$PROJECT_DIR$/src/lib/api/zation.ts">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="2237">
-              <caret line="426" column="19" lean-forward="true" selection-start-line="426" selection-start-column="19" selection-end-line="426" selection-end-column="19" />
+              <caret line="426" column="19" selection-start-line="426" selection-start-column="19" selection-end-line="426" selection-end-column="19" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="n#AuthEngine#0" expanded="true" />
@@ -78,7 +53,7 @@
         <entry file="file://$PROJECT_DIR$/src/lib/api/validationRequest.ts">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="570">
-              <caret line="41" column="22" lean-forward="true" selection-start-line="41" selection-start-column="22" selection-end-line="41" selection-end-column="22" />
+              <caret line="41" column="22" selection-start-line="41" selection-start-column="22" selection-end-line="41" selection-end-column="22" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -95,7 +70,7 @@
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="15">
-              <caret line="1" column="4" selection-start-line="1" selection-start-column="4" selection-end-line="1" selection-end-column="4" />
+              <caret line="1" column="4" selection-end-line="1" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -141,7 +116,7 @@
         <entry file="file://$PROJECT_DIR$/src/lib/helper/request/requestHelper.ts">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-5442">
-              <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
+              <caret line="29" selection-start-line="29" selection-end-line="29" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="n#Zation#0" expanded="true" />
@@ -211,14 +186,12 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/lib/helper/react/TaskError.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/error/deauthenticationFailError.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/error/signAuthenticationFailError.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/filter/filterEngine.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/request/progressHandler.ts" />
         <option value="$PROJECT_DIR$/src/lib/reader/zationReader.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/request/zationRequest.ts" />
-        <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/src/lib/helper/constants/systemController.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/config/ZationConfig.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/channel/channelType.ts" />
@@ -262,6 +235,8 @@
         <option value="$PROJECT_DIR$/src/lib/helper/request/requestBuilder.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/request/requestHelper.ts" />
         <option value="$PROJECT_DIR$/src/lib/api/zation.ts" />
+        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/src/.gitignore" />
       </list>
     </option>
   </component>
@@ -501,11 +476,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/src/lib/helper/react/taskError" />
       <recent name="$PROJECT_DIR$/src/lib/helper/react/reaction" />
       <recent name="$PROJECT_DIR$/src/lib/helper/react/responseReactionEngine" />
       <recent name="D:\MyProjekts\GitHub\zation-js-client\src\lib\helper\react\filterEngines" />
-      <recent name="D:\MyProjekts\GitHub\zation-js-client\src\lib\helper\react\box" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/lib/helper/constants" />
@@ -580,7 +555,7 @@
       <workItem from="1538490045017" duration="163000" />
       <workItem from="1538490221567" duration="7740000" />
       <workItem from="1538571128101" duration="470000" />
-      <workItem from="1538665451767" duration="124653000" />
+      <workItem from="1538665451767" duration="125145000" />
     </task>
     <task id="LOCAL-00001" summary="update config">
       <created>1538086085086</created>
@@ -638,11 +613,18 @@
       <option name="project" value="LOCAL" />
       <updated>1539554873028</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="improve api and documentation">
+      <created>1539923518458</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1539923518458</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="336590000" />
+    <option name="totallyTimeSpent" value="337082000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -656,7 +638,7 @@
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.8506024" visible="true" weight="0.16420014" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.8506024" visible="true" weight="0.41930938" />
       <window_info id="Structure" order="1" sideWeight="0.1493976" side_tool="true" weight="0.16472115" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Messages" weight="0.32891566" />
@@ -713,18 +695,10 @@
     <MESSAGE value="add new build get request to request builder&#10;add new task error group support&#10;improve documentation" />
     <MESSAGE value="add new preset errors&#10;fix bugs&#10;add new error group" />
     <MESSAGE value="add ne async support for responseReaction&#10;add event reaction api structure" />
-    <option name="LAST_COMMIT_MESSAGE" value="add ne async support for responseReaction&#10;add event reaction api structure" />
+    <MESSAGE value="improve api and documentation" />
+    <option name="LAST_COMMIT_MESSAGE" value="improve api and documentation" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/constants/constWrapper.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/lib/helper/constants/systemController.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
@@ -1122,21 +1096,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/index.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="70" column="25" selection-start-line="70" selection-start-column="25" selection-end-line="70" selection-end-column="25" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="n#Zation#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/lib/helper/request/requestHelper.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-5442">
-          <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
+          <caret line="29" selection-start-line="29" selection-end-line="29" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="n#Zation#0" expanded="true" />
@@ -1148,7 +1111,7 @@
     <entry file="file://$PROJECT_DIR$/src/lib/api/zation.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2237">
-          <caret line="426" column="19" lean-forward="true" selection-start-line="426" selection-start-column="19" selection-end-line="426" selection-end-column="19" />
+          <caret line="426" column="19" selection-start-line="426" selection-start-column="19" selection-end-line="426" selection-end-column="19" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="n#AuthEngine#0" expanded="true" />
@@ -1160,20 +1123,38 @@
     <entry file="file://$PROJECT_DIR$/src/lib/api/validationRequest.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="570">
-          <caret line="41" column="22" lean-forward="true" selection-start-line="41" selection-start-column="22" selection-end-line="41" selection-end-column="22" />
+          <caret line="41" column="22" selection-start-line="41" selection-start-column="22" selection-end-line="41" selection-end-column="22" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="1" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/build.sh">
       <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="294">
+          <caret line="70" column="25" selection-start-line="70" selection-start-column="25" selection-end-line="70" selection-end-column="25" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#Zation#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
-          <caret line="1" column="4" selection-start-line="1" selection-start-column="4" selection-end-line="1" selection-end-column="4" />
+          <caret line="1" column="4" selection-end-line="1" selection-end-column="5" />
         </state>
       </provider>
     </entry>
