@@ -1122,7 +1122,7 @@ export class PresetErrorFilter<T>
     /**
      * @description
      * Preset for wrongPanelAuthData.
-     * The task error can be thrown if the panel auth data is wrong.
+     * The task error can be thrown if the panel auth authData is wrong.
      */
     wrongPanelAuthData() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild

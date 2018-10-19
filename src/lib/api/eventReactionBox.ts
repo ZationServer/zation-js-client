@@ -95,9 +95,10 @@ class EventReactionBox extends ReactionBox
      * @description
      * Remove on connect reaction.
      * @param reaction
+     * If it is not given away all will be removed.
      */
-    offConnect(reaction : EventReactionOnConnect) : void {
-        this.connectReactionBox.removeItem(reaction);
+    offConnect(reaction ?: EventReactionOnConnect) : void {
+        this.connectReactionBox.remove(reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -121,9 +122,10 @@ class EventReactionBox extends ReactionBox
      * @description
      * Remove on first connect reaction.
      * @param reaction
+     * If it is not given away all will be removed.
      */
-    offFirstConnect(reaction : EventReactionOnFirstConnect) : void {
-        this.firstConnectReactionBox.removeItem(reaction);
+    offFirstConnect(reaction ?: EventReactionOnFirstConnect) : void {
+        this.firstConnectReactionBox.remove(reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -146,9 +148,10 @@ class EventReactionBox extends ReactionBox
      * @description
      * Remove on reconnect reaction.
      * @param reaction
+     * If it is not given away all will be removed.
      */
-    offReconnect(reaction : EventReactionOnReconnect) : void {
-        this.reconnectReactionBox.removeItem(reaction);
+    offReconnect(reaction ?: EventReactionOnReconnect) : void {
+        this.reconnectReactionBox.remove(reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -157,7 +160,7 @@ class EventReactionBox extends ReactionBox
      * React on disconnect with the client.
      * This event can trigger if you call the disconnect method on the client.
      * @example
-     * onClientDisconnect((code,data) => {});
+     * onClientDisconnect((code,authData) => {});
      * @param reaction
      * @return
      * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
@@ -172,9 +175,10 @@ class EventReactionBox extends ReactionBox
      * @description
      * Remove on client disconnect reaction.
      * @param reaction
+     * If it is not given away all will be removed.
      */
-    offClientDisconnect(reaction : EventReactionOnClientDisconnect) : void {
-        this.clientDisconnectReactionBox.removeItem(reaction);
+    offClientDisconnect(reaction ?: EventReactionOnClientDisconnect) : void {
+        this.clientDisconnectReactionBox.remove(reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -184,7 +188,7 @@ class EventReactionBox extends ReactionBox
      * This event can trigger if the server is disconnet this client or
      * the connection is lost to the server.
      * @example
-     * onServerDisconnect((code,data) => {});
+     * onServerDisconnect((code,authData) => {});
      * @param reaction
      * @return
      * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
@@ -199,9 +203,10 @@ class EventReactionBox extends ReactionBox
      * @description
      * Remove on server disconnect reaction.
      * @param reaction
+     * If it is not given away all will be removed.
      */
-    offServerDisconnect(reaction : EventReactionOnServerDisconnect) : void {
-        this.serverDisconnectReactionBox.removeItem(reaction);
+    offServerDisconnect(reaction ?: EventReactionOnServerDisconnect) : void {
+        this.serverDisconnectReactionBox.remove(reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -211,7 +216,7 @@ class EventReactionBox extends ReactionBox
      * So this event is trigger if you call the disconnect method on the client,
      * the server is disconnect the client or the connection to the server is lost.
      * @example
-     * onDisconnect((fromClient,code,data) => {});
+     * onDisconnect((fromClient,code,authData) => {});
      * @param reaction
      * @return
      * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
@@ -226,9 +231,10 @@ class EventReactionBox extends ReactionBox
      * @description
      * Remove on disconnect reaction.
      * @param reaction
+     * If it is not given away all will be removed.
      */
-    offDisconnect(reaction : EventReactionOnDisconnect) : void {
-        this.disconnectReactionBox.removeItem(reaction);
+    offDisconnect(reaction ?: EventReactionOnDisconnect) : void {
+        this.disconnectReactionBox.remove(reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -252,9 +258,10 @@ class EventReactionBox extends ReactionBox
      * @description
      * Remove on authenticate reaction.
      * @param reaction
+     * If it is not given away all will be removed.
      */
-    offAuthenticate(reaction : EventReactionOnAuthenticate) : void {
-        this.authenticateReactionBox.removeItem(reaction);
+    offAuthenticate(reaction ?: EventReactionOnAuthenticate) : void {
+        this.authenticateReactionBox.remove(reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -278,9 +285,10 @@ class EventReactionBox extends ReactionBox
      * @description
      * Remove on client deauthenticate reaction.
      * @param reaction
+     * If it is not given away all will be removed.
      */
-    offClientDeauthenticate(reaction : EventReactionOnClinetDeauthenticate) : void {
-        this.clientDeauthenticateReactionBox.removeItem(reaction);
+    offClientDeauthenticate(reaction ?: EventReactionOnClinetDeauthenticate) : void {
+        this.clientDeauthenticateReactionBox.remove(reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -305,9 +313,10 @@ class EventReactionBox extends ReactionBox
      * @description
      * Remove on server deauthenticate reaction.
      * @param reaction
+     * If it is not given away all will be removed.
      */
-    offServerDeauthenticate(reaction : EventReactionOnServerDeauthenticate) : void {
-        this.serverDeauthenticateReactionBox.removeItem(reaction);
+    offServerDeauthenticate(reaction ?: EventReactionOnServerDeauthenticate) : void {
+        this.serverDeauthenticateReactionBox.remove(reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -332,9 +341,10 @@ class EventReactionBox extends ReactionBox
      * @description
      * Remove on server deauthenticate reaction.
      * @param reaction
+     * If it is not given away all will be removed.
      */
-    offDeauthenticate(reaction : EventReactionOnDeauthenticate) : void {
-        this.deauthenticateReactionBox.removeItem(reaction);
+    offDeauthenticate(reaction ?: EventReactionOnDeauthenticate) : void {
+        this.deauthenticateReactionBox.remove(reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -345,7 +355,7 @@ class EventReactionBox extends ReactionBox
      * This could be caused by a failure during the connection phase or
      * it may be triggered intentionally by calling zation.disconnect() while the socket is connecting.
      * @example
-     * onConnectAbort((code,data) => {});
+     * onConnectAbort((code,authData) => {});
      * @param reaction
      * @return
      * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
@@ -360,9 +370,10 @@ class EventReactionBox extends ReactionBox
      * @description
      * Remove on connect abort reaction.
      * @param reaction
+     * If it is not given away all will be removed.
      */
-    offConnectAbort(reaction : EventReactionOnConnectAbort) : void {
-        this.connectAbortReactionBox.removeItem(reaction);
+    offConnectAbort(reaction ?: EventReactionOnConnectAbort) : void {
+        this.connectAbortReactionBox.remove(reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -387,9 +398,10 @@ class EventReactionBox extends ReactionBox
      * @description
      * Remove on connecting reaction.
      * @param reaction
+     * If it is not given away all will be removed.
      */
-    offConnecting(reaction : EventReactionOnConnecting) : void {
-        this.connectingReactionBox.removeItem(reaction);
+    offConnecting(reaction ?: EventReactionOnConnecting) : void {
+        this.connectingReactionBox.remove(reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -413,9 +425,10 @@ class EventReactionBox extends ReactionBox
      * @description
      * Remove on error reaction.
      * @param reaction
+     * If it is not given away all will be removed.
      */
-    offError(reaction : EventReactionOnError) : void {
-        this.errorReactionBox.removeItem(reaction);
+    offError(reaction ?: EventReactionOnError) : void {
+        this.errorReactionBox.remove(reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -424,7 +437,7 @@ class EventReactionBox extends ReactionBox
      * React on close.
      * Triggers when a socket is disconnected or the connection is aborted
      * @example
-     * onClose((code,data) => {});
+     * onClose((code,authData) => {});
      * @param reaction
      * @return
      * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
@@ -439,9 +452,10 @@ class EventReactionBox extends ReactionBox
      * @description
      * Remove on close reaction.
      * @param reaction
+     * If it is not given away all will be removed.
      */
-    offClose(reaction : EventReactionOnClose) : void {
-        this.closeReactionBox.removeItem(reaction);
+    offClose(reaction ?: EventReactionOnClose) : void {
+        this.closeReactionBox.remove(reaction);
     }
 
     private async _triggerDataEventBox(box : Box<any>,...data : any[])

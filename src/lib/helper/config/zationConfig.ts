@@ -78,6 +78,11 @@ class ZationConfig
         return this.config[key];
     }
 
+    isDebug() : boolean
+    {
+        return this.getConfig(Const.Config.DEBUG);
+    }
+
     setConfig(key : any,value : any) : void
     {
         this.config[key] = value;

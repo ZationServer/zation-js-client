@@ -61,6 +61,16 @@ class Box<T>
         }
     }
 
+    remove(item ?: T) : void
+    {
+        if(item){
+            this.removeItem(item);
+        }
+        else {
+            this.removeAllItems();
+        }
+    }
+
     //Part Fixed Items
 
     // noinspection JSUnusedGlobalSymbols

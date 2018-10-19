@@ -30,6 +30,10 @@ import {ZationOptions} from "./zationOptions";
 import {ProgressHandler} from "../helper/request/progressHandler";
 import {OnHandlerFunction, ResponseFunction, Socket} from "../helper/sc/socket";
 import {Events} from "../helper/constants/events";
+import {ValidationCheck, ValidationRequest} from "./validationRequest";
+import AuthRequestHelper = require("../helper/request/authRequestHelper");
+import AuthRequest = require("./authRequest");
+import ValidationRequestHelper = require("../helper/request/validationRequestHelper");
 
 //override for decide between client/server deauthenticate
 SocketClusterClient.prototype.deauthenticate = function (callback) {
@@ -78,11 +82,7 @@ class Zation
     private readonly channelReactionMainBox : Box<ChannelReactionBox>;
     private readonly eventReactionMainBox : Box<EventReactionBox>;
 
-    //system reactionBoxes
-    private readonly syResponseReactionBox : ResponseReactionBox;
-    private readonly syChannelReactionBox : ChannelReactionBox;
-    private readonly syEventReactionBox : EventReactionBox;
-
+    //User system reaction boxes
     private readonly userResponseReactionBox : ResponseReactionBox;
     private readonly userChannelReactionBox : ChannelReactionBox;
     private readonly userEventReactionBox : EventReactionBox;
@@ -112,55 +112,18 @@ class Zation
         this.channelReactionMainBox = new Box<ChannelReactionBox>();
         this.eventReactionMainBox = new Box<EventReactionBox>();
 
-        //system reactionBoxes
-        this.syResponseReactionBox = new ResponseReactionBox();
-        this.syResponseReactionBox._link(this);
+        //user system reaction boxes
         this.userResponseReactionBox = new ResponseReactionBox();
         this.userResponseReactionBox._link(this);
-        this.syChannelReactionBox = new ChannelReactionBox();
-        this.syChannelReactionBox._link(this);
         this.userChannelReactionBox = new ChannelReactionBox();
         this.userChannelReactionBox._link(this);
-        this.syEventReactionBox = new EventReactionBox();
-        this.syEventReactionBox._link(this);
         this.userEventReactionBox = new EventReactionBox();
         this.userEventReactionBox._link(this);
 
-        this.responseReactionMainBox.addFixedItem(this.syResponseReactionBox);
         this.responseReactionMainBox.addFixedItem(this.userResponseReactionBox);
-        this.channelReactionMainBox.addFixedItem(this.syChannelReactionBox);
         this.channelReactionMainBox.addFixedItem(this.userChannelReactionBox);
-        this.eventReactionMainBox.addFixedItem(this.syEventReactionBox);
         this.eventReactionMainBox.addFixedItem(this.userEventReactionBox);
-        this._addSystemReactions();
         this.addReactionBox(...reactionBox);
-    }
-
-    private _addSystemReactions()
-    {
-        //response for update new token by http req
-        this.syResponseReactionBox.onResponse(async (response) => {
-            if(response.hasNewToken())
-            {
-                const signToken = response.getNewSignedToken();
-                const plainToken = response.getNewPlainToken();
-                if(!!signToken && !!plainToken) {
-                    if(this.isSocketConnected()) {
-                        try{
-                            await this.signAuthenticate(signToken);
-                        }
-                        catch(e){}
-                    }
-                    else{
-                        await this.authEngine.refreshToken(plainToken,signToken);
-                    }
-                }
-            }
-
-            if(response.hasZationHttpInfo(Const.Settings.ZATION_HTTP_INFO.DEAUTHENTICATE)) {
-                await this.authEngine.deauthenticate();
-            }
-        });
     }
 
     //Part Responds
@@ -180,6 +143,9 @@ class Zation
     /**
      * @description
      * Add a reactionBox or more reactionBoxes.
+     * Notice that the response reaction boxes are triggerd before the system response reaction box.
+     * The system response reaction box is the box that is returned by the method zation.responseReact().
+     * The system response reaction box should be used to catch the remaining errors.
      * @example
      * addReactionBox(myResponseReactionBox,myChannelReactionBox,myEventReactionBox);
      * @param reactionBox
@@ -252,6 +218,7 @@ class Zation
     /**
      * @description
      * Returns the system fixed user response reaction box.
+     * Can be used to catch the remaining errors.
      */
     responseReact() : ResponseReactionBox {
         return this.userResponseReactionBox;
@@ -338,7 +305,7 @@ class Zation
     /**
      * @description
      * Authenticate this connection (use authentication controller)
-     * with authentication data and returns the response.
+     * with authentication authData and returns the response.
      * Notice that the zation response reaction boxes are not triggerd.
      * Because then you have the opportunity to react with the response on specific things
      * then trigger the zation response reaction boxes (using response.react().zationReact()).
@@ -347,7 +314,7 @@ class Zation
      * @throws ConnectionNeededError(if using protocol type webSocket)
      */
     async authenticate(authData : object = {}, protocolType : ProtocolType = ProtocolType.WebSocket) : Promise<Response> {
-        return await this.authEngine.authenticate(authData,protocolType);
+        return await this.send(new AuthRequest(authData,protocolType),undefined,false);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -407,18 +374,92 @@ class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns request helper.
+     * Returns an request helper.
      * Where you can easy build an request with reactions and send it.
      * The default values are:
      * Protocol: WebSocket
-     * AuthRequest: false
      * ControllerName: ''
      * Data: {}
      * SystemController: false
      * UseAuth: true
+     * @example
+     * await zation.request()
+     * .controller('sendMessage')
+     * .authData({msg : 'hallo'})
+     * .buildCatchError()
+     * .presets()
+     * .inputNotMatchWithMinLength('msg')
+     * .react(()=>{console.log('Message to short')})
+     * .catchError(()=>{console.log('Something went wrong')})
+     * .onSuccessful(()=>{console.log('Message sent successfully')})
+     * .send();
+     * @param controllerName
+     * @param data
      */
-    request() : RequestHelper {
-        return new RequestHelper(this);
+    request(controllerName : string = '',data : object = {}) : RequestHelper {
+        const helper = new RequestHelper(this);
+        helper.controller(controllerName);
+        helper.data(data);
+        return helper;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns an auth request helper.
+     * Where you can easy build an auth request with reactions and send it.
+     * This is another way to authenticate this client.
+     * The default values are:
+     * Protocol: WebSocket
+     * AuthData: {}
+     * @example
+     * await zation.authRequest()
+     * .authData({userName : 'luca',password : '123'})
+     * .buildOnError()
+     * .nameIs('passwordIsWrong')
+     * .react(() => {console.log('The password is wrong')})
+     * .catchError(()=>{console.log('Something went wrong')})
+     * .onSuccessful(() => {console.log('Successfully authenticated')})
+     * .send();
+     * @param authData
+     * @param protocolType
+     */
+    authRequest(authData : object = {}, protocolType : ProtocolType = ProtocolType.WebSocket) : AuthRequestHelper {
+        const helper = new AuthRequestHelper(this);
+        helper.protocol(protocolType);
+        helper.authData(authData);
+        return helper;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns an validation request helper.
+     * Where you can easy build an validation request with reactions and send it.
+     * This is useful for checking the verification of individual controller parameters.
+     * The default values are:
+     * Protocol: WebSocket
+     * ControllerName: ''
+     * Checks: []
+     * @example
+     * await zation.validationRequest()
+     * .controller('sendMessage')
+     * .check('msg','hallo')
+     * .buildCatchError()
+     * .presets()
+     * .inputNotMatchWithMinLength()
+     * .react(()=>{console.log('Message to short')})
+     * .catchError(()=>{console.log('Something went wrong')})
+     * .onSuccessful(()=>{console.log('Message is ok')})
+     * .send();
+     * @param controllerName
+     * @param checks
+     */
+    validationRequest(controllerName : string = '',...checks : ValidationCheck[]) : ValidationRequestHelper {
+        const helper = new ValidationRequestHelper(this);
+        helper.controller(controllerName);
+        helper.checks(...checks);
+        return helper;
     }
 
     //Part Send
@@ -456,6 +497,8 @@ class Zation
             response = await SendEngine.httpSend(this,jsonObj,ph);
         }
 
+        await this._respondsActions(response);
+
         for(let i = 0; i < responseReactionBox.length; i++) {
             await responseReactionBox[i]._trigger(response);
         }
@@ -466,6 +509,31 @@ class Zation
 
         return response;
     };
+
+    private async _respondsActions(response : Response)
+    {
+        //response for update new token by http req
+        if(response.hasNewToken())
+        {
+            const signToken = response.getNewSignedToken();
+            const plainToken = response.getNewPlainToken();
+            if(!!signToken && !!plainToken) {
+                if(this.isSocketConnected()) {
+                    try{
+                        await this.signAuthenticate(signToken);
+                    }
+                    catch(e){}
+                }
+                else{
+                    await this.authEngine.refreshToken(plainToken,signToken);
+                }
+            }
+        }
+
+        if(response.hasZationHttpInfo(Const.Settings.ZATION_HTTP_INFO.DEAUTHENTICATE)) {
+            await this.authEngine.deauthenticate();
+        }
+    }
 
     // Part Connection
 
@@ -570,11 +638,16 @@ class Zation
     private _registerSocketEvents()
     {
         this.socket.on('connect',async () => {
-
             if(this.firstConnection) {
+                if(this.zc.isDebug()) {
+                    Logger.printInfo('Client is first connected.');
+                }
                 await this._triggerEventReactions(Events.FirstConnect);
             }
             else {
+                if(this.zc.isDebug()) {
+                    Logger.printInfo('Client is reconnected.');
+                }
                 await this._triggerEventReactions(Events.Reconnect);
             }
             this.firstConnection = false;
@@ -583,7 +656,7 @@ class Zation
         });
 
         this.socket.on('error', async (err) => {
-            if(this.zc.getConfig(Const.Config.DEBUG)) {
+            if(this.zc.isDebug()) {
                 Logger.printError(err);
             }
             await this._triggerEventReactions(Events.Error,err);
@@ -593,9 +666,15 @@ class Zation
         {
             const fromClient = data['#internal-fromZationClient'];
             if(typeof fromClient === "boolean" && fromClient){
+                if(this.zc.isDebug()) {
+                    Logger.printInfo(`Client is disconnected from client. Code:'${code}' Data:'${data}'`);
+                }
                 await this._triggerEventReactions(Events.ClientDisconnect,code,data);
             }
             else{
+                if(this.zc.isDebug()) {
+                    Logger.printInfo(`Client is disconnected from server. Code:'${code}' Data:'${data}'`);
+                }
                 await this._triggerEventReactions(Events.ServerDisconnect,code,data);
             }
             await this._triggerEventReactions(Events.Disconnect,!!fromClient,code,data);
@@ -604,19 +683,31 @@ class Zation
         this.socket.on('deauthenticate',async (oldSignedJwtToken,fromClient) =>
         {
             if(fromClient){
+                if(this.zc.isDebug()) {
+                    Logger.printInfo('Client is deauthenticated from client.');
+                }
                 await this._triggerEventReactions(Events.ClientDisconnect,oldSignedJwtToken);
             }
             else{
+                if(this.zc.isDebug()) {
+                    Logger.printInfo('Client is deauthenticated from server.');
+                }
                 await this._triggerEventReactions(Events.ServerDisconnect,oldSignedJwtToken);
             }
             await this._triggerEventReactions(Events.Disconnect,fromClient,oldSignedJwtToken);
         });
 
         this.socket.on('connectAbort',async (code,data) => {
+            if(this.zc.isDebug()) {
+                Logger.printInfo(`Client connect aborted. Code:'${code}' Data:'${data}'`);
+            }
             await this._triggerEventReactions(Events.ConnectAbort,code,data);
         });
 
         this.socket.on('connecting', async () => {
+            if(this.zc.isDebug()) {
+                Logger.printInfo('Client is connecting.');
+            }
             await this._triggerEventReactions(Events.Connecting);
         });
 
@@ -625,6 +716,9 @@ class Zation
         });
 
         this.socket.on('authenticate', async (signedJwtToken) => {
+            if(this.zc.isDebug()) {
+                Logger.printInfo('Client is authenticated.');
+            }
             await this._triggerEventReactions(Events.Authenticate,signedJwtToken);
         });
     }

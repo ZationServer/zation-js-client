@@ -5,9 +5,6 @@ GitHub: LucaCode
  */
 
 import Zation         = require("../../api/zation");
-import Response       = require("../../api/response");
-import AuthRequest    = require("../../api/authRequest");
-import {ProtocolType}   from "../constants/protocolType";
 import ChannelEngine  = require("../channel/channelEngine");
 import Logger         = require("../Logger/logger");
 import Const              = require("../constants/constWrapper");
@@ -29,8 +26,6 @@ class AuthEngine
 
     private readonly zation : Zation;
     private readonly chEngine : ChannelEngine;
-
-    private authData : object;
 
     constructor(zation : Zation,channelEngine : ChannelEngine)
     {
@@ -77,21 +72,6 @@ class AuthEngine
         this.plainToken = plainToken;
         this.signToken = signToken;
         await this.updateToken(plainToken);
-    }
-
-    async authenticate(authData ?: object, protocolType : ProtocolType = ProtocolType.WebSocket) : Promise<Response>
-    {
-        let loginData = {};
-        if(typeof authData === 'object') {
-            loginData = authData;
-            this.authData = authData;
-        }
-        else if(typeof this.authData === 'object') {
-            loginData = this.authData;
-        }
-
-        const authReq = new AuthRequest(loginData,protocolType);
-        return await this.zation.send(authReq,undefined,false);
     }
 
     signAuthenticate(signToken : string) : Promise<void>

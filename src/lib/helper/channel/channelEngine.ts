@@ -306,7 +306,7 @@ class ChannelEngine
                 });
             }
             else {
-                reject(new ConnectionNeededError('To publish data!'));
+                reject(new ConnectionNeededError('To publish authData!'));
             }
         });
     }

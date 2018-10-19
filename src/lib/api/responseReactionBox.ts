@@ -122,9 +122,10 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * @description
      * Remove an OnError reaction with the FullReaction.
      * @param fullReaction
+     * If it is not given away all will be removed.
      */
-    offError(fullReaction : FullReaction<ResponseReactionOnError>) : void {
-        this.errorReactionBox.removeItem(fullReaction);
+    offError(fullReaction ?: FullReaction<ResponseReactionOnError>) : void {
+        this.errorReactionBox.remove(fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -203,9 +204,10 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * @description
      * Remove an catchError reaction with the FullReaction.
      * @param fullReaction
+     * If it is not given away all will be removed.
      */
-    rmCatchError(fullReaction : FullReaction<ResponseReactionCatchError>) : void {
-        this.errorCatchReactionBox.removeItem(fullReaction);
+    rmCatchError(fullReaction ?: FullReaction<ResponseReactionCatchError>) : void {
+        this.errorCatchReactionBox.remove(fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -232,9 +234,10 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * @description
      * Remove an onSuccessful reaction with the FullReaction.
      * @param fullReaction
+     * If it is not given away all will be removed.
      */
-    offSuccessful(fullReaction : FullReaction<ResponseReactionOnSuccessful>) : void {
-        this.successfulReactionBox.removeItem(fullReaction);
+    offSuccessful(fullReaction ?: FullReaction<ResponseReactionOnSuccessful>) : void {
+        this.successfulReactionBox.remove(fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -260,9 +263,10 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * @description
      * Remove an onResponse reaction with the FullReaction.
      * @param fullReaction
+     * If it is not given away all will be removed.
      */
-    offResponse(fullReaction : FullReaction<ResponseReactionOnResponse>) : void {
-        this.responseReactionBox.removeItem(fullReaction);
+    offResponse(fullReaction ?: FullReaction<ResponseReactionOnResponse>) : void {
+        this.responseReactionBox.remove(fullReaction);
     }
 
     async _trigger(response : Response)

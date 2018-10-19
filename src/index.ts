@@ -83,6 +83,44 @@ await zation.request()
     .onSuccessful(()=>{console.log('message sended')})
     .send();
 
+zation.request()
+    .controller('')
+    .onError((filteredErrors, response) => {})
+    .data({})
+    .send()
+
+
+zation.validationCheck('sendMessage',{ip:'msg',v:'hallo'})
+    .then((resp)=>{
+        resp.react()
+            .buildCatchError()
+            .presets()
+            .inputNotMatchWithMinLength('msg')
+            .react(()=>{console.log('message to short')})
+            .catchError(()=>{console.log('something went wrong')})
+    });
+
+await zation.authRequest()
+    .authData({userName : 'luca',password : '123'})
+    .buildOnError()
+    .nameIs('passwordIsWrong')
+    .react(() => {console.log('The password is wrong')})
+    .catchError(()=>{console.log('Something went wrong')})
+    .onSuccessful(() => {console.log('Successfully authenticated')})
+    .send();
+
+await zation.validationRequest()
+    .controller('sendMessage')
+    .check('msg','hallo')
+    .buildCatchError()
+    .presets()
+    .inputNotMatchWithMinLength()
+    .react(()=>{console.log('Message to short')})
+    .catchError(()=>{console.log('Something went wrong')})
+    .onSuccessful(()=>{console.log('Message is ok')})
+    .send();
+
+
 zation.newResponseReactionBox().buildOnError().react().
 
 zation.authenticate({userName : 'peter'})

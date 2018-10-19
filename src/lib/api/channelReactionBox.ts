@@ -52,7 +52,7 @@ class ChannelReactionBox extends ReactionBox
      * @description
      * React on publish in the user channel.
      * @example
-     * onUserChPub((data,event,socketSrcSid) => {});
+     * onUserChPub((authData,event,socketSrcSid) => {});
      * @param event
      * You can also respond to multiple events by giving an event array.
      * Or to all events if you pass as parameter null.
@@ -81,7 +81,7 @@ class ChannelReactionBox extends ReactionBox
      * @description
      * React on publish in the auth user group channel.
      * @example
-     * onAuthUserGroupChPub((data,event,socketSrcSid) => {});
+     * onAuthUserGroupChPub((authData,event,socketSrcSid) => {});
      * @param event
      * You can also respond to multiple events by giving an event array.
      * Or to all events if you pass as parameter null.
@@ -110,7 +110,7 @@ class ChannelReactionBox extends ReactionBox
      * @description
      * React on publish in the default user group channel.
      * @example
-     * onDefaultUserGroupChPub((data,event,socketSrcSid) => {});
+     * onDefaultUserGroupChPub((authData,event,socketSrcSid) => {});
      * @param event
      * You can also respond to multiple events by giving an event array.
      * Or to all events if you pass as parameter null.
@@ -139,7 +139,7 @@ class ChannelReactionBox extends ReactionBox
      * @description
      * React on publish in the all channel.
      * @example
-     * onAllChPub((data,event,socketSrcSid) => {});
+     * onAllChPub((authData,event,socketSrcSid) => {});
      * @param event
      * You can also respond to multiple events by giving an event array.
      * Or to all events if you pass as parameter null.
@@ -168,7 +168,7 @@ class ChannelReactionBox extends ReactionBox
      * @description
      * React on publish in the panel out channel.
      * @example
-     * onPanelOutChPub((data,event,socketSrcSid) => {});
+     * onPanelOutChPub((authData,event,socketSrcSid) => {});
      * @param event
      * You can also respond to multiple events by giving an event array.
      * Or to all events if you pass as parameter null.
@@ -197,7 +197,7 @@ class ChannelReactionBox extends ReactionBox
      * @description
      * React on publish in an custom channel.
      * @example
-     * onAllChPub((data,chName,socketSrcSid) => {});
+     * onAllChPub((authData,chName,socketSrcSid) => {});
      * @param chName
      * @param event
      * @param reaction
