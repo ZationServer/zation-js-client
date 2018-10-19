@@ -8,14 +8,17 @@ import {ResponseReactionOnError} from "../reaction/reactionHandler";
 import ResponseReactAble = require("../responseReactionEngine/responseReactAble");
 import {AbstractErrorFilterBuilder} from "./abstractErrorFilterBuilder";
 
-export class CatchErrorBuilder<T extends ResponseReactAble> extends AbstractErrorFilterBuilder<T>
+export class CatchErrorBuilder<T extends ResponseReactAble,R> extends AbstractErrorFilterBuilder<R>
 {
-    constructor(main : T) {
-        super(main);
+    private readonly target  : T;
+
+    constructor(target : T) {
+        super();
+        this.target = target;
     }
 
-    _save(reaction : ResponseReactionOnError, filter : object[]) : void
+    protected _save(reaction : ResponseReactionOnError, filter : object[]) : R
     {
-        this.main.catchError(reaction,...filter);
+        return this.target.catchError(reaction,...filter);
     }
 }

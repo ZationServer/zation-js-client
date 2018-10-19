@@ -18,13 +18,14 @@ class SendEngine
     {
         return new Promise(async (resolve, reject)=>
         {
-            if(zation.isSocketConnected()) {
+            const socket = zation.getSocket();
+            if(zation.isSocketConnected() && socket) {
 
                 if (!!progressHandler) {
                     progressHandler(0);
                 }
 
-                zation.getSocket().emit('ZATION.SERVER.REQUEST',data,async (err,res) =>
+                socket.emit('ZATION.SERVER.REQUEST',data,async (err,res) =>
                 {
                     if (!!progressHandler) {
                         progressHandler(100);
@@ -34,7 +35,7 @@ class SendEngine
                         reject(err);
                     }
                     if(res !== undefined) {
-                        let response = new Response(res,ProtocolType.WebSocket);
+                        let response = new Response(res,zation,ProtocolType.WebSocket);
                         resolve(response);
                     }
                     else {
@@ -69,7 +70,7 @@ class SendEngine
                         },
                     })
                 ).then(async (res) => {
-                    resolve(new Response(await res.json(),ProtocolType.Http));
+                    resolve(new Response(await res.json(),zation,ProtocolType.Http));
                 });
         });
     }

@@ -7,20 +7,15 @@ GitHub: LucaCode
 import {OrBuilder} from "../statementBuilder/orBuilder";
 import {PairOrAndBuilder} from "../statementBuilder/pairOrAndBuilder";
 import {ResponseReactionOnError} from "../reaction/reactionHandler";
-import ResponseReactAble = require("../responseReactionEngine/responseReactAble");
 import {ErrorFilter} from "../../filter/errorFilter";
 import {PresetErrorFilter} from "./presetErrorFilter";
 
-export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
+export abstract class AbstractErrorFilterBuilder<R>
 {
-    protected readonly main : T;
-
     private filter : ErrorFilter[] = [];
     private tmpFilter : ErrorFilter = {};
 
-    protected constructor(main : T)
-    {
-        this.main = main;
+    protected constructor() {
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -30,7 +25,7 @@ export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
      * More names are linked with OR.
      * @param name
      */
-    nameIs(...name : string[]) : AbstractErrorFilterBuilder<T>
+    nameIs(...name : string[]) : AbstractErrorFilterBuilder<R>
     {
         if(!Array.isArray(this.tmpFilter.name)) {
             this.tmpFilter.name = [];
@@ -45,8 +40,9 @@ export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
      * Reset the filter property name.
      * Than all names are allowed.
      */
-    resetName() {
+    resetName() : AbstractErrorFilterBuilder<R> {
         delete this.tmpFilter.name;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -56,7 +52,7 @@ export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
      * More types are linked with OR.
      * @param type
      */
-    typeIs(...type : string[]) : AbstractErrorFilterBuilder<T>
+    typeIs(...type : string[]) : AbstractErrorFilterBuilder<R>
     {
         if(!Array.isArray(this.tmpFilter.type)) {
             this.tmpFilter.type = [];
@@ -71,8 +67,9 @@ export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
      * Reset the filter property type.
      * Than all types are allowed.
      */
-    resetType(){
+    resetType() : AbstractErrorFilterBuilder<R> {
         delete this.tmpFilter.type;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -82,7 +79,7 @@ export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
      * More infos are linked with OR.
      * @param obj
      */
-    infoIs(...obj : object[]) : AbstractErrorFilterBuilder<T>
+    infoIs(...obj : object[]) : AbstractErrorFilterBuilder<R>
     {
         if(!Array.isArray(this.tmpFilter.info)) {
             this.tmpFilter.info = [];
@@ -98,8 +95,9 @@ export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
      * Reset the filter property info.
      * Than all infos are allowed.
      */
-    resetInfo(){
+    resetInfo() : AbstractErrorFilterBuilder<R>{
         delete this.tmpFilter.info;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -108,12 +106,12 @@ export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
      * Returns an easy builder for the filter property info.
      * Notice that the infos will be added to the tmpFilter with OR.
      */
-    infoIsBuilder() : PairOrAndBuilder<AbstractErrorFilterBuilder<T>>
+    infoIsBuilder() : PairOrAndBuilder<AbstractErrorFilterBuilder<R>>
     {
         if(!Array.isArray(this.tmpFilter.info)) {
             this.tmpFilter.info = [];
         }
-        return new PairOrAndBuilder<AbstractErrorFilterBuilder<T>>
+        return new PairOrAndBuilder<AbstractErrorFilterBuilder<R>>
         (
             this,
             (res : object[]) => {
@@ -131,7 +129,7 @@ export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
      * More keys are linked with AND.
      * Every invoke will be linked with OR.
      */
-    infoKeys(...keys : string[]) : AbstractErrorFilterBuilder<T>
+    infoKeys(...keys : string[]) : AbstractErrorFilterBuilder<R>
     {
         if(!Array.isArray(this.tmpFilter.infoKey)) {
             this.tmpFilter.infoKey = [];
@@ -146,8 +144,9 @@ export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
      * Reset the filter property infoKey.
      * Than all info keys are allowed.
      */
-    resetInfoKeys(){
+    resetInfoKeys() : AbstractErrorFilterBuilder<R> {
         delete this.tmpFilter.infoKey;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -156,10 +155,10 @@ export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
      * Returns an easy builder for the filter property infoKey.
      * Notice that the info keys will be added to the tmpFilter with OR.
      */
-    infoKeysBuilder() : OrBuilder<AbstractErrorFilterBuilder<T>,string>
+    infoKeysBuilder() : OrBuilder<AbstractErrorFilterBuilder<R>,string>
     {
         this.tmpFilter.infoKey = [];
-        return new OrBuilder<AbstractErrorFilterBuilder<T>,string>
+        return new OrBuilder<AbstractErrorFilterBuilder<R>,string>
         (
             this,
             (res) =>
@@ -178,7 +177,7 @@ export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
      * More values are linked with AND.
      * Every invoke will be linked with OR.
      */
-    infoValues(...values : string[]) : AbstractErrorFilterBuilder<T>
+    infoValues(...values : string[]) : AbstractErrorFilterBuilder<R>
     {
         if(!Array.isArray(this.tmpFilter.infoValue)) {
             this.tmpFilter.infoValue = [];
@@ -193,8 +192,9 @@ export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
      * Reset the filter property infoValue.
      * Than all info values are allowed.
      */
-    resetInfoValues(){
+    resetInfoValues() : AbstractErrorFilterBuilder<R> {
         delete this.tmpFilter.infoValue;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -203,10 +203,10 @@ export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
      * Returns an easy builder for the filter property infoValue.
      * Notice that the info values will be added to the tmpFilter with OR.
      */
-    infoValuesBuilder() : OrBuilder<AbstractErrorFilterBuilder<T>,string>
+    infoValuesBuilder() : OrBuilder<AbstractErrorFilterBuilder<R>,string>
     {
         this.tmpFilter.infoValue = [];
-        return new OrBuilder<AbstractErrorFilterBuilder<T>,string>
+        return new OrBuilder<AbstractErrorFilterBuilder<R>,string>
         (
             this,
             (res) =>
@@ -227,7 +227,7 @@ export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
      * Undefined means it dosent matter (like a reset).
      * Notice that the filter property fromZationSystem will be reseted when you calling this method.
      */
-    fromZationSystem(fromZationSystem : boolean | undefined) : AbstractErrorFilterBuilder<T>
+    fromZationSystem(fromZationSystem : boolean | undefined) : AbstractErrorFilterBuilder<R>
     {
         this.tmpFilter.fromZationSystem = fromZationSystem;
         return this;
@@ -241,12 +241,11 @@ export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
      * @param reactions
      * You also can add more than one reaction.
      */
-    react(...reactions : ResponseReactionOnError[]) : T
+    react(...reactions : ResponseReactionOnError[]) : R
     {
         //save last tmp
         this._pushTmpFilter();
-        this._save(this._mergeReaction(reactions),this.filter);
-        return this.main;
+        return this._save(this._mergeReaction(reactions),this.filter);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -258,7 +257,7 @@ export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
      * If there is more than one error at the end,
      * the reaction wil be triggerd with all filtered errors.
      */
-    or() : AbstractErrorFilterBuilder<T>
+    or() : AbstractErrorFilterBuilder<R>
     {
         this._pushTmpFilter();
         //reset tmpFilter
@@ -311,7 +310,7 @@ export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
      * {fromZationSystem : false}
      * You can combine all of this properties.
      */
-    addErrorFilter(filter : ErrorFilter) : AbstractErrorFilterBuilder<T> {
+    addErrorFilter(filter : ErrorFilter) : AbstractErrorFilterBuilder<R> {
         this.filter.push(filter);
         return this;
     }
@@ -358,7 +357,7 @@ export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
      * {fromZationSystem : false}
      * You can combine all of this properties.
      */
-    setTmpFilter(filter : ErrorFilter) : AbstractErrorFilterBuilder<T> {
+    setTmpFilter(filter : ErrorFilter) : AbstractErrorFilterBuilder<R> {
         this.tmpFilter = filter;
         return this;
     }
@@ -377,18 +376,18 @@ export abstract class AbstractErrorFilterBuilder<T extends ResponseReactAble>
      * @description
      * Returns an presetErrorFilter.
      * You can use it to easy filter preset errors like
-     * validation or zation main errors.
+     * validation or zation returnTarget errors.
      * Notice that you call
      * @param pushPreset
      * Indicates if you want to push the preset error filter directly into the filters.
      * If not you can modify it later with this builder.
      */
-    presets(pushPreset : boolean = false) : PresetErrorFilter
+    presets(pushPreset : boolean = false) : PresetErrorFilter<R>
     {
-        return new PresetErrorFilter(this,pushPreset);
+        return new PresetErrorFilter<R>(this,pushPreset);
     }
 
-    protected abstract _save(reaction : ResponseReactionOnError, filter : object[]) : void;
+    protected abstract _save(reaction : ResponseReactionOnError, filter : object[]) : R;
 
     private _mergeReaction(reactions : ResponseReactionOnError[]) : ResponseReactionOnError
     {

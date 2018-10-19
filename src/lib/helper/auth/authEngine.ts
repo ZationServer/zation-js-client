@@ -51,7 +51,6 @@ class AuthEngine
             this.currentUserAuthGroup = undefined;
         });
 
-        //reset on disconnection
         this.zation.getSocket().on('authenticate',async ()=> {
             const authToken = this.zation.getSocket().getAuthToken();
             const signToken = this.zation.getSocket().getSignedAuthToken();
@@ -92,7 +91,7 @@ class AuthEngine
         }
 
         const authReq = new AuthRequest(loginData,protocolType);
-        return await this.zation.send(authReq)
+        return await this.zation.send(authReq,undefined,false);
     }
 
     signAuthenticate(signToken : string) : Promise<void>

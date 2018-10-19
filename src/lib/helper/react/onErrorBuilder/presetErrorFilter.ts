@@ -5,20 +5,30 @@ GitHub: LucaCode
  */
 
 import {AbstractErrorFilterBuilder} from "./abstractErrorFilterBuilder";
-import ResponseReactAble          = require("../responseReactionEngine/responseReactAble");
 import {ErrorFilter} from "../../filter/errorFilter";
 import ErrorGroups = require("../../constants/errorGroups");
 import ErrorTypes = require("../../constants/errorTypes");
 
-export class PresetErrorFilter
+export class PresetErrorFilter<T>
 {
-    private readonly errorFilterBuilder : AbstractErrorFilterBuilder<ResponseReactAble>;
+    private readonly errorFilterBuilder : AbstractErrorFilterBuilder<T>;
     private  readonly pushPreset : boolean;
 
-    constructor(errorFilterBuilder : AbstractErrorFilterBuilder<ResponseReactAble>,pushPreset : boolean)
+    constructor(errorFilterBuilder : AbstractErrorFilterBuilder<T>,pushPreset : boolean)
     {
         this.errorFilterBuilder  = errorFilterBuilder ;
         this.pushPreset = pushPreset;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Preset for any validation error.
+     */
+    validationError() : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._zationErrorBuild
+        (ErrorTypes.VALIDATION_ERROR));
+        return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -31,7 +41,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputTypeError(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputTypeError(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -47,7 +57,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAString(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotAString(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotAString',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -63,7 +73,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAInt(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotAInt(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotAInt',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -79,7 +89,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAFloat(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotAFloat(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotAFloat',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -95,7 +105,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotADate(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotADate(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotADate',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -111,7 +121,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAEmail(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotAEmail(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotAEmail',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -127,7 +137,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotABoolean(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotABoolean(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotABoolean',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -143,7 +153,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotASha512(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotASha512(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotASha512',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -159,7 +169,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotASha256(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotASha256(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotASha256',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -175,7 +185,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotASha384(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotASha384(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotASha384',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -191,7 +201,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotASha1(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotASha1(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotASha1',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -207,7 +217,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAMd5(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotAMd5(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotAMd5',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -223,7 +233,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAHexColor(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotAHexColor(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotAHexColor',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -239,7 +249,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAHexadecimal(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotAHexadecimal(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotAHexadecimal',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -255,7 +265,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAIp4(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotAIp4(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotAIp4',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -271,7 +281,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAIp6(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotAIp6(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotAIp6',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -287,7 +297,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAIsbn10(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotAIsbn10(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotAIsbn10',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -303,7 +313,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAIsbn13(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotAIsbn13(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotAIsbn13',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -319,7 +329,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAJson(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotAJson(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotAJson',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -335,7 +345,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAUrl(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotAUrl(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotAUrl',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -351,7 +361,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAMimeType(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotAMimeType(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotAMimeType',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -367,7 +377,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAMacAddress(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotAMacAddress(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotAMacAddress',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -383,7 +393,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAMobileNumber(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotAMobileNumber(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotAMobileNumber',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -399,7 +409,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAUuid3(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotAUuid3(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotAUuid3',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -415,7 +425,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAUuid4(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotAUuid4(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotAUuid4',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -431,7 +441,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAUuid5(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotAUuid5(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotAUuid5',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -447,7 +457,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotALatLong(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotALatLong(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotALatLong',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -463,7 +473,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotABase64(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotABase64(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotABase64',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -479,7 +489,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAAscii(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotAAscii(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotAscii',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -495,7 +505,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotANumber(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotANumber(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotANumber',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -511,7 +521,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAUserId(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotAUserId(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotAUserId',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -527,7 +537,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputValueLengthError(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputValueLengthError(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroups.VALUE_LENGTH_ERROR));
         return this.errorFilterBuilder;
@@ -546,7 +556,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputNotMatchWithMinLength(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputNotMatchWithMinLength(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputNotMatchWithMinLength',inputPath,inputValue,ErrorGroups.VALUE_LENGTH_ERROR));
         return this.errorFilterBuilder;
@@ -565,7 +575,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputNotMatchWithMaxLength(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputNotMatchWithMaxLength(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputNotMatchWithMaxLength',inputPath,inputValue,ErrorGroups.VALUE_LENGTH_ERROR));
         return this.errorFilterBuilder;
@@ -584,7 +594,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputNotMatchWithLength(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputNotMatchWithLength(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputNotMatchWithLength',inputPath,inputValue,ErrorGroups.VALUE_LENGTH_ERROR));
         return this.errorFilterBuilder;
@@ -600,7 +610,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputLettersFormatError(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputLettersFormatError(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroups.LETTERS_FORMAT_ERROR));
         return this.errorFilterBuilder;
@@ -616,7 +626,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotUppercase(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotUppercase(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotUppercase',inputPath,inputValue,ErrorGroups.LETTERS_FORMAT_ERROR));
         return this.errorFilterBuilder;
@@ -632,7 +642,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotLowercase(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotLowercase(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotLowercase',inputPath,inputValue,ErrorGroups.LETTERS_FORMAT_ERROR));
         return this.errorFilterBuilder;
@@ -651,7 +661,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotContains(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotContains(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotContains',inputPath,inputValue));
         return this.errorFilterBuilder;
@@ -670,7 +680,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotEquals(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotEquals(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotEquals',inputPath,inputValue));
         return this.errorFilterBuilder;
@@ -686,7 +696,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputNumberSizeError(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputNumberSizeError(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroups.NUMBER_SIZE_ERROR));
         return this.errorFilterBuilder;
@@ -705,7 +715,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotBiggerThan(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotBiggerThan(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotBiggerThan',inputPath,inputValue,ErrorGroups.NUMBER_SIZE_ERROR));
         return this.errorFilterBuilder;
@@ -724,7 +734,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotLesserThan(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotLesserThan(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotLesserThan',inputPath,inputValue,ErrorGroups.NUMBER_SIZE_ERROR));
         return this.errorFilterBuilder;
@@ -743,7 +753,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotMatchWithRegex(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotMatchWithRegex(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotMatchWithRegex',inputPath,inputValue));
         return this.errorFilterBuilder;
@@ -762,7 +772,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotStartsWith(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotStartsWith(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotStartsWith',inputPath,inputValue));
         return this.errorFilterBuilder;
@@ -781,7 +791,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotEndsWith(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotEndsWith(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotEndsWith',inputPath,inputValue));
         return this.errorFilterBuilder;
@@ -797,7 +807,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputEnumError(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputEnumError(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroups.ENUM_ERROR));
         return this.errorFilterBuilder;
@@ -816,7 +826,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotMatchWithEnum(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotMatchWithEnum(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotMatchWithEnum',inputPath,inputValue,ErrorGroups.ENUM_ERROR));
         return this.errorFilterBuilder;
@@ -832,7 +842,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotMatchWithPrivateEnum(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputIsNotMatchWithPrivateEnum(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotMatchWithPrivateEnum',inputPath,inputValue,ErrorGroups.ENUM_ERROR));
         return this.errorFilterBuilder;
@@ -848,7 +858,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputArrayLengthError(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputArrayLengthError(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroups.ARRAY_LENGTH_ERROR));
         return this.errorFilterBuilder;
@@ -867,7 +877,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputArrayNotMatchWithMaxLength(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputArrayNotMatchWithMaxLength(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputArrayNotMatchWithMaxLength',inputPath,inputValue,ErrorGroups.ARRAY_LENGTH_ERROR));
         return this.errorFilterBuilder;
@@ -886,7 +896,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputArrayNotMatchWithMinLength(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputArrayNotMatchWithMinLength(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputArrayNotMatchWithMinLength',inputPath,inputValue,ErrorGroups.ARRAY_LENGTH_ERROR));
         return this.errorFilterBuilder;
@@ -905,7 +915,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputArrayNotMatchWithLength(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputArrayNotMatchWithLength(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputArrayNotMatchWithLength',inputPath,inputValue,ErrorGroups.ARRAY_LENGTH_ERROR));
         return this.errorFilterBuilder;
@@ -924,7 +934,7 @@ export class PresetErrorFilter
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    noValidTypeWasFound(inputPath ?: string,inputValue ?: string) : AbstractErrorFilterBuilder<ResponseReactAble> {
+    noValidTypeWasFound(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('noValidTypeWasFound',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
@@ -939,7 +949,7 @@ export class PresetErrorFilter
      * Possibilities are:
      * controllerName
      */
-    controllerNotFound() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    controllerNotFound() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.INPUT_ERROR,'controllerNotFound'));
         return this.errorFilterBuilder;
@@ -954,7 +964,7 @@ export class PresetErrorFilter
      * Possibilities are:
      * controllerName
      */
-    systemControllerNotFound() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    systemControllerNotFound() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.INPUT_ERROR,'systemControllerNotFound'));
         return this.errorFilterBuilder;
@@ -966,7 +976,7 @@ export class PresetErrorFilter
      * Preset for authControllerNotSet.
      * The task error can be thrown when no auth controller is set.
      */
-    authControllerNotSet() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    authControllerNotSet() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.INPUT_ERROR,'authControllerNotSet'));
         return this.errorFilterBuilder;
@@ -981,7 +991,7 @@ export class PresetErrorFilter
      * Possibilities are:
      * systemName
      */
-    systemNotFound() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    systemNotFound() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.COMPATIBILITY_ERROR,'systemNotFound'));
         return this.errorFilterBuilder;
@@ -996,7 +1006,7 @@ export class PresetErrorFilter
      * Possibilities are:
      * minVersion
      */
-    versionToOld() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    versionToOld() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.COMPATIBILITY_ERROR,'versionToOld'));
         return this.errorFilterBuilder;
@@ -1007,7 +1017,7 @@ export class PresetErrorFilter
      * @description
      * Preset for any code error.
      */
-    codeError() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    codeError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.CODE_ERROR));
         return this.errorFilterBuilder;
@@ -1019,7 +1029,7 @@ export class PresetErrorFilter
      * Preset for authenticationError.
      * The task error can be thrown by trying to authenticate an sc.
      */
-    authenticationError() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    authenticationError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.SYSTEM_ERROR,'authenticationError'));
         return this.errorFilterBuilder;
@@ -1030,7 +1040,7 @@ export class PresetErrorFilter
      * @description
      * Preset for any input error.
      */
-    inputError() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.INPUT_ERROR));
         return this.errorFilterBuilder;
@@ -1042,7 +1052,7 @@ export class PresetErrorFilter
      * Preset for inputMissing.
      * The task error can be thrown if input is missing.
      */
-    inputMissing() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputMissing() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.INPUT_ERROR,'inputMissing'));
         return this.errorFilterBuilder;
@@ -1054,7 +1064,7 @@ export class PresetErrorFilter
      * Preset for tooMuchInput.
      * The task error can be thrown if input is to much.
      */
-    tooMuchInput() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    tooMuchInput() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.INPUT_ERROR,'tooMuchInput'));
         return this.errorFilterBuilder;
@@ -1066,7 +1076,7 @@ export class PresetErrorFilter
      * Preset for arrayWasExpected.
      * The task error can be thrown if array was expected in the input.
      */
-    arrayWasExpected() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    arrayWasExpected() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.INPUT_ERROR,'arrayWasExpected'));
         return this.errorFilterBuilder;
@@ -1078,7 +1088,7 @@ export class PresetErrorFilter
      * Preset for objectWasExpected.
      * The task error can be thrown if object was expected in the input.
      */
-    objectWasExpected() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    objectWasExpected() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.INPUT_ERROR,'objectWasExpected'));
         return this.errorFilterBuilder;
@@ -1090,7 +1100,7 @@ export class PresetErrorFilter
      * Preset for objectPropertyIsMissing.
      * The task error can be thrown if object property is missing.
      */
-    objectPropertyIsMissing() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    objectPropertyIsMissing() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.INPUT_ERROR,'objectPropertyIsMissing'));
         return this.errorFilterBuilder;
@@ -1102,7 +1112,7 @@ export class PresetErrorFilter
      * Preset for unknownObjectProperty.
      * The task error can be thrown if input object has an unknow property.
      */
-    unknownObjectProperty() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    unknownObjectProperty() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.INPUT_ERROR,'unknownObjectProperty'));
         return this.errorFilterBuilder;
@@ -1114,7 +1124,7 @@ export class PresetErrorFilter
      * Preset for wrongPanelAuthData.
      * The task error can be thrown if the panel auth data is wrong.
      */
-    wrongPanelAuthData() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    wrongPanelAuthData() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.AUTH_ERROR,'wrongPanelAuthData'));
         return this.errorFilterBuilder;
@@ -1127,7 +1137,7 @@ export class PresetErrorFilter
      * The task error can be thrown if the server is in auth start mode
      * and you send an normal request.
      */
-    authStartActive() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    authStartActive() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.TIME_ERROR,'authStartActive'));
         return this.errorFilterBuilder;
@@ -1143,7 +1153,7 @@ export class PresetErrorFilter
      * authIn (if you auth in)
      * authUserGroup (you auth user group)
      */
-    noAccessToController() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    noAccessToController() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.AUTH_ERROR,'noAccessToController'));
         return this.errorFilterBuilder;
@@ -1155,7 +1165,7 @@ export class PresetErrorFilter
      * Preset for wrongInputDataStructure.
      * The task error can be thrown if the request has a wrong structure.
      */
-    wrongInputDataStructure() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    wrongInputDataStructure() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.INPUT_ERROR,'wrongInputDataStructure'));
         return this.errorFilterBuilder;
@@ -1167,7 +1177,7 @@ export class PresetErrorFilter
      * Preset for JSONParseSyntaxError.
      * The task error can be thrown if the json parse with the input thwors an error.
      */
-    JSONParseSyntaxError() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    JSONParseSyntaxError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.INPUT_ERROR,'JSONParseSyntaxError'));
         return this.errorFilterBuilder;
@@ -1184,7 +1194,7 @@ export class PresetErrorFilter
      * controllerName
      * inputPath
      */
-    inputPathInControllerNotFound() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    inputPathInControllerNotFound() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.INPUT_ERROR,'inputPathInControllerNotFound'));
         return this.errorFilterBuilder;
@@ -1195,7 +1205,7 @@ export class PresetErrorFilter
      * @description
      * Preset for any protocol error.
      */
-    protocolError() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    protocolError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.PROTOCOL_ERROR));
         return this.errorFilterBuilder;
@@ -1212,7 +1222,7 @@ export class PresetErrorFilter
      * controllerName
      * protocol
      */
-    noAccessWithProtocol() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    noAccessWithProtocol() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.PROTOCOL_ERROR,'noAccessWithProtocol'));
         return this.errorFilterBuilder;
@@ -1230,7 +1240,7 @@ export class PresetErrorFilter
      * controllerName
      * method
      */
-    noAccessWithHttpMethod() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    noAccessWithHttpMethod() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.PROTOCOL_ERROR,'noAccessWithHttpMethod'));
         return this.errorFilterBuilder;
@@ -1241,7 +1251,7 @@ export class PresetErrorFilter
      * @description
      * Preset for any system error.
      */
-    systemError() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    systemError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.SYSTEM_ERROR));
         return this.errorFilterBuilder;
@@ -1256,7 +1266,7 @@ export class PresetErrorFilter
      * Possibilities are:
      * info (only server is running in debug mode)
      */
-    unknownError() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    unknownError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.SYSTEM_ERROR,'unknownError'));
         return this.errorFilterBuilder;
@@ -1267,7 +1277,7 @@ export class PresetErrorFilter
      * @description
      * Preset for any token error.
      */
-    tokenError() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    tokenError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.TOKEN_ERROR));
         return this.errorFilterBuilder;
@@ -1280,7 +1290,7 @@ export class PresetErrorFilter
      * The task error can be thrown by any unknown error by verify a token.
      * More info checks you need to do by yourself.
      */
-    unknownTokenVerifyError() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    unknownTokenVerifyError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.TOKEN_ERROR,'unknownTokenVerifyError'));
         return this.errorFilterBuilder;
@@ -1293,7 +1303,7 @@ export class PresetErrorFilter
      * The task error can be thrown by any unknown error by sign a token.
      * More info checks you need to do by yourself.
      */
-    unknownTokenSignError() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    unknownTokenSignError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.TOKEN_ERROR,'unknownTokenSignError'));
         return this.errorFilterBuilder;
@@ -1308,7 +1318,7 @@ export class PresetErrorFilter
      * Possibilities are:
      * expiredAt
      */
-    tokenExpiredError() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    tokenExpiredError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.TOKEN_ERROR,'tokenExpiredError'));
         return this.errorFilterBuilder;
@@ -1323,7 +1333,7 @@ export class PresetErrorFilter
      * Possibilities are:
      * message
      */
-    jsonWebTokenError() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    jsonWebTokenError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.TOKEN_ERROR,'jsonWebTokenError'));
         return this.errorFilterBuilder;
@@ -1338,14 +1348,14 @@ export class PresetErrorFilter
      * Possibilities are:
      * err
      */
-    authenticateMiddlewareBlock() : AbstractErrorFilterBuilder<ResponseReactAble> {
+    authenticateMiddlewareBlock() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorTypes.TOKEN_ERROR,'authenticateMiddlewareBlock'));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSMethodCanBeStatic
-    private _validationErrorBuild(name ?: string,inputPath ?: string,inputValue ?: string,group ?: string) : ErrorFilter
+    private _validationErrorBuild(name ?: string,inputPath ?: string,inputValue ?: any,group ?: string) : ErrorFilter
     {
         const preset : ErrorFilter = {};
         preset.fromZationSystem = true;

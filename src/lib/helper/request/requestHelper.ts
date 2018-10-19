@@ -11,15 +11,20 @@ import AuthRequest = require("../../api/authRequest");
 // noinspection TypeScriptPreferShortImport
 import {ProtocolType} from "../constants/protocolType";
 import {ProgressHandler} from "./progressHandler";
-import {ResponseReactionOnError, ResponseReactionOnSuccessful} from "../react/reaction/reactionHandler";
+import {
+    ResponseReactionOnError,
+    ResponseReactionOnResponse,
+    ResponseReactionOnSuccessful
+} from "../react/reaction/reactionHandler";
 import {OnErrorBuilder} from "../react/onErrorBuilder/onErrorBuilder";
 import {CatchErrorBuilder} from "../react/onErrorBuilder/catchErrorBuilder";
 import {ErrorFilter} from "../filter/errorFilter";
 import WsRequest = require("../../api/wsRequest");
 import HttpRequest = require("../../api/httpRequest");
 import Const = require("../constants/constWrapper");
+import ZationRequest = require("./zationRequest");
 
-class RequestBuilder
+class RequestHelper
 {
     private readonly zation : Zation;
 
@@ -31,6 +36,7 @@ class RequestBuilder
     private _data : object = {};
     private _progressHandler : ProgressHandler[] = [];
     private _responseReactionBox : ResponseReactionBox;
+    private _reactionAdded : boolean = false;
     private _addedResponseReactionBoxes : ResponseReactionBox[] = [];
 
     constructor(zation : Zation)
@@ -46,7 +52,7 @@ class RequestBuilder
      * @param protocolType
      * @default webSocket
      */
-    protocol(protocolType : ProtocolType) : RequestBuilder {
+    protocol(protocolType : ProtocolType) : RequestHelper {
         this._protocol = protocolType;
         return this;
     }
@@ -56,7 +62,7 @@ class RequestBuilder
      * @description
      * Set the protocolType to web socket
      */
-    isWs() : RequestBuilder {
+    isWs() : RequestHelper {
         this._protocol = ProtocolType.WebSocket;
         return this;
     }
@@ -66,7 +72,7 @@ class RequestBuilder
      * @description
      * Set the protocolType to web socket
      */
-    isWebSocket() : RequestBuilder {
+    isWebSocket() : RequestHelper {
         this.isWs();
         return this;
     }
@@ -76,7 +82,7 @@ class RequestBuilder
      * @description
      * Set the protocolType to http
      */
-    isHttp() : RequestBuilder {
+    isHttp() : RequestHelper {
         this._protocol = ProtocolType.Http;
         return this;
     }
@@ -88,7 +94,7 @@ class RequestBuilder
      * @param isAuthRequest
      * @default false
      */
-    authRequest(isAuthRequest : boolean) : RequestBuilder {
+    authRequest(isAuthRequest : boolean) : RequestHelper {
         this._authRequest = isAuthRequest;
         return this;
     }
@@ -100,7 +106,7 @@ class RequestBuilder
      * @param useAuth
      * @default true
      */
-    useAuth(useAuth : boolean) : RequestBuilder {
+    useAuth(useAuth : boolean) : RequestHelper {
         this._useAuth = useAuth;
         return this;
     }
@@ -113,7 +119,7 @@ class RequestBuilder
      * @param controllerName
      * @default ''
      */
-    controller(controllerName : string) : RequestBuilder {
+    controller(controllerName : string) : RequestHelper {
         this._controllerName = controllerName;
         return this;
     }
@@ -125,7 +131,7 @@ class RequestBuilder
      * @default false
      * @param isSystemController
      */
-    systemController(isSystemController : boolean) : RequestBuilder {
+    systemController(isSystemController : boolean) : RequestHelper {
         this._systemController = isSystemController;
         return this;
     }
@@ -137,7 +143,7 @@ class RequestBuilder
      * @param data
      * @default {}
      */
-    data(data : object | any[]) : RequestBuilder {
+    data(data : object | any[]) : RequestHelper {
         this._data = data;
         return this;
     }
@@ -148,7 +154,7 @@ class RequestBuilder
      * Add an onProgress handler.
      * @param progressHandler
      */
-    onProgress(progressHandler : ProgressHandler) : RequestBuilder {
+    onProgress(progressHandler : ProgressHandler) : RequestHelper {
         this._progressHandler.push(progressHandler);
         return this;
     }
@@ -159,12 +165,16 @@ class RequestBuilder
      * React on the response with responseReaction box/es.
      * @param responseReactionBox
      */
-    reactWith(...responseReactionBox : ResponseReactionBox[]) : RequestBuilder
+    reactWith(...responseReactionBox : ResponseReactionBox[]) : RequestHelper
     {
-        for(let i = 0;  i  < responseReactionBox.length; i++)
-        {
+        if(this._reactionAdded) {
+            this._addedResponseReactionBoxes.push(this._responseReactionBox);
+        }
+        for(let i = 0;  i  < responseReactionBox.length; i++) {
             this._addedResponseReactionBoxes.push(responseReactionBox[i]);
         }
+        this._responseReactionBox = new ResponseReactionBox();
+        this._reactionAdded = false;
         return this;
     }
 
@@ -221,9 +231,10 @@ class RequestBuilder
      * If there is more than one error at the end,
      * the reaction wil be triggerd with all filtered errors.
      */
-    onError(reaction: ResponseReactionOnError, ...filter: ErrorFilter[]) : RequestBuilder
+    onError(reaction: ResponseReactionOnError, ...filter: ErrorFilter[]) : RequestHelper
     {
         this._responseReactionBox.onError(reaction,...filter);
+        this._reactionAdded = true;
         return this;
     }
 
@@ -279,9 +290,10 @@ class RequestBuilder
      * If there is more than one error at the end,
      * the reaction wil be triggerd with all filtered errors.
      */
-    catchError(reaction: ResponseReactionOnError, ...filter: ErrorFilter[]) : RequestBuilder
+    catchError(reaction: ResponseReactionOnError, ...filter: ErrorFilter[]) : RequestHelper
     {
         this._responseReactionBox.catchError(reaction,...filter);
+        this._reactionAdded = true;
         return this;
     }
 
@@ -290,8 +302,8 @@ class RequestBuilder
      * @description
      * Returns an OnErrorBuilder to easy react on error.
      */
-    buildOnError() : OnErrorBuilder<RequestBuilder> {
-        return new OnErrorBuilder<RequestBuilder>(this);
+    buildOnError() : OnErrorBuilder<RequestHelper,RequestHelper> {
+        return new OnErrorBuilder<RequestHelper,RequestHelper>(this);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -299,14 +311,14 @@ class RequestBuilder
      * @description
      * Returns an CatchErrorBuilder to easy catch an error.
      */
-    buildCatchError() : CatchErrorBuilder<RequestBuilder> {
-        return new CatchErrorBuilder<RequestBuilder>(this);
+    buildCatchError() : CatchErrorBuilder<RequestHelper,RequestHelper> {
+        return new CatchErrorBuilder<RequestHelper,RequestHelper>(this);
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * React on successful response
+     * React on successful response.
      * @example
      * onSuccessful((result,response) => {});
      * onSuccessful((result,response) => {},2000);
@@ -314,8 +326,23 @@ class RequestBuilder
      * @param statusCode
      * can be provided to filter on with an status code.
      */
-    onSuccessful(reaction: ResponseReactionOnSuccessful, statusCode ?: number | string) : RequestBuilder {
+    onSuccessful(reaction: ResponseReactionOnSuccessful, statusCode ?: number | string) : RequestHelper {
         this._responseReactionBox.onSuccessful(reaction,statusCode);
+        this._reactionAdded = true;
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * React on response.
+     * @example
+     * onResponse((response) => {});
+     * @param reaction
+     */
+    onResponse(reaction:  ResponseReactionOnResponse) : RequestHelper {
+        this._responseReactionBox.onResponse(reaction);
+        this._reactionAdded = true;
         return this;
     }
 
@@ -324,8 +351,37 @@ class RequestBuilder
      * @description
      * Send the request and returns the response after trigger the reactions from the build.
      * @throws ConnectionNeededError
+     * @param triggerZationBoxes
+     * Specifies if the zation response boxes are triggerd.
+     * The default value is true if at least one reaction is added in the requestBuilder.
+     * Otherwise you have the possibility to react with the response on specific things and
+     * then trigger the zation response reaction boxes (using response.react().zationReact()).
      */
-    async send() : Promise<Response>
+    async send(triggerZationBoxes : boolean = this._reactionAdded || this._addedResponseReactionBoxes.length > 0) : Promise<Response>
+    {
+
+        //send
+        return await this.zation.send
+        (
+            this.buildRequest(),
+            (...args) => {
+            this._progressHandler.forEach((handler)=>
+            {
+                handler(...args);
+            })},
+            triggerZationBoxes,
+            this._responseReactionBox,
+            ...this._addedResponseReactionBoxes
+        );
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Builds the request and return it.
+     * Notice that the request not contains the reactions!
+     */
+    buildRequest() : ZationRequest
     {
         let request;
         //buildRequest
@@ -340,22 +396,7 @@ class RequestBuilder
                 request = new HttpRequest(this._controllerName,this._data,this._useAuth,this._systemController)
             }
         }
-
-        //send
-        const resp = await this.zation.send(request,(...args) => {
-            this._progressHandler.forEach((handler)=>
-            {
-                handler(...args);
-            })
-        });
-
-        //_trigger boxes
-        this._responseReactionBox._trigger(resp);
-        this._addedResponseReactionBoxes.forEach((box) => {
-            box._trigger(resp);
-        });
-
-        return resp;
+        return request;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -393,5 +434,5 @@ class RequestBuilder
 
 }
 
-export = RequestBuilder;
+export = RequestHelper;
 

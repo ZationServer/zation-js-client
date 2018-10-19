@@ -39,15 +39,15 @@
   "dependencies": {
     "@babel/core": "^7.1.0",
     "@types/node": "10.5.2",
-    "emitter": "0.0.5",
     "fetch-progress": "1.0.2",
     "fs": "0.0.1-security",
     "gulp-print": "^5.0.0",
     "lodash": "4.17.11",
     "minimatch": "3.0.4",
     "path": "0.12.7",
-    "socketcluster-client": "14.1.0",
-    "object-path": "0.11.4"
+    "socketcluster-client": "14.2.1",
+    "object-path": "0.11.4",
+    "component-emitter": "1.2.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

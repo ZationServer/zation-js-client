@@ -34,7 +34,7 @@ import {ProtocolType} from "./lib/helper/constants/protocolType";
 // noinspection JSUnusedGlobalSymbols
 /**
  * @description
- * Creates the main zation client.
+ * Creates the returnTarget zation client.
  * @param options
  * @param reactionBox
  */
@@ -49,7 +49,63 @@ const create = (options : ZationOptions = {},...reactionBox : (ResponseReactionB
 new Response({},ProtocolType.Http).react().
     buildCatchError().presets().inputNotMatchWithMinLength('name')
     .react(((filteredErrors, response) => {}))
-    .onSuccessful((result, response) => {});
+    .onSuccessful((result, response) => {})
+    .onError(() => {})
+    .buildOnError().react().buildOnError().react().
+
+
+create().eventReact()
+    .onServerDisconnect(((code, data) => {
+        console.log('Du wurdest disconnected';
+    }));
+
+
+
+const zation = create();
+
+await zation.connect();
+
+zation.authenticate({userName : 'luca',password : '123'})
+    .then((resp) => {
+       resp.react()
+           .zationReact()
+
+    });
+
+await zation.request()
+    .controller('sendMessage')
+    .data({msg : 'hallo'})
+    .buildCatchError()
+    .presets()
+    .inputNotMatchWithMinLength('msg')
+    .react(()=>{console.log('message to short')})
+    .catchError(()=>{console.log('something went wrong')})
+    .onSuccessful(()=>{console.log('message sended')})
+    .send();
+
+zation.newResponseReactionBox().buildOnError().react().
+
+zation.authenticate({userName : 'peter'})
+    .then((resp) =>
+    {
+        resp.react()
+            .buildCatchError()
+            .presets()
+            .controllerNotFound()
+            .or()
+            .presets()
+            .authControllerNotSet()
+            .react((filteredErrors, response) => {
+
+            })
+            .catchError(()=>{
+
+            })
+            .reactWith()
+    });
+
+    zation.channelReact().onCustomChPub('stream','message',((data, eventName, chName, socketSrcSid) => ))
+
 
 export
 {

@@ -112,9 +112,9 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * @description
      * Returns an OnErrorBuilder to easy react on error.
      */
-    buildOnError() : OnErrorBuilder<ResponseReactionBox>
+    buildOnError() : OnErrorBuilder<ResponseReactionBox,FullReaction<ResponseReactionOnError>>
     {
-        return new OnErrorBuilder<ResponseReactionBox>(this);
+        return new OnErrorBuilder<ResponseReactionBox,FullReaction<ResponseReactionOnError>>(this);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -193,9 +193,9 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * @description
      * Returns an CatchErrorBuilder to easy catch an error.
      */
-    buildCatchError() : CatchErrorBuilder<ResponseReactionBox>
+    buildCatchError() : CatchErrorBuilder<ResponseReactionBox,FullReaction<ResponseReactionCatchError>>
     {
-        return new CatchErrorBuilder<ResponseReactionBox>(this);
+        return new CatchErrorBuilder<ResponseReactionBox,FullReaction<ResponseReactionCatchError>>(this);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -283,7 +283,7 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
 
                 this.errorReactionBox.forEachSync(async (fullReaction : FullReaction<ResponseReactionOnError>) =>
                 {
-                    TriggerResponseEngine.onError(response,fullReaction);
+                    await TriggerResponseEngine.onError(response,fullReaction);
                 });
             }
         }

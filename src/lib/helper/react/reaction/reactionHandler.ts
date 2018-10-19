@@ -15,9 +15,9 @@ export type ResponseReactionOnError      = (filteredErrors : TaskError[], respon
 export type ResponseReactionCatchError   = (catchedErrors : TaskError[], response : Response) => void | Promise<void>;
 
 //Channel
-export type ChannelReactionOnPubZationCh   = (data : any, eventName : string, socketSrcSid : undefined | string) => void | Promise<void>;
-export type ChannelReactionOnPubCustomCh   = (data : any, eventName : string, chName : string, socketSrcSid : undefined | string) => void | Promise<void>;
-export type ChannelReactionOnPubCustomIdCh = (data : any, eventName : string, chName : string, chId : string, socketSrcSid : undefined | string) => void | Promise<void>;
+export type ChannelReactionOnPubZationCh   = (data : any, socketSrcSid : undefined | string, eventName : string) => void | Promise<void>;
+export type ChannelReactionOnPubCustomCh   = (data : any, socketSrcSid : undefined | string, eventName : string, chName : string) => void | Promise<void>;
+export type ChannelReactionOnPubCustomIdCh = (data : any, socketSrcSid : undefined | string, eventName : string, chId : string, chName : string) => void | Promise<void>;
 
 //Event
 export type EventReactionOnConnect                  = (isFirstConnection) => void | Promise<void>;

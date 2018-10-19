@@ -8,11 +8,13 @@ import {ProtocolType}    from "../helper/constants/protocolType";
 import Const             = require("../helper/constants/constWrapper");
 import ResponseReact     = require("../helper/react/reaction/responseReact");
 import {TaskError} from "../helper/react/taskError/taskError";
+import Zation = require("./zation");
 
 class Response
 {
     private successful = false;
     private readonly type : ProtocolType;
+    protected readonly client : Zation;
 
     private result : any;
     private statusCode : string | number | undefined;
@@ -25,11 +27,12 @@ class Response
     private newSignedToken : string | undefined = undefined;
     private newPlainToken : object | undefined = undefined;
 
-    constructor(data,type : ProtocolType)
+    constructor(data,client : Zation,type : ProtocolType)
     {
         this.successful = false;
         this.erros = [];
         this.type = type;
+        this.client = client;
 
         this._readData(data);
         this.resetNotCatchedErrors();
@@ -182,9 +185,8 @@ class Response
      * @description
      * Returns the an response react for rect directly on the repsonse.
      */
-    react() : ResponseReact
-    {
-        return new ResponseReact(this);
+    react() : ResponseReact {
+        return new ResponseReact(this,this.client);
     }
 
     //Part Type
@@ -249,8 +251,9 @@ class Response
      * @description
      * Reset all catched errors.
      */
-    resetNotCatchedErrors() : void {
+    resetNotCatchedErrors() : Response {
         this.notCatchedErrors = this.erros;
+        return this;
     }
 
     _getNotCatchedErrors() : TaskError[] {
@@ -265,7 +268,7 @@ class Response
         });
     }
 
-    //Part main system
+    //Part returnTarget system
 
     private _readData(data)
     {

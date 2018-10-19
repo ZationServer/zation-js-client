@@ -4,31 +4,68 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import AuthEngine             = require("../helper/auth/authEngine");
-import Const                  = require('../helper/constants/constWrapper');
-import ChannelEngine          = require("../helper/channel/channelEngine");
-import Box                    = require("../helper/box/box");
-import ResponseReactionBox    = require("./responseReactionBox");
-import ChannelReactionBox     = require("./channelReactionBox");
-import WsRequest              = require("./wsRequest");
-import Response               = require("./response");
-import SendEngine             = require("../helper/send/sendEngine");
-const  SocketClusterClient    = require('socketcluster-client');
-import {SendAble}               from "../helper/request/sendAble";
-// noinspection TypeScriptPreferShortImport
-import {ProtocolType}           from "../helper/constants/protocolType";
-import {ZationOptions}          from "./zationOptions";
-import {ProgressHandler}        from "../helper/request/progressHandler";
-import ZationRequest          = require("../helper/request/zationRequest");
-import RequestBuilder         = require("../helper/request/requestBuilder");
-import ConnectionAbortError   = require("../helper/error/connectionAbortError");
-import ZationConfig           = require("../helper/config/zationConfig");
-import EventReactionBox       = require("./eventReactionBox");
-import {OnHandlerFunction, ResponseFunction, Socket} from "../helper/sc/socket";
-import ObjectPath             = require("../helper/tools/objectPath");
-import ConnectionNeededError  = require("../helper/error/connectionNeededError");
+import AuthEngine = require("../helper/auth/authEngine");
+import Const = require('../helper/constants/constWrapper');
+import ChannelEngine = require("../helper/channel/channelEngine");
+import Box = require("../helper/box/box");
+import ResponseReactionBox = require("./responseReactionBox");
+import ChannelReactionBox = require("./channelReactionBox");
+import WsRequest = require("./wsRequest");
+import Response = require("./response");
+import SendEngine = require("../helper/send/sendEngine");
+import ZationRequest = require("../helper/request/zationRequest");
+import RequestHelper = require("../helper/request/requestHelper");
+import ConnectionAbortError = require("../helper/error/connectionAbortError");
+import ZationConfig = require("../helper/config/zationConfig");
+import EventReactionBox = require("./eventReactionBox");
+import ObjectPath = require("../helper/tools/objectPath");
+import ConnectionNeededError = require("../helper/error/connectionNeededError");
 import Logger = require("../helper/Logger/logger");
+const  Emitter = require('component-emitter');
+const  SocketClusterClient    = require('socketcluster-client');
+import {SendAble} from "../helper/request/sendAble";
+// noinspection TypeScriptPreferShortImport
+import {ProtocolType} from "../helper/constants/protocolType";
+import {ZationOptions} from "./zationOptions";
+import {ProgressHandler} from "../helper/request/progressHandler";
+import {OnHandlerFunction, ResponseFunction, Socket} from "../helper/sc/socket";
 import {Events} from "../helper/constants/events";
+
+//override for decide between client/server deauthenticate
+SocketClusterClient.prototype.deauthenticate = function (callback) {
+    const self = this;
+    this.auth.removeToken(this.authTokenName, function (err, oldToken) {
+        if (err) {
+            // Non-fatal error - Do not close the connection
+            self._onSCError(err);
+        } else {
+            Emitter.prototype.emit.call(self, 'removeAuthToken', oldToken);
+            if (self.state !== self.CLOSED) {
+                self.emit('#removeAuthToken');
+            }
+            self._changeToUnauthenticatedStateAndClearTokens(true);
+        }
+        callback && callback(err);
+    });
+};
+
+SocketClusterClient.prototype._changeToUnauthenticatedStateAndClearTokens = function (fromClient : boolean = false) {
+    if (this.authState !== this.UNAUTHENTICATED) {
+        const oldState = this.authState;
+        const oldSignedToken = this.signedAuthToken;
+        this.authState = this.UNAUTHENTICATED;
+        this.signedAuthToken = null;
+        this.authToken = null;
+
+        const stateChangeData = {
+            oldState: oldState,
+            newState: this.authState
+        };
+        Emitter.prototype.emit.call(this, 'authStateChange', stateChangeData);
+        Emitter.prototype.emit.call(this, 'deauthenticate', oldSignedToken,fromClient);
+    }
+};
+
 
 class Zation
 {
@@ -53,10 +90,12 @@ class Zation
     //webSockets
     private socket : Socket;
 
+    private firstConnection : boolean = true;
+
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Creates the main zation client.
+     * Creates the returnTarget zation client.
      * @param settings
      * @param reactionBox
      */
@@ -227,6 +266,44 @@ class Zation
         return this.userEventReactionBox;
     }
 
+    //Part Reaction Boxes
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns a new channel reaction box
+     * and add this box to the client.
+     */
+    newChannelReactionBox() : ChannelReactionBox {
+        const box = new ChannelReactionBox();
+        this.addReactionBox(box);
+        return box;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns a new response reaction box
+     * and add this box to the client.
+     */
+    newResponseReactionBox() : ResponseReactionBox {
+        const box = new ResponseReactionBox();
+        this.addReactionBox(box);
+        return box;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns a new event reaction box
+     * and add this box to the client.
+     */
+    newEventReactionBox() : EventReactionBox {
+        const box = new EventReactionBox();
+        this.addReactionBox(box);
+        return box;
+    }
+
     //Part Ping
 
     // noinspection JSUnusedGlobalSymbols
@@ -262,11 +339,14 @@ class Zation
      * @description
      * Authenticate this connection (use authentication controller)
      * with authentication data and returns the response.
+     * Notice that the zation response reaction boxes are not triggerd.
+     * Because then you have the opportunity to react with the response on specific things
+     * then trigger the zation response reaction boxes (using response.react().zationReact()).
      * @example
      * await authenticate({userName : 'Tim', password : 'opqdjß2jdp1d'});
      * @throws ConnectionNeededError(if using protocol type webSocket)
      */
-    async authenticate(authData : object, protocolType : ProtocolType = ProtocolType.WebSocket) : Promise<Response> {
+    async authenticate(authData : object = {}, protocolType : ProtocolType = ProtocolType.WebSocket) : Promise<Response> {
         return await this.authEngine.authenticate(authData,protocolType);
     }
 
@@ -296,6 +376,9 @@ class Zation
      * @description
      * Connect and authenticate the client
      * and returns the Response from the authentication.
+     * Notice that the zation response reaction boxes are not triggerd.
+     * Because then you have the opportunity to react with the response on specific things
+     * then trigger the zation response reaction boxes (using response.react().zationReact()).
      * @example
      * await conAndAuth({userName : 'Tim', password : 'opqdjß2jdp1d'});
      * @throws connectionAbortError
@@ -315,7 +398,7 @@ class Zation
      * @param code error code (disconnection)
      * @param data reason code for disconnection
      */
-    async deauthDis(code ?: number, data ?: object | string) : Promise<void>
+    async deauthDis(code ?: number, data : object = {}) : Promise<void>
     {
         await this.deauthenticate();
         await this.disconnect(code,data);
@@ -324,11 +407,18 @@ class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns request builder.
-     * Where you can easy build an request.
+     * Returns request helper.
+     * Where you can easy build an request with reactions and send it.
+     * The default values are:
+     * Protocol: WebSocket
+     * AuthRequest: false
+     * ControllerName: ''
+     * Data: {}
+     * SystemController: false
+     * UseAuth: true
      */
-    buildReq() : RequestBuilder {
-        return new RequestBuilder(this);
+    request() : RequestHelper {
+        return new RequestHelper(this);
     }
 
     //Part Send
@@ -337,10 +427,16 @@ class Zation
      * @description
      * Send a sendAble object.
      * Optional you can add a progressHandler and responseReactionBox/es.
+     * Notice that the response boxes that are passed in are triggerd before the zation boxes.
+     * But the zationBoxes are only triggerd if the triggerZationBoxes param is true.
      * @throws ConnectionNeededError
      * @return Response
+     * @param sendAble
+     * @param progressHandler
+     * @param triggerZationBoxes
+     * @param responseReactionBox
      */
-    async send(sendAble : SendAble, progressHandler ?: ProgressHandler, ...responseReactionBox : ResponseReactionBox[]) : Promise<Response>
+    async send(sendAble : SendAble, progressHandler ?: ProgressHandler,triggerZationBoxes : boolean = false,...responseReactionBox : ResponseReactionBox[]) : Promise<Response>
     {
         let ph : undefined | ProgressHandler = undefined;
         if(!!progressHandler) {
@@ -360,10 +456,12 @@ class Zation
             response = await SendEngine.httpSend(this,jsonObj,ph);
         }
 
-        await this._triggerResponseReactions(response);
-
         for(let i = 0; i < responseReactionBox.length; i++) {
             await responseReactionBox[i]._trigger(response);
+        }
+
+        if(triggerZationBoxes) {
+            await this._triggerResponseReactions(response);
         }
 
         return response;
@@ -371,15 +469,22 @@ class Zation
 
     // Part Connection
 
-    //socket interface
-    getSocket() : Socket
-    {
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the current socket.
+     * Is undefined if socket is not created.
+     */
+    getSocket() : Socket {
         return this.socket;
     }
 
-    //socket interface
-    hasSocket() : boolean
-    {
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns if client has a current socket.
+     */
+    hasSocket() : boolean {
         return this.socket !== undefined;
     }
 
@@ -412,10 +517,11 @@ class Zation
                     this._buildWsConnection();
                 }
 
+                this._registerSocketEvents();
+
                 //register
-                this.socket.on('connect',() => {
+                this.socket.on('connect',async () => {
                     this.authEngine.initAuthEngine();
-                    this._registerSocketEvents();
                     resolve();
                 });
 
@@ -433,13 +539,18 @@ class Zation
     /**
      * @description
      * Disconnectes the socket if it is connected.
+     * The current auth token will not be removed.
+     * This means that when the client is reconnected the token is used again.
+     * To prevent this, use the function deauthenticate or deauthDis.
      * @param code error code (disconnection)
      * @param data reason code for disconnection
      */
-    disconnect(code ?: number, data ?: object | string) : void
+    disconnect(code ?: number, data : object = {}) : void
     {
         if(this.isSocketConnected()) {
+            data['#internal-fromZationClient'] = true;
             this.socket.disconnect(code,data);
+            this.firstConnection = true;
         }
     }
 
@@ -450,7 +561,7 @@ class Zation
      * @param code error code (disconnection)
      * @param data reason code for disconnection
      */
-    async reconnect(code ?: number, data ?: object | string) : Promise<void>
+    async reconnect(code ?: number, data : object = {}) : Promise<void>
     {
        this.disconnect(code,data);
        await this.connect();
@@ -458,11 +569,63 @@ class Zation
 
     private _registerSocketEvents()
     {
-        this.socket.on('error', (err) =>
-        {
+        this.socket.on('connect',async () => {
+
+            if(this.firstConnection) {
+                await this._triggerEventReactions(Events.FirstConnect);
+            }
+            else {
+                await this._triggerEventReactions(Events.Reconnect);
+            }
+            this.firstConnection = false;
+
+            await this._triggerEventReactions(Events.Connect,this.firstConnection);
+        });
+
+        this.socket.on('error', async (err) => {
             if(this.zc.getConfig(Const.Config.DEBUG)) {
                 Logger.printError(err);
             }
+            await this._triggerEventReactions(Events.Error,err);
+        });
+
+        this.socket.on('disconnect',async (code,data) =>
+        {
+            const fromClient = data['#internal-fromZationClient'];
+            if(typeof fromClient === "boolean" && fromClient){
+                await this._triggerEventReactions(Events.ClientDisconnect,code,data);
+            }
+            else{
+                await this._triggerEventReactions(Events.ServerDisconnect,code,data);
+            }
+            await this._triggerEventReactions(Events.Disconnect,!!fromClient,code,data);
+        });
+
+        this.socket.on('deauthenticate',async (oldSignedJwtToken,fromClient) =>
+        {
+            if(fromClient){
+                await this._triggerEventReactions(Events.ClientDisconnect,oldSignedJwtToken);
+            }
+            else{
+                await this._triggerEventReactions(Events.ServerDisconnect,oldSignedJwtToken);
+            }
+            await this._triggerEventReactions(Events.Disconnect,fromClient,oldSignedJwtToken);
+        });
+
+        this.socket.on('connectAbort',async (code,data) => {
+            await this._triggerEventReactions(Events.ConnectAbort,code,data);
+        });
+
+        this.socket.on('connecting', async () => {
+            await this._triggerEventReactions(Events.Connecting);
+        });
+
+        this.socket.on('close', async (code,data) => {
+            await this._triggerEventReactions(Events.Close,code,data);
+        });
+
+        this.socket.on('authenticate', async (signedJwtToken) => {
+            await this._triggerEventReactions(Events.Authenticate,signedJwtToken);
         });
     }
 
@@ -1032,7 +1195,7 @@ class Zation
     }
 
     //Part trigger
-    private async _triggerResponseReactions(response : Response) : Promise<void>
+    async _triggerResponseReactions(response : Response) : Promise<void>
     {
         await this.responseReactionMainBox.forEach(async (responseReactionBox : ResponseReactionBox) => {
             await responseReactionBox._trigger(response);

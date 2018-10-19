@@ -12,17 +12,20 @@ import Response                 = require("../../../api/response");
 import {ErrorFilter}            from "../../filter/errorFilter";
 import {TriggerResponseEngine}  from "../responseReactionEngine/triggerResponseEngine";
 import FullReaction             = require("./fullReaction");
-import ResponseReactionBox = require("../../../api/responseReactionBox");
+import ResponseReactionBox      = require("../../../api/responseReactionBox");
+import Zation                   = require("../../../api/zation");
 
 class ResponseReact implements ResponseReactAble
 {
     private readonly response : Response;
+    private readonly client : Zation;
     private preAction : Promise<void>;
 
-    constructor(response : Response)
+    constructor(response : Response,client : Zation)
     {
         this.preAction = Promise.resolve();
         this.response = response;
+        this.client = client;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -160,9 +163,9 @@ class ResponseReact implements ResponseReactAble
      * @description
      * Returns an OnErrorBuilder to easy react on error.
      */
-    buildOnError() : OnErrorBuilder<ResponseReact>
+    buildOnError() : OnErrorBuilder<ResponseReact,ResponseReact>
     {
-        return new OnErrorBuilder<ResponseReact>(this);
+        return new OnErrorBuilder<ResponseReact,ResponseReact>(this);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -170,9 +173,9 @@ class ResponseReact implements ResponseReactAble
      * @description
      * Returns an CatchErrorBuilder to easy catch an error.
      */
-    buildCatchError() : CatchErrorBuilder<ResponseReact>
+    buildCatchError() : CatchErrorBuilder<ResponseReact,ResponseReact>
     {
-        return new CatchErrorBuilder<ResponseReact>(this);
+        return new CatchErrorBuilder<ResponseReact,ResponseReact>(this);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -207,6 +210,21 @@ class ResponseReact implements ResponseReactAble
             await respReactionBoxes.forEach(async (box : ResponseReactionBox) => {
                 await box._trigger(this.response);
             });
+        });
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Triggers all response reaction boxes on the zation client.
+     * Only makes sense if the request was sent without its own reaction boxes.
+     * Because then the boxes from the zation client were not triggered.
+     */
+    zationReact() : ResponseReact
+    {
+        this.preAction = this.preAction.then(async () => {
+            await this.client._triggerResponseReactions(this.response);
         });
         return this;
     }
