@@ -17,7 +17,7 @@ import {OnErrorBuilder} from "../react/onErrorBuilder/onErrorBuilder";
 import {CatchErrorBuilder} from "../react/onErrorBuilder/catchErrorBuilder";
 import {ErrorFilter} from "../filter/errorFilter";
 import ZationRequest = require("./zationRequest");
-import {ProtocolType} from "../../..";
+import {ProtocolType} from "../constants/protocolType";
 
 abstract class AbstractRequestHelper<T>
 {

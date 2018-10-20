@@ -76,7 +76,7 @@ gulp.task('browserify', function() {
         transform: [[ignore]],
         builtins: ['_process', 'events', 'buffer', 'querystring'],
         entries: DIST+'index.js',
-        standalone: 'zation'
+        standalone: 'Zation'
     })
         .transform(ascjsify, { global: true })
         .ignore('_process')

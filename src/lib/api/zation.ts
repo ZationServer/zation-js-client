@@ -20,7 +20,7 @@ import ZationConfig = require("../helper/config/zationConfig");
 import EventReactionBox = require("./eventReactionBox");
 import ObjectPath = require("../helper/tools/objectPath");
 import ConnectionNeededError = require("../helper/error/connectionNeededError");
-import Logger = require("../helper/Logger/logger");
+import Logger = require("../helper/logger/logger");
 import AuthRequestHelper = require("../helper/request/authRequestHelper");
 import AuthRequest = require("./authRequest");
 import ValidationRequestHelper = require("../helper/request/validationRequestHelper");
@@ -38,7 +38,7 @@ import {ValidationCheck} from "./validationRequest";
 import {ChannelTarget} from "../helper/channel/channelTarget";
 
 //override for decide between client/server deauthenticate
-SocketClusterClient.prototype.deauthenticate = function (callback) {
+SocketClusterClient.SCClientSocket.prototype.deauthenticate = function (callback) {
     const self = this;
     this.auth.removeToken(this.authTokenName, function (err, oldToken) {
         if (err) {
@@ -55,7 +55,7 @@ SocketClusterClient.prototype.deauthenticate = function (callback) {
     });
 };
 
-SocketClusterClient.prototype._changeToUnauthenticatedStateAndClearTokens = function (fromClient : boolean = false) {
+SocketClusterClient.SCClientSocket.prototype._changeToUnauthenticatedStateAndClearTokens = function (fromClient : boolean = false) {
     if (this.authState !== this.UNAUTHENTICATED) {
         const oldState = this.authState;
         const oldSignedToken = this.signedAuthToken;
@@ -73,7 +73,7 @@ SocketClusterClient.prototype._changeToUnauthenticatedStateAndClearTokens = func
 };
 
 //override for decide between client/server unsub channel
-SocketClusterClient.prototype.unsubscribe = function (channelName) {
+SocketClusterClient.SCClientSocket.prototype.unsubscribe = function (channelName) {
     const channel = this.channels[channelName];
 
     if (channel) {
@@ -84,7 +84,7 @@ SocketClusterClient.prototype.unsubscribe = function (channelName) {
     }
 };
 
-SocketClusterClient.prototype._triggerChannelUnsubscribe = function (channel, newState, fromClient : boolean = false) {
+SocketClusterClient.SCClientSocket.prototype._triggerChannelUnsubscribe = function (channel, newState, fromClient : boolean = false) {
     const channelName = channel.name;
     const oldState = channel.state;
 

@@ -6,7 +6,7 @@ GitHub: LucaCode
 
 import Zation         = require("../../api/zation");
 import ChannelEngine  = require("../channel/channelEngine");
-import Logger         = require("../Logger/logger");
+import Logger         = require("../logger/logger");
 import Const              = require("../constants/constWrapper");
 import MissingUserIdError = require("../error/missingUserIdError");
 import MissingAuthUserGroupError   = require("../error/missingAuthUserGroupError");
