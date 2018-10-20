@@ -10,7 +10,6 @@ import ConnectionNeededError  = require("../error/connectionNeededError");
 import ResultIsMissingError   = require("../error/resultIsMissingError");
 import {ProtocolType}           from "../constants/protocolType";
 import {ProgressHandler}        from "../request/progressHandler";
-import fetchProgress            from 'fetch-progress';
 
 class SendEngine
 {
@@ -52,7 +51,12 @@ class SendEngine
 
     static async httpSend(zation : Zation,data : object,progressHandler ?: ProgressHandler) : Promise<Response>
     {
-        return new Promise<Response>((resolve) => {
+        return new Promise<Response>((resolve) =>
+        {
+            if (!!progressHandler) {
+                progressHandler(0);
+            }
+
             fetch(zation.getServerAddress(),
                 {
                     method : "POST",
@@ -60,16 +64,13 @@ class SendEngine
                         "Content-Type": "application/json; charset=utf-8",
                     },
                     body : JSON.stringify(data)
-                }).then(
-                fetchProgress(
-                    {
-                        onProgress(progress) {
-                            if (!!progressHandler) {
-                                progressHandler(progress.percentage);
-                            }
-                        },
-                    })
-                ).then(async (res) => {
+                })
+                .then(async (res) => {
+
+                    if (!!progressHandler) {
+                        progressHandler(100);
+                    }
+
                     resolve(new Response(await res.json(),zation,ProtocolType.Http));
                 });
         });

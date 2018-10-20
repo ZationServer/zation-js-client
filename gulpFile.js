@@ -12,11 +12,11 @@ const uglifyes        = require('uglify-es');
 const composer        = require('gulp-uglify/composer');
 const ignore          = require('browserify-ignore-code');
 const uglify          = composer(uglifyes, console);
-const print           = require('gulp-print').default;
 const convertNewline  = require('gulp-convert-newline');
 const path            = require('path');
 const ascjsify        = require('ascjsify');
-
+const OptimizeJs      = require('gulp-optimize-js');
+const clean           = require('gulp-clean');
 
 const tscConfig       = require('./tsconfig.json');
 const DIST            = './dist/';
@@ -86,7 +86,6 @@ gulp.task('browserify', function() {
             console.error(err);
         })
         .pipe(source('zation.js'))
-        .pipe(print())
         .pipe(convertNewline({
             newline: 'lf',
             encoding: 'utf8'
@@ -95,6 +94,13 @@ gulp.task('browserify', function() {
         .pipe(insert.prepend(HEADER))
         .pipe(derequire())
         .pipe(gulp.dest(DIST));
+});
+
+gulp.task('optimize', function () {
+    return gulp
+        .src('dist/**/*.js')
+        .pipe(OptimizeJs())
+        .pipe(gulp.dest('dist'));
 });
 
 gulp.task('minify', function() {
@@ -113,11 +119,18 @@ gulp.task('minify', function() {
         .pipe(gulp.dest(DIST))
 });
 
+gulp.task('cleanDist', function () {
+    return gulp.src('dist', {read: false,allowEmpty : true})
+        .pipe(clean());
+});
+
 gulp.task('ts', gulp.series('mainTs','cetTs'));
 
 gulp.task('browserVersion', gulp.series('browserify'));
 
-gulp.task('compile', gulp.series(gulp.parallel('cof','ts'),'browserVersion','minify'));
+gulp.task('compile', gulp.series(gulp.parallel('cof','ts'),'optimize','browserVersion','minify'));
+
+gulp.task('build', gulp.series('cleanDist','compile'));
 
 gulp.task('watch', function() {
     gulp.watch('src/**/*.ts', gulp.parallel('ts'));

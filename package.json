@@ -1,13 +1,13 @@
 {
   "name": "zation-client",
-  "version": "0.2.3",
+  "version": "0.2.5",
   "license": "MIT",
   "description": "Appication Server Framework JavaScript Client",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "prepublishOnly": "npm run build",
-    "build": "gulp compile",
+    "build": "gulp build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -37,11 +37,9 @@
     "tools"
   ],
   "dependencies": {
-    "@babel/core": "^7.1.0",
+    "@babel/core": "7.1.0",
     "@types/node": "10.5.2",
-    "fetch-progress": "1.0.2",
     "fs": "0.0.1-security",
-    "gulp-print": "^5.0.0",
     "lodash": "4.17.11",
     "minimatch": "3.0.4",
     "path": "0.12.7",
@@ -68,6 +66,8 @@
     "typescript": "3.0.0-dev.20180712",
     "uglify-es": "3.3.9",
     "vinyl-source-stream": "2.0.0",
-    "ascjsify": "1.0.0"
+    "ascjsify": "1.0.0",
+    "gulp-optimize-js": "1.1.0",
+    "gulp-clean": "0.4.0"
   }
 }
