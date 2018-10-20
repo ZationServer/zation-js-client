@@ -71,8 +71,8 @@ gulp.task('cof', function() {
         .pipe(gulp.dest(DIST));
 });
 
-gulp.task('browserify', function(done) {
-        browserify({
+gulp.task('browserify', function() {
+        return browserify({
         transform: [[ignore]],
         builtins: ['_process', 'events', 'buffer', 'querystring'],
         entries: DIST+'index.js',
@@ -95,7 +95,6 @@ gulp.task('browserify', function(done) {
         .pipe(insert.prepend(HEADER))
         .pipe(derequire())
         .pipe(gulp.dest(DIST));
-        done();
 });
 
 gulp.task('minify', function() {

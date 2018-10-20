@@ -29,6 +29,11 @@ import {ZationOptions} from "./lib/api/zationOptions";
 import {RequestAble} from "./lib/api/requestAble";
 import {ProtocolType} from "./lib/helper/constants/protocolType";
 
+// browserify-ignore-start
+//support for zation-server
+import ZationReader = require('./lib/reader/zationReader');
+// browserify-ignore-end
+
 // noinspection JSUnusedGlobalSymbols
 /**
  * @description
@@ -64,13 +69,11 @@ export {
     ResultIsMissingError,
     SignAuthenticationFailError,
     SubscribeFailError,
-    ProtocolType
+    ProtocolType,
+    // browserify-ignore-start
+    ZationReader
+    // browserify-ignore-end
 }
 
 
-// browserify-ignore-start
-//support for zation-server
-import ZationReader = require('./lib/reader/zationReader');
-export {ZationReader}
-// browserify-ignore-end
 
