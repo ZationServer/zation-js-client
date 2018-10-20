@@ -4,7 +4,9 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
+// noinspection TypeScriptPreferShortImport
 import {RequestAble}         from "../../api/requestAble";
+// noinspection TypeScriptPreferShortImport
 import {ProtocolType}        from "../constants/protocolType";
 import {SendAble}            from "./sendAble";
 import {ProgressHandler}     from "./progressHandler";

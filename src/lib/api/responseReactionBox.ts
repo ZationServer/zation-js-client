@@ -14,26 +14,24 @@ import {
     ResponseReactionOnSuccessful
 } from "../helper/react/reaction/reactionHandler";
 import FullReaction      = require("../helper/react/reaction/fullReaction");
-import Box               = require("../helper/box/box");
 import ResponseReactAble = require("../helper/react/responseReactionEngine/responseReactAble");
 import {ErrorFilter}       from "../helper/filter/errorFilter";
 import Response          = require("./response");
 import {TriggerResponseEngine} from "../helper/react/responseReactionEngine/triggerResponseEngine";
+import SboxMapper = require("../helper/box/sboxMapper");
+
+enum MapKey
+{
+   CATCH_ERROR,
+   ERROR,
+   SUCCESSFUL,
+   RESPONSE
+}
 
 class ResponseReactionBox extends ReactionBox implements ResponseReactAble
 {
 
-    private readonly errorCatchReactionBox : Box<FullReaction<ResponseReactionCatchError>>
-        = new Box<FullReaction<ResponseReactionCatchError>>();
-
-    private readonly errorReactionBox : Box<FullReaction<ResponseReactionOnError>>
-        = new Box<FullReaction<ResponseReactionOnError>>();
-
-    private readonly successfulReactionBox : Box<FullReaction<ResponseReactionOnSuccessful>>
-        = new Box<FullReaction<ResponseReactionOnSuccessful>>();
-
-    private readonly responseReactionBox : Box<FullReaction<ResponseReactionOnResponse>>
-        = new Box<FullReaction<ResponseReactionOnResponse>>();
+    private readonly map: SboxMapper<FullReaction<any>> = new SboxMapper<FullReaction<any>>();
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -103,7 +101,7 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
     onError(reaction: ResponseReactionOnError, ...filter: ErrorFilter[]) : FullReaction<ResponseReactionOnError>
     {
         const fullReaction = new FullReaction<ResponseReactionOnError>(reaction,filter);
-        this.errorReactionBox.addItem(fullReaction);
+        this.map.add(MapKey.ERROR,fullReaction);
         return fullReaction;
     }
 
@@ -125,7 +123,7 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * If it is not given away all will be removed.
      */
     offError(fullReaction ?: FullReaction<ResponseReactionOnError>) : void {
-        this.errorReactionBox.remove(fullReaction);
+        this.map.remove(MapKey.ERROR,fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -185,7 +183,7 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
     catchError(reaction: ResponseReactionCatchError, ...filter: ErrorFilter[]) : FullReaction<ResponseReactionCatchError>
     {
         const fullReaction = new FullReaction<ResponseReactionCatchError>(reaction,filter);
-        this.errorCatchReactionBox.addItem(fullReaction);
+        this.map.add(MapKey.CATCH_ERROR,fullReaction);
         return fullReaction;
     }
 
@@ -207,7 +205,7 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * If it is not given away all will be removed.
      */
     rmCatchError(fullReaction ?: FullReaction<ResponseReactionCatchError>) : void {
-        this.errorCatchReactionBox.remove(fullReaction);
+        this.map.remove(MapKey.CATCH_ERROR,fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -225,7 +223,7 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
     onSuccessful(reaction: ResponseReactionOnSuccessful, statusCode ?: number | string) : FullReaction<ResponseReactionOnSuccessful>
     {
         const fullReaction = new FullReaction<ResponseReactionOnSuccessful>(reaction,{statusCode : statusCode});
-        this.successfulReactionBox.addItem(fullReaction);
+        this.map.add(MapKey.SUCCESSFUL,fullReaction);
         return fullReaction;
     }
 
@@ -237,7 +235,7 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * If it is not given away all will be removed.
      */
     offSuccessful(fullReaction ?: FullReaction<ResponseReactionOnSuccessful>) : void {
-        this.successfulReactionBox.remove(fullReaction);
+        this.map.remove(MapKey.SUCCESSFUL,fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -254,7 +252,7 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
     onResponse(reaction: ResponseReactionOnResponse) : FullReaction<ResponseReactionOnResponse>
     {
         const fullReaction = new FullReaction<ResponseReactionOnResponse>(reaction);
-        this.responseReactionBox.addItem(fullReaction);
+        this.map.add(MapKey.RESPONSE,fullReaction);
         return fullReaction;
     }
 
@@ -266,28 +264,47 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * If it is not given away all will be removed.
      */
     offResponse(fullReaction ?: FullReaction<ResponseReactionOnResponse>) : void {
-        this.responseReactionBox.remove(fullReaction);
+        this.map.remove(MapKey.RESPONSE,fullReaction);
     }
 
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Used internally.
+     * Only use this method carefully.
+     */
     async _trigger(response : Response)
     {
         if(this.activate)
         {
             if(response.isSuccessful()) {
-                await this.successfulReactionBox.forEach(async (fullReaction : FullReaction<ResponseReactionOnSuccessful>) =>
-                {
-                    await TriggerResponseEngine.onSuccessful(response,fullReaction);
-                });
+                const sucBox = this.map.tryGet(MapKey.SUCCESSFUL);
+                if(sucBox) {
+                    await sucBox.forEach(async (fullReaction : FullReaction<ResponseReactionOnSuccessful>) => {
+                        await TriggerResponseEngine.onSuccessful(response,fullReaction);
+                    });
+                }
             }
             else {
-                await this.errorCatchReactionBox.forEach(async (fullReaction : FullReaction<ResponseReactionCatchError>) =>
-                {
-                    await TriggerResponseEngine.catchError(response,fullReaction);
-                });
+                const catchBox = this.map.tryGet(MapKey.CATCH_ERROR);
+                const errorBox = this.map.tryGet(MapKey.ERROR);
 
-                this.errorReactionBox.forEachSync(async (fullReaction : FullReaction<ResponseReactionOnError>) =>
-                {
-                    await TriggerResponseEngine.onError(response,fullReaction);
+                if(catchBox) {
+                    await catchBox.forEach(async (fullReaction : FullReaction<ResponseReactionCatchError>) => {
+                        await TriggerResponseEngine.catchError(response,fullReaction);
+                    });
+                }
+
+                if(errorBox) {
+                    await errorBox.forEachAll(async (fullReaction : FullReaction<ResponseReactionOnError>) => {
+                        await TriggerResponseEngine.onError(response,fullReaction);
+                    });
+                }
+            }
+            const respBox = this.map.tryGet(MapKey.RESPONSE);
+            if(respBox) {
+                await respBox.forEachAll(async (fullReaction : FullReaction<ResponseReactionOnResponse>) => {
+                    await fullReaction.getReactionHandler()(response);
                 });
             }
         }

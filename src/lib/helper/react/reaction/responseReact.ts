@@ -5,7 +5,12 @@ GitHub: LucaCode
  */
 
 import ResponseReactAble        = require("../responseReactionEngine/responseReactAble");
-import {ResponseReactionCatchError, ResponseReactionOnError, ResponseReactionOnSuccessful} from "./reactionHandler";
+import {
+    ResponseReactionCatchError,
+    ResponseReactionOnError,
+    ResponseReactionOnResponse,
+    ResponseReactionOnSuccessful
+} from "./reactionHandler";
 import {OnErrorBuilder}         from "../onErrorBuilder/onErrorBuilder";
 import {CatchErrorBuilder}      from "../onErrorBuilder/catchErrorBuilder";
 import Response                 = require("../../../api/response");
@@ -194,6 +199,21 @@ class ResponseReact implements ResponseReactAble
         this.preAction = this.preAction.then(async () => {
             await TriggerResponseEngine.
             onSuccessful(this.response,new FullReaction<ResponseReactionOnSuccessful>(reaction,{statusCode : statusCode}));
+        });
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * React on response.
+     * @example
+     * onResponse((response) => {});
+     * @param reaction
+     */
+    onResponse(reaction:  ResponseReactionOnResponse) : ResponseReact {
+        this.preAction = this.preAction.then(async () => {
+           await reaction(this.response);
         });
         return this;
     }

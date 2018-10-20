@@ -21,6 +21,10 @@ import EventReactionBox = require("./eventReactionBox");
 import ObjectPath = require("../helper/tools/objectPath");
 import ConnectionNeededError = require("../helper/error/connectionNeededError");
 import Logger = require("../helper/Logger/logger");
+import AuthRequestHelper = require("../helper/request/authRequestHelper");
+import AuthRequest = require("./authRequest");
+import ValidationRequestHelper = require("../helper/request/validationRequestHelper");
+
 const  Emitter = require('component-emitter');
 const  SocketClusterClient    = require('socketcluster-client');
 import {SendAble} from "../helper/request/sendAble";
@@ -30,10 +34,8 @@ import {ZationOptions} from "./zationOptions";
 import {ProgressHandler} from "../helper/request/progressHandler";
 import {OnHandlerFunction, ResponseFunction, Socket} from "../helper/sc/socket";
 import {Events} from "../helper/constants/events";
-import {ValidationCheck, ValidationRequest} from "./validationRequest";
-import AuthRequestHelper = require("../helper/request/authRequestHelper");
-import AuthRequest = require("./authRequest");
-import ValidationRequestHelper = require("../helper/request/validationRequestHelper");
+import {ValidationCheck} from "./validationRequest";
+import {ChannelTarget} from "../helper/channel/channelTarget";
 
 //override for decide between client/server deauthenticate
 SocketClusterClient.prototype.deauthenticate = function (callback) {
@@ -70,6 +72,41 @@ SocketClusterClient.prototype._changeToUnauthenticatedStateAndClearTokens = func
     }
 };
 
+//override for decide between client/server unsub channel
+SocketClusterClient.prototype.unsubscribe = function (channelName) {
+    const channel = this.channels[channelName];
+
+    if (channel) {
+        if (channel.state !== channel.UNSUBSCRIBED) {
+            this._triggerChannelUnsubscribe(channel,undefined,true);
+            this._tryUnsubscribe(channel);
+        }
+    }
+};
+
+SocketClusterClient.prototype._triggerChannelUnsubscribe = function (channel, newState, fromClient : boolean = false) {
+    const channelName = channel.name;
+    const oldState = channel.state;
+
+    if (newState) {
+        channel.state = newState;
+    } else {
+        channel.state = channel.UNSUBSCRIBED;
+    }
+    this._cancelPendingSubscribeCallback(channel);
+
+    if (oldState === channel.SUBSCRIBED) {
+        const stateChangeData = {
+            channel: channelName,
+            oldState: oldState,
+            newState: channel.state
+        };
+        channel.emit('subscribeStateChange', stateChangeData);
+        channel.emit('unsubscribe', channelName,fromClient);
+        Emitter.prototype.emit.call(this, 'subscribeStateChange', stateChangeData);
+        Emitter.prototype.emit.call(this, 'unsubscribe', channelName, fromClient);
+    }
+};
 
 class Zation
 {
@@ -721,6 +758,36 @@ class Zation
             }
             await this._triggerEventReactions(Events.Authenticate,signedJwtToken);
         });
+
+        //events for any channel
+        this.socket.on('kickOut',async (msg,chName) => {
+            await this._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
+                await chReactionBox._triggerEvent(chReactionBox.mapKick,ChannelTarget.ANY,{chFullName : chName},msg);
+            });
+        });
+
+        this.socket.on('subscribeFail',async (err,chName) => {
+            await this._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
+                await chReactionBox._triggerEvent(chReactionBox.mapSubFail,ChannelTarget.ANY,{chFullName : chName},err);
+            });
+        });
+
+        this.socket.on('subscribe',async (chName) => {
+            await this._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
+                await chReactionBox._triggerEvent(chReactionBox.mapSub,ChannelTarget.ANY,{chFullName : chName});
+            });
+        });
+
+        this.socket.on('unsubscribe',async (chName,fromClient) => {
+            if(fromClient){
+                await this._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
+                    await chReactionBox._triggerEvent(chReactionBox.mapClientUnsub,ChannelTarget.ANY,{chFullName : chName});
+                });
+            }
+            await this._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
+                await chReactionBox._triggerEvent(chReactionBox.mapUnsub,ChannelTarget.ANY,{chFullName : chName},fromClient);
+            });
+        });
     }
 
     private _buildScOptions()
@@ -1284,11 +1351,24 @@ class Zation
         return `${hostname}:${port}${path}`;
     };
 
+    //Part trigger
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Used internally.
+     * Only use this method carefully.
+     */
     _getChannelReactionMainBox() : Box<ChannelReactionBox> {
         return this.channelReactionMainBox;
     }
 
-    //Part trigger
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Used internally.
+     * Only use this method carefully.
+     */
     async _triggerResponseReactions(response : Response) : Promise<void>
     {
         await this.responseReactionMainBox.forEach(async (responseReactionBox : ResponseReactionBox) => {
@@ -1296,9 +1376,15 @@ class Zation
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Used internally.
+     * Only use this method carefully.
+     */
     private async _triggerEventReactions(event : Events,...arg : any[]) : Promise<void>
     {
-        await this.eventReactionMainBox.forEach(async (eventReactionBox : EventReactionBox) => {
+        await this.eventReactionMainBox.forEachAll(async (eventReactionBox : EventReactionBox) => {
             await eventReactionBox._trigger(event,...arg);
         });
     }

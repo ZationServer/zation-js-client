@@ -6,18 +6,49 @@ GitHub: LucaCode
 
 import Response = require("../../../api/response");
 import {TaskError} from "../taskError/taskError";
-import Zation = require("../../../api/zation");
 
 //Response
 export type ResponseReactionOnSuccessful = (result : any, response : Response) => void | Promise<void>;
-export type ResponseReactionOnResponse   = (response : Response, zation : Zation) => void | Promise<void>;
+export type ResponseReactionOnResponse   = (response : Response) => void | Promise<void>;
 export type ResponseReactionOnError      = (filteredErrors : TaskError[], response : Response) => void | Promise<void>;
 export type ResponseReactionCatchError   = (catchedErrors : TaskError[], response : Response) => void | Promise<void>;
 
 //Channel
-export type ChannelReactionOnPubZationCh   = (data : any, socketSrcSid : undefined | string, eventName : string) => void | Promise<void>;
-export type ChannelReactionOnPubCustomCh   = (data : any, socketSrcSid : undefined | string, eventName : string, chName : string) => void | Promise<void>;
-export type ChannelReactionOnPubCustomIdCh = (data : any, socketSrcSid : undefined | string, eventName : string, chId : string, chName : string) => void | Promise<void>;
+//Pub
+export type ChannelReactionOnPubAnyCh          = (data : any, socketSrcSid : undefined | string, eventName : string, fullChName : string) => void | Promise<void>;
+export type ChannelReactionOnPubZationCh       = (data : any, socketSrcSid : undefined | string, eventName : string) => void | Promise<void>;
+export type ChannelReactionOnPubCustomCh       = (data : any, socketSrcSid : undefined | string, eventName : string, chName : string) => void | Promise<void>;
+export type ChannelReactionOnPubCustomIdCh     = (data : any, socketSrcSid : undefined | string, eventName : string, chId : string, chName : string) => void | Promise<void>;
+
+//KickOut
+export type ChannelReactionOnKickOutAnyCh      = (message : string | undefined,fullChName : string) => void | Promise<void>;
+export type ChannelReactionOnKickOutZationCh   = (message : string | undefined) => void | Promise<void>;
+export type ChannelReactionOnKickOutCustomCh   = (message : string | undefined,chName : string) => void | Promise<void>;
+export type ChannelReactionOnKickOutCustomIdCh = (message : string | undefined,chId : string,chName : string) => void | Promise<void>;
+
+//SubFail
+export type ChannelReactionOnSubFailAnyCh      = (err : object,fullChName : string) => void | Promise<void>;
+export type ChannelReactionOnSubFailZationCh   = (err : object) => void | Promise<void>;
+export type ChannelReactionOnSubFailCustomCh   = (err : object,chName : string) => void | Promise<void>;
+export type ChannelReactionOnSubFailCustomIdCh = (err : object,chId : string,chName : string) => void | Promise<void>;
+
+//Sub
+export type ChannelReactionOnSubAnyCh          = (fullChName : string) => void | Promise<void>;
+export type ChannelReactionOnSubZationCh       = () => void | Promise<void>;
+export type ChannelReactionOnSubCustomCh       = (chName : string) => void | Promise<void>;
+export type ChannelReactionOnSubCustomIdCh     = (chId : string,chName : string) => void | Promise<void>;
+
+//ClientUnsub
+export type ChannelReactionOnClientUnsubAnyCh        = (fullChName : string) => void | Promise<void>;
+export type ChannelReactionOnClientUnsubZationCh     = () => void | Promise<void>;
+export type ChannelReactionOnClientUnsubCustomCh     = (chName : string) => void | Promise<void>;
+export type ChannelReactionOnClientUnsubCustomIdCh   = (chId : string,chName : string) => void | Promise<void>;
+
+//Unsub
+export type ChannelReactionOnUnsubAnyCh        = (fromClient : boolean,fullChName : string) => void | Promise<void>;
+export type ChannelReactionOnUnsubZationCh     = (fromClient : boolean) => void | Promise<void>;
+export type ChannelReactionOnUnsubCustomCh     = (fromClient : boolean,chName : string) => void | Promise<void>;
+export type ChannelReactionOnUnsubCustomIdCh   = (fromClient : boolean,chId : string,chName : string) => void | Promise<void>;
 
 //Event
 export type EventReactionOnConnect                  = (isFirstConnection) => void | Promise<void>;

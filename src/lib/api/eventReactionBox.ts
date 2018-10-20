@@ -18,52 +18,12 @@ import {
     EventReactionOnFirstConnect,
     EventReactionOnReconnect, EventReactionOnConnecting, EventReactionOnError, EventReactionOnClose
 } from "../helper/react/reaction/reactionHandler";
-import Box = require("../helper/box/box");
 import {Events} from "../helper/constants/events";
+import SboxMapper = require("../helper/box/sboxMapper");
 
 class EventReactionBox extends ReactionBox
 {
-    private readonly connectReactionBox : Box<EventReactionOnConnect>
-        = new Box<EventReactionOnConnect>();
-
-    private readonly firstConnectReactionBox : Box<EventReactionOnFirstConnect>
-        = new Box<EventReactionOnFirstConnect>();
-
-    private readonly reconnectReactionBox : Box<EventReactionOnReconnect>
-        = new Box<EventReactionOnReconnect>();
-
-    private readonly clientDisconnectReactionBox : Box<EventReactionOnClientDisconnect>
-        = new Box<EventReactionOnClientDisconnect>();
-
-    private readonly serverDisconnectReactionBox : Box<EventReactionOnServerDisconnect>
-        = new Box<EventReactionOnServerDisconnect>();
-
-    private readonly disconnectReactionBox : Box<EventReactionOnDisconnect>
-        = new Box<EventReactionOnDisconnect>();
-
-    private readonly authenticateReactionBox : Box<EventReactionOnAuthenticate>
-        = new Box<EventReactionOnAuthenticate>();
-
-    private readonly clientDeauthenticateReactionBox : Box<EventReactionOnClinetDeauthenticate>
-        = new Box<EventReactionOnClinetDeauthenticate>();
-
-    private readonly serverDeauthenticateReactionBox : Box<EventReactionOnServerDeauthenticate>
-        = new Box<EventReactionOnServerDeauthenticate>();
-
-    private readonly deauthenticateReactionBox : Box<EventReactionOnDeauthenticate>
-        = new Box<EventReactionOnDeauthenticate>();
-
-    private readonly connectAbortReactionBox : Box<EventReactionOnConnectAbort>
-        = new Box<EventReactionOnConnectAbort>();
-
-    private readonly connectingReactionBox : Box<EventReactionOnConnecting>
-        = new Box<EventReactionOnConnecting>();
-
-    private readonly errorReactionBox : Box<EventReactionOnError>
-        = new Box<EventReactionOnError>();
-
-    private readonly closeReactionBox : Box<EventReactionOnClose>
-        = new Box<EventReactionOnClose>();
+    private readonly map: SboxMapper<any> = new SboxMapper<any>();
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -86,7 +46,7 @@ class EventReactionBox extends ReactionBox
      * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
      */
     onConnect(reaction : EventReactionOnConnect) : EventReactionOnConnect {
-        this.connectReactionBox.addItem(reaction);
+        this.map.add(Events.Connect,reaction);
         return reaction;
     }
 
@@ -98,7 +58,7 @@ class EventReactionBox extends ReactionBox
      * If it is not given away all will be removed.
      */
     offConnect(reaction ?: EventReactionOnConnect) : void {
-        this.connectReactionBox.remove(reaction);
+        this.map.remove(Events.Connect,reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -113,7 +73,7 @@ class EventReactionBox extends ReactionBox
      * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
      */
     onFirstConnect(reaction : EventReactionOnFirstConnect) : EventReactionOnFirstConnect {
-        this.firstConnectReactionBox.addItem(reaction);
+        this.map.add(Events.FirstConnect,reaction);
         return reaction;
     }
 
@@ -125,7 +85,7 @@ class EventReactionBox extends ReactionBox
      * If it is not given away all will be removed.
      */
     offFirstConnect(reaction ?: EventReactionOnFirstConnect) : void {
-        this.firstConnectReactionBox.remove(reaction);
+        this.map.remove(Events.FirstConnect,reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -139,7 +99,7 @@ class EventReactionBox extends ReactionBox
      * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
      */
     onReconnect(reaction : EventReactionOnReconnect) : EventReactionOnReconnect {
-        this.reconnectReactionBox.addItem(reaction);
+        this.map.add(Events.Reconnect,reaction);
         return reaction;
     }
 
@@ -151,7 +111,7 @@ class EventReactionBox extends ReactionBox
      * If it is not given away all will be removed.
      */
     offReconnect(reaction ?: EventReactionOnReconnect) : void {
-        this.reconnectReactionBox.remove(reaction);
+        this.map.remove(Events.Reconnect,reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -160,13 +120,13 @@ class EventReactionBox extends ReactionBox
      * React on disconnect with the client.
      * This event can trigger if you call the disconnect method on the client.
      * @example
-     * onClientDisconnect((code,authData) => {});
+     * onClientDisconnect((code,data) => {});
      * @param reaction
      * @return
      * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
      */
     onClinetDisconnect(reaction : EventReactionOnClientDisconnect) : EventReactionOnClientDisconnect {
-        this.clientDisconnectReactionBox.addItem(reaction);
+        this.map.add(Events.ClientDisconnect,reaction);
         return reaction;
     }
 
@@ -178,7 +138,7 @@ class EventReactionBox extends ReactionBox
      * If it is not given away all will be removed.
      */
     offClientDisconnect(reaction ?: EventReactionOnClientDisconnect) : void {
-        this.clientDisconnectReactionBox.remove(reaction);
+        this.map.remove(Events.ClientDisconnect,reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -188,13 +148,13 @@ class EventReactionBox extends ReactionBox
      * This event can trigger if the server is disconnet this client or
      * the connection is lost to the server.
      * @example
-     * onServerDisconnect((code,authData) => {});
+     * onServerDisconnect((code,data) => {});
      * @param reaction
      * @return
      * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
      */
     onServerDisconnect(reaction : EventReactionOnServerDisconnect) : EventReactionOnServerDisconnect {
-        this.serverDisconnectReactionBox.addItem(reaction);
+        this.map.add(Events.ServerDisconnect,reaction);
         return reaction;
     }
 
@@ -206,7 +166,7 @@ class EventReactionBox extends ReactionBox
      * If it is not given away all will be removed.
      */
     offServerDisconnect(reaction ?: EventReactionOnServerDisconnect) : void {
-        this.serverDisconnectReactionBox.remove(reaction);
+        this.map.remove(Events.ServerDisconnect,reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -216,13 +176,13 @@ class EventReactionBox extends ReactionBox
      * So this event is trigger if you call the disconnect method on the client,
      * the server is disconnect the client or the connection to the server is lost.
      * @example
-     * onDisconnect((fromClient,code,authData) => {});
+     * onDisconnect((fromClient,code,data) => {});
      * @param reaction
      * @return
      * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
      */
     onDisconnect(reaction : EventReactionOnDisconnect) : EventReactionOnDisconnect {
-        this.disconnectReactionBox.addItem(reaction);
+        this.map.add(Events.Disconnect,reaction);
         return reaction;
     }
 
@@ -234,7 +194,7 @@ class EventReactionBox extends ReactionBox
      * If it is not given away all will be removed.
      */
     offDisconnect(reaction ?: EventReactionOnDisconnect) : void {
-        this.disconnectReactionBox.remove(reaction);
+        this.map.remove(Events.Disconnect,reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -249,7 +209,7 @@ class EventReactionBox extends ReactionBox
      * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
      */
     onAuthenticate(reaction : EventReactionOnAuthenticate) : EventReactionOnAuthenticate {
-        this.authenticateReactionBox.addItem(reaction);
+        this.map.add(Events.Authenticate,reaction);
         return reaction;
     }
 
@@ -261,7 +221,7 @@ class EventReactionBox extends ReactionBox
      * If it is not given away all will be removed.
      */
     offAuthenticate(reaction ?: EventReactionOnAuthenticate) : void {
-        this.authenticateReactionBox.remove(reaction);
+        this.map.remove(Events.Authenticate,reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -276,7 +236,7 @@ class EventReactionBox extends ReactionBox
      * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
      */
     onClientDeauthenticate(reaction : EventReactionOnClinetDeauthenticate) : EventReactionOnClinetDeauthenticate {
-        this.clientDeauthenticateReactionBox.addItem(reaction);
+        this.map.add(Events.ClientDeauthenticate,reaction);
         return reaction;
     }
 
@@ -288,7 +248,7 @@ class EventReactionBox extends ReactionBox
      * If it is not given away all will be removed.
      */
     offClientDeauthenticate(reaction ?: EventReactionOnClinetDeauthenticate) : void {
-        this.clientDeauthenticateReactionBox.remove(reaction);
+        this.map.remove(Events.ClientDeauthenticate,reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -304,7 +264,7 @@ class EventReactionBox extends ReactionBox
      * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
      */
     onServerDeauthenticate(reaction : EventReactionOnServerDeauthenticate) : EventReactionOnServerDeauthenticate {
-        this.serverDeauthenticateReactionBox.addItem(reaction);
+        this.map.add(Events.ServerDeauthenticate,reaction);
         return reaction;
     }
 
@@ -316,7 +276,7 @@ class EventReactionBox extends ReactionBox
      * If it is not given away all will be removed.
      */
     offServerDeauthenticate(reaction ?: EventReactionOnServerDeauthenticate) : void {
-        this.serverDeauthenticateReactionBox.remove(reaction);
+        this.map.remove(Events.ServerDeauthenticate,reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -332,7 +292,7 @@ class EventReactionBox extends ReactionBox
      * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
      */
     onDeauthenticate(reaction : EventReactionOnDeauthenticate) : EventReactionOnDeauthenticate {
-        this.deauthenticateReactionBox.addItem(reaction);
+        this.map.add(Events.Deauthenticate,reaction);
         return reaction;
     }
 
@@ -344,7 +304,7 @@ class EventReactionBox extends ReactionBox
      * If it is not given away all will be removed.
      */
     offDeauthenticate(reaction ?: EventReactionOnDeauthenticate) : void {
-        this.deauthenticateReactionBox.remove(reaction);
+        this.map.remove(Events.Deauthenticate,reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -355,13 +315,13 @@ class EventReactionBox extends ReactionBox
      * This could be caused by a failure during the connection phase or
      * it may be triggered intentionally by calling zation.disconnect() while the socket is connecting.
      * @example
-     * onConnectAbort((code,authData) => {});
+     * onConnectAbort((code,data) => {});
      * @param reaction
      * @return
      * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
      */
     onConnectAbort(reaction : EventReactionOnConnectAbort) : EventReactionOnConnectAbort {
-        this.connectAbortReactionBox.addItem(reaction);
+        this.map.add(Events.ConnectAbort,reaction);
         return reaction;
     }
 
@@ -373,7 +333,7 @@ class EventReactionBox extends ReactionBox
      * If it is not given away all will be removed.
      */
     offConnectAbort(reaction ?: EventReactionOnConnectAbort) : void {
-        this.connectAbortReactionBox.remove(reaction);
+        this.map.remove(Events.ConnectAbort,reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -389,7 +349,7 @@ class EventReactionBox extends ReactionBox
      * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
      */
     onConnecting(reaction : EventReactionOnConnecting) : EventReactionOnConnecting {
-        this.connectingReactionBox.addItem(reaction);
+        this.map.add(Events.Connecting,reaction);
         return reaction;
     }
 
@@ -401,7 +361,7 @@ class EventReactionBox extends ReactionBox
      * If it is not given away all will be removed.
      */
     offConnecting(reaction ?: EventReactionOnConnecting) : void {
-        this.connectingReactionBox.remove(reaction);
+        this.map.remove(Events.Connecting,reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -416,7 +376,7 @@ class EventReactionBox extends ReactionBox
      * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
      */
     onError(reaction : EventReactionOnError) : EventReactionOnError {
-        this.errorReactionBox.addItem(reaction);
+        this.map.add(Events.Error,reaction);
         return reaction;
     }
 
@@ -428,7 +388,7 @@ class EventReactionBox extends ReactionBox
      * If it is not given away all will be removed.
      */
     offError(reaction ?: EventReactionOnError) : void {
-        this.errorReactionBox.remove(reaction);
+        this.map.remove(Events.Error,reaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -437,13 +397,13 @@ class EventReactionBox extends ReactionBox
      * React on close.
      * Triggers when a socket is disconnected or the connection is aborted
      * @example
-     * onClose((code,authData) => {});
+     * onClose((code,data) => {});
      * @param reaction
      * @return
      * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
      */
     onClose(reaction : EventReactionOnClose) : EventReactionOnClose {
-        this.closeReactionBox.addItem(reaction);
+        this.map.add(Events.Close,reaction);
         return reaction;
     }
 
@@ -455,19 +415,26 @@ class EventReactionBox extends ReactionBox
      * If it is not given away all will be removed.
      */
     offClose(reaction ?: EventReactionOnClose) : void {
-        this.closeReactionBox.remove(reaction);
+        this.map.remove(Events.Close,reaction);
     }
 
-    private async _triggerDataEventBox(box : Box<any>,...data : any[])
+    private async _triggerDataEventBox(mapKey : number, ...data : any[])
     {
-        let promises : Promise<void>[] = [];
-        promises.push(box.forEach(async (reaction : Function) =>
-        {
-            await reaction(...data);
-        }));
-        await Promise.all(promises);
+        const box = this.map.tryGet(mapKey);
+        if(box) {
+            await box.forEachAll(async (reaction : Function) =>
+            {
+                await reaction(...data);
+            });
+        }
     }
 
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Used internally.
+     * Only use this method carefully.
+     */
     async _trigger(event : Events,...arg : any[])
     {
         if(this.active)
@@ -475,46 +442,46 @@ class EventReactionBox extends ReactionBox
             switch (event)
             {
                 case Events.Connect:
-                    await this._triggerDataEventBox(this.connectReactionBox,...arg);
+                    await this._triggerDataEventBox(Events.Connect,...arg);
                     break;
                 case Events.FirstConnect:
-                    await this._triggerDataEventBox(this.firstConnectReactionBox,...arg);
+                    await this._triggerDataEventBox(Events.FirstConnect,...arg);
                     break;
                 case Events.Reconnect:
-                    await this._triggerDataEventBox(this.reconnectReactionBox,...arg);
+                    await this._triggerDataEventBox(Events.Reconnect,...arg);
                     break;
                 case Events.ServerDisconnect:
-                    await this._triggerDataEventBox(this.serverDisconnectReactionBox,...arg);
+                    await this._triggerDataEventBox(Events.ServerDisconnect,...arg);
                     break;
                 case Events.ClientDisconnect:
-                    await this._triggerDataEventBox(this.clientDisconnectReactionBox,...arg);
+                    await this._triggerDataEventBox(Events.ClientDisconnect,...arg);
                     break;
                 case Events.Disconnect:
-                    await this._triggerDataEventBox(this.disconnectReactionBox,...arg);
+                    await this._triggerDataEventBox(Events.Disconnect,...arg);
                     break;
                 case Events.Authenticate:
-                    await this._triggerDataEventBox(this.authenticateReactionBox,...arg);
+                    await this._triggerDataEventBox(Events.Authenticate,...arg);
                     break;
                 case Events.ClientDeauthenticate:
-                    await this._triggerDataEventBox(this.clientDeauthenticateReactionBox,...arg);
+                    await this._triggerDataEventBox(Events.ClientDeauthenticate,...arg);
                     break;
                 case Events.ServerDeauthenticate:
-                    await this._triggerDataEventBox(this.serverDeauthenticateReactionBox,...arg);
+                    await this._triggerDataEventBox(Events.ServerDeauthenticate,...arg);
                     break;
                 case Events.Deauthenticate:
-                    await this._triggerDataEventBox(this.deauthenticateReactionBox,...arg);
+                    await this._triggerDataEventBox(Events.Deauthenticate,...arg);
                     break;
                 case Events.ConnectAbort:
-                    await this._triggerDataEventBox(this.connectAbortReactionBox,...arg);
+                    await this._triggerDataEventBox(Events.ConnectAbort,...arg);
                     break;
                 case Events.Connecting:
-                    await this._triggerDataEventBox(this.connectingReactionBox,...arg);
+                    await this._triggerDataEventBox(Events.Connecting,...arg);
                     break;
                 case Events.Error:
-                    await this._triggerDataEventBox(this.errorReactionBox,...arg);
+                    await this._triggerDataEventBox(Events.Error,...arg);
                     break;
                 case Events.Close:
-                    await this._triggerDataEventBox(this.closeReactionBox,...arg);
+                    await this._triggerDataEventBox(Events.Close,...arg);
                     break;
             }
         }

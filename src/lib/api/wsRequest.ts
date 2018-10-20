@@ -5,6 +5,7 @@ GitHub: LucaCode
  */
 
 import ZationRequest = require("../helper/request/zationRequest");
+// noinspection TypeScriptPreferShortImport
 import {ProtocolType}   from "../helper/constants/protocolType";
 import Zation = require("./zation");
 import RequestJsonBuilder = require("../helper/tools/requestJsonBuilder");

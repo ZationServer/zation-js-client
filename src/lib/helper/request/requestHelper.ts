@@ -64,7 +64,7 @@ class RequestHelper extends AbstractRequestHelper<RequestHelper>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Set the authData from the request.
+     * Set the data from the request.
      * @param data
      * @default {}
      */

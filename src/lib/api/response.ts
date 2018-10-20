@@ -4,6 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
+// noinspection TypeScriptPreferShortImport
 import {ProtocolType}    from "../helper/constants/protocolType";
 import Const             = require("../helper/constants/constWrapper");
 import ResponseReact     = require("../helper/react/reaction/responseReact");
