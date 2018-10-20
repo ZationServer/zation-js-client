@@ -46,7 +46,7 @@ const create = (options : ZationOptions = {},...reactionBox : (ResponseReactionB
     return new Zation(options,...reactionBox);
 };
 
-export {
+export = {
     Zation,
     create,
     RequestAble,
