@@ -41,33 +41,36 @@ const create = (options : ZationOptions = {},...reactionBox : (ResponseReactionB
     return new Zation(options,...reactionBox);
 };
 
-module.exports.Zation = Zation;
-module.exports.create = create;
-module.exports.RequestAble = RequestAble;
-module.exports.WsRequest = WsRequest;
-module.exports.HttpRequest = HttpRequest;
-module.exports.AuthRequest = AuthRequest;
-module.exports.ValidationRequest = ValidationRequest;
-module.exports.ChannelReactionBox = ChannelReactionBox;
-module.exports.ResponseReactionBox = ResponseReactionBox;
-module.exports.EventReactionBox = EventReactionBox;
-module.exports.Response = Response;
-module.exports.AuthenticationNeededError = AuthenticationNeededError;
-module.exports.ConnectionAbortError = ConnectionAbortError;
-module.exports.ConnectionNeededError = ConnectionNeededError;
-module.exports.DeauthenticationFailError = DeauthenticationFailError;
-module.exports.DeauthenticationNeededError = DeauthenticationNeededError;
-module.exports.MissingAuthUserGroupError = MissingAuthUserGroupError;
-module.exports.MissingUserIdError = MissingUserIdError;
-module.exports.PublishFailError = PublishFailError;
-module.exports.ResultIsMissingError = ResultIsMissingError;
-module.exports.SignAuthenticationFailError = SignAuthenticationFailError;
-module.exports.SubscribeFailError = SubscribeFailError;
-module.exports.ProtocolType = ProtocolType;
+export {
+    Zation,
+    create,
+    RequestAble,
+    WsRequest,
+    HttpRequest,
+    AuthRequest,
+    ValidationRequest,
+    ChannelReactionBox,
+    ResponseReactionBox,
+    EventReactionBox,
+    Response,
+    AuthenticationNeededError,
+    ConnectionAbortError,
+    ConnectionNeededError,
+    DeauthenticationFailError,
+    DeauthenticationNeededError,
+    MissingAuthUserGroupError,
+    MissingUserIdError,
+    PublishFailError,
+    ResultIsMissingError,
+    SignAuthenticationFailError,
+    SubscribeFailError,
+    ProtocolType
+}
+
 
 // browserify-ignore-start
 //support for zation-server
 import ZationReader = require('./lib/reader/zationReader');
-module.exports.ZationReader = ZationReader;
+export {ZationReader}
 // browserify-ignore-end
 
