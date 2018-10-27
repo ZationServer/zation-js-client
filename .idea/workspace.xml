@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="76638f38-4a15-47c2-ad03-534e2aa2a298" name="Default" comment="fetch progress bug fux">
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+    <list default="true" id="76638f38-4a15-47c2-ad03-534e2aa2a298" name="Default" comment="update version to 0.2.7">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gulpFile.js" beforeDir="false" afterPath="$PROJECT_DIR$/gulpFile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/reader/zationReader.ts" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -23,7 +18,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gulpFile.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="151">
+            <state relative-caret-position="1279">
               <caret line="95" column="3" selection-start-line="95" selection-start-column="3" selection-end-line="95" selection-end-column="3" />
             </state>
           </provider>
@@ -42,11 +37,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/package.json">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="30">
               <caret line="2" column="19" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dist/zation.min.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="330">
+              <caret line="3" column="2627" selection-start-line="3" selection-start-column="2627" selection-end-line="3" selection-end-column="2627" />
             </state>
           </provider>
         </entry>
@@ -76,22 +80,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1005">
-              <caret line="76" column="5" selection-start-line="76" selection-start-column="5" selection-end-line="76" selection-end-column="5" />
-              <folding>
-                <element signature="n#Zation#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dist/index.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="462">
               <caret line="64" selection-start-line="64" selection-end-line="64" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="1" column="4" selection-start-line="1" selection-start-column="4" selection-end-line="1" selection-end-column="4" />
             </state>
           </provider>
         </entry>
@@ -187,11 +188,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/lib/helper/auth/authEngine.ts" />
-        <option value="$PROJECT_DIR$/src/lib/helper/request/authRequestHelper.ts" />
-        <option value="$PROJECT_DIR$/src/lib/api/validationRequest.ts" />
-        <option value="$PROJECT_DIR$/src/lib/helper/request/validationCheckHelper.ts" />
-        <option value="$PROJECT_DIR$/src/lib/helper/constants/settings.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/request/validationRequestHelper.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/box/sBox.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/box/box.ts" />
@@ -221,23 +217,28 @@
         <option value="$PROJECT_DIR$/../zation/bin/helper/initController.js" />
         <option value="$PROJECT_DIR$/../../testZone/server/package.json" />
         <option value="$PROJECT_DIR$/../zation/bin/templates/initServer/ts/package.json" />
-        <option value="$PROJECT_DIR$/../zation/bin/cli.js" />
-        <option value="$PROJECT_DIR$/../zation/bin/helper/consoleHelper.js" />
-        <option value="$PROJECT_DIR$/../../testZone/nodeClient/src/index.ts" />
         <option value="$PROJECT_DIR$/../zation/bin/templates/initClient/node/package.json" />
         <option value="$PROJECT_DIR$/../zation/bin/helper/serverInit.js" />
         <option value="$PROJECT_DIR$/../zation/bin/templates/initClient/node/src/index.ts" />
         <option value="$PROJECT_DIR$/../../testZone/nodeClient/tsconfig.json" />
-        <option value="$PROJECT_DIR$/../zation/bin/helper/clientInit.js" />
-        <option value="$PROJECT_DIR$/../../testZone/nodeClient/webpack.config.js" />
-        <option value="$PROJECT_DIR$/../../testZone/nodeClient/index.html" />
-        <option value="$PROJECT_DIR$/../../testZone/nodeClient/package.json" />
         <option value="$PROJECT_DIR$/../zation-server/src/lib/main/zationWorker.ts" />
         <option value="$PROJECT_DIR$/../zation-server/src/lib/main/zationMaster.ts" />
         <option value="$PROJECT_DIR$/../zation-server/src/lib/helper/client/prepareClientJs.ts" />
         <option value="$PROJECT_DIR$/src/index.ts" />
         <option value="$PROJECT_DIR$/gulpFile.js" />
         <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/../zation-server/package.json" />
+        <option value="$PROJECT_DIR$/../zation/package.json" />
+        <option value="$PROJECT_DIR$/../../testZone/nodeClient/webpack.config.js" />
+        <option value="$PROJECT_DIR$/../../testZone/nodeClient/index.html" />
+        <option value="$PROJECT_DIR$/../../testZone/nodeClient/src/index.ts" />
+        <option value="$PROJECT_DIR$/../zation/bin/templates/initClient/node/.gitignore" />
+        <option value="$PROJECT_DIR$/../../testZone/nodeClient/package.json" />
+        <option value="$PROJECT_DIR$/../zation/bin/templates/initClient/web/src/index.ts" />
+        <option value="$PROJECT_DIR$/../zation/bin/templates/initClient/web/package.json" />
+        <option value="$PROJECT_DIR$/../zation/bin/helper/clientInit.js" />
+        <option value="$PROJECT_DIR$/../zation/bin/helper/consoleHelper.js" />
+        <option value="$PROJECT_DIR$/../zation/bin/cli.js" />
       </list>
     </option>
   </component>
@@ -368,7 +369,7 @@
       <workItem from="1538571128101" duration="470000" />
       <workItem from="1538665451767" duration="172882000" />
       <workItem from="1540057112922" duration="8000" />
-      <workItem from="1540557461676" duration="2310000" />
+      <workItem from="1540557461676" duration="4774000" />
     </task>
     <task id="LOCAL-00001" summary="update config">
       <created>1538086085086</created>
@@ -496,11 +497,25 @@
       <option name="project" value="LOCAL" />
       <updated>1540072313455</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="remove zation reader">
+      <created>1540646526567</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1540646526567</updated>
+    </task>
+    <task id="LOCAL-00020" summary="update version to 0.2.7">
+      <created>1540646696971</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1540646696971</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="403893000" />
+    <option name="totallyTimeSpent" value="406357000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -513,9 +528,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.84247786" visible="true" weight="0.21634954" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.84247786" visible="true" weight="0.21634954" />
       <window_info id="Structure" order="1" sideWeight="0.15752213" side_tool="true" visible="true" weight="0.21634954" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="Gulp" order="3" side_tool="true" />
@@ -529,7 +543,7 @@
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32891566" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Statistic" order="8" weight="0.32939914" />
-      <window_info anchor="bottom" id="Terminal" order="9" visible="true" weight="0.3192771" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.3192771" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" weight="0.32891566" />
       <window_info anchor="bottom" id="Version Control" order="11" weight="0.32891566" />
       <window_info anchor="bottom" id="TypeScript" order="12" weight="0.32891566" />
@@ -584,7 +598,9 @@
     <MESSAGE value="fix export bug" />
     <MESSAGE value="fix typescript export" />
     <MESSAGE value="fetch progress bug fux" />
-    <option name="LAST_COMMIT_MESSAGE" value="fetch progress bug fux" />
+    <MESSAGE value="remove zation reader" />
+    <MESSAGE value="update version to 0.2.7" />
+    <option name="LAST_COMMIT_MESSAGE" value="update version to 0.2.7" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/lib/helper/sc/socket.ts">
@@ -790,9 +806,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/lib/api/zation.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-5">
@@ -802,13 +815,6 @@
             <element signature="n#AuthEngine#0" expanded="true" />
             <element signature="e#1520#1582#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dist/zation.min.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4692">
-          <caret line="3" column="37" selection-start-line="3" selection-start-column="37" selection-end-line="3" selection-end-column="37" />
         </state>
       </provider>
     </entry>
@@ -864,10 +870,33 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/dist/index.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-307">
+          <folding>
+            <element signature="n#Zation#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/gulpFile.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="151">
+        <state relative-caret-position="1279">
           <caret line="95" column="3" selection-start-line="95" selection-start-column="3" selection-end-line="95" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="19" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/zation.min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="3" column="2627" selection-start-line="3" selection-start-column="2627" selection-end-line="3" selection-end-column="2627" />
         </state>
       </provider>
     </entry>
@@ -878,19 +907,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dist/index.d.ts">
+    <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-307">
-          <folding>
-            <element signature="n#Zation#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="19" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
+        <state relative-caret-position="15">
+          <caret line="1" column="4" selection-start-line="1" selection-start-column="4" selection-end-line="1" selection-end-column="4" />
         </state>
       </provider>
     </entry>
