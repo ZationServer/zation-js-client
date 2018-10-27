@@ -80,7 +80,6 @@ gulp.task('browserify', function() {
     })
         .transform(ascjsify, { global: true })
         .ignore('_process')
-        .ignore('zationReader.js')
         .bundle()
         .on('error', function(err){
             console.error(err);
