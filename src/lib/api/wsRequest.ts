@@ -26,12 +26,10 @@ class WsRequest extends ZationRequest
     {
         const compiledData = await this.getCompiledData();
 
-        return RequestJsonBuilder.buildRequestData(
+        return RequestJsonBuilder.buildWsRequestData(
             compiledData,
             this.controllerName,
             this.isSystemController,
-            zation.getSystem(),
-            zation.getVersion()
         )
     }
 }

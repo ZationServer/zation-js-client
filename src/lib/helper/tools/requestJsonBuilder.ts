@@ -7,7 +7,7 @@ import Const = require("../constants/constWrapper");
 
 class RequestJsonBuilder
 {
-    static buildRequestData
+    static buildHttpRequestData
     (
         data : object,
         controllerName : string,
@@ -39,7 +39,27 @@ class RequestJsonBuilder
         return res;
     }
 
-    static buildAuthRequestData(data : object,system : string, version : number,signToken ?: string | null)
+    static buildWsRequestData
+    (
+        data : object,
+        controllerName : string,
+        isSystemController : boolean
+    )
+    {
+        const controllerKey = !isSystemController ?
+            Const.Settings.REQ_IN_C.CONTROLLER :
+            Const.Settings.REQ_IN_C.SYSTEM_CONTROLLER;
+
+        return {
+            [Const.Settings.REQUEST_INPUT.TASK] :
+                {
+                    [controllerKey] : controllerName,
+                    [Const.Settings.REQUEST_INPUT.INPUT] : data,
+                }
+        };
+    }
+
+    static buildHttpAuthRequestData(data : object,system : string, version : number,signToken ?: string | null)
     {
         let res = {
             [Const.Settings.REQUEST_INPUT.VERSION] : version,
@@ -55,6 +75,16 @@ class RequestJsonBuilder
         }
 
         return res;
+    }
+
+    static buildWsAuthRequestData(data : object)
+    {
+        return {
+            [Const.Settings.REQUEST_INPUT.AUTH] :
+                {
+                    [Const.Settings.REQUEST_INPUT.INPUT] : data,
+                }
+        };
     }
 
     static buildValidationRequestData(input : object,constrollerName : string,isSystemController : boolean)

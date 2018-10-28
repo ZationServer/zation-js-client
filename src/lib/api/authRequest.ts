@@ -4,10 +4,10 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import ZationRequest      = require("../helper/request/zationRequest");
-import {ProtocolType}     from "../helper/constants/protocolType";
-import Zation             = require("./zation");
+import ZationRequest = require("../helper/request/zationRequest");
+import Zation = require("./zation");
 import RequestJsonBuilder = require("../helper/tools/requestJsonBuilder");
+import {ProtocolType} from "../helper/constants/protocolType";
 
 class AuthRequest extends ZationRequest
 {
@@ -19,18 +19,22 @@ class AuthRequest extends ZationRequest
     async getSendData(zation: Zation): Promise<object>
     {
         const compiledData = await this.getCompiledData();
-        let signToken : null | string = null;
 
-        if(this.getProtocol() === ProtocolType.Http && zation._getAuthEngine().hasSignToken()) {
-            signToken = zation._getAuthEngine().getSignToken();
+        if(this.getProtocol() === ProtocolType.WebSocket) {
+            return RequestJsonBuilder.buildWsAuthRequestData(compiledData);
         }
-
-        return RequestJsonBuilder.buildAuthRequestData(
-            compiledData,
-            zation.getSystem(),
-            zation.getVersion(),
-            signToken
-        )
+        else {
+            let signToken : null | string = null;
+            if(zation._getAuthEngine().hasSignToken()){
+                signToken = zation._getAuthEngine().getSignToken();
+            }
+            return RequestJsonBuilder.buildHttpAuthRequestData(
+                compiledData,
+                zation.getSystem(),
+                zation.getVersion(),
+                signToken
+            )
+        }
     }
 }
 

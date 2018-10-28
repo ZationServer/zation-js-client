@@ -799,7 +799,11 @@ class Zation
             rejectUnauthorized: this.zc.getConfig(Const.Config.REJECT_UNAUTHORIZED),
             path : this.zc.getConfig(Const.Config.PATH),
             autoReconnect: true,
-            autoConnect : false
+            autoConnect : false,
+            query: {
+                system : this.zc.getConfig(Const.Config.SYSTEM),
+                version : this.zc.getConfig(Const.Config.VERSION)
+            }
         };
     }
 

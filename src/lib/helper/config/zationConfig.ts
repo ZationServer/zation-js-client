@@ -31,7 +31,7 @@ class ZationConfig
     {
         this.config = {
           debug : false,
-          system : 'W',
+          system : 'Default',
           version : 1.0,
           hostname : 'localhost',
           path : '/zation',

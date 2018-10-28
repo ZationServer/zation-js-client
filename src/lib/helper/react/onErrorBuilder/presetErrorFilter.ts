@@ -985,30 +985,30 @@ export class PresetErrorFilter<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for systemNotFound.
-     * The task error can be thrown when the system is not found.
+     * Preset for systemNotCompatible.
+     * The task error can be thrown when the system is not compatible with the controller.
      * More info checks you need to do by yourself.
      * Possibilities are:
-     * systemName
+     * system
      */
-    systemNotFound() : AbstractErrorFilterBuilder<T> {
+    systemNotCompatible() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.COMPATIBILITY_ERROR,'systemNotFound'));
+        (ErrorTypes.COMPATIBILITY_ERROR,'systemNotCompatible'));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for versionToOld.
-     * The task error can be thrown when the version is to old.
+     * Preset for versionNotCompatible.
+     * The task error can be thrown when the version is not compatible with the controller.
      * More info checks you need to do by yourself.
      * Possibilities are:
-     * minVersion
+     * version
      */
-    versionToOld() : AbstractErrorFilterBuilder<T> {
+    versionNotCompatible() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.COMPATIBILITY_ERROR,'versionToOld'));
+        (ErrorTypes.COMPATIBILITY_ERROR,'versionNotCompatible'));
         return this.errorFilterBuilder;
     }
 

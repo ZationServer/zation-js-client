@@ -32,7 +32,7 @@ class HttpRequest extends MainRequest
             signToken = zation._getAuthEngine().getSignToken();
         }
 
-        return RequestJsonBuilder.buildRequestData(
+        return RequestJsonBuilder.buildHttpRequestData(
             compiledData,
             this.controllerName,
             this.isSystemController,
