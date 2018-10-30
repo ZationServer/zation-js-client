@@ -50,480 +50,512 @@ export class PresetErrorFilter<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotAString.
+     * Preset for inputIsNotTypeObject.
+     * The task error can be thrown by input validation type:'object'.
+     * @param inputPath
+     * Parameter can be used to check the inputPath in the info.
+     * @param inputValue
+     * Parameter can be used to check the inputValue in the info.
+     */
+    inputIsNotTypeObject(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._validationErrorBuild
+        ('inputIsNotTypeObject',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Preset for inputIsNotTypeArray.
+     * The task error can be thrown by input validation type:'array'.
+     * @param inputPath
+     * Parameter can be used to check the inputPath in the info.
+     * @param inputValue
+     * Parameter can be used to check the inputValue in the info.
+     */
+    inputIsNotTypeArray(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._validationErrorBuild
+        ('inputIsNotTypeArray',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Preset for inputIsNotTypeString.
      * The task error can be thrown by input validation type:'string'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAString(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeString(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotAString',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeString',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotAInt.
+     * Preset for inputIsNotTypeInt.
      * The task error can be thrown by input validation type:'int'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAInt(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeInt(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotAInt',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeInt',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotAFloat.
+     * Preset for inputIsNotTypeFloat.
      * The task error can be thrown by input validation type:'float'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAFloat(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeFloat(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotAFloat',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeFloat',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotADate.
+     * Preset for inputIsNotTypeDate.
      * The task error can be thrown by input validation type:'date'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotADate(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeDate(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotADate',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeDate',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotAEmail.
+     * Preset for inputIsNotTypeEmail.
      * The task error can be thrown by input validation type:'email'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAEmail(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeEmail(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotAEmail',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeEmail',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotABoolean.
+     * Preset for inputIsNotTypeBoolean.
      * The task error can be thrown by input validation type:'boolean'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotABoolean(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeBoolean(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotABoolean',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeBoolean',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotASha512.
+     * Preset for inputIsNotTypeSha512.
      * The task error can be thrown by input validation type:'sha512'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotASha512(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeSha512(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotASha512',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeSha512',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotASha256.
+     * Preset for inputIsNotTypeSha256.
      * The task error can be thrown by input validation type:'sha256'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotASha256(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeSha256(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotASha256',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeSha256',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotASha384.
+     * Preset for inputIsNotTypeSha384.
      * The task error can be thrown by input validation type:'sha384'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotASha384(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeSha384(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotASha384',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeSha384',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotASha1.
+     * Preset for inputIsNotTypeSha1.
      * The task error can be thrown by input validation type:'sha1'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotASha1(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeSha1(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotASha1',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeSha1',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotAMd5.
+     * Preset for inputIsNotTypeMd5.
      * The task error can be thrown by input validation type:'md5'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAMd5(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeMd5(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotAMd5',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeMd5',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotAHexColor.
+     * Preset for inputIsNotTypeHexColor.
      * The task error can be thrown by input validation type:'hexColor'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAHexColor(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeHexColor(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotAHexColor',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeHexColor',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotAHexadecimal.
+     * Preset for inputIsNotTypeHexadecimal.
      * The task error can be thrown by input validation type:'hexadecimal'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAHexadecimal(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeHexadecimal(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotAHexadecimal',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeHexadecimal',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotAIp4.
+     * Preset for inputIsNotTypeIp4.
      * The task error can be thrown by input validation type:'ip4'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAIp4(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeIp4(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotAIp4',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeIp4',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotAIp6.
+     * Preset for inputIsNotTypeIp6.
      * The task error can be thrown by input validation type:'ip6'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAIp6(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeIp6(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotAIp6',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeIp6',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotAIsbn10.
+     * Preset for inputIsNotTypeIsbn10.
      * The task error can be thrown by input validation type:'isbn10'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAIsbn10(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeIsbn10(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotAIsbn10',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeIsbn10',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotAIsbn13.
+     * Preset for inputIsNotTypeIsbn13.
      * The task error can be thrown by input validation type:'isbn13'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAIsbn13(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeIsbn13(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotAIsbn13',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeIsbn13',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotAJson.
+     * Preset for inputIsNotTypeJson.
      * The task error can be thrown by input validation type:'json'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAJson(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeJson(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotAJson',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeJson',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotAUrl.
+     * Preset for inputIsNotTypeUrl.
      * The task error can be thrown by input validation type:'url'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAUrl(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeUrl(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotAUrl',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeUrl',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotAMimeType.
+     * Preset for inputIsNotTypeMimeType.
      * The task error can be thrown by input validation type:'mimeType'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAMimeType(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeMimeType(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotAMimeType',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeMimeType',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotAMacAddress.
+     * Preset for inputIsNotTypeMacAddress.
      * The task error can be thrown by input validation type:'macAddress'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAMacAddress(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeMacAddress(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotAMacAddress',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeMacAddress',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotAMobileNumber.
+     * Preset for inputIsNotTypeMobileNumber.
      * The task error can be thrown by input validation type:'mobileNumber'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAMobileNumber(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeMobileNumber(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotAMobileNumber',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeMobileNumber',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotAUuid3.
+     * Preset for inputIsNotTypeUuid3.
      * The task error can be thrown by input validation type:'uuid3'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAUuid3(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeUuid3(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotAUuid3',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeUuid3',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotAUuid4.
+     * Preset for inputIsNotTypeUuid4.
      * The task error can be thrown by input validation type:'uuid4'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAUuid4(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeUuid4(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotAUuid4',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeUuid4',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotAUuid5.
+     * Preset for inputIsNotTypeUuid5.
      * The task error can be thrown by input validation type:'uuid5'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAUuid5(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeUuid5(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotAUuid5',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeUuid5',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotALatLong.
+     * Preset for inputIsNotTypeLatLong.
      * The task error can be thrown by input validation type:'latLong'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotALatLong(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeLatLong(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotALatLong',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeLatLong',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotABase64.
+     * Preset for inputIsNotTypeBase64.
      * The task error can be thrown by input validation type:'base64'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotABase64(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeBase64(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotABase64',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeBase64',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotAAscii.
+     * Preset for inputIsNotTypeAscii.
      * The task error can be thrown by input validation type:'ascii'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAAscii(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeAscii(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotAscii',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypescii',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotANumber.
+     * Preset for inputIsNotTypeNumber.
      * The task error can be thrown by input validation type:'number'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotANumber(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeNumber(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotANumber',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeNumber',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotAUserId.
+     * Preset for inputIsNotTypeUserId.
      * The task error can be thrown by input validation type:'userId'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotAUserId(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotTypeUserId(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotAUserId',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeUserId',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -745,17 +777,16 @@ export class PresetErrorFilter<T>
      * @description
      * Preset for inputIsNotMatchWithRegex.
      * The task error can be thrown by input validation regex:'/^\/user\/.+/'.
-     * More info checks you need to do by yourself.
-     * Possibilities are:
-     * regex
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
+     * @param regexName
+     * Parameter can be used to check the regexName in the info.
      */
-    inputIsNotMatchWithRegex(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputIsNotMatchWithRegex(inputPath ?: string,inputValue ?: any,regexName ?: string) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotMatchWithRegex',inputPath,inputValue));
+        ('inputIsNotMatchWithRegex',inputPath,inputValue,undefined,'regexName',regexName));
         return this.errorFilterBuilder;
     }
 
@@ -1355,7 +1386,7 @@ export class PresetErrorFilter<T>
     }
 
     // noinspection JSMethodCanBeStatic
-    private _validationErrorBuild(name ?: string,inputPath ?: string,inputValue ?: any,group ?: string) : ErrorFilter
+    private _validationErrorBuild(name ?: string,inputPath ?: string,inputValue ?: any,group ?: string,opInfoKey ?: string, opInfoValue ?: any) : ErrorFilter
     {
         const preset : ErrorFilter = {};
         preset.fromZationSystem = true;
@@ -1371,6 +1402,9 @@ export class PresetErrorFilter<T>
             }
             if(inputValue){
                 info['inputValue'] = inputValue;
+            }
+            if(opInfoKey !== undefined && opInfoValue !== undefined) {
+                info[opInfoKey] = opInfoValue;
             }
             preset.info = [info];
         }
