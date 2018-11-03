@@ -78,7 +78,7 @@ abstract class ZationRequest extends SendAble
     {
         let res : any[] = [];
         let promises : Promise<void>[] = [];
-        for(let i in data)
+        for(let i = 0; i < data.length; i++)
         {
             if(data[i] instanceof RequestAble) {
                 promises.push(new Promise<void>(async (resolve) =>
@@ -87,7 +87,14 @@ abstract class ZationRequest extends SendAble
                     resolve();
                 }));
             }
-            else if(typeof data === 'object') {
+            else if(Array.isArray(data[i]))
+            {
+                promises.push(new Promise<void>(async (resolve) => {
+                    res[i] = this.compileArrayData(data[i]);
+                    resolve();
+                }));
+            }
+            else if(typeof data[i] === 'object') {
                 promises.push(new Promise<void>(async (resolve) =>
                 {
                     res[i] = await this.compileObjectData(data[i]);
@@ -113,6 +120,13 @@ abstract class ZationRequest extends SendAble
                     promises.push(new Promise<void>(async (resolve) =>
                     {
                         res[key] = await this.compileRequestAble(data[key]);
+                        resolve();
+                    }));
+                }
+                else if(Array.isArray(data[key]))
+                {
+                    promises.push(new Promise<void>(async (resolve) => {
+                        res[key] = this.compileArrayData(data[key]);
                         resolve();
                     }));
                 }

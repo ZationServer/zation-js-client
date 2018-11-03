@@ -130,6 +130,22 @@ export class PresetErrorFilter<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
+     * Preset for inputIsNotTypeNumber.
+     * The task error can be thrown by input validation type:'number'.
+     * @param inputPath
+     * Parameter can be used to check the inputPath in the info.
+     * @param inputValue
+     * Parameter can be used to check the inputValue in the info.
+     */
+    inputIsNotTypeNumber(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._validationErrorBuild
+        ('inputIsNotTypeNumber',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
      * Preset for inputIsNotTypeDate.
      * The task error can be thrown by input validation type:'date'.
      * @param inputPath
@@ -482,22 +498,6 @@ export class PresetErrorFilter<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeLatLong.
-     * The task error can be thrown by input validation type:'latLong'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
-     */
-    inputIsNotTypeLatLong(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
-        this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeLatLong',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
-        return this.errorFilterBuilder;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
      * Preset for inputIsNotTypeBase64.
      * The task error can be thrown by input validation type:'base64'.
      * @param inputPath
@@ -524,22 +524,6 @@ export class PresetErrorFilter<T>
     inputIsNotTypeAscii(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypescii',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
-        return this.errorFilterBuilder;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Preset for inputIsNotTypeNumber.
-     * The task error can be thrown by input validation type:'number'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
-     */
-    inputIsNotTypeNumber(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
-        this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeNumber',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -688,6 +672,7 @@ export class PresetErrorFilter<T>
      * More info checks you need to do by yourself.
      * Possibilities are:
      * shouldContain
+     * missing
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
