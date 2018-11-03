@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="76638f38-4a15-47c2-ad03-534e2aa2a298" name="Default" comment="preset error builder fix type error names bug&#10;add new types object/array&#10;add regex name check">
+    <list default="true" id="76638f38-4a15-47c2-ad03-534e2aa2a298" name="Default" comment="update preset errors &#10;fix bug for sending arrays">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorFilter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorFilter.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/zationRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/request/zationRequest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -52,11 +51,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/lib/helper/request/zationRequest.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1860">
-              <caret line="130" column="24" lean-forward="true" selection-start-line="130" selection-start-column="24" selection-end-line="130" selection-end-column="24" />
+            <state relative-caret-position="-708">
+              <caret line="22" column="5" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -71,18 +70,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib/api/validationRequest.ts">
-          <provider selected="true" editor-type-id="text-editor" />
+        <entry file="file://$PROJECT_DIR$/package.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="30">
+              <caret line="2" column="19" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib/api/authRequest.ts">
+        <entry file="file://$PROJECT_DIR$/dist/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="36" column="9" selection-start-line="36" selection-start-column="9" selection-end-line="36" selection-end-column="9" />
-              <folding>
-                <element signature="n#ZationRequest#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="462">
+              <caret line="64" selection-start-line="64" selection-end-line="64" />
             </state>
           </provider>
         </entry>
@@ -90,31 +90,24 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dist/zation.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="31575">
+            <state relative-caret-position="496">
               <caret line="2105" column="12" selection-start-line="2105" selection-start-column="12" selection-end-line="2105" selection-end-column="12" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/dist/zation.min.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="3" column="3041" selection-start-line="3" selection-start-column="3041" selection-end-line="3" selection-end-column="3041" />
+            <state relative-caret-position="375">
+              <caret line="3" column="3256" selection-start-line="3" selection-start-column="3256" selection-end-line="3" selection-end-column="3256" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib/api/httpRequest.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="525">
-              <caret line="42" column="5" selection-start-line="42" selection-start-column="5" selection-end-line="42" selection-end-column="5" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-              </folding>
-            </state>
-          </provider>
+        <entry file="file://$PROJECT_DIR$/src/lib/api/validationRequest.ts">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
     </leaf>
@@ -191,7 +184,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/../../testZone/nodeClient/src/index.ts" />
         <option value="$PROJECT_DIR$/../zation/bin/helper/serverInit.js" />
         <option value="$PROJECT_DIR$/../zation/bin/helper/clientInit.js" />
         <option value="$PROJECT_DIR$/../zation-server/src/lib/public/panel/webpack.config.js" />
@@ -242,6 +234,7 @@
         <option value="$PROJECT_DIR$/../../testZone/server/src/config/app.config.ts" />
         <option value="$PROJECT_DIR$/../../testZone/server/src/public/index.html" />
         <option value="$PROJECT_DIR$/src/lib/helper/request/zationRequest.ts" />
+        <option value="$PROJECT_DIR$/package.json" />
       </list>
     </option>
   </component>
@@ -266,189 +259,6 @@
             <path>
               <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
               <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="api" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="auth" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="box" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="channel" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="config" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="constants" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="error" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="filter" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="logger" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="box" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="onErrorBuilder" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="reaction" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="responseReactionEngine" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="statementBuilder" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="taskError" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="request" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="sc" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="send" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="tools" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -558,7 +368,7 @@
       <workItem from="1540768396943" duration="1108000" />
       <workItem from="1540839882169" duration="6376000" />
       <workItem from="1541195997108" duration="45000" />
-      <workItem from="1541196138046" duration="1284000" />
+      <workItem from="1541196138046" duration="1427000" />
     </task>
     <task id="LOCAL-00001" summary="update config">
       <created>1538086085086</created>
@@ -714,11 +524,18 @@
       <option name="project" value="LOCAL" />
       <updated>1540914591719</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="update preset errors &#10;fix bug for sending arrays">
+      <created>1541211822932</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1541211822932</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="419842000" />
+    <option name="totallyTimeSpent" value="419985000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -733,7 +550,7 @@
     <frame x="0" y="0" width="1440" height="900" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.8342059" visible="true" weight="0.15433404" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.8342059" visible="true" weight="0.15433404" />
       <window_info id="Structure" order="1" sideWeight="0.16579406" side_tool="true" visible="true" weight="0.15433404" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="Gulp" order="3" side_tool="true" />
@@ -747,7 +564,7 @@
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32891566" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Statistic" order="8" weight="0.32939914" />
-      <window_info anchor="bottom" id="Terminal" order="9" visible="true" weight="0.30963856" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.30963856" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" weight="0.32891566" />
       <window_info anchor="bottom" id="Version Control" order="11" weight="0.32891566" />
       <window_info anchor="bottom" id="TypeScript" order="12" weight="0.32891566" />
@@ -806,7 +623,8 @@
     <MESSAGE value="update version to 0.2.7" />
     <MESSAGE value="update to version 0.2.9&#10;update requestBuilder&#10;add new ws support for query system and version&#10;update error presets" />
     <MESSAGE value="preset error builder fix type error names bug&#10;add new types object/array&#10;add regex name check" />
-    <option name="LAST_COMMIT_MESSAGE" value="preset error builder fix type error names bug&#10;add new types object/array&#10;add regex name check" />
+    <MESSAGE value="update preset errors &#10;fix bug for sending arrays" />
+    <option name="LAST_COMMIT_MESSAGE" value="update preset errors &#10;fix bug for sending arrays" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/node_modules/typescript/lib/lib.es5.d.ts">
@@ -981,13 +799,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dist/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="462">
-          <caret line="64" selection-start-line="64" selection-end-line="64" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
@@ -1049,13 +860,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1020">
-          <caret line="68" column="24" selection-start-line="68" selection-start-column="24" selection-end-line="68" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/lib/api/authRequest.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="435">
@@ -1063,20 +867,6 @@
           <folding>
             <element signature="n#ZationRequest#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dist/zation.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="31575">
-          <caret line="2105" column="12" selection-start-line="2105" selection-start-column="12" selection-end-line="2105" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dist/zation.min.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="3" column="3041" selection-start-line="3" selection-start-column="3041" selection-end-line="3" selection-end-column="3041" />
         </state>
       </provider>
     </entry>
@@ -1131,8 +921,36 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/lib/helper/request/zationRequest.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1860">
-          <caret line="130" column="24" lean-forward="true" selection-start-line="130" selection-start-column="24" selection-end-line="130" selection-end-column="24" />
+        <state relative-caret-position="-708">
+          <caret line="22" column="5" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="19" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="462">
+          <caret line="64" selection-start-line="64" selection-end-line="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/zation.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="496">
+          <caret line="2105" column="12" selection-start-line="2105" selection-start-column="12" selection-end-line="2105" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/zation.min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="3" column="3256" selection-start-line="3" selection-start-column="3256" selection-end-line="3" selection-end-column="3256" />
         </state>
       </provider>
     </entry>
