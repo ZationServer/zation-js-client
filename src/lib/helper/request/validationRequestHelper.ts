@@ -5,10 +5,10 @@ GitHub: LucaCode
  */
 
 import Zation = require("../../api/zation");
-import Const = require("../constants/constWrapper");
 import ZationRequest = require("./zationRequest");
 import AbstractRequestHelper = require("./abstractRequestHelper");
 import {ValidationCheck, ValidationRequest} from "../../api/validationRequest";
+import {HttpGetReq} from "../constants/settings";
 
 class ValidationRequestHelper extends AbstractRequestHelper<ValidationRequestHelper>
 {
@@ -88,15 +88,15 @@ class ValidationRequestHelper extends AbstractRequestHelper<ValidationRequestHel
     buildGetRequest() : string
     {
         //checks
-        let params = `?${Const.Settings.HTTP_GET_REUQEST.INPUT}=${JSON.stringify(this._checks)}`;
+        let params = `?${HttpGetReq.INPUT}=${JSON.stringify(this._checks)}`;
         //vali req
-        params += `&${Const.Settings.HTTP_GET_REUQEST.VALI_REQ}=true`;
+        params += `&${HttpGetReq.VALI_REQ}=true`;
         //controller
         if(this._systemController) {
-            params += `&${Const.Settings.HTTP_GET_REUQEST.SYSTEM_CONTROLLER}=${this._controllerName}`;
+            params += `&${HttpGetReq.SYSTEM_CONTROLLER}=${this._controllerName}`;
         }
         else {
-            params += `&${Const.Settings.HTTP_GET_REUQEST.CONTROLLER}=${this._controllerName}`;
+            params += `&${HttpGetReq.CONTROLLER}=${this._controllerName}`;
         }
         return this.zation.getServerAddress()+params;
     }

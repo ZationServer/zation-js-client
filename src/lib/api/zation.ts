@@ -5,7 +5,6 @@ GitHub: LucaCode
  */
 
 import AuthEngine = require("../helper/auth/authEngine");
-import Const = require('../helper/constants/constWrapper');
 import ChannelEngine = require("../helper/channel/channelEngine");
 import Box = require("../helper/box/box");
 import ResponseReactionBox = require("./responseReactionBox");
@@ -36,6 +35,8 @@ import {OnHandlerFunction, ResponseFunction, Socket} from "../helper/sc/socket";
 import {Events} from "../helper/constants/events";
 import {ValidationCheck} from "./validationRequest";
 import {ChannelTarget} from "../helper/channel/channelTarget";
+import {SystemController} from "../helper/constants/systemController";
+import {Token, ZationHttpInfo} from "../helper/constants/settings";
 
 //override for decide between client/server deauthenticate
 SocketClusterClient.SCClientSocket.prototype.deauthenticate = function (callback) {
@@ -136,7 +137,7 @@ class Zation
      * @param settings
      * @param reactionBox
      */
-    constructor(settings : ZationOptions = {},...reactionBox : (ResponseReactionBox | ChannelReactionBox | EventReactionBox)[])
+    constructor(settings ?: ZationOptions,...reactionBox : (ResponseReactionBox | ChannelReactionBox | EventReactionBox)[])
     {
         //config
         this.zc = new ZationConfig(settings);
@@ -321,7 +322,7 @@ class Zation
      */
     async ping() : Promise<number>
     {
-        const req = new WsRequest(Const.SyController.PING,{},true);
+        const req = new WsRequest(SystemController.PING,{},true);
         const start = Date.now();
         await this.send(req);
         return Date.now() - start;
@@ -567,7 +568,7 @@ class Zation
             }
         }
 
-        if(response.hasZationHttpInfo(Const.Settings.ZATION_HTTP_INFO.DEAUTHENTICATE)) {
+        if(response.hasZationHttpInfo(ZationHttpInfo.DEAUTHENTICATE)) {
             await this.authEngine.deauthenticate();
         }
     }
@@ -793,16 +794,16 @@ class Zation
     private _buildScOptions()
     {
         return {
-            hostname: this.zc.getConfig(Const.Config.HOSTNAME),
-            port: this.zc.getConfig(Const.Config.PORT),
-            secure: this.zc.getConfig(Const.Config.SECURE),
-            rejectUnauthorized: this.zc.getConfig(Const.Config.REJECT_UNAUTHORIZED),
-            path : this.zc.getConfig(Const.Config.PATH),
+            hostname: this.zc.config.hostname,
+            port: this.zc.config.port,
+            secure: this.zc.config.secure,
+            rejectUnauthorized: this.zc.config.rejectUnauthorized,
+            path : this.zc.config.path,
             autoReconnect: true,
             autoConnect : false,
             query: {
-                system : this.zc.getConfig(Const.Config.SYSTEM),
-                version : this.zc.getConfig(Const.Config.VERSION)
+                system : this.zc.config.system,
+                version : this.zc.config.version
             }
         };
     }
@@ -1173,7 +1174,7 @@ class Zation
      */
     getTokenId() : string
     {
-        return this.authEngine.getTokenVar(Const.Settings.TOKEN.TOKEN_ID);
+        return this.authEngine.getTokenVar(Token.TOKEN_ID);
 
     }
 
@@ -1185,7 +1186,7 @@ class Zation
      */
     getTokenExpire() : number
     {
-        return this.authEngine.getTokenVar(Const.Settings.TOKEN.EXPIRE);
+        return this.authEngine.getTokenVar(Token.EXPIRE);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1196,7 +1197,7 @@ class Zation
      */
     getTokenPanelAccess() : boolean
     {
-        return this.authEngine.getTokenVar(Const.Settings.TOKEN.PANEL_ACCESS);
+        return this.authEngine.getTokenVar(Token.PANEL_ACCESS);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1266,80 +1267,79 @@ class Zation
         }
     }
 
-
     //Part Getter/Setter
     // noinspection JSUnusedGlobalSymbols
     isAutoAllChSub() : boolean {
-        return this.zc.getConfig(Const.Config.AUTO_ALL_CH_SUB);
+        return this.zc.config.autoAllChSub
     }
 
     // noinspection JSUnusedGlobalSymbols
     setAutoAllChSub(value : boolean) : void {
-        this.zc.setConfig(Const.Config.AUTO_ALL_CH_SUB,value);
+        this.zc.config.autoAllChSub = value;
     }
 
     isAutoUserChSub() : boolean {
-        return this.zc.getConfig(Const.Config.AUTO_USER_CH_SUB);
+        return this.zc.config.autoUserChSub;
     }
 
     // noinspection JSUnusedGlobalSymbols
     setAutoUserChSub(value : boolean) : void {
-        this.zc.setConfig(Const.Config.AUTO_USER_CH_SUB,value);
+        this.zc.config.autoUserChSub = value;
     }
 
     // noinspection JSUnusedGlobalSymbols
     isAutoDefaultUserGroupChSub() : boolean {
-        return this.zc.getConfig(Const.Config.AUTO_DEFAULT_USER_GROUP_CH_SUB);
+        return this.zc.config.autoDefaultUserGroupChSub;
     }
 
     // noinspection JSUnusedGlobalSymbols
     setAutoDefaultUserGroupChSub(value : boolean) : void {
-        this.zc.setConfig(Const.Config.AUTO_DEFAULT_USER_GROUP_CH_SUB,value);
+        this.zc.config.autoDefaultUserGroupChSub = value;
     }
 
     // noinspection JSUnusedGlobalSymbols
     isAutoAuthUserGroupChSub() : boolean {
-        return this.zc.getConfig(Const.Config.AUTO_AUTH_USER_GROUP_CH_SUB);
+        return this.zc.config.autoAuthUserGroupChSub;
     }
 
     // noinspection JSUnusedGlobalSymbols
     setAutoAuthUserGroupChSub(value : boolean) : void {
-        this.zc.setConfig(Const.Config.AUTO_AUTH_USER_GROUP_CH_SUB,value);
+        this.zc.config.autoAuthUserGroupChSub = value;
     }
 
     // noinspection JSUnusedGlobalSymbols
     getRejectUnauthorized() : boolean{
-        return this.zc.getConfig(Const.Config.REJECT_UNAUTHORIZED);
+        return this.zc.config.rejectUnauthorized;
     }
 
     // noinspection JSUnusedGlobalSymbols
     getSystem() : string {
-        return this.zc.getConfig(Const.Config.SYSTEM);
+        return this.zc.config.system;
     };
 
     // noinspection JSUnusedGlobalSymbols
     getVersion() : number {
-        return this.zc.getConfig(Const.Config.VERSION);
+        return this.zc.config.version;
     };
 
     // noinspection JSUnusedGlobalSymbols
     getHostname() : string {
-        return this.zc.getConfig(Const.Config.HOSTNAME);
+        return this.zc.config.hostname;
     };
 
     // noinspection JSUnusedGlobalSymbols
     getPort() : number {
-        return this.zc.getConfig(Const.Config.PORT);
+        return this.zc.config.port;
     };
 
     // noinspection JSUnusedGlobalSymbols
-    getSecure() {
-        return this.zc.getConfig(Const.Config.SECURE);
+    getSecure() : boolean {
+        return this.zc.config.secure;
     };
 
     // noinspection JSUnusedGlobalSymbols
     isDebug() : boolean {
-        return this.zc.getConfig(Const.Config.DEBUG);
+        return this.zc.config.debug;
     };
 
     // noinspection JSUnusedGlobalSymbols
@@ -1349,9 +1349,9 @@ class Zation
      */
     getServerAddress() : string
     {
-        const path = this.zc.getConfig(Const.Config.PATH);
-        const hostname = this.zc.getConfig(Const.Config.HOSTNAME);
-        const port = this.zc.getConfig(Const.Config.PORT);
+        const path = this.zc.config.path;
+        const hostname = this.zc.config.hostname;
+        const port = this.zc.config.port;
         return `${hostname}:${port}${path}`;
     };
 

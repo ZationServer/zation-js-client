@@ -36,7 +36,7 @@ import {ProtocolType} from "./lib/helper/constants/protocolType";
  * @param options
  * @param reactionBox
  */
-const create = (options : ZationOptions = {},...reactionBox : (ResponseReactionBox | ChannelReactionBox | EventReactionBox)[]) : Zation =>
+const create = (options ?: ZationOptions,...reactionBox : (ResponseReactionBox | ChannelReactionBox | EventReactionBox)[]) : Zation =>
 {
     return new Zation(options,...reactionBox);
 };

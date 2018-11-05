@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import Const = require("../../constants/constWrapper");
+import {ErrorInfo, ResponseTaskError} from "../../constants/settings";
 
 export class TaskError
 {
@@ -20,7 +20,7 @@ export class TaskError
      * Returns the name of the task error.
      */
     getName() : string {
-        return this.data[Const.Settings.RESPONSE.ERROR.NAME];
+        return this.data[ResponseTaskError.NAME];
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -29,7 +29,7 @@ export class TaskError
      * Returns the group of the task error.
      */
     getGroup() : string {
-        return this.data[Const.Settings.RESPONSE.ERROR.GROUP];
+        return this.data[ResponseTaskError.GROUP];
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -38,7 +38,7 @@ export class TaskError
      * Returns if the task error has a group.
      */
     hasGroup() : boolean {
-        return this.data[Const.Settings.RESPONSE.ERROR.GROUP] !== undefined;
+        return this.data[ResponseTaskError.GROUP] !== undefined;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -47,7 +47,7 @@ export class TaskError
      * Returns the type of the task error.
      */
     getType() : string {
-        return this.data[Const.Settings.RESPONSE.ERROR.TYPE];
+        return this.data[ResponseTaskError.TYPE];
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -57,7 +57,7 @@ export class TaskError
      * Is undefined if it was not sended.
      */
     getDescription() : string | undefined {
-        return this.data[Const.Settings.RESPONSE.ERROR.DESCRIPTION];
+        return this.data[ResponseTaskError.DESCRIPTION];
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -67,7 +67,7 @@ export class TaskError
      * Is undefined if it was not sended.
      */
     isFromZationSystem() : boolean | undefined {
-        return this.data[Const.Settings.RESPONSE.ERROR.FROM_ZATION_SYSTEM];
+        return this.data[ResponseTaskError.FROM_ZATION_SYSTEM];
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -77,8 +77,8 @@ export class TaskError
      * Returns empty object if it was not sended.
      */
     getInfo() : object {
-        return typeof this.data[Const.Settings.RESPONSE.ERROR.INFO] === 'object' ?
-            this.data[Const.Settings.RESPONSE.ERROR.INFO] : {};
+        return typeof this.data[ResponseTaskError.INFO] === 'object' ?
+            this.data[ResponseTaskError.INFO] : {};
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -87,7 +87,25 @@ export class TaskError
      * Returns if the task error has info object.
      */
     hasInfo() : boolean {
-        return typeof this.data[Const.Settings.RESPONSE.ERROR.INFO] === 'object';
+        return typeof this.data[ResponseTaskError.INFO] === 'object';
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the main info of the task error.
+     */
+    getMainInfo() : string | undefined {
+        return this.getInfo()[ErrorInfo.MAIN];
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns if the task error has main info.
+     */
+    hasMainInfo() : boolean {
+        return this.getInfo()[ErrorInfo.MAIN] !== undefined;
     }
 
     // noinspection JSUnusedGlobalSymbols

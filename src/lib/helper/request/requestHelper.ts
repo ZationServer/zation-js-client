@@ -9,9 +9,9 @@ import Zation = require("../../api/zation");
 import {ProtocolType} from "../constants/protocolType";
 import WsRequest = require("../../api/wsRequest");
 import HttpRequest = require("../../api/httpRequest");
-import Const = require("../constants/constWrapper");
 import ZationRequest = require("./zationRequest");
 import AbstractRequestHelper = require("./abstractRequestHelper");
+import {HttpGetReq} from "../constants/settings";
 
 class RequestHelper extends AbstractRequestHelper<RequestHelper>
 {
@@ -102,21 +102,21 @@ class RequestHelper extends AbstractRequestHelper<RequestHelper>
     buildGetRequest() : string
     {
         //system
-        let params = `?${Const.Settings.HTTP_GET_REUQEST.SYSTEM}=${this.zation.getSystem()}`;
+        let params = `?${HttpGetReq.SYSTEM}=${this.zation.getSystem()}`;
         //version
-        params += `&${Const.Settings.HTTP_GET_REUQEST.VERSION}=${this.zation.getVersion()}`;
+        params += `&${HttpGetReq.VERSION}=${this.zation.getVersion()}`;
         //input
-        params += `&${Const.Settings.HTTP_GET_REUQEST.INPUT}=${JSON.stringify(this._data)}`;
+        params += `&${HttpGetReq.INPUT}=${JSON.stringify(this._data)}`;
         //add sign token
         if(this._useAuth && this.zation._getAuthEngine().hasSignToken()) {
-            params += `&${Const.Settings.HTTP_GET_REUQEST.TOKEN}=${this.zation._getAuthEngine().getSignToken()}`;
+            params += `&${HttpGetReq.TOKEN}=${this.zation._getAuthEngine().getSignToken()}`;
         }
         //controller
         if(this._systemController) {
-            params += `&${Const.Settings.HTTP_GET_REUQEST.SYSTEM_CONTROLLER}=${this._controllerName}`;
+            params += `&${HttpGetReq.SYSTEM_CONTROLLER}=${this._controllerName}`;
         }
         else {
-            params += `&${Const.Settings.HTTP_GET_REUQEST.CONTROLLER}=${this._controllerName}`;
+            params += `&${HttpGetReq.CONTROLLER}=${this._controllerName}`;
         }
         return this.zation.getServerAddress()+params;
     }

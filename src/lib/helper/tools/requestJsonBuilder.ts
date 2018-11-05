@@ -3,7 +3,8 @@ Author: Luca Scaringella
 GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
-import Const = require("../constants/constWrapper");
+
+import {ReqInC, RequestInput, ValidationRequestInput} from "../constants/settings";
 
 class RequestJsonBuilder
 {
@@ -19,21 +20,21 @@ class RequestJsonBuilder
     {
 
         const controllerKey = !isSystemController ?
-            Const.Settings.REQ_IN_C.CONTROLLER :
-            Const.Settings.REQ_IN_C.SYSTEM_CONTROLLER;
+            ReqInC.CONTROLLER :
+            ReqInC.SYSTEM_CONTROLLER;
 
         let res = {
-            [Const.Settings.REQUEST_INPUT.VERSION] : version,
-            [Const.Settings.REQUEST_INPUT.SYSTEM] : system,
-            [Const.Settings.REQUEST_INPUT.TASK] :
+            [RequestInput.VERSION] : version,
+            [RequestInput.SYSTEM] : system,
+            [RequestInput.TASK] :
                 {
                     [controllerKey] : controllerName,
-                    [Const.Settings.REQUEST_INPUT.INPUT] : data,
+                    [RequestInput.INPUT] : data,
                 }
         };
 
         if(!!signToken) {
-            res[Const.Settings.REQUEST_INPUT.TOKEN] = signToken;
+            res[RequestInput.TOKEN] = signToken;
         }
 
         return res;
@@ -47,14 +48,14 @@ class RequestJsonBuilder
     )
     {
         const controllerKey = !isSystemController ?
-            Const.Settings.REQ_IN_C.CONTROLLER :
-            Const.Settings.REQ_IN_C.SYSTEM_CONTROLLER;
+            ReqInC.CONTROLLER :
+            ReqInC.SYSTEM_CONTROLLER;
 
         return {
-            [Const.Settings.REQUEST_INPUT.TASK] :
+            [RequestInput.TASK] :
                 {
                     [controllerKey] : controllerName,
-                    [Const.Settings.REQUEST_INPUT.INPUT] : data,
+                    [RequestInput.INPUT] : data,
                 }
         };
     }
@@ -62,16 +63,16 @@ class RequestJsonBuilder
     static buildHttpAuthRequestData(data : object,system : string, version : number,signToken ?: string | null)
     {
         let res = {
-            [Const.Settings.REQUEST_INPUT.VERSION] : version,
-            [Const.Settings.REQUEST_INPUT.SYSTEM] : system,
-            [Const.Settings.REQUEST_INPUT.AUTH] :
+            [RequestInput.VERSION] : version,
+            [RequestInput.SYSTEM] : system,
+            [RequestInput.AUTH] :
                 {
-                    [Const.Settings.REQUEST_INPUT.INPUT] : data,
+                    [RequestInput.INPUT] : data,
                 }
         };
 
         if(!!signToken) {
-            res[Const.Settings.REQUEST_INPUT.TOKEN] = signToken;
+            res[RequestInput.TOKEN] = signToken;
         }
 
         return res;
@@ -80,9 +81,9 @@ class RequestJsonBuilder
     static buildWsAuthRequestData(data : object)
     {
         return {
-            [Const.Settings.REQUEST_INPUT.AUTH] :
+            [RequestInput.AUTH] :
                 {
-                    [Const.Settings.REQUEST_INPUT.INPUT] : data,
+                    [RequestInput.INPUT] : data,
                 }
         };
     }
@@ -90,13 +91,13 @@ class RequestJsonBuilder
     static buildValidationRequestData(input : object,constrollerName : string,isSystemController : boolean)
     {
         const controllerKey = !isSystemController ?
-            Const.Settings.REQ_IN_C.CONTROLLER :
-            Const.Settings.REQ_IN_C.SYSTEM_CONTROLLER;
+            ReqInC.CONTROLLER :
+            ReqInC.SYSTEM_CONTROLLER;
 
         return {
-            [Const.Settings.VALIDATION_REQUEST_INPUT.MAIN] :
+            [ValidationRequestInput.MAIN] :
                 {
-                    [Const.Settings.VALIDATION_REQUEST_INPUT.INPUT] : input,
+                    [ValidationRequestInput.INPUT] : input,
                     [controllerKey] : constrollerName,
                 }
         };

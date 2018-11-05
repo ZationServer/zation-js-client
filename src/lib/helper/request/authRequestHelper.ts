@@ -6,9 +6,9 @@ GitHub: LucaCode
 
 import Zation = require("../../api/zation");
 import AuthRequest = require("../../api/authRequest");
-import Const = require("../constants/constWrapper");
 import ZationRequest = require("./zationRequest");
 import AbstractRequestHelper = require("./abstractRequestHelper");
+import {HttpGetReq} from "../constants/settings";
 
 class AuthRequestHelper extends AbstractRequestHelper<AuthRequestHelper>
 {
@@ -51,13 +51,13 @@ class AuthRequestHelper extends AbstractRequestHelper<AuthRequestHelper>
     buildGetRequest() : string
     {
         //system
-        let params = `?${Const.Settings.HTTP_GET_REUQEST.SYSTEM}=${this.zation.getSystem()}`;
+        let params = `?${HttpGetReq.SYSTEM}=${this.zation.getSystem()}`;
         //version
-        params += `&${Const.Settings.HTTP_GET_REUQEST.VERSION}=${this.zation.getVersion()}`;
+        params += `&${HttpGetReq.VALI_REQ}=${this.zation.getVersion()}`;
         //input
-        params += `&${Const.Settings.HTTP_GET_REUQEST.INPUT}=${JSON.stringify(this._authData)}`;
+        params += `&${HttpGetReq.INPUT}=${JSON.stringify(this._authData)}`;
         //auth req
-        params += `&${Const.Settings.HTTP_GET_REUQEST.AUTH_REQ}=true`;
+        params += `&${HttpGetReq.AUTH_REQ}=true`;
         return this.zation.getServerAddress()+params;
     }
 

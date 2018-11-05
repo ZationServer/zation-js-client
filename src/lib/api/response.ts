@@ -6,10 +6,10 @@ GitHub: LucaCode
 
 // noinspection TypeScriptPreferShortImport
 import {ProtocolType}    from "../helper/constants/protocolType";
-import Const             = require("../helper/constants/constWrapper");
 import ResponseReact     = require("../helper/react/reaction/responseReact");
 import {TaskError} from "../helper/react/taskError/taskError";
 import Zation = require("./zation");
+import {ZationResponse} from "../helper/constants/settings";
 
 class Response
 {
@@ -273,28 +273,28 @@ class Response
 
     private _readData(data)
     {
-        if (typeof data[Const.Settings.RESPONSE.SUCCESSFUL] === 'boolean') {
-            this.successful = data[Const.Settings.RESPONSE.SUCCESSFUL];
+        if (typeof data[ZationResponse.SUCCESSFUL] === 'boolean') {
+            this.successful = data[ZationResponse.SUCCESSFUL];
         }
 
-        if (typeof data[Const.Settings.RESPONSE.RESULT] === 'object') {
+        if (typeof data[ZationResponse.RESULT] === 'object') {
 
-            const res = data[Const.Settings.RESPONSE.RESULT];
+            const res = data[ZationResponse.RESULT];
 
-            if (res[Const.Settings.RESPONSE.RESULT_MAIN] !== undefined) {
-                this.result = res[Const.Settings.RESPONSE.RESULT_MAIN];
+            if (res[ZationResponse.RESULT_MAIN] !== undefined) {
+                this.result = res[ZationResponse.RESULT_MAIN];
             }
 
-            if (typeof res[Const.Settings.RESPONSE.RESULT_STATUS] === 'string' ||
-                typeof res[Const.Settings.RESPONSE.RESULT_STATUS] === 'number'
+            if (typeof res[ZationResponse.RESULT_STATUS] === 'string' ||
+                typeof res[ZationResponse.RESULT_STATUS] === 'number'
             ) {
-                this.statusCode = res[Const.Settings.RESPONSE.RESULT_STATUS];
+                this.statusCode = res[ZationResponse.RESULT_STATUS];
             }
         }
 
-        if (Array.isArray(data[Const.Settings.RESPONSE.ERRORS]))
+        if (Array.isArray(data[ZationResponse.ERRORS]))
         {
-            const errors : any[] = data[Const.Settings.RESPONSE.ERRORS];
+            const errors : any[] = data[ZationResponse.ERRORS];
             for(let i = 0; i < errors.length; i++)
             {
                 if(typeof errors[i] === 'object') {
@@ -303,18 +303,18 @@ class Response
             }
         }
 
-        if(Array.isArray(data[Const.Settings.RESPONSE.ZATION_HTTP_INFO])) {
-            this.zationInfo = data[Const.Settings.RESPONSE.ZATION_HTTP_INFO];
+        if(Array.isArray(data[ZationResponse.ZATION_HTTP_INFO])) {
+            this.zationInfo = data[ZationResponse.ZATION_HTTP_INFO];
         }
 
-        if(this.isHttpProtocolType() && typeof data[Const.Settings.RESPONSE.TOKEN] === 'object')
+        if(this.isHttpProtocolType() && typeof data[ZationResponse.TOKEN] === 'object')
         {
-            const token = data[Const.Settings.RESPONSE.TOKEN];
-            if(typeof token[Const.Settings.RESPONSE.TOKEN_PLAIN] === 'object' &&
-               typeof token[Const.Settings.RESPONSE.TOKEN_SIGNED] === 'string')
+            const token = data[ZationResponse.TOKEN];
+            if(typeof token[ZationResponse.TOKEN_PLAIN] === 'object' &&
+               typeof token[ZationResponse.TOKEN_SIGNED] === 'string')
             {
-                this.newPlainToken = token[Const.Settings.RESPONSE.TOKEN_PLAIN];
-                this.newSignedToken = token[Const.Settings.RESPONSE.TOKEN_SIGNED];
+                this.newPlainToken = token[ZationResponse.TOKEN_PLAIN];
+                this.newSignedToken = token[ZationResponse.TOKEN_SIGNED];
             }
         }
     }

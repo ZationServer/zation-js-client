@@ -3,8 +3,6 @@ const typescript      = require('gulp-typescript');
 const browserify      = require('browserify');
 const babel           = require('gulp-babel');
 const derequire       = require('gulp-derequire');
-const gulpIgnore      = require('gulp-ignore');
-const gulpReplace     = require('gulp-replace');
 const insert          = require('gulp-insert');
 const rename          = require('gulp-rename');
 const source          = require('vinyl-source-stream');
@@ -13,7 +11,6 @@ const composer        = require('gulp-uglify/composer');
 const ignore          = require('browserify-ignore-code');
 const uglify          = composer(uglifyes, console);
 const convertNewline  = require('gulp-convert-newline');
-const path            = require('path');
 const ascjsify        = require('ascjsify');
 const OptimizeJs      = require('gulp-optimize-js');
 const clean           = require('gulp-clean');
@@ -27,40 +24,9 @@ const HEADER = (
     ' * Zation JavaScript client version:' + VERSION + '\n' +
     ' */\n');
 
-const isInterfaceComputedFile = (file) =>
-{
-    return file.path.match(`^.*src${path.sep}lib${path.sep}api${path.sep}zationOptions.ts$`);
-};
-
-const replaceConst = (match) =>
-{
-    const Const          = require('./dist/lib/helper/constants/constWrapper');
-    const pathToConstant =  match.replace(new RegExp(/[\[\]]*/, 'g'),'').split('.');
-    let tempRes = Const;
-    for(let i= 1; i < pathToConstant.length; i++) {
-        if(tempRes.hasOwnProperty(pathToConstant[i])) {
-            tempRes = tempRes[pathToConstant[i]];
-        }
-        else {
-            return undefined;
-        }
-    }
-    return `'${tempRes}' `;
-};
-
-gulp.task('cetTs', function () {
+gulp.task('ts', function () {
     return gulp
         .src('src/**/*.ts')
-        .pipe(gulpIgnore.include(isInterfaceComputedFile))
-        .pipe(gulpReplace(/\[Const[a-zA-Z_.]*]/g,replaceConst))
-        .pipe(typescript(tscConfig.compilerOptions))
-        .pipe(gulp.dest('dist'));
-});
-
-gulp.task('mainTs', function () {
-    return gulp
-        .src('src/**/*.ts')
-        .pipe(gulpIgnore.exclude(isInterfaceComputedFile))
         .pipe(typescript(tscConfig.compilerOptions))
         .pipe(gulp.dest(DIST));
 });
@@ -122,8 +88,6 @@ gulp.task('cleanDist', function () {
     return gulp.src('dist', {read: false,allowEmpty : true})
         .pipe(clean());
 });
-
-gulp.task('ts', gulp.series('mainTs','cetTs'));
 
 gulp.task('browserVersion', gulp.series('browserify'));
 

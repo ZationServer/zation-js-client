@@ -4,32 +4,33 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import Const = require("../constants/constWrapper");
 import {ZationOptions} from "../../api/zationOptions";
 
 class ZationConfig
 {
-    private config : ZationOptions = {};
+    private _config : ZationOptions;
 
-    constructor(config : object)
+    constructor(config ?: ZationOptions)
     {
         this.loadDefaults();
         this.loadSettingsFromClientPrepare();
-        this.addToConfig(config,true);
+        if(config) {
+            this.addToConfig(config,true);
+        }
     }
 
     addToConfig(obj : object,override : boolean = false)
     {
         for(let k in obj) {
-            if (obj.hasOwnProperty(k) && override || (!override && !this.config.hasOwnProperty(k))) {
-                this.config[k] = obj[k];
+            if (obj.hasOwnProperty(k) && override || (!override && !this._config.hasOwnProperty(k))) {
+                this._config[k] = obj[k];
             }
         }
     }
 
     loadDefaults()
     {
-        this.config = {
+        this._config = {
           debug : false,
           system : 'Default',
           version : 1.0,
@@ -56,41 +57,41 @@ class ZationConfig
             let zss = ZATION_SERVER_SETTINGS;
 
             if(!!zss['HOSTNAME']) {
-                this.config[Const.Config.HOSTNAME] = zss['HOSTNAME'];
+                this._config.hostname = zss['HOSTNAME'];
             }
             if(!!zss['PORT']) {
-                this.config[Const.Config.PORT] = zss['PORT'];
+                this._config.port = zss['PORT'];
             }
             if(!!zss['PATH']) {
-                this.config[Const.Config.PATH] = zss['PATH'];
+                this._config.path = zss['PATH'];
             }
             if(!!zss['SECURE']) {
-                this.config[Const.Config.SECURE] = zss['SECURE'];
+                this._config.secure = zss['SECURE'];
             }
             if(!!zss['POST_KEY']) {
-                this.config[Const.Config.POST_KEY] = zss['POST_KEY'];
+                this._config.postKey = zss['POST_KEY'];
             }
         }
     }
 
-    getConfig(key : any) : any
-    {
-        return this.config[key];
+
+    get config(): ZationOptions {
+        return this._config;
     }
 
     isDebug() : boolean
     {
-        return this.getConfig(Const.Config.DEBUG);
+        return !!this.config.debug;
     }
 
     setConfig(key : any,value : any) : void
     {
-        this.config[key] = value;
+        this._config[key] = value;
     }
 
     isConfig(key : any) : boolean
     {
-        return this.config[key] !== undefined;
+        return this._config[key] !== undefined;
     }
 
 }

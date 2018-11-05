@@ -7,7 +7,6 @@ GitHub: LucaCode
 import Zation         = require("../../api/zation");
 import ChannelEngine  = require("../channel/channelEngine");
 import Logger         = require("../logger/logger");
-import Const              = require("../constants/constWrapper");
 import MissingUserIdError = require("../error/missingUserIdError");
 import MissingAuthUserGroupError   = require("../error/missingAuthUserGroupError");
 import NotAuthenticatedNeededError = require("../error/deauthenticationNeededError");
@@ -15,6 +14,7 @@ import AuthenticationNeededError   = require("../error/authenticationNeededError
 import DeauthenticationFailError   = require("../error/deauthenticationFailError");
 import ConnectionNeededError       = require("../error/connectionNeededError");
 import SignAuthenticationFailError = require("../error/signAuthenticationFailError");
+import {Token} from "../constants/settings";
 
 class AuthEngine
 {
@@ -237,8 +237,8 @@ class AuthEngine
 
     async updateToken(token : object | null) {
         if(token === null) {token = {};}
-        await this.updateUserId(token[Const.Settings.TOKEN.USER_ID]);
-        await this.updateAuthGroup(token[Const.Settings.TOKEN.AUTH_USER_GROUP]);
+        await this.updateUserId(token[Token.USER_ID]);
+        await this.updateAuthGroup(token[Token.AUTH_USER_GROUP]);
     }
 
     getSignToken() : string | null {
@@ -276,8 +276,8 @@ class AuthEngine
     getCustomTokenVar() : object
     {
         if(this.plainToken !== null) {
-            return typeof this.plainToken[Const.Settings.TOKEN.CUSTOM_VARIABLES] === 'object' ?
-                this.plainToken[Const.Settings.TOKEN.CUSTOM_VARIABLES] : {};
+            return typeof this.plainToken[Token.CUSTOM_VARIABLES] === 'object' ?
+                this.plainToken[Token.CUSTOM_VARIABLES] : {};
         }
         else {
             throw new AuthenticationNeededError('To get access to customTokenVar');
