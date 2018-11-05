@@ -8,7 +8,7 @@ import Zation = require("../../api/zation");
 import AuthRequest = require("../../api/authRequest");
 import ZationRequest = require("./zationRequest");
 import AbstractRequestHelper = require("./abstractRequestHelper");
-import {HttpGetReq} from "../constants/settings";
+import {HttpGetReq} from "../constants/internal";
 
 class AuthRequestHelper extends AbstractRequestHelper<AuthRequestHelper>
 {

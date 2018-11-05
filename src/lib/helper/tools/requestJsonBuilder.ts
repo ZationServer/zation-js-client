@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import {ReqInC, RequestInput, ValidationRequestInput} from "../constants/settings";
+import {ZationRequest} from "../constants/internal";
 
 class RequestJsonBuilder
 {
@@ -16,28 +16,21 @@ class RequestJsonBuilder
         system : string,
         version : number,
         signToken ?: string | null
-    )
+    ) : ZationRequest
     {
-
-        const controllerKey = !isSystemController ?
-            ReqInC.CONTROLLER :
-            ReqInC.SYSTEM_CONTROLLER;
-
-        let res = {
-            [RequestInput.VERSION] : version,
-            [RequestInput.SYSTEM] : system,
-            [RequestInput.TASK] :
-                {
-                    [controllerKey] : controllerName,
-                    [RequestInput.INPUT] : data,
-                }
+        const request : ZationRequest = {
+            v : version,
+            s : system,
+            t : {
+                i : data,
+                [!isSystemController ? 'c' : 'sc'] : controllerName
+            }
         };
 
         if(!!signToken) {
-            res[RequestInput.TOKEN] = signToken;
+            request.to = signToken;
         }
-
-        return res;
+        return request;
     }
 
     static buildWsRequestData
@@ -45,61 +38,47 @@ class RequestJsonBuilder
         data : object,
         controllerName : string,
         isSystemController : boolean
-    )
+    ) : ZationRequest
     {
-        const controllerKey = !isSystemController ?
-            ReqInC.CONTROLLER :
-            ReqInC.SYSTEM_CONTROLLER;
-
         return {
-            [RequestInput.TASK] :
-                {
-                    [controllerKey] : controllerName,
-                    [RequestInput.INPUT] : data,
-                }
+            t : {
+                [!isSystemController ? 'c' : 'sc'] : controllerName,
+                i : data
+            }
         };
     }
 
-    static buildHttpAuthRequestData(data : object,system : string, version : number,signToken ?: string | null)
+    static buildHttpAuthRequestData(data : object,system : string, version : number,signToken ?: string | null) : ZationRequest
     {
-        let res = {
-            [RequestInput.VERSION] : version,
-            [RequestInput.SYSTEM] : system,
-            [RequestInput.AUTH] :
-                {
-                    [RequestInput.INPUT] : data,
-                }
+        const res : ZationRequest = {
+            v : version,
+            s : system,
+            a : {
+                i : data
+            }
         };
-
         if(!!signToken) {
-            res[RequestInput.TOKEN] = signToken;
+            res.to = signToken;
         }
-
         return res;
     }
 
-    static buildWsAuthRequestData(data : object)
+    static buildWsAuthRequestData(data : object) : ZationRequest
     {
         return {
-            [RequestInput.AUTH] :
-                {
-                    [RequestInput.INPUT] : data,
-                }
+           a : {
+               i : data
+           }
         };
     }
 
-    static buildValidationRequestData(input : object,constrollerName : string,isSystemController : boolean)
+    static buildValidationRequestData(input : object | any[],controllerName : string,isSystemController : boolean) : ZationRequest
     {
-        const controllerKey = !isSystemController ?
-            ReqInC.CONTROLLER :
-            ReqInC.SYSTEM_CONTROLLER;
-
         return {
-            [ValidationRequestInput.MAIN] :
-                {
-                    [ValidationRequestInput.INPUT] : input,
-                    [controllerKey] : constrollerName,
-                }
+            v : {
+                [!isSystemController ? 'c' : 'sc'] : controllerName,
+                i : input
+            }
         };
     }
 }

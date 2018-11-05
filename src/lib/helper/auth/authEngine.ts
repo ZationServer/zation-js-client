@@ -7,14 +7,14 @@ GitHub: LucaCode
 import Zation         = require("../../api/zation");
 import ChannelEngine  = require("../channel/channelEngine");
 import Logger         = require("../logger/logger");
-import MissingUserIdError = require("../error/missingUserIdError");
+import MissingUserIdError          = require("../error/missingUserIdError");
 import MissingAuthUserGroupError   = require("../error/missingAuthUserGroupError");
 import NotAuthenticatedNeededError = require("../error/deauthenticationNeededError");
 import AuthenticationNeededError   = require("../error/authenticationNeededError");
 import DeauthenticationFailError   = require("../error/deauthenticationFailError");
 import ConnectionNeededError       = require("../error/connectionNeededError");
 import SignAuthenticationFailError = require("../error/signAuthenticationFailError");
-import {Token} from "../constants/settings";
+import {ZationToken}                 from "../constants/internal";
 
 class AuthEngine
 {
@@ -22,7 +22,7 @@ class AuthEngine
     private currentUserAuthGroup : string | undefined = undefined;
 
     private signToken : string | null = null;
-    private plainToken : object | null = null;
+    private plainToken : ZationToken | null = null;
 
     private readonly zation : Zation;
     private readonly chEngine : ChannelEngine;
@@ -67,7 +67,7 @@ class AuthEngine
     }
 
 
-    async refreshToken(plainToken : null | object,signToken : null | string)
+    async refreshToken(plainToken : null | ZationToken,signToken : null | string)
     {
         this.plainToken = plainToken;
         this.signToken = signToken;
@@ -235,10 +235,10 @@ class AuthEngine
         this.chEngine.unsubDefaultUserGroupChannel(andDestroy);
     }
 
-    async updateToken(token : object | null) {
+    async updateToken(token : ZationToken | null) {
         if(token === null) {token = {};}
-        await this.updateUserId(token[Token.USER_ID]);
-        await this.updateAuthGroup(token[Token.AUTH_USER_GROUP]);
+        await this.updateUserId(token.zationUserId);
+        await this.updateAuthGroup(token.zationAuthUserGroup);
     }
 
     getSignToken() : string | null {
@@ -246,14 +246,13 @@ class AuthEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    getPlainToken() : object | null {
+    getPlainToken() : ZationToken | null {
         return this.plainToken;
     }
 
-    getTokenVar(key : string) : any
-    {
+    getSecurePlainToken() : ZationToken {
         if(this.plainToken !== null) {
-            return this.plainToken[key];
+            return this.plainToken;
         }
         else {
             throw new AuthenticationNeededError('To get access to token variable');
@@ -276,8 +275,8 @@ class AuthEngine
     getCustomTokenVar() : object
     {
         if(this.plainToken !== null) {
-            return typeof this.plainToken[Token.CUSTOM_VARIABLES] === 'object' ?
-                this.plainToken[Token.CUSTOM_VARIABLES] : {};
+            return typeof this.plainToken.zationCustomVariables === 'object' ?
+                this.plainToken.zationCustomVariables : {};
         }
         else {
             throw new AuthenticationNeededError('To get access to customTokenVar');

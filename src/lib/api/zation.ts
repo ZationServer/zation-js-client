@@ -36,7 +36,8 @@ import {Events} from "../helper/constants/events";
 import {ValidationCheck} from "./validationRequest";
 import {ChannelTarget} from "../helper/channel/channelTarget";
 import {SystemController} from "../helper/constants/systemController";
-import {Token, ZationHttpInfo} from "../helper/constants/settings";
+import {ZationHttpInfo} from "../helper/constants/internal";
+import AuthenticationNeededError = require("../helper/error/authenticationNeededError");
 
 //override for decide between client/server deauthenticate
 SocketClusterClient.SCClientSocket.prototype.deauthenticate = function (callback) {
@@ -1174,8 +1175,8 @@ class Zation
      */
     getTokenId() : string
     {
-        return this.authEngine.getTokenVar(Token.TOKEN_ID);
-
+       // @ts-ignore
+        return this.authEngine.getSecurePlainToken().zationTokenId;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1186,7 +1187,8 @@ class Zation
      */
     getTokenExpire() : number
     {
-        return this.authEngine.getTokenVar(Token.EXPIRE);
+        // @ts-ignore
+        return this.authEngine.getSecurePlainToken().exp;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1197,7 +1199,8 @@ class Zation
      */
     getTokenPanelAccess() : boolean
     {
-        return this.authEngine.getTokenVar(Token.PANEL_ACCESS);
+        // @ts-ignore
+        return this.authEngine.getSecurePlainToken().zationPanelAccess;
     }
 
     // noinspection JSUnusedGlobalSymbols

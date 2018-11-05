@@ -11,7 +11,7 @@ import WsRequest = require("../../api/wsRequest");
 import HttpRequest = require("../../api/httpRequest");
 import ZationRequest = require("./zationRequest");
 import AbstractRequestHelper = require("./abstractRequestHelper");
-import {HttpGetReq} from "../constants/settings";
+import {HttpGetReq} from "../constants/internal";
 
 class RequestHelper extends AbstractRequestHelper<RequestHelper>
 {

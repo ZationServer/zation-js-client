@@ -10,7 +10,7 @@ import ConnectionNeededError = require("../error/connectionNeededError");
 import SubscribeFailError = require("../error/subscribeFailError");
 import PublishFailError = require("../error/publishFailError");
 import {ChannelTarget} from "./channelTarget";
-import {ZationChannel} from "../constants/settings";
+import {ZationChannel} from "../constants/internal";
 
 class ChannelEngine
 {

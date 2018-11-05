@@ -4,13 +4,13 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import {ErrorInfo, ResponseTaskError} from "../../constants/settings";
+import {ErrorInfo, ResponseTaskError} from "../../constants/internal";
 
 export class TaskError
 {
-    private readonly data : object;
+    private readonly data : ResponseTaskError;
 
-    constructor(data : object) {
+    constructor(data : ResponseTaskError) {
         this.data = data
     }
 
@@ -20,7 +20,7 @@ export class TaskError
      * Returns the name of the task error.
      */
     getName() : string {
-        return this.data[ResponseTaskError.NAME];
+        return this.data.n;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -28,8 +28,8 @@ export class TaskError
      * @description
      * Returns the group of the task error.
      */
-    getGroup() : string {
-        return this.data[ResponseTaskError.GROUP];
+    getGroup() : string | undefined {
+        return this.data.g;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -38,7 +38,7 @@ export class TaskError
      * Returns if the task error has a group.
      */
     hasGroup() : boolean {
-        return this.data[ResponseTaskError.GROUP] !== undefined;
+        return this.data.g !== undefined;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -47,7 +47,7 @@ export class TaskError
      * Returns the type of the task error.
      */
     getType() : string {
-        return this.data[ResponseTaskError.TYPE];
+        return this.data.t
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -57,7 +57,7 @@ export class TaskError
      * Is undefined if it was not sended.
      */
     getDescription() : string | undefined {
-        return this.data[ResponseTaskError.DESCRIPTION];
+        return this.data.d;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -67,7 +67,7 @@ export class TaskError
      * Is undefined if it was not sended.
      */
     isFromZationSystem() : boolean | undefined {
-        return this.data[ResponseTaskError.FROM_ZATION_SYSTEM];
+        return this.data.zs;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -77,8 +77,8 @@ export class TaskError
      * Returns empty object if it was not sended.
      */
     getInfo() : object {
-        return typeof this.data[ResponseTaskError.INFO] === 'object' ?
-            this.data[ResponseTaskError.INFO] : {};
+        return typeof this.data.i === 'object' ?
+            this.data.i : {};
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -87,7 +87,7 @@ export class TaskError
      * Returns if the task error has info object.
      */
     hasInfo() : boolean {
-        return typeof this.data[ResponseTaskError.INFO] === 'object';
+        return typeof this.data.i === 'object';
     }
 
     // noinspection JSUnusedGlobalSymbols

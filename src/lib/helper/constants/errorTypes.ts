@@ -5,8 +5,9 @@ GitHub: LucaCode
  */
 
 export enum ErrorTypes {
-    SYSTEM_ERROR         = 'SYSTEM_ERROR',
-    INPUT_ERROR          = 'INPUT_ERROR',
+    // noinspection JSUnusedGlobalSymbols
+    SYSTEM_ERROR             = 'SYSTEM_ERROR',
+    INPUT_ERROR              = 'INPUT_ERROR',
     VALIDATION_ERROR         = 'VALIDATION_ERROR',
     AUTH_ERROR               = 'AUTH_ERROR',
     PROTOCOL_ERROR           = 'PROTOCOL_ERROR',

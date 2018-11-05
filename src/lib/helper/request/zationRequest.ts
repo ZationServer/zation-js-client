@@ -66,8 +66,7 @@ abstract class ZationRequest extends SendAble
 
     async getCompiledData(): Promise<object | any[]>
     {
-        if(this.compiledData === undefined)
-        {
+        if(this.compiledData === undefined) {
             await this.preCompile();
         }
 

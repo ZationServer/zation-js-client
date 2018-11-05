@@ -9,7 +9,7 @@ import {ProtocolType}    from "../helper/constants/protocolType";
 import ResponseReact     = require("../helper/react/reaction/responseReact");
 import {TaskError} from "../helper/react/taskError/taskError";
 import Zation = require("./zation");
-import {ZationResponse} from "../helper/constants/settings";
+import {ZationResponse} from "../helper/constants/internal";
 
 class Response
 {
@@ -271,30 +271,27 @@ class Response
 
     //Part returnTarget system
 
-    private _readData(data)
+    private _readData(data : ZationResponse)
     {
-        if (typeof data[ZationResponse.SUCCESSFUL] === 'boolean') {
-            this.successful = data[ZationResponse.SUCCESSFUL];
+        if (typeof data.s === 'boolean') {
+            this.successful = data.s;
         }
 
-        if (typeof data[ZationResponse.RESULT] === 'object') {
-
-            const res = data[ZationResponse.RESULT];
-
-            if (res[ZationResponse.RESULT_MAIN] !== undefined) {
-                this.result = res[ZationResponse.RESULT_MAIN];
+        if (typeof data.r === 'object') {
+            if (data.r.r !== undefined) {
+                this.result = data.r.r;
             }
 
-            if (typeof res[ZationResponse.RESULT_STATUS] === 'string' ||
-                typeof res[ZationResponse.RESULT_STATUS] === 'number'
+            if (typeof data.r.s === 'string' ||
+                typeof data.r.s === 'number'
             ) {
-                this.statusCode = res[ZationResponse.RESULT_STATUS];
+                this.statusCode = data.r.s;
             }
         }
 
-        if (Array.isArray(data[ZationResponse.ERRORS]))
+        if (Array.isArray(data.e))
         {
-            const errors : any[] = data[ZationResponse.ERRORS];
+            const errors : any[] = data.e;
             for(let i = 0; i < errors.length; i++)
             {
                 if(typeof errors[i] === 'object') {
@@ -303,18 +300,18 @@ class Response
             }
         }
 
-        if(Array.isArray(data[ZationResponse.ZATION_HTTP_INFO])) {
-            this.zationInfo = data[ZationResponse.ZATION_HTTP_INFO];
+        if(Array.isArray(data.zhi)) {
+            this.zationInfo = data.zhi;
         }
 
-        if(this.isHttpProtocolType() && typeof data[ZationResponse.TOKEN] === 'object')
+        if(this.isHttpProtocolType() && typeof data.t === 'object')
         {
-            const token = data[ZationResponse.TOKEN];
-            if(typeof token[ZationResponse.TOKEN_PLAIN] === 'object' &&
-               typeof token[ZationResponse.TOKEN_SIGNED] === 'string')
+            const token = data.t;
+            if(typeof token.pt === 'object' &&
+               typeof token.st === 'string')
             {
-                this.newPlainToken = token[ZationResponse.TOKEN_PLAIN];
-                this.newSignedToken = token[ZationResponse.TOKEN_SIGNED];
+                this.newPlainToken = token.pt;
+                this.newSignedToken = token.st;
             }
         }
     }

@@ -8,7 +8,7 @@ import Zation = require("../../api/zation");
 import ZationRequest = require("./zationRequest");
 import AbstractRequestHelper = require("./abstractRequestHelper");
 import {ValidationCheck, ValidationRequest} from "../../api/validationRequest";
-import {HttpGetReq} from "../constants/settings";
+import {HttpGetReq} from "../constants/internal";
 
 class ValidationRequestHelper extends AbstractRequestHelper<ValidationRequestHelper>
 {
