@@ -6,8 +6,8 @@ GitHub: LucaCode
 
 import {AbstractErrorFilterBuilder} from "./abstractErrorFilterBuilder";
 import {ErrorFilter} from "../../filter/errorFilter";
-import {ErrorGroups} from "../../constants/errorGroups";
-import {ErrorTypes}  from "../../constants/errorTypes";
+import {ErrorGroup} from "../../constants/errorGroup";
+import {ErrorType}  from "../../constants/errorType";
 
 export class PresetErrorFilter<T>
 {
@@ -27,7 +27,7 @@ export class PresetErrorFilter<T>
      */
     validationError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.VALIDATION_ERROR));
+        (ErrorType.VALIDATION_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -43,7 +43,7 @@ export class PresetErrorFilter<T>
      */
     inputTypeError(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        (undefined,inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -59,7 +59,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeObject(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeObject',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeObject',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -75,7 +75,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeArray(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeArray',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeArray',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -91,7 +91,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeString(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeString',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeString',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -107,7 +107,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeInt(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeInt',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeInt',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -123,7 +123,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeFloat(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeFloat',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeFloat',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -139,7 +139,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeNumber(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeNumber',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeNumber',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -155,7 +155,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeDate(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeDate',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeDate',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -171,7 +171,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeEmail(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeEmail',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeEmail',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -187,7 +187,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeBoolean(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeBoolean',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeBoolean',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -203,7 +203,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeSha512(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeSha512',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeSha512',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -219,7 +219,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeSha256(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeSha256',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeSha256',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -235,7 +235,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeSha384(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeSha384',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeSha384',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -251,7 +251,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeSha1(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeSha1',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeSha1',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -267,7 +267,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeMd5(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeMd5',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeMd5',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -283,7 +283,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeHexColor(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeHexColor',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeHexColor',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -299,7 +299,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeHexadecimal(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeHexadecimal',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeHexadecimal',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -315,7 +315,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeIp4(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeIp4',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeIp4',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -331,7 +331,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeIp6(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeIp6',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeIp6',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -347,7 +347,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeIsbn10(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeIsbn10',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeIsbn10',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -363,7 +363,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeIsbn13(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeIsbn13',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeIsbn13',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -379,7 +379,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeJson(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeJson',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeJson',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -395,7 +395,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeUrl(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeUrl',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeUrl',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -411,7 +411,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeMimeType(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeMimeType',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeMimeType',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -427,7 +427,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeMacAddress(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeMacAddress',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeMacAddress',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -443,7 +443,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeMobileNumber(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeMobileNumber',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeMobileNumber',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -459,7 +459,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeUuid3(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeUuid3',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeUuid3',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -475,7 +475,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeUuid4(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeUuid4',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeUuid4',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -491,7 +491,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeUuid5(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeUuid5',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeUuid5',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -507,7 +507,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeBase64(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeBase64',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeBase64',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -523,7 +523,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeAscii(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypescii',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypescii',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -539,7 +539,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotTypeUserId(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeUserId',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('inputIsNotTypeUserId',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -555,7 +555,7 @@ export class PresetErrorFilter<T>
      */
     inputValueLengthError(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroups.VALUE_LENGTH_ERROR));
+        (undefined,inputPath,inputValue,ErrorGroup.VALUE_LENGTH_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -574,7 +574,7 @@ export class PresetErrorFilter<T>
      */
     inputNotMatchWithMinLength(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithMinLength',inputPath,inputValue,ErrorGroups.VALUE_LENGTH_ERROR));
+        ('inputNotMatchWithMinLength',inputPath,inputValue,ErrorGroup.VALUE_LENGTH_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -593,7 +593,7 @@ export class PresetErrorFilter<T>
      */
     inputNotMatchWithMaxLength(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithMaxLength',inputPath,inputValue,ErrorGroups.VALUE_LENGTH_ERROR));
+        ('inputNotMatchWithMaxLength',inputPath,inputValue,ErrorGroup.VALUE_LENGTH_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -612,7 +612,7 @@ export class PresetErrorFilter<T>
      */
     inputNotMatchWithLength(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithLength',inputPath,inputValue,ErrorGroups.VALUE_LENGTH_ERROR));
+        ('inputNotMatchWithLength',inputPath,inputValue,ErrorGroup.VALUE_LENGTH_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -628,7 +628,7 @@ export class PresetErrorFilter<T>
      */
     inputLettersFormatError(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroups.LETTERS_FORMAT_ERROR));
+        (undefined,inputPath,inputValue,ErrorGroup.LETTERS_FORMAT_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -644,7 +644,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotUppercase(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotUppercase',inputPath,inputValue,ErrorGroups.LETTERS_FORMAT_ERROR));
+        ('inputIsNotUppercase',inputPath,inputValue,ErrorGroup.LETTERS_FORMAT_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -660,7 +660,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotLowercase(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotLowercase',inputPath,inputValue,ErrorGroups.LETTERS_FORMAT_ERROR));
+        ('inputIsNotLowercase',inputPath,inputValue,ErrorGroup.LETTERS_FORMAT_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -715,7 +715,7 @@ export class PresetErrorFilter<T>
      */
     inputNumberSizeError(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroups.NUMBER_SIZE_ERROR));
+        (undefined,inputPath,inputValue,ErrorGroup.NUMBER_SIZE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -734,7 +734,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotBiggerThan(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotBiggerThan',inputPath,inputValue,ErrorGroups.NUMBER_SIZE_ERROR));
+        ('inputIsNotBiggerThan',inputPath,inputValue,ErrorGroup.NUMBER_SIZE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -753,7 +753,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotLesserThan(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotLesserThan',inputPath,inputValue,ErrorGroups.NUMBER_SIZE_ERROR));
+        ('inputIsNotLesserThan',inputPath,inputValue,ErrorGroup.NUMBER_SIZE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -825,7 +825,7 @@ export class PresetErrorFilter<T>
      */
     inputEnumError(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroups.ENUM_ERROR));
+        (undefined,inputPath,inputValue,ErrorGroup.ENUM_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -844,7 +844,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotMatchWithEnum(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotMatchWithEnum',inputPath,inputValue,ErrorGroups.ENUM_ERROR));
+        ('inputIsNotMatchWithEnum',inputPath,inputValue,ErrorGroup.ENUM_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -860,7 +860,7 @@ export class PresetErrorFilter<T>
      */
     inputIsNotMatchWithPrivateEnum(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotMatchWithPrivateEnum',inputPath,inputValue,ErrorGroups.ENUM_ERROR));
+        ('inputIsNotMatchWithPrivateEnum',inputPath,inputValue,ErrorGroup.ENUM_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -876,7 +876,7 @@ export class PresetErrorFilter<T>
      */
     inputArrayLengthError(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroups.ARRAY_LENGTH_ERROR));
+        (undefined,inputPath,inputValue,ErrorGroup.ARRAY_LENGTH_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -895,7 +895,7 @@ export class PresetErrorFilter<T>
      */
     inputArrayNotMatchWithMaxLength(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputArrayNotMatchWithMaxLength',inputPath,inputValue,ErrorGroups.ARRAY_LENGTH_ERROR));
+        ('inputArrayNotMatchWithMaxLength',inputPath,inputValue,ErrorGroup.ARRAY_LENGTH_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -914,7 +914,7 @@ export class PresetErrorFilter<T>
      */
     inputArrayNotMatchWithMinLength(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputArrayNotMatchWithMinLength',inputPath,inputValue,ErrorGroups.ARRAY_LENGTH_ERROR));
+        ('inputArrayNotMatchWithMinLength',inputPath,inputValue,ErrorGroup.ARRAY_LENGTH_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -933,7 +933,7 @@ export class PresetErrorFilter<T>
      */
     inputArrayNotMatchWithLength(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputArrayNotMatchWithLength',inputPath,inputValue,ErrorGroups.ARRAY_LENGTH_ERROR));
+        ('inputArrayNotMatchWithLength',inputPath,inputValue,ErrorGroup.ARRAY_LENGTH_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -952,7 +952,7 @@ export class PresetErrorFilter<T>
      */
     noValidTypeWasFound(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('noValidTypeWasFound',inputPath,inputValue,ErrorGroups.TYPE_ERROR));
+        ('noValidTypeWasFound',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -967,7 +967,7 @@ export class PresetErrorFilter<T>
      */
     controllerNotFound() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.INPUT_ERROR,'controllerNotFound'));
+        (ErrorType.INPUT_ERROR,'controllerNotFound'));
         return this.errorFilterBuilder;
     }
 
@@ -982,7 +982,7 @@ export class PresetErrorFilter<T>
      */
     systemControllerNotFound() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.INPUT_ERROR,'systemControllerNotFound'));
+        (ErrorType.INPUT_ERROR,'systemControllerNotFound'));
         return this.errorFilterBuilder;
     }
 
@@ -994,7 +994,7 @@ export class PresetErrorFilter<T>
      */
     authControllerNotSet() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.INPUT_ERROR,'authControllerNotSet'));
+        (ErrorType.INPUT_ERROR,'authControllerNotSet'));
         return this.errorFilterBuilder;
     }
 
@@ -1009,7 +1009,7 @@ export class PresetErrorFilter<T>
      */
     systemNotCompatible() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.COMPATIBILITY_ERROR,'systemNotCompatible'));
+        (ErrorType.COMPATIBILITY_ERROR,'systemNotCompatible'));
         return this.errorFilterBuilder;
     }
 
@@ -1024,7 +1024,7 @@ export class PresetErrorFilter<T>
      */
     versionNotCompatible() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.COMPATIBILITY_ERROR,'versionNotCompatible'));
+        (ErrorType.COMPATIBILITY_ERROR,'versionNotCompatible'));
         return this.errorFilterBuilder;
     }
 
@@ -1035,7 +1035,7 @@ export class PresetErrorFilter<T>
      */
     codeError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.CODE_ERROR));
+        (ErrorType.CODE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -1047,7 +1047,7 @@ export class PresetErrorFilter<T>
      */
     authenticationError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.SYSTEM_ERROR,'authenticationError'));
+        (ErrorType.SYSTEM_ERROR,'authenticationError'));
         return this.errorFilterBuilder;
     }
 
@@ -1058,7 +1058,7 @@ export class PresetErrorFilter<T>
      */
     inputError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.INPUT_ERROR));
+        (ErrorType.INPUT_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -1070,7 +1070,7 @@ export class PresetErrorFilter<T>
      */
     inputMissing() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.INPUT_ERROR,'inputMissing'));
+        (ErrorType.INPUT_ERROR,'inputMissing'));
         return this.errorFilterBuilder;
     }
 
@@ -1082,7 +1082,7 @@ export class PresetErrorFilter<T>
      */
     tooMuchInput() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.INPUT_ERROR,'tooMuchInput'));
+        (ErrorType.INPUT_ERROR,'tooMuchInput'));
         return this.errorFilterBuilder;
     }
 
@@ -1094,7 +1094,7 @@ export class PresetErrorFilter<T>
      */
     arrayWasExpected() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.INPUT_ERROR,'arrayWasExpected'));
+        (ErrorType.INPUT_ERROR,'arrayWasExpected'));
         return this.errorFilterBuilder;
     }
 
@@ -1106,7 +1106,7 @@ export class PresetErrorFilter<T>
      */
     objectWasExpected() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.INPUT_ERROR,'objectWasExpected'));
+        (ErrorType.INPUT_ERROR,'objectWasExpected'));
         return this.errorFilterBuilder;
     }
 
@@ -1118,7 +1118,7 @@ export class PresetErrorFilter<T>
      */
     objectPropertyIsMissing() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.INPUT_ERROR,'objectPropertyIsMissing'));
+        (ErrorType.INPUT_ERROR,'objectPropertyIsMissing'));
         return this.errorFilterBuilder;
     }
 
@@ -1130,7 +1130,7 @@ export class PresetErrorFilter<T>
      */
     unknownObjectProperty() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.INPUT_ERROR,'unknownObjectProperty'));
+        (ErrorType.INPUT_ERROR,'unknownObjectProperty'));
         return this.errorFilterBuilder;
     }
 
@@ -1142,7 +1142,7 @@ export class PresetErrorFilter<T>
      */
     wrongPanelAuthData() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.AUTH_ERROR,'wrongPanelAuthData'));
+        (ErrorType.AUTH_ERROR,'wrongPanelAuthData'));
         return this.errorFilterBuilder;
     }
 
@@ -1155,7 +1155,7 @@ export class PresetErrorFilter<T>
      */
     authStartActive() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.TIME_ERROR,'authStartActive'));
+        (ErrorType.TIME_ERROR,'authStartActive'));
         return this.errorFilterBuilder;
     }
 
@@ -1171,7 +1171,7 @@ export class PresetErrorFilter<T>
      */
     noAccessToController() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.AUTH_ERROR,'noAccessToController'));
+        (ErrorType.AUTH_ERROR,'noAccessToController'));
         return this.errorFilterBuilder;
     }
 
@@ -1183,7 +1183,7 @@ export class PresetErrorFilter<T>
      */
     wrongInputDataStructure() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.INPUT_ERROR,'wrongInputDataStructure'));
+        (ErrorType.INPUT_ERROR,'wrongInputDataStructure'));
         return this.errorFilterBuilder;
     }
 
@@ -1195,7 +1195,7 @@ export class PresetErrorFilter<T>
      */
     JSONParseSyntaxError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.INPUT_ERROR,'JSONParseSyntaxError'));
+        (ErrorType.INPUT_ERROR,'JSONParseSyntaxError'));
         return this.errorFilterBuilder;
     }
 
@@ -1212,7 +1212,7 @@ export class PresetErrorFilter<T>
      */
     inputPathInControllerNotFound() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.INPUT_ERROR,'inputPathInControllerNotFound'));
+        (ErrorType.INPUT_ERROR,'inputPathInControllerNotFound'));
         return this.errorFilterBuilder;
     }
 
@@ -1223,7 +1223,7 @@ export class PresetErrorFilter<T>
      */
     protocolError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.PROTOCOL_ERROR));
+        (ErrorType.PROTOCOL_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -1240,7 +1240,7 @@ export class PresetErrorFilter<T>
      */
     noAccessWithProtocol() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.PROTOCOL_ERROR,'noAccessWithProtocol'));
+        (ErrorType.PROTOCOL_ERROR,'noAccessWithProtocol'));
         return this.errorFilterBuilder;
     }
 
@@ -1258,7 +1258,7 @@ export class PresetErrorFilter<T>
      */
     noAccessWithHttpMethod() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.PROTOCOL_ERROR,'noAccessWithHttpMethod'));
+        (ErrorType.PROTOCOL_ERROR,'noAccessWithHttpMethod'));
         return this.errorFilterBuilder;
     }
 
@@ -1269,7 +1269,7 @@ export class PresetErrorFilter<T>
      */
     systemError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.SYSTEM_ERROR));
+        (ErrorType.SYSTEM_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -1284,7 +1284,7 @@ export class PresetErrorFilter<T>
      */
     unknownError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.SYSTEM_ERROR,'unknownError'));
+        (ErrorType.SYSTEM_ERROR,'unknownError'));
         return this.errorFilterBuilder;
     }
 
@@ -1295,7 +1295,7 @@ export class PresetErrorFilter<T>
      */
     tokenError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.TOKEN_ERROR));
+        (ErrorType.TOKEN_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -1308,7 +1308,7 @@ export class PresetErrorFilter<T>
      */
     unknownTokenVerifyError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.TOKEN_ERROR,'unknownTokenVerifyError'));
+        (ErrorType.TOKEN_ERROR,'unknownTokenVerifyError'));
         return this.errorFilterBuilder;
     }
 
@@ -1321,7 +1321,7 @@ export class PresetErrorFilter<T>
      */
     unknownTokenSignError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.TOKEN_ERROR,'unknownTokenSignError'));
+        (ErrorType.TOKEN_ERROR,'unknownTokenSignError'));
         return this.errorFilterBuilder;
     }
 
@@ -1336,7 +1336,7 @@ export class PresetErrorFilter<T>
      */
     tokenExpiredError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.TOKEN_ERROR,'tokenExpiredError'));
+        (ErrorType.TOKEN_ERROR,'tokenExpiredError'));
         return this.errorFilterBuilder;
     }
 
@@ -1351,7 +1351,7 @@ export class PresetErrorFilter<T>
      */
     jsonWebTokenError() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.TOKEN_ERROR,'jsonWebTokenError'));
+        (ErrorType.TOKEN_ERROR,'jsonWebTokenError'));
         return this.errorFilterBuilder;
     }
 
@@ -1366,7 +1366,7 @@ export class PresetErrorFilter<T>
      */
     authenticateMiddlewareBlock() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorTypes.TOKEN_ERROR,'authenticateMiddlewareBlock'));
+        (ErrorType.TOKEN_ERROR,'authenticateMiddlewareBlock'));
         return this.errorFilterBuilder;
     }
 
@@ -1375,7 +1375,7 @@ export class PresetErrorFilter<T>
     {
         const preset : ErrorFilter = {};
         preset.fromZationSystem = true;
-        preset.type = ErrorTypes.VALIDATION_ERROR;
+        preset.type = ErrorType.VALIDATION_ERROR;
         if(name) {
             preset.name = name;
         }

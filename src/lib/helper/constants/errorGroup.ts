@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-export enum ErrorGroups {
+export enum ErrorGroup {
     TYPE_ERROR            = 'TYPE_ERROR',
     VALUE_LENGTH_ERROR    = 'VALUE_LENGTH_ERROR',
     ARRAY_LENGTH_ERROR    = 'ARRAY_LENGTH_ERROR',

@@ -4,9 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import {TaskError} from "../react/taskError/taskError";
-
-export enum ErrorInfo {
+export enum TaskErrorInfo {
     MAIN = 'main'
 }
 
@@ -53,11 +51,11 @@ export enum ZationHttpInfo {
 }
 
 export interface ZationResponse {
-    e : TaskError[],
+    e : ResponseTaskError[],
     s : boolean,
     r : {
-        r : any,
-        s : string | number
+        r ?: any,
+        s ?: string | number
     }
     t ?: {
         st : string,

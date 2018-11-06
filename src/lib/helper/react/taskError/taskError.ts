@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import {ErrorInfo, ResponseTaskError} from "../../constants/internal";
+import {TaskErrorInfo, ResponseTaskError} from "../../constants/internal";
 
 export class TaskError
 {
@@ -96,7 +96,7 @@ export class TaskError
      * Returns the main info of the task error.
      */
     getMainInfo() : string | undefined {
-        return this.getInfo()[ErrorInfo.MAIN];
+        return this.getInfo()[TaskErrorInfo.MAIN];
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -105,7 +105,7 @@ export class TaskError
      * Returns if the task error has main info.
      */
     hasMainInfo() : boolean {
-        return this.getInfo()[ErrorInfo.MAIN] !== undefined;
+        return this.getInfo()[TaskErrorInfo.MAIN] !== undefined;
     }
 
     // noinspection JSUnusedGlobalSymbols

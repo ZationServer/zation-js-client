@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-export enum ErrorTypes {
+export enum ErrorType {
     // noinspection JSUnusedGlobalSymbols
     SYSTEM_ERROR             = 'SYSTEM_ERROR',
     INPUT_ERROR              = 'INPUT_ERROR',
