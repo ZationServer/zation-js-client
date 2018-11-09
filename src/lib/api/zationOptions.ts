@@ -6,6 +6,24 @@ GitHub: LucaCode
 
 export interface ZationOptions {
 
+    debug ?: boolean;
+    system ?: string;
+    version ?: number;
+    hostname ?: string;
+    path ?: string;
+    port ?: number;
+    secure ?: boolean;
+    rejectUnauthorized ?: boolean;
+    postKey ?: string;
+
+    autoAllChSub ?: boolean;
+    autoUserChSub ?: boolean;
+    autoDefaultUserGroupChSub ?: boolean;
+    autoAuthUserGroupChSub ?: boolean;
+}
+
+export interface ZationOptionsInternal extends ZationOptions{
+
     debug : boolean;
     system : string;
     version : number;
@@ -15,7 +33,6 @@ export interface ZationOptions {
     secure : boolean;
     rejectUnauthorized : boolean;
     postKey : string;
-
     autoAllChSub : boolean;
     autoUserChSub : boolean;
     autoDefaultUserGroupChSub : boolean;

@@ -4,11 +4,11 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import {ZationOptions} from "../../api/zationOptions";
+import {ZationOptions, ZationOptionsInternal} from "../../api/zationOptions";
 
 class ZationConfig
 {
-    private _config : ZationOptions;
+    private _config : ZationOptionsInternal;
 
     constructor(config ?: ZationOptions)
     {
@@ -75,7 +75,7 @@ class ZationConfig
     }
 
 
-    get config(): ZationOptions {
+    get config(): ZationOptionsInternal {
         return this._config;
     }
 

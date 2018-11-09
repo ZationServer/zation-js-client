@@ -610,6 +610,7 @@ class Zation
      * Connect to the server.
      * Promises will be resolve on connection
      * or throw an ConnectionAbortError by connectAbort.
+     * The client will also automatically try to establish a new connection when gets disconnected.
      * @throws ConnectionAbortError
      */
     connect() : Promise<void>
