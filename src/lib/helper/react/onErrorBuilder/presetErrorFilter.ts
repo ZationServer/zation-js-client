@@ -1110,15 +1110,15 @@ export class PresetErrorFilter<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for tooMuchInput.
-     * The task error can be thrown if you send the input with type array and the input is to much.
+     * Preset for inputNotAssignable.
+     * The task error can be thrown if you send the input with type array and the input is not assignable.
      * Possibilities are:
-     * sendCount (send input count)
-     * maxCount (controller config max input count)
+     * index (index of input that is not assignable)
+     * value (input value that is not assignable)
      */
-    tooMuchInput() : AbstractErrorFilterBuilder<T> {
+    inputNotAssignable() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'tooMuchInput'));
+        (ErrorType.INPUT_ERROR,'inputNotAssignable'));
         return this.errorFilterBuilder;
     }
 
@@ -1252,6 +1252,22 @@ export class PresetErrorFilter<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
+     * Preset for wrongValidationCheckStructure.
+     * The task error can be thrown if the input validation check has a wrong structure.
+     * Can only throw by an validation request.
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * checkIndex
+     */
+    wrongValidationCheckStructure() : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._zationErrorBuild
+        (ErrorType.INPUT_ERROR,'wrongValidationCheckStructure'));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
      * Preset for inputPathInControllerNotFound.
      * The task error can be thrown if the input path in the controller is not found.
      * Can only throw by an validation request.
@@ -1259,6 +1275,7 @@ export class PresetErrorFilter<T>
      * Possibilities are:
      * controllerName
      * inputPath
+     * checkIndex
      */
     inputPathInControllerNotFound() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
@@ -1275,6 +1292,7 @@ export class PresetErrorFilter<T>
      * More info checks you need to do by yourself.
      * Possibilities are:
      * inputPath
+     * checkIndex
      */
     inputPathNotHasAtLeastOneEntry() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild

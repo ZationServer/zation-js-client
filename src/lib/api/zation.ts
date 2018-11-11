@@ -38,6 +38,7 @@ import {ChannelTarget} from "../helper/channel/channelTarget";
 import {SystemController} from "../helper/constants/systemController";
 import {ZationHttpInfo} from "../helper/constants/internal";
 import AuthenticationNeededError = require("../helper/error/authenticationNeededError");
+import ResponseReactionBoxBuilder = require("../helper/react/box/builder/responseReactionBoxBuilder");
 
 //override for decide between client/server deauthenticate
 SocketClusterClient.SCClientSocket.prototype.deauthenticate = function (callback) {
@@ -296,6 +297,16 @@ class Zation
         const box = new ResponseReactionBox();
         this.addReactionBox(box);
         return box;
+    }
+
+    // noinspection JSUnusedGlobalSymbols, JSMethodCanBeStatic
+    /**
+     * @description
+     * Returns a new response reaction box
+     * and add this box to the client.
+     */
+    buildResponseReactionBox() : ResponseReactionBoxBuilder {
+       return new ResponseReactionBoxBuilder();
     }
 
     // noinspection JSUnusedGlobalSymbols
