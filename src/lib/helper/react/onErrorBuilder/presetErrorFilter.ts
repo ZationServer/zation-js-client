@@ -98,6 +98,22 @@ export class PresetErrorFilter<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
+     * Preset for inputIsNotTypeNull.
+     * The task error can be thrown by input validation type:'null'.
+     * @param inputPath
+     * Parameter can be used to check the inputPath in the info.
+     * @param inputValue
+     * Parameter can be used to check the inputValue in the info.
+     */
+    inputIsNotTypeNull(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._validationErrorBuild
+        ('inputIsNotTypeNull',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
      * Preset for inputIsNotTypeInt.
      * The task error can be thrown by input validation type:'int'.
      * @param inputPath
@@ -707,7 +723,7 @@ export class PresetErrorFilter<T>
     /**
      * @description
      * Preset for inputNumberSizeError.
-     * The task error can be thrown by input validation biggerThan,lesserThan.
+     * The task error can be thrown by input validation minValue,maxValue.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -722,38 +738,38 @@ export class PresetErrorFilter<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotBiggerThan.
-     * The task error can be thrown by input validation biggerThan:10.
+     * Preset for inputNotMatchWithMinValue.
+     * The task error can be thrown by input validation minValue:10.
      * More info checks you need to do by yourself.
      * Possibilities are:
-     * shouldBiggerThan
+     * minValue
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotBiggerThan(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputNotMatchWithMinValue(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotBiggerThan',inputPath,inputValue,ErrorGroup.NUMBER_SIZE_ERROR));
+        ('inputNotMatchWithMinValue',inputPath,inputValue,ErrorGroup.NUMBER_SIZE_ERROR));
         return this.errorFilterBuilder;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotLesserThan.
-     * The task error can be thrown by input validation lesserThan:10.
+     * Preset for inputNotMatchWithMaxValue.
+     * The task error can be thrown by input validation maxValue:10.
      * More info checks you need to do by yourself.
      * Possibilities are:
-     * shouldLesserThan
+     * maxValue
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotLesserThan(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputNotMatchWithMaxValue(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotLesserThan',inputPath,inputValue,ErrorGroup.NUMBER_SIZE_ERROR));
+        ('inputNotMatchWithMaxValue',inputPath,inputValue,ErrorGroup.NUMBER_SIZE_ERROR));
         return this.errorFilterBuilder;
     }
 
@@ -1065,12 +1081,29 @@ export class PresetErrorFilter<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputMissing.
-     * The task error can be thrown if input is missing.
+     * Preset for inputPropertyIsMissing.
+     * The task error can be thrown if an input property is missing.
+     * Possibilities are:
+     * propertyName (the name of the missing property)
+     * input (the input object where the property is missing)
      */
-    inputMissing() : AbstractErrorFilterBuilder<T> {
+    inputPropertyIsMissing() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'inputMissing'));
+        (ErrorType.INPUT_ERROR,'inputPropertyIsMissing'));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Preset for unknownInputProperty.
+     * The task error can be thrown if the input object has an unknown input property.
+     * Possibilities are:
+     * propertyName (the unknown input property name)
+     */
+    unknownInputProperty() : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._zationErrorBuild
+        (ErrorType.INPUT_ERROR,'unknownInputProperty'));
         return this.errorFilterBuilder;
     }
 
@@ -1078,7 +1111,10 @@ export class PresetErrorFilter<T>
     /**
      * @description
      * Preset for tooMuchInput.
-     * The task error can be thrown if input is to much.
+     * The task error can be thrown if you send the input with type array and the input is to much.
+     * Possibilities are:
+     * sendCount (send input count)
+     * maxCount (controller config max input count)
      */
     tooMuchInput() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
@@ -1091,6 +1127,9 @@ export class PresetErrorFilter<T>
      * @description
      * Preset for arrayWasExpected.
      * The task error can be thrown if array was expected in the input.
+     * Possibilities are:
+     * inputPath (full path to the value where an array was expected)
+     * inputValue (the input value that is not from type array)
      */
     arrayWasExpected() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
@@ -1103,6 +1142,9 @@ export class PresetErrorFilter<T>
      * @description
      * Preset for objectWasExpected.
      * The task error can be thrown if object was expected in the input.
+     * Possibilities are:
+     * inputPath (full path to the value where an object was expected)
+     * inputValue (the input value that is not from type object)
      */
     objectWasExpected() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
@@ -1115,6 +1157,11 @@ export class PresetErrorFilter<T>
      * @description
      * Preset for objectPropertyIsMissing.
      * The task error can be thrown if object property is missing.
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * object (the input object where the property is missing)
+     * propertyName (name of missing property)
+     * inputPath (the full input path to missing property)
      */
     objectPropertyIsMissing() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
@@ -1127,6 +1174,9 @@ export class PresetErrorFilter<T>
      * @description
      * Preset for unknownObjectProperty.
      * The task error can be thrown if input object has an unknow property.
+     * Possibilities are:
+     * propertyName (name of the unknown property)
+     * inputPath (full input path to unknown property)
      */
     unknownObjectProperty() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
@@ -1204,7 +1254,7 @@ export class PresetErrorFilter<T>
      * @description
      * Preset for inputPathInControllerNotFound.
      * The task error can be thrown if the input path in the controller is not found.
-     * Can only throws by an validation request.
+     * Can only throw by an validation request.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * controllerName
@@ -1213,6 +1263,22 @@ export class PresetErrorFilter<T>
     inputPathInControllerNotFound() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'inputPathInControllerNotFound'));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Preset for inputPathNotHasAtLeastOneEntry.
+     * The task error can be thrown if the input path has not at least one entry.
+     * Can only throw by an validation request.
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * inputPath
+     */
+    inputPathNotHasAtLeastOneEntry() : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._zationErrorBuild
+        (ErrorType.INPUT_ERROR,'inputPathNotHasAtLeastOneEntry'));
         return this.errorFilterBuilder;
     }
 
