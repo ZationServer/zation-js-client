@@ -52,6 +52,7 @@
     "babel-core": "6.26.3",
     "babel-plugin-minify-dead-code-elimination": "0.4.3",
     "browserify": "16.2.3",
+    "cached-path-relative": "1.0.2",
     "browserify-ignore-code": "0.1.0",
     "gulp": "4.0.0",
     "gulp-babel": "8.0.0-beta.2",
