@@ -38,7 +38,6 @@ import {ChannelTarget} from "../helper/channel/channelTarget";
 import {SystemController} from "../helper/constants/systemController";
 import {ZationHttpInfo} from "../helper/constants/internal";
 import AuthenticationNeededError = require("../helper/error/authenticationNeededError");
-import ResponseReactionBoxBuilder = require("../helper/react/box/builder/responseReactionBoxBuilder");
 
 //override for decide between client/server deauthenticate
 SocketClusterClient.SCClientSocket.prototype.deauthenticate = function (callback) {
@@ -281,9 +280,9 @@ class Zation
      * Returns a new channel reaction box
      * and add this box to the client.
      */
-    newChannelReactionBox() : ChannelReactionBox {
+    newChannelReactionBox(addReactionBoxToClient : boolean = true) : ChannelReactionBox {
         const box = new ChannelReactionBox();
-        this.addReactionBox(box);
+        if(addReactionBoxToClient){this.addReactionBox(box);}
         return box;
     }
 
@@ -293,20 +292,10 @@ class Zation
      * Returns a new response reaction box
      * and add this box to the client.
      */
-    newResponseReactionBox() : ResponseReactionBox {
+    newResponseReactionBox(addReactionBoxToClient : boolean = true) : ResponseReactionBox {
         const box = new ResponseReactionBox();
-        this.addReactionBox(box);
+        if(addReactionBoxToClient){this.addReactionBox(box);}
         return box;
-    }
-
-    // noinspection JSUnusedGlobalSymbols, JSMethodCanBeStatic
-    /**
-     * @description
-     * Returns a new response reaction box
-     * and add this box to the client.
-     */
-    buildResponseReactionBox() : ResponseReactionBoxBuilder {
-       return new ResponseReactionBoxBuilder();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -315,9 +304,9 @@ class Zation
      * Returns a new event reaction box
      * and add this box to the client.
      */
-    newEventReactionBox() : EventReactionBox {
+    newEventReactionBox(addReactionBoxToClient : boolean = true) : EventReactionBox {
         const box = new EventReactionBox();
-        this.addReactionBox(box);
+        if(addReactionBoxToClient){this.addReactionBox(box);}
         return box;
     }
 

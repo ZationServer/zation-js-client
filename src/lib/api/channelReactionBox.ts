@@ -38,6 +38,12 @@ import {ChannelTarget} from "../helper/channel/channelTarget";
 
 type ValidChecker = (filter : object) => boolean;
 
+interface ChFilter {
+    chId ?: string,
+    chName ?: string,
+    event ?: string
+}
+
 class ChannelReactionBox extends ReactionBox
 {
 
@@ -47,6 +53,8 @@ class ChannelReactionBox extends ReactionBox
     private readonly _mapSub: SboxMapper<FullReaction<any>> = new SboxMapper<FullReaction<any>>();
     private readonly _mapClientUnsub: SboxMapper<FullReaction<any>> = new SboxMapper<FullReaction<any>>();
     private readonly _mapUnsub: SboxMapper<FullReaction<any>> = new SboxMapper<FullReaction<any>>();
+
+    private lastFullReactionTmp : FullReaction<any>;
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -70,12 +78,14 @@ class ChannelReactionBox extends ReactionBox
      * Or to all events if you pass as parameter null.
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onPubAnyCh(event: string | string[] | null, reaction: ChannelReactionOnPubAnyCh): FullReaction<ChannelReactionOnPubAnyCh> {
+    onPubAnyCh(event: string | string[] | null, reaction: ChannelReactionOnPubAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubAnyCh>(reaction, {event: event});
         this._mapPub.add(ChannelTarget.ANY, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -85,7 +95,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offPubAnyCh(fullReaction ?: FullReaction<ChannelReactionOnPubAnyCh>): void {
+    offPubAnyCh(fullReaction ?: FullReaction<any>): void {
         this._mapPub.remove(ChannelTarget.ANY, fullReaction);
     }
 
@@ -100,12 +110,14 @@ class ChannelReactionBox extends ReactionBox
      * Or to all events if you pass as parameter null.
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onPubUserCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): FullReaction<ChannelReactionOnPubZationCh> {
+    onPubUserCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event});
         this._mapPub.add(ChannelTarget.USER, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -115,7 +127,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offPubUserCh(fullReaction ?: FullReaction<ChannelReactionOnPubZationCh>): void {
+    offPubUserCh(fullReaction ?: FullReaction<any>): void {
         this._mapPub.remove(ChannelTarget.USER, fullReaction);
     }
 
@@ -130,12 +142,14 @@ class ChannelReactionBox extends ReactionBox
      * Or to all events if you pass as parameter null.
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onPubAuthUserGroupCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): FullReaction<ChannelReactionOnPubZationCh> {
+    onPubAuthUserGroupCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event});
         this._mapPub.add(ChannelTarget.AUG, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -145,7 +159,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offPubAuthUserGroupCh(fullReaction ?: FullReaction<ChannelReactionOnPubZationCh>): void {
+    offPubAuthUserGroupCh(fullReaction ?: FullReaction<any>): void {
         this._mapPub.remove(ChannelTarget.AUG, fullReaction);
     }
 
@@ -160,12 +174,14 @@ class ChannelReactionBox extends ReactionBox
      * Or to all events if you pass as parameter null.
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onPubDefaultUserGroupCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): FullReaction<ChannelReactionOnPubZationCh> {
+    onPubDefaultUserGroupCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event});
         this._mapPub.add(ChannelTarget.DUG, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -175,7 +191,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offPubDefaultUserGroupCh(fullReaction ?: FullReaction<ChannelReactionOnPubZationCh>): void {
+    offPubDefaultUserGroupCh(fullReaction ?: FullReaction<any>): void {
         this._mapPub.remove(ChannelTarget.DUG, fullReaction);
     }
 
@@ -190,12 +206,14 @@ class ChannelReactionBox extends ReactionBox
      * Or to all events if you pass as parameter null.
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onPubAllCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): FullReaction<ChannelReactionOnPubZationCh> {
+    onPubAllCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event});
         this._mapPub.add(ChannelTarget.ALL, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -205,7 +223,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offPubAllCh(fullReaction ?: FullReaction<ChannelReactionOnPubZationCh>): void {
+    offPubAllCh(fullReaction ?: FullReaction<any>): void {
         this._mapPub.remove(ChannelTarget.ALL, fullReaction);
     }
 
@@ -223,12 +241,14 @@ class ChannelReactionBox extends ReactionBox
      * Or to all events if you pass as parameter null.
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onPubCustomCh(chName: string | string[] | null, event: string | string[] | null, reaction: ChannelReactionOnPubCustomCh): FullReaction<ChannelReactionOnPubCustomCh> {
+    onPubCustomCh(chName: string | string[] | null, event: string | string[] | null, reaction: ChannelReactionOnPubCustomCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubCustomCh>(reaction, {chName: chName, event: event});
         this._mapPub.add(ChannelTarget.C, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -238,7 +258,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offPubCustomCh(fullReaction ?: FullReaction<ChannelReactionOnPubCustomCh>): void {
+    offPubCustomCh(fullReaction ?: FullReaction<any>): void {
         this._mapPub.remove(ChannelTarget.C, fullReaction);
     }
 
@@ -259,12 +279,14 @@ class ChannelReactionBox extends ReactionBox
      * Or to all events if you pass as parameter null.
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onPubCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,event: string | string[] | null,reaction: ChannelReactionOnPubCustomIdCh): FullReaction<ChannelReactionOnPubCustomIdCh> {
+    onPubCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,event: string | string[] | null,reaction: ChannelReactionOnPubCustomIdCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubCustomIdCh>(reaction, {chName, event, chId});
         this._mapPub.add(ChannelTarget.CID, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -274,7 +296,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offPubCustomIdCh(fullReaction ?: FullReaction<ChannelReactionOnPubCustomIdCh>): void {
+    offPubCustomIdCh(fullReaction ?: FullReaction<any>): void {
         this._mapPub.remove(ChannelTarget.CID, fullReaction);
     }
 
@@ -290,12 +312,14 @@ class ChannelReactionBox extends ReactionBox
      * Or to all events if you pass as parameter null.
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onPubPanelOutCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): FullReaction<ChannelReactionOnPubZationCh> {
+    onPubPanelOutCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event});
         this._mapPub.add(ChannelTarget.PANEL, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -305,7 +329,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offPubPanelOutCh(fullReaction ?: FullReaction<ChannelReactionOnPubZationCh>): void {
+    offPubPanelOutCh(fullReaction ?: FullReaction<any>): void {
         this._mapPub.remove(ChannelTarget.PANEL, fullReaction);
     }
 
@@ -318,12 +342,14 @@ class ChannelReactionBox extends ReactionBox
      * onKickOutAnyCh((message,fullChName) => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onKickOutAnyCh(reaction: ChannelReactionOnKickOutAnyCh): FullReaction<ChannelReactionOnKickOutAnyCh> {
+    onKickOutAnyCh(reaction: ChannelReactionOnKickOutAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutAnyCh>(reaction);
         this._mapKick.add(ChannelTarget.ANY, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -333,7 +359,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offKickOutAnyCh(fullReaction ?: FullReaction<ChannelReactionOnKickOutAnyCh>): void {
+    offKickOutAnyCh(fullReaction ?: FullReaction<any>): void {
         this._mapKick.remove(ChannelTarget.ANY, fullReaction);
     }
 
@@ -345,12 +371,14 @@ class ChannelReactionBox extends ReactionBox
      * onKickOutUserCh((message) => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onKickOutUserCh(reaction: ChannelReactionOnKickOutZationCh): FullReaction<ChannelReactionOnKickOutZationCh> {
+    onKickOutUserCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction);
         this._mapKick.add(ChannelTarget.USER, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -360,7 +388,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offKickOutUserCh(fullReaction ?: FullReaction<ChannelReactionOnKickOutZationCh>): void {
+    offKickOutUserCh(fullReaction ?: FullReaction<any>): void {
         this._mapKick.remove(ChannelTarget.USER, fullReaction);
     }
 
@@ -372,12 +400,14 @@ class ChannelReactionBox extends ReactionBox
      * onKickOutAuthUserGroupCh((message) => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onKickOutAuthUserGroupCh(reaction: ChannelReactionOnKickOutZationCh): FullReaction<ChannelReactionOnKickOutZationCh> {
+    onKickOutAuthUserGroupCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction);
         this._mapKick.add(ChannelTarget.AUG, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -387,7 +417,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offKickOutAuthUserGroupCh(fullReaction ?: FullReaction<ChannelReactionOnKickOutZationCh>): void {
+    offKickOutAuthUserGroupCh(fullReaction ?: FullReaction<any>): void {
         this._mapKick.remove(ChannelTarget.AUG, fullReaction);
     }
 
@@ -399,12 +429,14 @@ class ChannelReactionBox extends ReactionBox
      * onKickOutDefaultUserGroupCh((message) => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onKickOutDefaultUserGroupCh(reaction: ChannelReactionOnKickOutZationCh): FullReaction<ChannelReactionOnKickOutZationCh> {
+    onKickOutDefaultUserGroupCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction);
         this._mapKick.add(ChannelTarget.DUG, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -414,7 +446,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offKickOutDefaultUserGroupCh(fullReaction ?: FullReaction<ChannelReactionOnKickOutZationCh>): void {
+    offKickOutDefaultUserGroupCh(fullReaction ?: FullReaction<any>): void {
         this._mapKick.remove(ChannelTarget.DUG, fullReaction);
     }
 
@@ -426,12 +458,14 @@ class ChannelReactionBox extends ReactionBox
      * onKickOutAllCh((message) => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onKickOutAllCh(reaction: ChannelReactionOnKickOutZationCh): FullReaction<ChannelReactionOnKickOutZationCh> {
+    onKickOutAllCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction);
         this._mapKick.add(ChannelTarget.ALL, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -441,7 +475,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offKickOutAllCh(fullReaction ?: FullReaction<ChannelReactionOnKickOutZationCh>): void {
+    offKickOutAllCh(fullReaction ?: FullReaction<any>): void {
         this._mapKick.remove(ChannelTarget.ALL, fullReaction);
     }
 
@@ -456,12 +490,14 @@ class ChannelReactionBox extends ReactionBox
      * Or to all channel names if you pass as parameter null.
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onKickOutCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnKickOutCustomCh): FullReaction<ChannelReactionOnKickOutCustomCh> {
+    onKickOutCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnKickOutCustomCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutCustomCh>(reaction, {chName: chName});
         this._mapKick.add(ChannelTarget.C, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -471,7 +507,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offKickOutCustomCh(fullReaction ?: FullReaction<ChannelReactionOnKickOutCustomCh>): void {
+    offKickOutCustomCh(fullReaction ?: FullReaction<any>): void {
         this._mapKick.remove(ChannelTarget.C, fullReaction);
     }
 
@@ -489,12 +525,14 @@ class ChannelReactionBox extends ReactionBox
      * Or to all channel ids if you pass as parameter null.
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onKickOutCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,reaction: ChannelReactionOnKickOutCustomIdCh): FullReaction<ChannelReactionOnKickOutCustomIdCh> {
+    onKickOutCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,reaction: ChannelReactionOnKickOutCustomIdCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutCustomIdCh>(reaction, {chName, chId});
         this._mapKick.add(ChannelTarget.CID, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -504,7 +542,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offKickOutCustomIdCh(fullReaction ?: FullReaction<ChannelReactionOnKickOutCustomIdCh>): void {
+    offKickOutCustomIdCh(fullReaction ?: FullReaction<any>): void {
         this._mapKick.remove(ChannelTarget.CID, fullReaction);
     }
 
@@ -517,12 +555,14 @@ class ChannelReactionBox extends ReactionBox
      * onKickOutPanelOutCh((message) => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onKickOutPanelOutCh(reaction: ChannelReactionOnKickOutZationCh): FullReaction<ChannelReactionOnKickOutZationCh> {
+    onKickOutPanelOutCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction);
         this._mapKick.add(ChannelTarget.PANEL, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -532,7 +572,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offKickOutPanelOutCh(fullReaction ?: FullReaction<ChannelReactionOnKickOutZationCh>): void {
+    offKickOutPanelOutCh(fullReaction ?: FullReaction<any>): void {
         this._mapKick.remove(ChannelTarget.PANEL, fullReaction);
     }
 
@@ -545,12 +585,14 @@ class ChannelReactionBox extends ReactionBox
      * onSubFailAnyCh((error,fullChName) => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onSubFailAnyCh(reaction: ChannelReactionOnSubFailAnyCh): FullReaction<ChannelReactionOnSubFailAnyCh> {
+    onSubFailAnyCh(reaction: ChannelReactionOnSubFailAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailAnyCh>(reaction);
         this._mapSubFail.add(ChannelTarget.ANY, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -560,7 +602,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offSubFailAnyCh(fullReaction ?: FullReaction<ChannelReactionOnSubFailAnyCh>): void {
+    offSubFailAnyCh(fullReaction ?: FullReaction<any>): void {
         this._mapSubFail.remove(ChannelTarget.ANY, fullReaction);
     }
 
@@ -572,12 +614,14 @@ class ChannelReactionBox extends ReactionBox
      * onSubFailUserCh((error) => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onSubFailUserCh(reaction: ChannelReactionOnSubFailZationCh): FullReaction<ChannelReactionOnSubFailZationCh> {
+    onSubFailUserCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction);
         this._mapSubFail.add(ChannelTarget.USER, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -587,7 +631,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offSubFailUserCh(fullReaction ?: FullReaction<ChannelReactionOnSubFailZationCh>): void {
+    offSubFailUserCh(fullReaction ?: FullReaction<any>): void {
         this._mapSubFail.remove(ChannelTarget.USER, fullReaction);
     }
 
@@ -599,12 +643,14 @@ class ChannelReactionBox extends ReactionBox
      * onSubFailAuthUserGroupCh((error) => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onSubFailAuthUserGroupCh(reaction: ChannelReactionOnSubFailZationCh): FullReaction<ChannelReactionOnSubFailZationCh> {
+    onSubFailAuthUserGroupCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction);
         this._mapSubFail.add(ChannelTarget.AUG, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -614,7 +660,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offSubFailAuthUserGroupCh(fullReaction ?: FullReaction<ChannelReactionOnSubFailZationCh>): void {
+    offSubFailAuthUserGroupCh(fullReaction ?: FullReaction<any>): void {
         this._mapSubFail.remove(ChannelTarget.AUG, fullReaction);
     }
 
@@ -626,12 +672,14 @@ class ChannelReactionBox extends ReactionBox
      * onSubFailDefaultUserGroupCh((error) => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onSubFailDefaultUserGroupCh(reaction: ChannelReactionOnSubFailZationCh): FullReaction<ChannelReactionOnSubFailZationCh> {
+    onSubFailDefaultUserGroupCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction);
         this._mapSubFail.add(ChannelTarget.DUG, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -641,7 +689,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offSubFailDefaultUserGroupCh(fullReaction ?: FullReaction<ChannelReactionOnSubFailZationCh>): void {
+    offSubFailDefaultUserGroupCh(fullReaction ?: FullReaction<any>): void {
         this._mapSubFail.remove(ChannelTarget.DUG, fullReaction);
     }
 
@@ -653,12 +701,14 @@ class ChannelReactionBox extends ReactionBox
      * onSubFailAllCh((error) => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onSubFailAllCh(reaction: ChannelReactionOnSubFailZationCh): FullReaction<ChannelReactionOnSubFailZationCh> {
+    onSubFailAllCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction);
         this._mapSubFail.add(ChannelTarget.ALL, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -668,7 +718,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offSubFailAllCh(fullReaction ?: FullReaction<ChannelReactionOnSubFailZationCh>): void {
+    offSubFailAllCh(fullReaction ?: FullReaction<any>): void {
         this._mapSubFail.remove(ChannelTarget.ALL, fullReaction);
     }
 
@@ -683,12 +733,14 @@ class ChannelReactionBox extends ReactionBox
      * Or to all channel names if you pass as parameter null.
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onSubFailCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnSubFailCustomCh): FullReaction<ChannelReactionOnSubFailCustomCh> {
+    onSubFailCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnSubFailCustomCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailCustomCh>(reaction, {chName: chName});
         this._mapSubFail.add(ChannelTarget.C, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -698,7 +750,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offSubFailCustomCh(fullReaction ?: FullReaction<ChannelReactionOnSubFailCustomCh>): void {
+    offSubFailCustomCh(fullReaction ?: FullReaction<any>): void {
         this._mapSubFail.remove(ChannelTarget.C, fullReaction);
     }
 
@@ -716,12 +768,14 @@ class ChannelReactionBox extends ReactionBox
      * Or to all channel ids if you pass as parameter null.
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onSubFailCustomIdCh(chName: string | string[] | null,chId: string | string[] | null, reaction: ChannelReactionOnSubFailCustomIdCh): FullReaction<ChannelReactionOnSubFailCustomIdCh> {
+    onSubFailCustomIdCh(chName: string | string[] | null,chId: string | string[] | null, reaction: ChannelReactionOnSubFailCustomIdCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailCustomIdCh>(reaction, {chName,chId});
         this._mapSubFail.add(ChannelTarget.CID, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -731,7 +785,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offSubFailCustomIdCh(fullReaction ?: FullReaction<ChannelReactionOnSubFailCustomIdCh>): void {
+    offSubFailCustomIdCh(fullReaction ?: FullReaction<any>): void {
         this._mapSubFail.remove(ChannelTarget.CID, fullReaction);
     }
     
@@ -743,12 +797,14 @@ class ChannelReactionBox extends ReactionBox
      * onSubFailPanelOutCh((error) => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onSubFailPanelOutCh(reaction: ChannelReactionOnSubFailZationCh): FullReaction<ChannelReactionOnSubFailZationCh> {
+    onSubFailPanelOutCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction);
         this._mapSubFail.add(ChannelTarget.PANEL, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -758,7 +814,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offSubFailPanelOutCh(fullReaction ?: FullReaction<ChannelReactionOnSubFailZationCh>): void {
+    offSubFailPanelOutCh(fullReaction ?: FullReaction<any>): void {
         this._mapSubFail.remove(ChannelTarget.PANEL, fullReaction);
     }
 
@@ -771,12 +827,14 @@ class ChannelReactionBox extends ReactionBox
      * onSubAnyCh((fullChName) => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onSubAnyCh(reaction: ChannelReactionOnSubAnyCh): FullReaction<ChannelReactionOnSubAnyCh> {
+    onSubAnyCh(reaction: ChannelReactionOnSubAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubAnyCh>(reaction);
         this._mapSub.add(ChannelTarget.ANY, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -786,7 +844,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offSubAnyCh(fullReaction ?: FullReaction<ChannelReactionOnSubAnyCh>): void {
+    offSubAnyCh(fullReaction ?: FullReaction<any>): void {
         this._mapSub.remove(ChannelTarget.ANY, fullReaction);
     }
 
@@ -798,12 +856,14 @@ class ChannelReactionBox extends ReactionBox
      * onSubUserCh(() => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onSubUserCh(reaction: ChannelReactionOnSubZationCh): FullReaction<ChannelReactionOnSubZationCh> {
+    onSubUserCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction);
         this._mapSub.add(ChannelTarget.USER, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -813,7 +873,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offSubUserCh(fullReaction ?: FullReaction<ChannelReactionOnSubZationCh>): void {
+    offSubUserCh(fullReaction ?: FullReaction<any>): void {
         this._mapSub.remove(ChannelTarget.USER, fullReaction);
     }
 
@@ -825,12 +885,14 @@ class ChannelReactionBox extends ReactionBox
      * onSubAuthUserGroupCh(() => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onSubAuthUserGroupCh(reaction: ChannelReactionOnSubZationCh): FullReaction<ChannelReactionOnSubZationCh> {
+    onSubAuthUserGroupCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction);
         this._mapSub.add(ChannelTarget.AUG, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -840,7 +902,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offSubAuthUserGroupCh(fullReaction ?: FullReaction<ChannelReactionOnSubZationCh>): void {
+    offSubAuthUserGroupCh(fullReaction ?: FullReaction<any>): void {
         this._mapSub.remove(ChannelTarget.AUG, fullReaction);
     }
 
@@ -852,12 +914,14 @@ class ChannelReactionBox extends ReactionBox
      * onSubDefaultUserGroupCh(() => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onSubDefaultUserGroupCh(reaction: ChannelReactionOnSubZationCh): FullReaction<ChannelReactionOnSubZationCh> {
+    onSubDefaultUserGroupCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction);
         this._mapSub.add(ChannelTarget.DUG, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -867,7 +931,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offSubDefaultUserGroupCh(fullReaction ?: FullReaction<ChannelReactionOnSubZationCh>): void {
+    offSubDefaultUserGroupCh(fullReaction ?: FullReaction<any>): void {
         this._mapSub.remove(ChannelTarget.DUG, fullReaction);
     }
 
@@ -879,12 +943,14 @@ class ChannelReactionBox extends ReactionBox
      * onSubAllCh(() => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onSubAllCh(reaction: ChannelReactionOnSubZationCh): FullReaction<ChannelReactionOnSubZationCh> {
+    onSubAllCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction);
         this._mapSub.add(ChannelTarget.ALL, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -894,7 +960,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offSubAllCh(fullReaction ?: FullReaction<ChannelReactionOnSubZationCh>): void {
+    offSubAllCh(fullReaction ?: FullReaction<any>): void {
         this._mapSub.remove(ChannelTarget.ALL, fullReaction);
     }
 
@@ -909,12 +975,14 @@ class ChannelReactionBox extends ReactionBox
      * Or to all channel names if you pass as parameter null.
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onSubCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnSubCustomCh): FullReaction<ChannelReactionOnSubCustomCh> {
+    onSubCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnSubCustomCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubCustomCh>(reaction, {chName: chName});
         this._mapSub.add(ChannelTarget.C, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -924,7 +992,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offSubCustomCh(fullReaction ?: FullReaction<ChannelReactionOnSubCustomCh>): void {
+    offSubCustomCh(fullReaction ?: FullReaction<any>): void {
         this._mapSub.remove(ChannelTarget.C, fullReaction);
     }
 
@@ -942,12 +1010,14 @@ class ChannelReactionBox extends ReactionBox
      * Or to all channel ids if you pass as parameter null.
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onSubCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,reaction: ChannelReactionOnSubCustomIdCh): FullReaction<ChannelReactionOnSubCustomIdCh> {
+    onSubCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,reaction: ChannelReactionOnSubCustomIdCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubCustomIdCh>(reaction, {chName, chId});
         this._mapSub.add(ChannelTarget.CID, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -957,7 +1027,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offSubCustomIdCh(fullReaction ?: FullReaction<ChannelReactionOnSubCustomIdCh>): void {
+    offSubCustomIdCh(fullReaction ?: FullReaction<any>): void {
         this._mapSub.remove(ChannelTarget.CID, fullReaction);
     }
 
@@ -970,12 +1040,14 @@ class ChannelReactionBox extends ReactionBox
      * onSubPanelOutCh(() => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onSubPanelOutCh(reaction: ChannelReactionOnSubZationCh): FullReaction<ChannelReactionOnSubZationCh> {
+    onSubPanelOutCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction);
         this._mapSub.add(ChannelTarget.PANEL, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -985,7 +1057,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offSubPanelOutCh(fullReaction ?: FullReaction<ChannelReactionOnSubZationCh>): void {
+    offSubPanelOutCh(fullReaction ?: FullReaction<any>): void {
         this._mapSub.remove(ChannelTarget.PANEL, fullReaction);
     }
 
@@ -998,12 +1070,14 @@ class ChannelReactionBox extends ReactionBox
      * onClientUnsubAnyCh((fullChName) => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onClientUnsubAnyCh(reaction: ChannelReactionOnClientUnsubAnyCh): FullReaction<ChannelReactionOnClientUnsubAnyCh> {
+    onClientUnsubAnyCh(reaction: ChannelReactionOnClientUnsubAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubAnyCh>(reaction);
         this._mapClientUnsub.add(ChannelTarget.ANY, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1013,7 +1087,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offClientUnsubAnyCh(fullReaction ?: FullReaction<ChannelReactionOnClientUnsubAnyCh>): void {
+    offClientUnsubAnyCh(fullReaction ?: FullReaction<any>): void {
         this._mapClientUnsub.remove(ChannelTarget.ANY, fullReaction);
     }
 
@@ -1025,12 +1099,14 @@ class ChannelReactionBox extends ReactionBox
      * onClientUnsubUserCh(() => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onClientUnsubUserCh(reaction: ChannelReactionOnClientUnsubZationCh): FullReaction<ChannelReactionOnClientUnsubZationCh> {
+    onClientUnsubUserCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction);
         this._mapClientUnsub.add(ChannelTarget.USER, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1040,7 +1116,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offClientUnsubUserCh(fullReaction ?: FullReaction<ChannelReactionOnClientUnsubZationCh>): void {
+    offClientUnsubUserCh(fullReaction ?: FullReaction<any>): void {
         this._mapClientUnsub.remove(ChannelTarget.USER, fullReaction);
     }
 
@@ -1052,12 +1128,14 @@ class ChannelReactionBox extends ReactionBox
      * onClientUnsubAuthUserGroupCh(() => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onClientUnsubAuthUserGroupCh(reaction: ChannelReactionOnClientUnsubZationCh): FullReaction<ChannelReactionOnClientUnsubZationCh> {
+    onClientUnsubAuthUserGroupCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction);
         this._mapClientUnsub.add(ChannelTarget.AUG, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1067,7 +1145,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offClientUnsubAuthUserGroupCh(fullReaction ?: FullReaction<ChannelReactionOnClientUnsubZationCh>): void {
+    offClientUnsubAuthUserGroupCh(fullReaction ?: FullReaction<any>): void {
         this._mapClientUnsub.remove(ChannelTarget.AUG, fullReaction);
     }
 
@@ -1079,12 +1157,14 @@ class ChannelReactionBox extends ReactionBox
      * onClientUnsubDefaultUserGroupCh(() => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onClientUnsubDefaultUserGroupCh(reaction: ChannelReactionOnClientUnsubZationCh): FullReaction<ChannelReactionOnClientUnsubZationCh> {
+    onClientUnsubDefaultUserGroupCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction);
         this._mapClientUnsub.add(ChannelTarget.DUG, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1094,7 +1174,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offClientUnsubDefaultUserGroupCh(fullReaction ?: FullReaction<ChannelReactionOnClientUnsubZationCh>): void {
+    offClientUnsubDefaultUserGroupCh(fullReaction ?: FullReaction<any>): void {
         this._mapClientUnsub.remove(ChannelTarget.DUG, fullReaction);
     }
 
@@ -1106,12 +1186,14 @@ class ChannelReactionBox extends ReactionBox
      * onClientUnsubAllCh(() => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onClientUnsubAllCh(reaction: ChannelReactionOnClientUnsubZationCh): FullReaction<ChannelReactionOnClientUnsubZationCh> {
+    onClientUnsubAllCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction);
         this._mapClientUnsub.add(ChannelTarget.ALL, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1121,7 +1203,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offClientUnsubAllCh(fullReaction ?: FullReaction<ChannelReactionOnClientUnsubZationCh>): void {
+    offClientUnsubAllCh(fullReaction ?: FullReaction<any>): void {
         this._mapClientUnsub.remove(ChannelTarget.ALL, fullReaction);
     }
 
@@ -1136,12 +1218,14 @@ class ChannelReactionBox extends ReactionBox
      * Or to all channel names if you pass as parameter null.
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onClientUnsubCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnClientUnsubCustomCh): FullReaction<ChannelReactionOnClientUnsubCustomCh> {
+    onClientUnsubCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnClientUnsubCustomCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubCustomCh>(reaction, {chName: chName});
         this._mapClientUnsub.add(ChannelTarget.C, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1151,7 +1235,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offClientUnsubCustomCh(fullReaction ?: FullReaction<ChannelReactionOnClientUnsubCustomCh>): void {
+    offClientUnsubCustomCh(fullReaction ?: FullReaction<any>): void {
         this._mapClientUnsub.remove(ChannelTarget.C, fullReaction);
     }
 
@@ -1169,12 +1253,14 @@ class ChannelReactionBox extends ReactionBox
      * Or to all channel ids if you pass as parameter null.
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onClientUnsubCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,reaction: ChannelReactionOnClientUnsubCustomIdCh): FullReaction<ChannelReactionOnClientUnsubCustomIdCh> {
+    onClientUnsubCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,reaction: ChannelReactionOnClientUnsubCustomIdCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubCustomIdCh>(reaction, {chName, chId});
         this._mapClientUnsub.add(ChannelTarget.CID, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1184,7 +1270,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offClientUnsubCustomIdCh(fullReaction ?: FullReaction<ChannelReactionOnClientUnsubCustomIdCh>): void {
+    offClientUnsubCustomIdCh(fullReaction ?: FullReaction<any>): void {
         this._mapClientUnsub.remove(ChannelTarget.CID, fullReaction);
     }
 
@@ -1197,12 +1283,14 @@ class ChannelReactionBox extends ReactionBox
      * onClientUnsubPanelOutCh(() => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onClientUnsubPanelOutCh(reaction: ChannelReactionOnClientUnsubZationCh): FullReaction<ChannelReactionOnClientUnsubZationCh> {
+    onClientUnsubPanelOutCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction);
         this._mapClientUnsub.add(ChannelTarget.PANEL, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1212,7 +1300,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offClientUnsubPanelOutCh(fullReaction ?: FullReaction<ChannelReactionOnClientUnsubZationCh>): void {
+    offClientUnsubPanelOutCh(fullReaction ?: FullReaction<any>): void {
         this._mapClientUnsub.remove(ChannelTarget.PANEL, fullReaction);
     }
 
@@ -1225,12 +1313,14 @@ class ChannelReactionBox extends ReactionBox
      * onUnsubAnyCh((fromClient,fullChName) => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onUnsubAnyCh(reaction: ChannelReactionOnUnsubAnyCh): FullReaction<ChannelReactionOnUnsubAnyCh> {
+    onUnsubAnyCh(reaction: ChannelReactionOnUnsubAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubAnyCh>(reaction);
         this._mapUnsub.add(ChannelTarget.ANY, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1240,7 +1330,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offUnsubAnyCh(fullReaction ?: FullReaction<ChannelReactionOnUnsubAnyCh>): void {
+    offUnsubAnyCh(fullReaction ?: FullReaction<any>): void {
         this._mapUnsub.remove(ChannelTarget.ANY, fullReaction);
     }
 
@@ -1252,12 +1342,14 @@ class ChannelReactionBox extends ReactionBox
      * onUnsubUserCh((fromClient) => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onUnsubUserCh(reaction: ChannelReactionOnUnsubZationCh): FullReaction<ChannelReactionOnUnsubZationCh> {
+    onUnsubUserCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction);
         this._mapUnsub.add(ChannelTarget.USER, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1267,7 +1359,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offUnsubUserCh(fullReaction ?: FullReaction<ChannelReactionOnUnsubZationCh>): void {
+    offUnsubUserCh(fullReaction ?: FullReaction<any>): void {
         this._mapUnsub.remove(ChannelTarget.USER, fullReaction);
     }
 
@@ -1279,12 +1371,14 @@ class ChannelReactionBox extends ReactionBox
      * onUnsubAuthUserGroupCh((fromClient) => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onUnsubAuthUserGroupCh(reaction: ChannelReactionOnUnsubZationCh): FullReaction<ChannelReactionOnUnsubZationCh> {
+    onUnsubAuthUserGroupCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction);
         this._mapUnsub.add(ChannelTarget.AUG, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1294,7 +1388,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offUnsubAuthUserGroupCh(fullReaction ?: FullReaction<ChannelReactionOnUnsubZationCh>): void {
+    offUnsubAuthUserGroupCh(fullReaction ?: FullReaction<any>): void {
         this._mapUnsub.remove(ChannelTarget.AUG, fullReaction);
     }
 
@@ -1306,12 +1400,14 @@ class ChannelReactionBox extends ReactionBox
      * onUnsubDefaultUserGroupCh((fromClient) => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onUnsubDefaultUserGroupCh(reaction: ChannelReactionOnUnsubZationCh): FullReaction<ChannelReactionOnUnsubZationCh> {
+    onUnsubDefaultUserGroupCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction);
         this._mapUnsub.add(ChannelTarget.DUG, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1321,7 +1417,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offUnsubDefaultUserGroupCh(fullReaction ?: FullReaction<ChannelReactionOnUnsubZationCh>): void {
+    offUnsubDefaultUserGroupCh(fullReaction ?: FullReaction<any>): void {
         this._mapUnsub.remove(ChannelTarget.DUG, fullReaction);
     }
 
@@ -1333,12 +1429,14 @@ class ChannelReactionBox extends ReactionBox
      * onUnsubAllCh((fromClient) => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onUnsubAllCh(reaction: ChannelReactionOnUnsubZationCh): FullReaction<ChannelReactionOnUnsubZationCh> {
+    onUnsubAllCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction);
         this._mapUnsub.add(ChannelTarget.ALL, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1348,7 +1446,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offUnsubAllCh(fullReaction ?: FullReaction<ChannelReactionOnUnsubZationCh>): void {
+    offUnsubAllCh(fullReaction ?: FullReaction<any>): void {
         this._mapUnsub.remove(ChannelTarget.ALL, fullReaction);
     }
 
@@ -1363,12 +1461,14 @@ class ChannelReactionBox extends ReactionBox
      * Or to all channel names if you pass as parameter null.
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onUnsubCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnUnsubCustomCh): FullReaction<ChannelReactionOnUnsubCustomCh> {
+    onUnsubCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnUnsubCustomCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubCustomCh>(reaction, {chName: chName});
         this._mapUnsub.add(ChannelTarget.C, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1378,7 +1478,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offUnsubCustomCh(fullReaction ?: FullReaction<ChannelReactionOnUnsubCustomCh>): void {
+    offUnsubCustomCh(fullReaction ?: FullReaction<any>): void {
         this._mapUnsub.remove(ChannelTarget.C, fullReaction);
     }
 
@@ -1396,12 +1496,14 @@ class ChannelReactionBox extends ReactionBox
      * Or to all channel ids if you pass as parameter null.
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onUnsubCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,reaction: ChannelReactionOnUnsubCustomIdCh): FullReaction<ChannelReactionOnUnsubCustomIdCh> {
+    onUnsubCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,reaction: ChannelReactionOnUnsubCustomIdCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubCustomIdCh>(reaction, {chName, chId});
         this._mapUnsub.add(ChannelTarget.CID, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1411,7 +1513,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offUnsubCustomIdCh(fullReaction ?: FullReaction<ChannelReactionOnUnsubCustomIdCh>): void {
+    offUnsubCustomIdCh(fullReaction ?: FullReaction<any>): void {
         this._mapUnsub.remove(ChannelTarget.CID, fullReaction);
     }
 
@@ -1424,12 +1526,14 @@ class ChannelReactionBox extends ReactionBox
      * onUnsubPanelOutCh((fromClient) => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the channelReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onUnsubPanelOutCh(reaction: ChannelReactionOnUnsubZationCh): FullReaction<ChannelReactionOnUnsubZationCh> {
+    onUnsubPanelOutCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction);
         this._mapUnsub.add(ChannelTarget.PANEL, fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1439,7 +1543,7 @@ class ChannelReactionBox extends ReactionBox
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offUnsubPanelOutCh(fullReaction ?: FullReaction<ChannelReactionOnUnsubZationCh>): void {
+    offUnsubPanelOutCh(fullReaction ?: FullReaction<any>): void {
         this._mapUnsub.remove(ChannelTarget.PANEL, fullReaction);
     }
 
@@ -1483,21 +1587,21 @@ class ChannelReactionBox extends ReactionBox
             switch (target)
             {
                 case ChannelTarget.C:
-                    const sameEventAndChFilter : ValidChecker = (filter : object) : boolean => {
-                        return ChannelReactionBox._multiFilter(filter['event'],event) &&
-                            ChannelReactionBox._multiFilter(filter['chName'],chName);};
+                    const sameEventAndChFilter : ValidChecker = (filter : ChFilter) : boolean => {
+                        return ChannelReactionBox._multiFilter(filter.event,event) &&
+                            ChannelReactionBox._multiFilter(filter.chName,chName);};
                     await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.C),sameEventAndChFilter,data,ssid,event,chName);
                     break;
                 case ChannelTarget.CID:
-                    const sameEventChOrIdFilter : ValidChecker = (filter : object) : boolean => {
-                        return ChannelReactionBox._multiFilter(filter['event'],event) &&
-                            ChannelReactionBox._multiFilter(filter['chName'],chName) &&
-                            ChannelReactionBox._multiFilter(filter['chId'],chId);};
+                    const sameEventChOrIdFilter : ValidChecker = (filter : ChFilter) : boolean => {
+                        return ChannelReactionBox._multiFilter(filter.event,event) &&
+                            ChannelReactionBox._multiFilter(filter.chName,chName) &&
+                            ChannelReactionBox._multiFilter(filter.chId,chId);};
                     await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.CID),sameEventChOrIdFilter,data,ssid,event,chId,chName);
                     break;
                 default:
-                    const sameEventFilter : ValidChecker = (filter : object) : boolean => {
-                        return ChannelReactionBox._multiFilter(filter['event'],event);
+                    const sameEventFilter : ValidChecker = (filter : ChFilter) : boolean => {
+                        return ChannelReactionBox._multiFilter(filter.event,event);
                     };
                     switch (target) {
                         case ChannelTarget.ANY:
@@ -1570,6 +1674,18 @@ class ChannelReactionBox extends ReactionBox
                     break;
             }
         }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the last added EventReaction, you can use it to remove the reaction from the box
+     * by calling the specific off method.
+     * @return
+     * It returns the last added EventReaction.
+     */
+    getLastReaction() : FullReaction<any> {
+        return this.lastFullReactionTmp;
     }
 
     // noinspection JSUnusedGlobalSymbols

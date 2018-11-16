@@ -32,6 +32,7 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
 {
 
     private readonly map: SboxMapper<FullReaction<any>> = new SboxMapper<FullReaction<any>>();
+    private lastFullReactionTmp : FullReaction<any>;
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -96,13 +97,15 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * If there is more than one error at the end,
      * the reaction wil be triggerd with all filtered errors.
      * @return
-     * It returns a FullReaction, you can use it to remove the on ErrorReaction from the box.
+     * It returns the responseReactionBox, to remove the on ErrorReaction from the box
+     * you can use the getLastReaction method which is return the FullReaction.
      */
-    onError(reaction: ResponseReactionOnError, ...filter: ErrorFilter[]) : FullReaction<ResponseReactionOnError>
+    onError(reaction: ResponseReactionOnError, ...filter: ErrorFilter[]) : ResponseReactionBox
     {
         const fullReaction = new FullReaction<ResponseReactionOnError>(reaction,filter);
         this.map.add(MapKey.ERROR,fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -110,9 +113,9 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * @description
      * Returns an OnErrorBuilder to easy react on error.
      */
-    buildOnError() : OnErrorBuilder<ResponseReactionBox,FullReaction<ResponseReactionOnError>>
+    buildOnError() : OnErrorBuilder<ResponseReactionBox,ResponseReactionBox>
     {
-        return new OnErrorBuilder<ResponseReactionBox,FullReaction<ResponseReactionOnError>>(this);
+        return new OnErrorBuilder<ResponseReactionBox,ResponseReactionBox>(this);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -122,8 +125,9 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offError(fullReaction ?: FullReaction<ResponseReactionOnError>) : void {
+    offError(fullReaction ?: FullReaction<any>) : ResponseReactionBox {
         this.map.remove(MapKey.ERROR,fullReaction);
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -178,13 +182,15 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * If there is more than one error at the end,
      * the reaction wil be triggerd with all filtered errors.
      * @return
-     * It returns a FullReaction, you can use it to remove the catchError Reaction from the box.
+     * It returns the responseReactionBox, to remove the CatchErrorReaction from the box
+     * you can use the getLastReaction method which is return the FullReaction.
      */
-    catchError(reaction: ResponseReactionCatchError, ...filter: ErrorFilter[]) : FullReaction<ResponseReactionCatchError>
+    catchError(reaction: ResponseReactionCatchError, ...filter: ErrorFilter[]) : ResponseReactionBox
     {
         const fullReaction = new FullReaction<ResponseReactionCatchError>(reaction,filter);
         this.map.add(MapKey.CATCH_ERROR,fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -192,9 +198,9 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * @description
      * Returns an CatchErrorBuilder to easy catch an error.
      */
-    buildCatchError() : CatchErrorBuilder<ResponseReactionBox,FullReaction<ResponseReactionCatchError>>
+    buildCatchError() : CatchErrorBuilder<ResponseReactionBox,ResponseReactionBox>
     {
-        return new CatchErrorBuilder<ResponseReactionBox,FullReaction<ResponseReactionCatchError>>(this);
+        return new CatchErrorBuilder<ResponseReactionBox,ResponseReactionBox>(this);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -204,8 +210,9 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    rmCatchError(fullReaction ?: FullReaction<ResponseReactionCatchError>) : void {
+    rmCatchError(fullReaction ?: FullReaction<any>) : ResponseReactionBox {
         this.map.remove(MapKey.CATCH_ERROR,fullReaction);
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -218,13 +225,15 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * @param reaction
      * @param statusCode
      * @return
-     * It returns a FullReaction, you can use it to remove the onSuccessful Reaction from the box.
+     * It returns the responseReactionBox, to remove the on SuccessfulReaction from the box
+     * you can use the getLastReaction method which is return the FullReaction.
      */
-    onSuccessful(reaction: ResponseReactionOnSuccessful, statusCode ?: number | string) : FullReaction<ResponseReactionOnSuccessful>
+    onSuccessful(reaction: ResponseReactionOnSuccessful, statusCode ?: number | string) : ResponseReactionBox
     {
         const fullReaction = new FullReaction<ResponseReactionOnSuccessful>(reaction,{statusCode : statusCode});
         this.map.add(MapKey.SUCCESSFUL,fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -234,8 +243,9 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offSuccessful(fullReaction ?: FullReaction<ResponseReactionOnSuccessful>) : void {
+    offSuccessful(fullReaction ?: FullReaction<any>) : ResponseReactionBox {
         this.map.remove(MapKey.SUCCESSFUL,fullReaction);
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -247,13 +257,15 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * onResponse((response) => {});
      * @param reaction
      * @return
-     * It returns a FullReaction, you can use it to remove the onResponse Reaction from the box.
+     * It returns the responseReactionBox, to remove the on ResponseReaction from the box
+     * you can use the getLastReaction method which is return the FullReaction.
      */
-    onResponse(reaction: ResponseReactionOnResponse) : FullReaction<ResponseReactionOnResponse>
+    onResponse(reaction: ResponseReactionOnResponse) : ResponseReactionBox
     {
         const fullReaction = new FullReaction<ResponseReactionOnResponse>(reaction);
         this.map.add(MapKey.RESPONSE,fullReaction);
-        return fullReaction;
+        this.lastFullReactionTmp = fullReaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -263,8 +275,9 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offResponse(fullReaction ?: FullReaction<ResponseReactionOnResponse>) : void {
+    offResponse(fullReaction ?: FullReaction<any>) : ResponseReactionBox {
         this.map.remove(MapKey.RESPONSE,fullReaction);
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -308,6 +321,18 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
                 });
             }
         }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the last added FullReaction, you can use it to remove the reaction from the box
+     * by calling the specific off/rm method.
+     * @return
+     * It returns the last added FullReaction.
+     */
+    getLastReaction() : FullReaction<any> {
+        return this.lastFullReactionTmp;
     }
 }
 

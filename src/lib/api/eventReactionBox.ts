@@ -21,9 +21,16 @@ import {
 import {Events} from "../helper/constants/events";
 import SboxMapper = require("../helper/box/sboxMapper");
 
+type EventReaction = EventReactionOnAuthenticate | EventReactionOnConnect | EventReactionOnClinetDeauthenticate |
+    EventReactionOnDisconnect | EventReactionOnClientDisconnect | EventReactionOnServerDisconnect |
+    EventReactionOnServerDeauthenticate | EventReactionOnDeauthenticate | EventReactionOnConnectAbort |
+    EventReactionOnFirstConnect | EventReactionOnReconnect | EventReactionOnConnecting | EventReactionOnError |
+    EventReactionOnClose
+
 class EventReactionBox extends ReactionBox
 {
     private readonly map: SboxMapper<any> = new SboxMapper<any>();
+    private lastEventReactionTmp : EventReaction;
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -43,11 +50,13 @@ class EventReactionBox extends ReactionBox
      * onConnect(() => {isFirstConnection});
      * @param reaction
      * @return
-     * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the eventReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onConnect(reaction : EventReactionOnConnect) : EventReactionOnConnect {
+    onConnect(reaction : EventReactionOnConnect) : EventReactionBox {
         this.map.add(Events.Connect,reaction);
-        return reaction;
+        this.lastEventReactionTmp = reaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -57,7 +66,7 @@ class EventReactionBox extends ReactionBox
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offConnect(reaction ?: EventReactionOnConnect) : void {
+    offConnect(reaction ?: EventReaction) : void {
         this.map.remove(Events.Connect,reaction);
     }
 
@@ -70,11 +79,13 @@ class EventReactionBox extends ReactionBox
      * onFirstConnect(() => {});
      * @param reaction
      * @return
-     * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the eventReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onFirstConnect(reaction : EventReactionOnFirstConnect) : EventReactionOnFirstConnect {
+    onFirstConnect(reaction : EventReactionOnFirstConnect) : EventReactionBox {
         this.map.add(Events.FirstConnect,reaction);
-        return reaction;
+        this.lastEventReactionTmp = reaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -84,7 +95,7 @@ class EventReactionBox extends ReactionBox
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offFirstConnect(reaction ?: EventReactionOnFirstConnect) : void {
+    offFirstConnect(reaction ?: EventReaction) : void {
         this.map.remove(Events.FirstConnect,reaction);
     }
 
@@ -96,11 +107,14 @@ class EventReactionBox extends ReactionBox
      * onReconnect(() => {});
      * @param reaction
      * @return
-     * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
+     * @return
+     * It returns the eventReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onReconnect(reaction : EventReactionOnReconnect) : EventReactionOnReconnect {
+    onReconnect(reaction : EventReactionOnReconnect) : EventReactionBox {
         this.map.add(Events.Reconnect,reaction);
-        return reaction;
+        this.lastEventReactionTmp = reaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -110,7 +124,7 @@ class EventReactionBox extends ReactionBox
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offReconnect(reaction ?: EventReactionOnReconnect) : void {
+    offReconnect(reaction ?: EventReaction) : void {
         this.map.remove(Events.Reconnect,reaction);
     }
 
@@ -123,11 +137,13 @@ class EventReactionBox extends ReactionBox
      * onClientDisconnect((code,data) => {});
      * @param reaction
      * @return
-     * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the eventReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onClinetDisconnect(reaction : EventReactionOnClientDisconnect) : EventReactionOnClientDisconnect {
+    onClinetDisconnect(reaction : EventReactionOnClientDisconnect) : EventReactionBox {
         this.map.add(Events.ClientDisconnect,reaction);
-        return reaction;
+        this.lastEventReactionTmp = reaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -137,7 +153,7 @@ class EventReactionBox extends ReactionBox
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offClientDisconnect(reaction ?: EventReactionOnClientDisconnect) : void {
+    offClientDisconnect(reaction ?: EventReaction) : void {
         this.map.remove(Events.ClientDisconnect,reaction);
     }
 
@@ -151,11 +167,13 @@ class EventReactionBox extends ReactionBox
      * onServerDisconnect((code,data) => {});
      * @param reaction
      * @return
-     * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the eventReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onServerDisconnect(reaction : EventReactionOnServerDisconnect) : EventReactionOnServerDisconnect {
+    onServerDisconnect(reaction : EventReactionOnServerDisconnect) : EventReactionBox {
         this.map.add(Events.ServerDisconnect,reaction);
-        return reaction;
+        this.lastEventReactionTmp = reaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -165,7 +183,7 @@ class EventReactionBox extends ReactionBox
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offServerDisconnect(reaction ?: EventReactionOnServerDisconnect) : void {
+    offServerDisconnect(reaction ?: EventReaction) : void {
         this.map.remove(Events.ServerDisconnect,reaction);
     }
 
@@ -179,11 +197,13 @@ class EventReactionBox extends ReactionBox
      * onDisconnect((fromClient,code,data) => {});
      * @param reaction
      * @return
-     * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the eventReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onDisconnect(reaction : EventReactionOnDisconnect) : EventReactionOnDisconnect {
+    onDisconnect(reaction : EventReactionOnDisconnect) : EventReactionBox {
         this.map.add(Events.Disconnect,reaction);
-        return reaction;
+        this.lastEventReactionTmp = reaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -193,7 +213,7 @@ class EventReactionBox extends ReactionBox
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offDisconnect(reaction ?: EventReactionOnDisconnect) : void {
+    offDisconnect(reaction ?: EventReaction) : void {
         this.map.remove(Events.Disconnect,reaction);
     }
 
@@ -206,11 +226,13 @@ class EventReactionBox extends ReactionBox
      * onAuthenticate((signJwtToken) => {});
      * @param reaction
      * @return
-     * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the eventReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onAuthenticate(reaction : EventReactionOnAuthenticate) : EventReactionOnAuthenticate {
+    onAuthenticate(reaction : EventReactionOnAuthenticate) : EventReactionBox {
         this.map.add(Events.Authenticate,reaction);
-        return reaction;
+        this.lastEventReactionTmp = reaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -220,7 +242,7 @@ class EventReactionBox extends ReactionBox
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offAuthenticate(reaction ?: EventReactionOnAuthenticate) : void {
+    offAuthenticate(reaction ?: EventReaction) : void {
         this.map.remove(Events.Authenticate,reaction);
     }
 
@@ -233,11 +255,13 @@ class EventReactionBox extends ReactionBox
      * onClientDeauthenticate((oldSignedJwtToken) => {});
      * @param reaction
      * @return
-     * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the eventReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onClientDeauthenticate(reaction : EventReactionOnClinetDeauthenticate) : EventReactionOnClinetDeauthenticate {
+    onClientDeauthenticate(reaction : EventReactionOnClinetDeauthenticate) : EventReactionBox {
         this.map.add(Events.ClientDeauthenticate,reaction);
-        return reaction;
+        this.lastEventReactionTmp = reaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -247,7 +271,7 @@ class EventReactionBox extends ReactionBox
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offClientDeauthenticate(reaction ?: EventReactionOnClinetDeauthenticate) : void {
+    offClientDeauthenticate(reaction ?: EventReaction) : void {
         this.map.remove(Events.ClientDeauthenticate,reaction);
     }
 
@@ -261,11 +285,13 @@ class EventReactionBox extends ReactionBox
      * onServerDeauthenticate((oldSignedJwtToken) => {});
      * @param reaction
      * @return
-     * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the eventReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onServerDeauthenticate(reaction : EventReactionOnServerDeauthenticate) : EventReactionOnServerDeauthenticate {
+    onServerDeauthenticate(reaction : EventReactionOnServerDeauthenticate) : EventReactionBox {
         this.map.add(Events.ServerDeauthenticate,reaction);
-        return reaction;
+        this.lastEventReactionTmp = reaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -275,7 +301,7 @@ class EventReactionBox extends ReactionBox
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offServerDeauthenticate(reaction ?: EventReactionOnServerDeauthenticate) : void {
+    offServerDeauthenticate(reaction ?: EventReaction) : void {
         this.map.remove(Events.ServerDeauthenticate,reaction);
     }
 
@@ -289,11 +315,13 @@ class EventReactionBox extends ReactionBox
      * onDeauthenticate((fromClient,oldSignedJwtToken) => {});
      * @param reaction
      * @return
-     * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the eventReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onDeauthenticate(reaction : EventReactionOnDeauthenticate) : EventReactionOnDeauthenticate {
+    onDeauthenticate(reaction : EventReactionOnDeauthenticate) : EventReactionBox {
         this.map.add(Events.Deauthenticate,reaction);
-        return reaction;
+        this.lastEventReactionTmp = reaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -303,7 +331,7 @@ class EventReactionBox extends ReactionBox
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offDeauthenticate(reaction ?: EventReactionOnDeauthenticate) : void {
+    offDeauthenticate(reaction ?: EventReaction) : void {
         this.map.remove(Events.Deauthenticate,reaction);
     }
 
@@ -318,11 +346,13 @@ class EventReactionBox extends ReactionBox
      * onConnectAbort((code,data) => {});
      * @param reaction
      * @return
-     * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the eventReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onConnectAbort(reaction : EventReactionOnConnectAbort) : EventReactionOnConnectAbort {
+    onConnectAbort(reaction : EventReactionOnConnectAbort) : EventReactionBox {
         this.map.add(Events.ConnectAbort,reaction);
-        return reaction;
+        this.lastEventReactionTmp = reaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -332,7 +362,7 @@ class EventReactionBox extends ReactionBox
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offConnectAbort(reaction ?: EventReactionOnConnectAbort) : void {
+    offConnectAbort(reaction ?: EventReaction) : void {
         this.map.remove(Events.ConnectAbort,reaction);
     }
 
@@ -346,11 +376,13 @@ class EventReactionBox extends ReactionBox
      * onConnecting(() => {});
      * @param reaction
      * @return
-     * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the eventReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onConnecting(reaction : EventReactionOnConnecting) : EventReactionOnConnecting {
+    onConnecting(reaction : EventReactionOnConnecting) : EventReactionBox {
         this.map.add(Events.Connecting,reaction);
-        return reaction;
+        this.lastEventReactionTmp = reaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -360,7 +392,7 @@ class EventReactionBox extends ReactionBox
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offConnecting(reaction ?: EventReactionOnConnecting) : void {
+    offConnecting(reaction ?: EventReaction) : void {
         this.map.remove(Events.Connecting,reaction);
     }
 
@@ -373,11 +405,13 @@ class EventReactionBox extends ReactionBox
      * onError((err) => {});
      * @param reaction
      * @return
-     * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the eventReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onError(reaction : EventReactionOnError) : EventReactionOnError {
+    onError(reaction : EventReactionOnError) : EventReactionBox {
         this.map.add(Events.Error,reaction);
-        return reaction;
+        this.lastEventReactionTmp = reaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -387,7 +421,7 @@ class EventReactionBox extends ReactionBox
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offError(reaction ?: EventReactionOnError) : void {
+    offError(reaction ?: EventReaction) : void {
         this.map.remove(Events.Error,reaction);
     }
 
@@ -400,11 +434,13 @@ class EventReactionBox extends ReactionBox
      * onClose((code,data) => {});
      * @param reaction
      * @return
-     * It returns the Reaction, you can use it to remove this Reaction from the box with the off method.
+     * It returns the eventReactionBox, to remove the reaction from the box
+     * you can use the getLastReaction method which is return the reaction.
      */
-    onClose(reaction : EventReactionOnClose) : EventReactionOnClose {
+    onClose(reaction : EventReactionOnClose) : EventReactionBox {
         this.map.add(Events.Close,reaction);
-        return reaction;
+        this.lastEventReactionTmp = reaction;
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -414,7 +450,7 @@ class EventReactionBox extends ReactionBox
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offClose(reaction ?: EventReactionOnClose) : void {
+    offClose(reaction ?: EventReaction) : void {
         this.map.remove(Events.Close,reaction);
     }
 
@@ -485,6 +521,18 @@ class EventReactionBox extends ReactionBox
                     break;
             }
         }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the last added EventReaction, you can use it to remove the reaction from the box
+     * by calling the specific off method.
+     * @return
+     * It returns the last added EventReaction.
+     */
+    getLastReaction() : EventReaction {
+        return this.lastEventReactionTmp;
     }
 
 }
