@@ -1091,6 +1091,69 @@ class Zation
     }
 
     //Part ClientPublish
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Publish in a user channel with this client.
+     * Notice that the channel needs to allow client publish.
+     * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
+     * This gives you better control over validation.
+     * @throws ConnectionNeededError, PublishFailError
+     * @param userId
+     * @param event
+     * @param data
+     */
+    async pubUserCh(userId : string | number,event : string, data : any) : Promise<void> {
+        await this.channelEngine.pubUserCh(userId,event,data);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Publish in a auth user group channel with this client.
+     * Notice that the channel needs to allow client publish.
+     * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
+     * This gives you better control over validation.
+     * @throws ConnectionNeededError, PublishFailError
+     * @param authUserGroup
+     * @param event
+     * @param data
+     */
+    async pubAuthUserGroupCh(authUserGroup : string,event : string, data : any) : Promise<void> {
+        await this.channelEngine.pubAuthUserGroupCh(authUserGroup,event,data);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Publish in default user group channel with this client.
+     * Notice that the channel needs to allow client publish.
+     * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
+     * This gives you better control over validation.
+     * @throws ConnectionNeededError, PublishFailError
+     * @param event
+     * @param data
+     */
+    async pubDefaultUserGroupCh(event : string, data : any) : Promise<void> {
+        await this.channelEngine.pubDefaultUserGroupCh(event,data);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Publish in all channel with this client.
+     * Notice that the channel needs to allow client publish.
+     * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
+     * This gives you better control over validation.
+     * @throws ConnectionNeededError, PublishFailError
+     * @param event
+     * @param data
+     */
+    async pubAllCh(event : string, data : any) : Promise<void> {
+        await this.channelEngine.pubAllCh(event,data);
+    }
+
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
@@ -1248,7 +1311,7 @@ class Zation
             this.socket.on(event,handler);
         }
         else {
-            throw new ConnectionNeededError('To set on event');
+            throw new ConnectionNeededError('To set on event.');
 
         }
     }
@@ -1266,7 +1329,26 @@ class Zation
             this.socket.emit(event,data,callback)
         }
         else {
-            throw new ConnectionNeededError('To set on event');
+            throw new ConnectionNeededError('To emit an event.');
+
+        }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Send some raw data to the server.
+     * This will trigger the socketRaw event on the zation server
+     * which will carry the provided data.
+     * @throws ConnectionNeededError
+     */
+    sendRaw(data : any) : void
+    {
+        if(this.isSocketConnected()) {
+            this.socket.send(data);
+        }
+        else {
+            throw new ConnectionNeededError('To send raw data.');
 
         }
     }

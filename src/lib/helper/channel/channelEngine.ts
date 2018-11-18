@@ -383,6 +383,22 @@ class ChannelEngine
         });
     }
 
+    async pubUserCh(userId : string | number,event : string, data : any) : Promise<void> {
+        await this.publish(ZationChannel.USER_CHANNEL_PREFIX + userId,event,data);
+    }
+
+    async pubAuthUserGroupCh(authUserGroup : string,event : string, data : any) : Promise<void> {
+        await this.publish(ZationChannel.AUTH_USER_GROUP_PREFIX + authUserGroup,event,data);
+    }
+
+    async pubDefaultUserGroupCh(event : string, data : any) : Promise<void> {
+        await this.publish(ZationChannel.DEFAULT_USER_GROUP,event,data);
+    }
+
+    async pubAllCh(event : string, data : any) : Promise<void> {
+        await this.publish(ZationChannel.ALL,event,data);
+    }
+
     async pubPanelInCh(event : string, data : any) : Promise<void> {
         await this.publish(ZationChannel.PANEL_IN,event,data);
     }

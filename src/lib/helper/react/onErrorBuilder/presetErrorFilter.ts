@@ -98,6 +98,22 @@ export class PresetErrorFilter<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
+     * Preset for inputIsNotTypeChar.
+     * The task error can be thrown by input validation type:'char'.
+     * @param inputPath
+     * Parameter can be used to check the inputPath in the info.
+     * @param inputValue
+     * Parameter can be used to check the inputValue in the info.
+     */
+    inputIsNotTypeChar(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._validationErrorBuild
+        ('inputIsNotTypeChar',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
      * Preset for inputIsNotTypeNull.
      * The task error can be thrown by input validation type:'null'.
      * @param inputPath
