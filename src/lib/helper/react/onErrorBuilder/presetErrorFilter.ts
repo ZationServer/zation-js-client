@@ -699,6 +699,79 @@ export class PresetErrorFilter<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
+     * Preset for inputIsNotMatchWithCharClass.
+     * The task error can be thrown by input validation charClass:'a-zA-Z0-9'.
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * regex
+     * @param inputPath
+     * Parameter can be used to check the inputPath in the info.
+     * @param inputValue
+     * Parameter can be used to check the inputValue in the info.
+     */
+    inputIsNotMatchWithCharClass(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._validationErrorBuild
+        ('inputIsNotMatchWithCharClass',inputPath,inputValue));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Preset for inputDateError.
+     * The task error can be thrown by input validation before and after.
+     * @param inputPath
+     * Parameter can be used to check the inputPath in the info.
+     * @param inputValue
+     * Parameter can be used to check the inputValue in the info.
+     */
+    inputDateError(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._validationErrorBuild
+        (undefined,inputPath,inputValue,ErrorGroup.DATE_ERROR));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Preset for inputDateIsNotBefore.
+     * The task error can be thrown by input validation before:Date.now().
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * shouldBefore
+     * @param inputPath
+     * Parameter can be used to check the inputPath in the info.
+     * @param inputValue
+     * Parameter can be used to check the inputValue in the info.
+     */
+    inputDateIsNotBefore(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._validationErrorBuild
+        ('inputDateIsNotBefore',inputPath,inputValue,ErrorGroup.DATE_ERROR));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Preset for inputDateIsNotAfter.
+     * The task error can be thrown by input validation after:Date.now().
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * shouldAfter
+     * @param inputPath
+     * Parameter can be used to check the inputPath in the info.
+     * @param inputValue
+     * Parameter can be used to check the inputValue in the info.
+     */
+    inputDateIsNotAfter(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._validationErrorBuild
+        ('inputDateIsNotAfter',inputPath,inputValue,ErrorGroup.DATE_ERROR));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
      * Preset for inputIsNotContains.
      * The task error can be thrown by input validation contains:'hallo'.
      * More info checks you need to do by yourself.
