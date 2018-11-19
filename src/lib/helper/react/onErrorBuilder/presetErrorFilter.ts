@@ -1064,6 +1064,22 @@ export class PresetErrorFilter<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
+     * Preset for noAnyOfMatch.
+     * The task error can be thrown by input anyOf usage.
+     * @param inputPath
+     * Parameter can be used to check the inputPath in the info.
+     * @param inputValue
+     * Parameter can be used to check the inputValue in the info.
+     */
+    noAnyOfMatch(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._validationErrorBuild
+        ('noAnyOfMatch',inputPath,inputValue));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
      * Preset for controllerNotFound.
      * The task error can be thrown when the controller name is not found.
      * More info checks you need to do by yourself.
