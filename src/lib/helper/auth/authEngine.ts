@@ -272,7 +272,7 @@ class AuthEngine
         return this.currentUserAuthGroup !== undefined;
     }
 
-    getCustomTokenVar() : object
+    getCustomTokenVariable() : object
     {
         if(this.plainToken !== null) {
             return typeof this.plainToken.zationCustomVariables === 'object' ?

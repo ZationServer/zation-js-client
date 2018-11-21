@@ -1200,33 +1200,37 @@ class Zation
         await this.channelEngine.pubCustomIdCh(chName,id,event,data);
     }
 
-    //Part CustomTokenVar
+    //Part TokenVar
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Has a custom token variable with object path.
+     * Has a token variable with object path.
+     * Notice that the token variables are separated from the main zation token variables.
      * You can access this variables on client and server side.
+     * But only change, delete or set on the server.
      * @example
-     * hasCustomTokenVar('person.email');
+     * hasTokenVariable('person.email');
      * @param path
      * @throws AuthenticationNeededError
      */
-    hasCustomTokenVar(path ?: string | string[]) : boolean {
-        return ObjectPath.has(this.authEngine.getCustomTokenVar(),path);
+    hasTokenVariable(path ?: string | string[]) : boolean {
+        return ObjectPath.has(this.authEngine.getCustomTokenVariable(),path);
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Get a custom token variable with object path.
-     * You can protocolAccess this variables on client and server side.
+     * Get a token variable with object path.
+     * Notice that the token variables are separated from the main zation token variables.
+     * You can access this variables on client and server side.
+     * But only change, delete or set on the server.
      * @example
-     * getCustomTokenVar('person.email');
+     * getTokenVariable('person.email');
      * @param path
      * @throws AuthenticationNeededError
      */
-    getCustomTokenVar(path ?: string | string[]) : any {
-        return ObjectPath.get(this.authEngine.getCustomTokenVar(),path);
+    getTokenVariable(path ?: string | string[]) : any {
+        return ObjectPath.get(this.authEngine.getCustomTokenVariable(),path);
     }
 
     //Part Token
