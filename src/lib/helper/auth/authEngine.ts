@@ -127,7 +127,7 @@ class AuthEngine
             this.currentUserId = id;
 
             //register new user channel
-            if(this.zation.isAutoUserChSub()) {
+            if(this.zation.isAutoUserChSub() && !!id) {
                 await this.subUserCh();
             }
         }
