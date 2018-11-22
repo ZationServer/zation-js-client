@@ -36,7 +36,7 @@ import {Events} from "../helper/constants/events";
 import {ValidationCheck} from "./validationRequest";
 import {ChannelTarget} from "../helper/channel/channelTarget";
 import {SystemController} from "../helper/constants/systemController";
-import {ZationHttpInfo} from "../helper/constants/internal";
+import {ZationHttpInfo, ZationToken} from "../helper/constants/internal";
 import AuthenticationNeededError = require("../helper/error/authenticationNeededError");
 
 //override for decide between client/server deauthenticate
@@ -345,7 +345,10 @@ class Zation
      * @description
      * Authenticate this connection (use authentication controller)
      * with authentication authData and returns the response.
-     * Notice that the zation response reaction boxes are not triggerd.
+     * Note that it may take a while that the new auth token is set.
+     * Even if the response is already there.
+     * You have the possibility to wait for it with the method waitForAuth.
+     * Notice also that the zation response reaction boxes are not triggerd.
      * Because then you have the opportunity to react with the response on specific things
      * then trigger the zation response reaction boxes (using response.react().zationReact()).
      * @example
@@ -448,6 +451,9 @@ class Zation
      * Returns an auth request helper.
      * Where you can easy build an auth request with reactions and send it.
      * This is another way to authenticate this client.
+     * Note that it may take a while that the new auth token is set.
+     * Even if the response is already there.
+     * You have the possibility to wait for it with the method waitForAuth.
      * The default values are:
      * Protocol: WebSocket
      * AuthData: {}
@@ -1274,6 +1280,28 @@ class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
+     * Returns the current plain token.
+     * @throws AuthenticationNeededError
+     */
+    getPlainToken() : ZationToken
+    {
+        return this.authEngine.getSecurePlainToken();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the current sign token.
+     * @throws AuthenticationNeededError
+     */
+    getSignToken() : string
+    {
+        return this.authEngine.getSecureSignToken();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
      * Returns if the socket is authenticated (token with auth user group).
      */
     isAuthenticated() : boolean
@@ -1355,6 +1383,32 @@ class Zation
             throw new ConnectionNeededError('To send raw data.');
 
         }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Waiting for client is full authenticated.
+     * That means token is updated and client has susbcribed
+     * the user and user group channel if auto subscribe is active.
+     * @throws Error (by timeout)
+     */
+    waitForAuth(timeoutMs : number = 500) : Promise<void>
+    {
+        return new Promise<void>((resolve, reject) => {
+            if(this.isAuthenticated()){
+                resolve();
+            }
+            else {
+                const timeout = setTimeout(() => {
+                    reject(new Error('Timeout to wait for auth'));
+                },timeoutMs);
+                this.authEngine.addOneTimeFullAuthEvent(() => {
+                    clearTimeout(timeout);
+                    resolve();
+                });
+            }
+        })
     }
 
     //Part Getter/Setter

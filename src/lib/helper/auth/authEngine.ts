@@ -27,6 +27,8 @@ class AuthEngine
     private readonly zation : Zation;
     private readonly chEngine : ChannelEngine;
 
+    private readonly fullOneTimeAuthEvents : Function[] = [];
+
     constructor(zation : Zation,channelEngine : ChannelEngine)
     {
         this.zation = zation;
@@ -151,13 +153,13 @@ class AuthEngine
 
                 this.currentUserAuthGroup = authGroup;
 
-                await this.subAuthUserGroupCh();
-
                 if(this.zation.isDebug())
                 {
                     Logger.printInfo
                     (`User is Login with userId: '${this.currentUserId}' in user group: '${this.currentUserAuthGroup}'.`)
                 }
+
+                await this.subAuthUserGroupCh();
             }
             else {
                 //unregister old channels
@@ -166,6 +168,7 @@ class AuthEngine
                 }
 
                 this.currentUserAuthGroup = authGroup;
+
                 await this.subDefaultUserGroupCh();
             }
         }
@@ -237,8 +240,25 @@ class AuthEngine
 
     async updateToken(token : ZationToken | null) {
         if(token === null) {token = {};}
-        await this.updateUserId(token.zationUserId);
-        await this.updateAuthGroup(token.zationAuthUserGroup);
+        let promises : Promise<void>[] = [];
+        promises.push(this.updateAuthGroup(token.zationAuthUserGroup));
+        promises.push(this.updateUserId(token.zationUserId));
+        await Promise.all(promises);
+        if(this.isAuthenticated()) {
+            this.callOneTimeFullAuthEvents();
+        }
+    }
+
+    callOneTimeFullAuthEvents()
+    {
+        for(let i = 0; i < this.fullOneTimeAuthEvents.length; i++) {
+            this.fullOneTimeAuthEvents[i]();
+            this.fullOneTimeAuthEvents.slice(i,1);
+        }
+    }
+
+    addOneTimeFullAuthEvent(func : () => void) {
+        this.fullOneTimeAuthEvents.push(func);
     }
 
     getSignToken() : string | null {
@@ -250,12 +270,21 @@ class AuthEngine
         return this.plainToken;
     }
 
+    getSecureSignToken() : string {
+        if(this.signToken !== null) {
+            return this.signToken;
+        }
+        else {
+            throw new AuthenticationNeededError('To get access to token');
+        }
+    }
+
     getSecurePlainToken() : ZationToken {
         if(this.plainToken !== null) {
             return this.plainToken;
         }
         else {
-            throw new AuthenticationNeededError('To get access to token variable');
+            throw new AuthenticationNeededError('To get access to token');
         }
     }
 
