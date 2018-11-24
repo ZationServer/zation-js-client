@@ -156,11 +156,6 @@ export class AuthEngine
 
                 this.currentUserAuthGroup = authGroup;
 
-                if(this.zation.isDebug()) {
-                    Logger.printInfo
-                    (`User is Login with userId: '${this.currentUserId}' i n user group: '${this.currentUserAuthGroup}'.`)
-                }
-
                 if(this.zation.isAutoAuthUserGroupChSub()) {
                     await this.subAuthUserGroupCh();
                 }
@@ -249,6 +244,13 @@ export class AuthEngine
         let promises : Promise<void>[] = [];
         promises.push(this.updateAuthGroup(token.zationAuthUserGroup));
         promises.push(this.updateUserId(token.zationUserId));
+
+        //id and group is allready set
+        if(this.zation.isDebug() && this.isAuthenticated()) {
+            Logger.printInfo
+            (`User is Login with userId: '${this.currentUserId}' i n user group: '${this.currentUserAuthGroup}'.`)
+        }
+
         await Promise.all(promises);
     }
 
