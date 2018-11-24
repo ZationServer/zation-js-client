@@ -248,7 +248,7 @@ export class AuthEngine
         //id and group is allready set
         if(this.zation.isDebug() && this.isAuthenticated()) {
             Logger.printInfo
-            (`User is Login with userId: '${this.currentUserId}' i n user group: '${this.currentUserAuthGroup}'.`)
+            (`User is authenticated with userId: '${this.currentUserId}' and auth user group: '${this.currentUserAuthGroup}'.`)
         }
 
         await Promise.all(promises);
