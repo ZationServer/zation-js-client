@@ -28,6 +28,7 @@ import {PublishFailedError}            from "./lib/helper/error/publishFailedErr
 import {ResultIsMissingError}          from "./lib/helper/error/resultIsMissingError";
 import {SignAuthenticationFailedError} from "./lib/helper/error/signAuthenticationFailedError";
 import {SubscribeFailedError}          from "./lib/helper/error/subscribeFailedError";
+import {Response}                      from "./lib/api/response";
 
 // noinspection JSUnusedGlobalSymbols
 /**
