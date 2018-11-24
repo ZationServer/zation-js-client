@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-class AuthenticationNeededError extends Error
+export class AuthenticationNeededError extends Error
 {
     constructor(message : string = '')
     {
@@ -12,4 +12,3 @@ class AuthenticationNeededError extends Error
     }
 }
 
-export = AuthenticationNeededError;

@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-class ConnectionNeededError extends Error
+export class ConnectionNeededError extends Error
 {
     constructor(message : string = '')
     {
@@ -12,5 +12,4 @@ class ConnectionNeededError extends Error
     }
 }
 
-export = ConnectionNeededError;
 

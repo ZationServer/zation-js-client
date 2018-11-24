@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import Response = require("../../../api/response");
+import {Response}  from "../../../api/response";
 import {TaskError} from "../taskError/taskError";
 
 //Response

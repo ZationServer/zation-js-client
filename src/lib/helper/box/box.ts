@@ -4,11 +4,11 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import SBox = require("./sBox");
+import {SBox} from "./sBox";
 
 type ForEeachFunction<T> = (item : T) => Promise<void>;
 
-class Box<T> extends SBox<T>
+export class Box<T> extends SBox<T>
 {
     private fixedItems : T[] = [];
     
@@ -47,4 +47,3 @@ class Box<T> extends SBox<T>
 
 }
 
-export = Box;

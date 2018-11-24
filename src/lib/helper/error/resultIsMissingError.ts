@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-class ResultIsMissingError extends Error
+export class ResultIsMissingError extends Error
 {
     constructor(message : string = '')
     {
@@ -12,5 +12,4 @@ class ResultIsMissingError extends Error
     }
 }
 
-export = ResultIsMissingError;
 

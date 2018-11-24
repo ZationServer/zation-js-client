@@ -4,13 +4,14 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import ZationRequest = require("../helper/request/zationRequest");
-// noinspection TypeScriptPreferShortImport
-import {ProtocolType}   from "../helper/constants/protocolType";
-import Zation = require("./zation");
-import RequestJsonBuilder = require("../helper/tools/requestJsonBuilder");
 
-class WsRequest extends ZationRequest
+// noinspection TypeScriptPreferShortImport
+import {ProtocolType}       from "../helper/constants/protocolType";
+import {ZationRequest}      from "../helper/request/zationRequest";
+import {Zation}             from "./zation";
+import {RequestJsonBuilder} from "../helper/tools/requestJsonBuilder";
+
+export class WsRequest extends ZationRequest
 {
     private readonly controllerName : string;
     private readonly isSystemController : boolean;
@@ -34,4 +35,3 @@ class WsRequest extends ZationRequest
     }
 }
 
-export = WsRequest;

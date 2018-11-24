@@ -11,7 +11,7 @@ import {ProtocolType}        from "../constants/protocolType";
 import {SendAble}            from "./sendAble";
 import {ProgressHandler}     from "./progressHandler";
 
-abstract class ZationRequest extends SendAble
+export abstract class ZationRequest extends SendAble
 {
     private readonly data: object | any[];
     private readonly type: ProtocolType;
@@ -142,6 +142,4 @@ abstract class ZationRequest extends SendAble
         return await requestAble.toRequestData(this.type);
     }
 }
-
-export = ZationRequest;
 

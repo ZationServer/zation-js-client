@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-class ConnectionAbortError extends Error
+export class ConnectionAbortError extends Error
 {
     private readonly scError : Error;
 
@@ -21,5 +21,4 @@ class ConnectionAbortError extends Error
 
 }
 
-export = ConnectionAbortError;
 

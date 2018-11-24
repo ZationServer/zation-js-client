@@ -4,9 +4,9 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import SBox = require("./sBox");
+import {SBox} from "./sBox";
 
-class SboxMapper<T>
+export class SboxMapper<T>
 {
     private map : object = {};
 
@@ -39,4 +39,3 @@ class SboxMapper<T>
     }
 }
 
-export = SboxMapper;

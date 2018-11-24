@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-class SignAuthenticationFailedError extends Error
+export class SignAuthenticationFailedError extends Error
 {
     private readonly scError : Error;
 
@@ -21,5 +21,4 @@ class SignAuthenticationFailedError extends Error
 
 }
 
-export = SignAuthenticationFailedError;
 

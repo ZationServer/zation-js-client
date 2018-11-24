@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-class DeauthenticationNeededError extends Error
+export class DeauthenticationNeededError extends Error
 {
     constructor(message : string = '')
     {
@@ -12,5 +12,4 @@ class DeauthenticationNeededError extends Error
     }
 }
 
-export = DeauthenticationNeededError;
 

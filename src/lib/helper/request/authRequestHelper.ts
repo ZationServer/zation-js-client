@@ -4,13 +4,14 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import Zation = require("../../api/zation");
-import AuthRequest = require("../../api/authRequest");
-import ZationRequest = require("./zationRequest");
-import AbstractRequestHelper = require("./abstractRequestHelper");
-import {HttpGetReq} from "../constants/internal";
 
-class AuthRequestHelper extends AbstractRequestHelper<AuthRequestHelper>
+import {HttpGetReq}            from "../constants/internal";
+import {AbstractRequestHelper} from "./abstractRequestHelper";
+import {Zation}                from "../../api/zation";
+import {ZationRequest}         from "./zationRequest";
+import {AuthRequest}           from "../../api/authRequest";
+
+export class AuthRequestHelper extends AbstractRequestHelper<AuthRequestHelper>
 {
     private _authData : object = {};
 
@@ -67,5 +68,5 @@ class AuthRequestHelper extends AbstractRequestHelper<AuthRequestHelper>
 
 }
 
-export = AuthRequestHelper;
+
 

@@ -4,13 +4,13 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import Zation = require("../../api/zation");
-import ZationRequest = require("./zationRequest");
-import AbstractRequestHelper = require("./abstractRequestHelper");
 import {ValidationCheck, ValidationRequest} from "../../api/validationRequest";
-import {HttpGetReq} from "../constants/internal";
+import {HttpGetReq}                         from "../constants/internal";
+import {AbstractRequestHelper}              from "./abstractRequestHelper";
+import {Zation}                             from "../../api/zation";
+import {ZationRequest}                      from "./zationRequest";
 
-class ValidationRequestHelper extends AbstractRequestHelper<ValidationRequestHelper>
+export class ValidationRequestHelper extends AbstractRequestHelper<ValidationRequestHelper>
 {
     private _controllerName : string = '';
     private _systemController : boolean = false;
@@ -107,5 +107,5 @@ class ValidationRequestHelper extends AbstractRequestHelper<ValidationRequestHel
 
 }
 
-export = ValidationRequestHelper;
+
 

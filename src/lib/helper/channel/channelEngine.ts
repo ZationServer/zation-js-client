@@ -4,15 +4,16 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import Zation = require("../../api/zation");
-import ChannelReactionBox = require("../../api/channelReactionBox");
-import ConnectionNeededError = require("../error/connectionNeededError");
-import SubscribeFailError = require("../error/subscribeFailedError");
-import PublishFailError = require("../error/publishFailedError");
-import {ChannelTarget} from "./channelTarget";
-import {ZationChannel} from "../constants/internal";
 
-class ChannelEngine
+import {ChannelTarget}         from "./channelTarget";
+import {ZationChannel}         from "../constants/internal";
+import {Zation}                from "../../api/zation";
+import {SubscribeFailedError}  from "../error/subscribeFailedError";
+import {ChannelReactionBox}    from "../../api/channelReactionBox";
+import {PublishFailedError}    from "../error/publishFailedError";
+import {ConnectionNeededError} from "../error/connectionNeededError";
+
+export class ChannelEngine
 {
     private readonly zation : Zation;
 
@@ -112,7 +113,7 @@ class ChannelEngine
                 });
 
                 ch.on('subscribeFail',async (err) => {
-                    reject(new SubscribeFailError(err));
+                    reject(new SubscribeFailedError(err));
                 });
 
                 ch.on('kickOut',async (msg) => {
@@ -372,7 +373,7 @@ class ChannelEngine
                 this.zation.getSocket().publish(channelName,ChannelEngine.buildPubData(eventName,data),(err) =>
                 {
                     if(err){
-                        reject(new PublishFailError(err));
+                        reject(new PublishFailedError(err));
                     }
                     else{
                         resolve();
@@ -419,5 +420,4 @@ class ChannelEngine
     }
 }
 
-export = ChannelEngine;
 

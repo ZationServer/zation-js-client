@@ -4,9 +4,9 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import Response = require("./../../api/response");
+import {Response} from "../../api/response";
 
-class AuthenticationFailedError extends Error
+export class AuthenticationFailedError extends Error
 {
     private readonly response : Response;
 
@@ -29,4 +29,3 @@ class AuthenticationFailedError extends Error
     }
 }
 
-export = AuthenticationFailedError;

@@ -4,9 +4,11 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
+import {FilterHandlerLib} from "./filterHandlerLib";
+
 type HowToGetFunction<T> = (inputData : T) => any;
 
-class FilterEngine
+export class FilterEngine
 {
     static getWhoHasOneOfInputVar<T>(input : any[], filter : any[] | any, howToGet : HowToGetFunction<T>, searchFilter = FilterHandlerLib.equals) : any[]
     {
@@ -46,4 +48,3 @@ class FilterEngine
     }
 }
 
-exports = FilterEngine;

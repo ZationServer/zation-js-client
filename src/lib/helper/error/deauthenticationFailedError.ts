@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-class DeauthenticationFailedError extends Error
+export class DeauthenticationFailedError extends Error
 {
     private readonly scError : Error;
 
@@ -21,5 +21,5 @@ class DeauthenticationFailedError extends Error
 
 }
 
-export = DeauthenticationFailedError;
+
 

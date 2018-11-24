@@ -4,9 +4,9 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import {ResponseReactionOnError} from "../reaction/reactionHandler";
-import ResponseReactAble = require("../responseReactionEngine/responseReactAble");
+import {ResponseReactionOnError}    from "../reaction/reactionHandler";
 import {AbstractErrorFilterBuilder} from "./abstractErrorFilterBuilder";
+import {ResponseReactAble}          from "../responseReactionEngine/responseReactAble";
 
 export class CatchErrorBuilder<T extends ResponseReactAble,R> extends AbstractErrorFilterBuilder<R>
 {

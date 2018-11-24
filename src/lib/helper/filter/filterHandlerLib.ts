@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-class FilterHandlerLib
+export class FilterHandlerLib
 {
     static equals(v1 : any, v2 : any) : boolean
     {
@@ -70,5 +70,3 @@ class FilterHandlerLib
     }
 
 }
-
-exports = FilterHandlerLib;

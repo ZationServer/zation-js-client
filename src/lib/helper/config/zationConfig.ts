@@ -6,7 +6,7 @@ GitHub: LucaCode
 
 import {ZationOptions, ZationOptionsInternal} from "../../api/zationOptions";
 
-class ZationConfig
+export class ZationConfig
 {
     private _config : ZationOptionsInternal;
 
@@ -96,5 +96,4 @@ class ZationConfig
 
 }
 
-export = ZationConfig;
 

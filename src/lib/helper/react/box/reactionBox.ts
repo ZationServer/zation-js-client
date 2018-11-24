@@ -4,9 +4,9 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import Zation = require("../../../api/zation");
+import {Zation} from "../../../api/zation";
 
-class ReactionBox
+export class ReactionBox
 {
 
     protected active : boolean;
@@ -67,5 +67,4 @@ class ReactionBox
 
 }
 
-export = ReactionBox;
 

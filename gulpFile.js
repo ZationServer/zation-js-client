@@ -71,10 +71,12 @@ gulp.task('optimize', function () {
 gulp.task('minify', function() {
     return gulp.src(DIST + 'zation.js')
         .pipe(babel({
-            comments: false
+            comments: false,
+            compact : false
         }))
         .pipe(babel({
-            plugins: ['minify-dead-code-elimination']
+            plugins: ['minify-dead-code-elimination'],
+            compact : false
         }))
         .pipe(uglify())
         .pipe(insert.prepend(HEADER))

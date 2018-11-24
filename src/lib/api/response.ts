@@ -6,12 +6,12 @@ GitHub: LucaCode
 
 // noinspection TypeScriptPreferShortImport
 import {ProtocolType}    from "../helper/constants/protocolType";
-import ResponseReact     = require("../helper/react/reaction/responseReact");
-import {TaskError} from "../helper/react/taskError/taskError";
-import Zation = require("./zation");
-import {ZationResponse} from "../helper/constants/internal";
+import {TaskError}       from "../helper/react/taskError/taskError";
+import {ZationResponse}  from "../helper/constants/internal";
+import {Zation}          from "./zation";
+import {ResponseReact}   from "../helper/react/reaction/responseReact";
 
-class Response
+export class Response
 {
     private successful = false;
     private readonly type : ProtocolType;
@@ -317,5 +317,5 @@ class Response
     }
 }
 
-export = Response;
+
 

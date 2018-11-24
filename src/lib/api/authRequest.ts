@@ -4,12 +4,12 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import ZationRequest = require("../helper/request/zationRequest");
-import Zation = require("./zation");
-import RequestJsonBuilder = require("../helper/tools/requestJsonBuilder");
-import {ProtocolType} from "../helper/constants/protocolType";
+import {ProtocolType}       from "../helper/constants/protocolType";
+import {ZationRequest}      from "../helper/request/zationRequest";
+import {Zation}             from "./zation";
+import {RequestJsonBuilder} from "../helper/tools/requestJsonBuilder";
 
-class AuthRequest extends ZationRequest
+export class AuthRequest extends ZationRequest
 {
     constructor(data : object,protocol : ProtocolType)
     {
@@ -38,4 +38,3 @@ class AuthRequest extends ZationRequest
     }
 }
 
-export = AuthRequest;

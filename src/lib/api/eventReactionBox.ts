@@ -4,7 +4,6 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import ReactionBox = require("../helper/react/box/reactionBox");
 import {
     EventReactionOnAuthenticate,
     EventReactionOnConnect,
@@ -18,16 +17,17 @@ import {
     EventReactionOnFirstConnect,
     EventReactionOnReconnect, EventReactionOnConnecting, EventReactionOnError, EventReactionOnClose
 } from "../helper/react/reaction/reactionHandler";
-import {Events} from "../helper/constants/events";
-import SboxMapper = require("../helper/box/sboxMapper");
+import {Events}      from "../helper/constants/events";
+import {ReactionBox} from "../helper/react/box/reactionBox";
+import {SboxMapper}  from "../helper/box/sboxMapper";
 
 type EventReaction = EventReactionOnAuthenticate | EventReactionOnConnect | EventReactionOnClinetDeauthenticate |
     EventReactionOnDisconnect | EventReactionOnClientDisconnect | EventReactionOnServerDisconnect |
     EventReactionOnServerDeauthenticate | EventReactionOnDeauthenticate | EventReactionOnConnectAbort |
     EventReactionOnFirstConnect | EventReactionOnReconnect | EventReactionOnConnecting | EventReactionOnError |
-    EventReactionOnClose
+    EventReactionOnClose;
 
-class EventReactionBox extends ReactionBox
+export class EventReactionBox extends ReactionBox
 {
     private readonly map: SboxMapper<any> = new SboxMapper<any>();
     private lastEventReactionTmp : EventReaction;
@@ -537,4 +537,3 @@ class EventReactionBox extends ReactionBox
 
 }
 
-export = EventReactionBox;

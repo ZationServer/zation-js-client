@@ -4,11 +4,11 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import {OrBuilder} from "../statementBuilder/orBuilder";
-import {PairOrAndBuilder} from "../statementBuilder/pairOrAndBuilder";
+import {OrBuilder}               from "../statementBuilder/orBuilder";
+import {PairOrAndBuilder}        from "../statementBuilder/pairOrAndBuilder";
 import {ResponseReactionOnError} from "../reaction/reactionHandler";
-import {ErrorFilter} from "../../filter/errorFilter";
-import {PresetErrorFilter} from "./presetErrorFilter";
+import {ErrorFilter}             from "../../filter/errorFilter";
+import {PresetErrorFilter}       from "./presetErrorFilter";
 
 export abstract class AbstractErrorFilterBuilder<R>
 {

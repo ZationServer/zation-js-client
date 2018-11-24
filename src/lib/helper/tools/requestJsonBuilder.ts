@@ -6,7 +6,7 @@ GitHub: LucaCode
 
 import {ZationRequest} from "../constants/internal";
 
-class RequestJsonBuilder
+export class RequestJsonBuilder
 {
     static buildHttpRequestData
     (
@@ -83,5 +83,4 @@ class RequestJsonBuilder
     }
 }
 
-export = RequestJsonBuilder;
 

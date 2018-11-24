@@ -4,22 +4,22 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import Zation = require("../../api/zation");
-import ResponseReactionBox = require("../../api/responseReactionBox");
-import Response = require("../../api/response");
 import {ProgressHandler} from "./progressHandler";
 import {
     ResponseReactionOnError,
     ResponseReactionOnResponse,
     ResponseReactionOnSuccessful
 } from "../react/reaction/reactionHandler";
-import {OnErrorBuilder} from "../react/onErrorBuilder/onErrorBuilder";
-import {CatchErrorBuilder} from "../react/onErrorBuilder/catchErrorBuilder";
-import {ErrorFilter} from "../filter/errorFilter";
-import ZationRequest = require("./zationRequest");
-import {ProtocolType} from "../constants/protocolType";
+import {OnErrorBuilder}      from "../react/onErrorBuilder/onErrorBuilder";
+import {CatchErrorBuilder}   from "../react/onErrorBuilder/catchErrorBuilder";
+import {ErrorFilter}         from "../filter/errorFilter";
+import {ProtocolType}        from "../constants/protocolType";
+import {Zation}              from "../../api/zation";
+import {ResponseReactionBox} from "../../api/responseReactionBox";
+import {ZationRequest}       from "./zationRequest";
+import {Response}            from "../../api/response";
 
-abstract class AbstractRequestHelper<T>
+export abstract class AbstractRequestHelper<T>
 {
     protected readonly zation : Zation;
 
@@ -328,5 +328,4 @@ abstract class AbstractRequestHelper<T>
     protected abstract self() : T;
 }
 
-export = AbstractRequestHelper;
 

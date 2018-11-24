@@ -4,16 +4,16 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import Zation = require("../../api/zation");
 // noinspection TypeScriptPreferShortImport
-import {ProtocolType} from "../constants/protocolType";
-import WsRequest = require("../../api/wsRequest");
-import HttpRequest = require("../../api/httpRequest");
-import ZationRequest = require("./zationRequest");
-import AbstractRequestHelper = require("./abstractRequestHelper");
-import {HttpGetReq} from "../constants/internal";
+import {ProtocolType}          from "../constants/protocolType";
+import {HttpGetReq}            from "../constants/internal";
+import {AbstractRequestHelper} from "./abstractRequestHelper";
+import {Zation}                from "../../api/zation";
+import {ZationRequest}         from "./zationRequest";
+import {HttpRequest}           from "../../api/httpRequest";
+import {WsRequest}             from "../../api/wsRequest";
 
-class RequestHelper extends AbstractRequestHelper<RequestHelper>
+export class RequestHelper extends AbstractRequestHelper<RequestHelper>
 {
     private _useAuth : boolean = true;
     private _controllerName : string = '';
@@ -127,5 +127,4 @@ class RequestHelper extends AbstractRequestHelper<RequestHelper>
 
 }
 
-export = RequestHelper;
 

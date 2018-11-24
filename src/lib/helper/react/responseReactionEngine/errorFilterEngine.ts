@@ -4,12 +4,13 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import {TaskError}   from "../taskError/taskError";
-import {ErrorFilter} from "../../filter/errorFilter";
+import {TaskError}        from "../taskError/taskError";
+import {ErrorFilter}      from "../../filter/errorFilter";
+import {FilterEngine}     from "../../filter/filterEngine";
+import {FilterHandlerLib} from "../../filter/filterHandlerLib";
 
 export class ErrorFilterEngine
 {
-
     static filterErrors(errors : TaskError[],filters : ErrorFilter[]) : TaskError[] {
         if (filters.length === 0) {
             return errors;

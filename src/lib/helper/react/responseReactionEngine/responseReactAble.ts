@@ -10,7 +10,7 @@ import {
     ResponseReactionOnSuccessful
 } from "../reaction/reactionHandler";
 
-interface ResponseReactAble
+export interface ResponseReactAble
 {
     catchError(reaction : ResponseReactionOnError, ...filter : object[]) : any;
     onError(reaction : ResponseReactionOnError, ...filter : object[]) : any;
@@ -18,5 +18,5 @@ interface ResponseReactAble
     onResponse(reaction: ResponseReactionOnResponse) : any
 }
 
-export = ResponseReactAble;
+
 

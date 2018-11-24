@@ -4,7 +4,6 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import ResponseReactAble        = require("../responseReactionEngine/responseReactAble");
 import {
     ResponseReactionCatchError,
     ResponseReactionOnError,
@@ -13,14 +12,16 @@ import {
 } from "./reactionHandler";
 import {OnErrorBuilder}         from "../onErrorBuilder/onErrorBuilder";
 import {CatchErrorBuilder}      from "../onErrorBuilder/catchErrorBuilder";
-import Response                 = require("../../../api/response");
+import {Response}               from "../../../api/response";
 import {ErrorFilter}            from "../../filter/errorFilter";
 import {TriggerResponseEngine}  from "../responseReactionEngine/triggerResponseEngine";
-import FullReaction             = require("./fullReaction");
-import ResponseReactionBox      = require("../../../api/responseReactionBox");
-import Zation                   = require("../../../api/zation");
+import {Zation}                 from "../../../api/zation";
+import {ResponseReactAble}      from "../responseReactionEngine/responseReactAble";
+import {FullReaction}           from "./fullReaction";
+import {ResponseReactionBox}    from "../../../api/responseReactionBox";
 
-class ResponseReact implements ResponseReactAble
+
+export class ResponseReact implements ResponseReactAble
 {
     private readonly response : Response;
     private readonly client : Zation;
@@ -261,5 +262,4 @@ class ResponseReact implements ResponseReactAble
     }
 }
 
-export = ResponseReact;
 

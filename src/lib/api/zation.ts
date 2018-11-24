@@ -4,41 +4,39 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import AuthEngine = require("../helper/auth/authEngine");
-import ChannelEngine = require("../helper/channel/channelEngine");
-import Box = require("../helper/box/box");
-import ResponseReactionBox = require("./responseReactionBox");
-import ChannelReactionBox = require("./channelReactionBox");
-import WsRequest = require("./wsRequest");
-import Response = require("./response");
-import SendEngine = require("../helper/send/sendEngine");
-import ZationRequest = require("../helper/request/zationRequest");
-import RequestHelper = require("../helper/request/requestHelper");
-import ConnectionAbortError = require("../helper/error/connectionAbortError");
-import ZationConfig = require("../helper/config/zationConfig");
-import EventReactionBox = require("./eventReactionBox");
-import ObjectPath = require("../helper/tools/objectPath");
-import ConnectionNeededError = require("../helper/error/connectionNeededError");
-import Logger = require("../helper/logger/logger");
-import AuthRequestHelper = require("../helper/request/authRequestHelper");
-import AuthRequest = require("./authRequest");
-import ValidationRequestHelper = require("../helper/request/validationRequestHelper");
+const  Emitter                 = require('component-emitter');
+const  SocketClusterClient     = require('socketcluster-client');
 
-const  Emitter = require('component-emitter');
-const  SocketClusterClient    = require('socketcluster-client');
-import {SendAble} from "../helper/request/sendAble";
-// noinspection TypeScriptPreferShortImport
-import {ProtocolType} from "../helper/constants/protocolType";
-import {ZationOptions} from "./zationOptions";
-import {ProgressHandler} from "../helper/request/progressHandler";
+import {SendAble}                    from "../helper/request/sendAble";
+import {ProtocolType}                from "../helper/constants/protocolType";
+import {ZationOptions}               from "./zationOptions";
+import {ProgressHandler}             from "../helper/request/progressHandler";
 import {OnHandlerFunction, ResponseFunction, Socket} from "../helper/sc/socket";
-import {Events} from "../helper/constants/events";
-import {ValidationCheck} from "./validationRequest";
-import {ChannelTarget} from "../helper/channel/channelTarget";
-import {SystemController} from "../helper/constants/systemController";
+import {Events}                      from "../helper/constants/events";
+import {ValidationCheck}             from "./validationRequest";
+import {ChannelTarget}               from "../helper/channel/channelTarget";
+import {SystemController}            from "../helper/constants/systemController";
 import {ZationHttpInfo, ZationToken} from "../helper/constants/internal";
-import AuthenticationNeededError = require("../helper/error/authenticationNeededError");
-import AuthenticationFailedError = require("../helper/error/authenticationFailedError");
+import {ChannelEngine}               from "../helper/channel/channelEngine";
+import {ZationConfig}                from "../helper/config/zationConfig";
+import {Box}                         from "../helper/box/box";
+import {ResponseReactionBox}         from "./responseReactionBox";
+import {ChannelReactionBox}          from "./channelReactionBox";
+import {RequestHelper}               from "../helper/request/requestHelper";
+import {AuthRequestHelper}           from "../helper/request/authRequestHelper";
+import {ValidationRequestHelper}     from "../helper/request/validationRequestHelper";
+import {ZationRequest}               from "../helper/request/zationRequest";
+import {SendEngine}                  from "../helper/send/sendEngine";
+import {ConnectionAbortError}        from "../helper/error/connectionAbortError";
+import {Logger}                      from "../helper/logger/logger";
+import {ObjectPath}                  from "../helper/tools/objectPath";
+import {ConnectionNeededError}       from "../helper/error/connectionNeededError";
+import {AuthenticationFailedError}   from "../helper/error/authenticationFailedError";
+import {AuthRequest}                 from "./authRequest";
+import {EventReactionBox}            from "./eventReactionBox";
+import {WsRequest}                   from "./wsRequest";
+import {Response}                    from "./response";
+import {AuthEngine}                  from "../helper/auth/authEngine";
 
 //override for decide between client/server deauthenticate
 SocketClusterClient.SCClientSocket.prototype.deauthenticate = function (callback) {
@@ -111,7 +109,7 @@ SocketClusterClient.SCClientSocket.prototype._triggerChannelUnsubscribe = functi
     }
 };
 
-class Zation
+export class Zation
 {
     private readonly authEngine : AuthEngine;
     private readonly channelEngine : ChannelEngine;
@@ -1529,4 +1527,3 @@ class Zation
     }
 }
 
-export = Zation;

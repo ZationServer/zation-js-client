@@ -6,7 +6,7 @@ GitHub: LucaCode
 
 type ForEeachFunction<T> = (item : T) => Promise<void>;
 
-class SBox<T>
+export class SBox<T>
 {
     protected items : T[] = [] = [];
 
@@ -71,4 +71,3 @@ class SBox<T>
 
 }
 
-export = SBox;

@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-class PublishFailedError extends Error
+export class PublishFailedError extends Error
 {
     private readonly scError : Error;
 
@@ -21,5 +21,4 @@ class PublishFailedError extends Error
 
 }
 
-export = PublishFailedError;
 

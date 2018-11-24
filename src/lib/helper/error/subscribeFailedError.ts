@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-class SubscribeFailedError extends Error
+export class SubscribeFailedError extends Error
 {
     private readonly scError : Error;
 
@@ -20,6 +20,4 @@ class SubscribeFailedError extends Error
     }
 
 }
-
-export = SubscribeFailedError;
 

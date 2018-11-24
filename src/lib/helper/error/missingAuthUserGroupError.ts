@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-class MissingAuthUserGroupError extends Error
+export class MissingAuthUserGroupError extends Error
 {
     constructor(message : string = '')
     {
@@ -12,5 +12,4 @@ class MissingAuthUserGroupError extends Error
     }
 }
 
-export = MissingAuthUserGroupError;
 

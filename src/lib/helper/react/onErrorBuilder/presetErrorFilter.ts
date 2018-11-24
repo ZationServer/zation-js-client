@@ -6,8 +6,8 @@ GitHub: LucaCode
 
 import {AbstractErrorFilterBuilder} from "./abstractErrorFilterBuilder";
 import {ErrorFilter} from "../../filter/errorFilter";
-import {ErrorGroup} from "../../constants/errorGroup";
-import {ErrorType}  from "../../constants/errorType";
+import {ErrorGroup}  from "../../constants/errorGroup";
+import {ErrorType}   from "../../constants/errorType";
 
 export class PresetErrorFilter<T>
 {

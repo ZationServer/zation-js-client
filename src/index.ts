@@ -5,30 +5,29 @@ GitHub: LucaCode
  */
 
 //Api Classes
-import Zation = require("./lib/api/zation");
-import WsRequest = require("./lib/api/wsRequest");
-import HttpRequest = require("./lib/api/httpRequest");
-import AuthRequest = require("./lib/api/authRequest");
-import ValidationRequest = require("./lib/api/validationRequest");
-import ChannelReactionBox = require("./lib/api/channelReactionBox");
-import Response = require("./lib/api/response");
-import ResponseReactionBox = require("./lib/api/responseReactionBox");
-import EventReactionBox = require("./lib/api/eventReactionBox");
-import AuthenticationNeededError = require("./lib/helper/error/authenticationNeededError");
-import ConnectionAbortError = require("./lib/helper/error/connectionAbortError");
-import ConnectionNeededError = require("./lib/helper/error/connectionNeededError");
-import DeauthenticationFailedError = require("./lib/helper/error/deauthenticationFailedError");
-import DeauthenticationNeededError = require("./lib/helper/error/deauthenticationNeededError");
-import MissingAuthUserGroupError = require("./lib/helper/error/missingAuthUserGroupError");
-import MissingUserIdError = require("./lib/helper/error/missingUserIdError");
-import PublishFailedError = require("./lib/helper/error/publishFailedError");
-import ResultIsMissingError = require("./lib/helper/error/resultIsMissingError");
-import SignAuthenticationFailedError = require("./lib/helper/error/signAuthenticationFailedError");
-import AuthenticationFailedError = require("./lib/helper/error/authenticationFailedError");
-import SubscribeFailedError = require("./lib/helper/error/subscribeFailedError");
-import {ZationOptions} from "./lib/api/zationOptions";
-import {RequestAble} from "./lib/api/requestAble";
-import {ProtocolType} from "./lib/helper/constants/protocolType";
+import {ZationOptions}                 from "./lib/api/zationOptions";
+import {RequestAble}                   from "./lib/api/requestAble";
+import {ProtocolType}                  from "./lib/helper/constants/protocolType";
+import {Zation}                        from "./lib/api/zation";
+import {ResponseReactionBox}           from "./lib/api/responseReactionBox";
+import {ChannelReactionBox}            from "./lib/api/channelReactionBox";
+import {EventReactionBox}              from "./lib/api/eventReactionBox";
+import {WsRequest}                     from "./lib/api/wsRequest";
+import {HttpRequest}                   from "./lib/api/httpRequest";
+import {AuthRequest}                   from "./lib/api/authRequest";
+import {ValidationRequest}             from "./lib/api/validationRequest";
+import {AuthenticationFailedError}     from "./lib/helper/error/authenticationFailedError";
+import {AuthenticationNeededError}     from "./lib/helper/error/authenticationNeededError";
+import {ConnectionAbortError}          from "./lib/helper/error/connectionAbortError";
+import {ConnectionNeededError}         from "./lib/helper/error/connectionNeededError";
+import {DeauthenticationFailedError}   from "./lib/helper/error/deauthenticationFailedError";
+import {DeauthenticationNeededError}   from "./lib/helper/error/deauthenticationNeededError";
+import {MissingAuthUserGroupError}     from "./lib/helper/error/missingAuthUserGroupError";
+import {MissingUserIdError}            from "./lib/helper/error/missingUserIdError";
+import {PublishFailedError}            from "./lib/helper/error/publishFailedError";
+import {ResultIsMissingError}          from "./lib/helper/error/resultIsMissingError";
+import {SignAuthenticationFailedError} from "./lib/helper/error/signAuthenticationFailedError";
+import {SubscribeFailedError}          from "./lib/helper/error/subscribeFailedError";
 
 // noinspection JSUnusedGlobalSymbols
 /**

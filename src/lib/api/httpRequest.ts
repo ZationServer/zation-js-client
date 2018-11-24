@@ -4,12 +4,12 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import {ProtocolType}     from "../helper/constants/protocolType";
-import MainRequest        = require("../helper/request/zationRequest");
-import Zation             = require("./zation");
-import RequestJsonBuilder = require("../helper/tools/requestJsonBuilder");
+import {ProtocolType}       from "../helper/constants/protocolType";
+import {Zation}             from "./zation";
+import {RequestJsonBuilder} from "../helper/tools/requestJsonBuilder";
+import {ZationRequest}      from "../helper/request/zationRequest";
 
-class HttpRequest extends MainRequest
+export class HttpRequest extends ZationRequest
 {
     private readonly controllerName : string;
     private readonly useAuth : boolean;
@@ -43,4 +43,3 @@ class HttpRequest extends MainRequest
     }
 }
 
-export = HttpRequest;

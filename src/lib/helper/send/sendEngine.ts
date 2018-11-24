@@ -4,14 +4,15 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import Zation                 = require("../../api/zation");
-import Response               = require("../../api/response");
-import ConnectionNeededError  = require("../error/connectionNeededError");
-import ResultIsMissingError   = require("../error/resultIsMissingError");
+
 import {ProtocolType}           from "../constants/protocolType";
 import {ProgressHandler}        from "../request/progressHandler";
+import {Zation}                 from "../../api/zation";
+import {Response}               from "../../api/response";
+import {ResultIsMissingError}   from "../error/resultIsMissingError";
+import {ConnectionNeededError}  from "../error/connectionNeededError";
 
-class SendEngine
+export class SendEngine
 {
     static wsSend(zation : Zation,data : object,progressHandler ?: ProgressHandler) : Promise<Response>
     {
@@ -77,5 +78,4 @@ class SendEngine
     }
 }
 
-export = SendEngine;
 

@@ -4,19 +4,19 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import Zation         = require("../../api/zation");
-import ChannelEngine  = require("../channel/channelEngine");
-import Logger         = require("../logger/logger");
-import MissingUserIdError          = require("../error/missingUserIdError");
-import MissingAuthUserGroupError   = require("../error/missingAuthUserGroupError");
-import NotAuthenticatedNeededError = require("../error/deauthenticationNeededError");
-import AuthenticationNeededError   = require("../error/authenticationNeededError");
-import DeauthenticationFailError   = require("../error/deauthenticationFailedError");
-import ConnectionNeededError       = require("../error/connectionNeededError");
-import SignAuthenticationFailError = require("../error/signAuthenticationFailedError");
-import {ZationToken}                 from "../constants/internal";
+import {ZationToken}                   from "../constants/internal";
+import {Zation}                        from "../../api/zation";
+import {ChannelEngine}                 from "../channel/channelEngine";
+import {SignAuthenticationFailedError} from "../error/signAuthenticationFailedError";
+import {ConnectionNeededError}         from "../error/connectionNeededError";
+import {DeauthenticationFailedError}   from "../error/deauthenticationFailedError";
+import {Logger}                        from "../logger/logger";
+import {MissingUserIdError}            from "../error/missingUserIdError";
+import {MissingAuthUserGroupError}     from "../error/missingAuthUserGroupError";
+import {DeauthenticationNeededError}   from "../error/deauthenticationNeededError";
+import {AuthenticationNeededError}     from "../error/authenticationNeededError";
 
-class AuthEngine
+export class AuthEngine
 {
     private currentUserId : number | string | undefined = undefined;
     private currentUserAuthGroup : string | undefined = undefined;
@@ -86,10 +86,10 @@ class AuthEngine
                 this.zation.getSocket().authenticate(signToken,(err,authState)=>
                 {
                     if(err){
-                        reject(new SignAuthenticationFailError(err));
+                        reject(new SignAuthenticationFailedError(err));
                     }
                     else if(authState.authError){
-                        reject(new SignAuthenticationFailError(authState.authError));
+                        reject(new SignAuthenticationFailedError(authState.authError));
                     }
                     else {
                         resolve();
@@ -109,7 +109,7 @@ class AuthEngine
             {
                 this.zation.getSocket().deauthenticate((e => {
                     if(e){
-                        reject(new DeauthenticationFailError(e));
+                        reject(new DeauthenticationFailedError(e));
                     } else {
                         resolve();
                     }}));
@@ -236,7 +236,7 @@ class AuthEngine
             await this.chEngine.subDefaultUserGroupChannel();
         }
         else{
-            throw new NotAuthenticatedNeededError('To subscribe the default user group channel');
+            throw new DeauthenticationNeededError('To subscribe the default user group channel');
         }
     }
 
@@ -315,5 +315,4 @@ class AuthEngine
 
 }
 
-export = AuthEngine;
 

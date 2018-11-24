@@ -4,7 +4,6 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import ReactionBox       = require("../helper/react/box/reactionBox");
 import {OnErrorBuilder}    from "../helper/react/onErrorBuilder/onErrorBuilder";
 import {CatchErrorBuilder} from "../helper/react/onErrorBuilder/catchErrorBuilder";
 import {
@@ -13,12 +12,14 @@ import {
     ResponseReactionOnResponse,
     ResponseReactionOnSuccessful
 } from "../helper/react/reaction/reactionHandler";
-import FullReaction      = require("../helper/react/reaction/fullReaction");
-import ResponseReactAble = require("../helper/react/responseReactionEngine/responseReactAble");
-import {ErrorFilter}       from "../helper/filter/errorFilter";
-import Response          = require("./response");
+
+import {ErrorFilter}           from "../helper/filter/errorFilter";
 import {TriggerResponseEngine} from "../helper/react/responseReactionEngine/triggerResponseEngine";
-import SboxMapper = require("../helper/box/sboxMapper");
+import {ReactionBox}           from "../helper/react/box/reactionBox";
+import {ResponseReactAble}     from "../helper/react/responseReactionEngine/responseReactAble";
+import {FullReaction}          from "../helper/react/reaction/fullReaction";
+import {SboxMapper}            from "../helper/box/sboxMapper";
+import {Response}              from "./response";
 
 enum MapKey
 {
@@ -28,7 +29,7 @@ enum MapKey
    RESPONSE
 }
 
-class ResponseReactionBox extends ReactionBox implements ResponseReactAble
+export class ResponseReactionBox extends ReactionBox implements ResponseReactAble
 {
 
     private readonly map: SboxMapper<FullReaction<any>> = new SboxMapper<FullReaction<any>>();
@@ -336,4 +337,3 @@ class ResponseReactionBox extends ReactionBox implements ResponseReactAble
     }
 }
 
-export = ResponseReactionBox;

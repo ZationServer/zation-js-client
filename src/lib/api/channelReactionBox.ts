@@ -4,10 +4,6 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import ReactionBox = require("../helper/react/box/reactionBox");
-import SBox = require("../helper/box/sBox");
-import FullReaction = require("../helper/react/reaction/fullReaction");
-import SboxMapper = require("../helper/box/sboxMapper");
 import {
     ChannelReactionOnClientUnsubAnyCh,
     ChannelReactionOnClientUnsubCustomCh,
@@ -35,6 +31,10 @@ import {
     ChannelReactionOnUnsubZationCh
 } from "../helper/react/reaction/reactionHandler";
 import {ChannelTarget} from "../helper/channel/channelTarget";
+import {ReactionBox}   from "../helper/react/box/reactionBox";
+import {SboxMapper}    from "../helper/box/sboxMapper";
+import {FullReaction}  from "../helper/react/reaction/fullReaction";
+import {SBox}          from "../helper/box/sBox";
 
 type ValidChecker = (filter : object) => boolean;
 
@@ -44,7 +44,7 @@ interface ChFilter {
     event ?: string
 }
 
-class ChannelReactionBox extends ReactionBox
+export class ChannelReactionBox extends ReactionBox
 {
 
     private readonly _mapPub: SboxMapper<FullReaction<any>> = new SboxMapper<FullReaction<any>>();
@@ -1749,4 +1749,3 @@ class ChannelReactionBox extends ReactionBox
     }
 }
 
-export = ChannelReactionBox;

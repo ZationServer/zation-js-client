@@ -4,8 +4,8 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import Zation         = require("../../api/zation");
 import {ProtocolType} from "../constants/protocolType";
+import {Zation}       from "../../api/zation";
 
 export abstract class SendAble
 {

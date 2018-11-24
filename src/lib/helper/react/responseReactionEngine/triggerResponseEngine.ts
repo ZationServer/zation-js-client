@@ -4,11 +4,11 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import Response = require("../../../api/response");
-import FullReaction = require("../reaction/fullReaction");
+import {Response}          from "../../../api/response";
 import {ResponseReactionCatchError, ResponseReactionOnError, ResponseReactionOnSuccessful} from "../reaction/reactionHandler";
 import {ErrorFilterEngine} from "./errorFilterEngine";
-import {TaskError} from "../taskError/taskError";
+import {TaskError}         from "../taskError/taskError";
+import {FullReaction}      from "../reaction/fullReaction";
 
 export class TriggerResponseEngine
 {

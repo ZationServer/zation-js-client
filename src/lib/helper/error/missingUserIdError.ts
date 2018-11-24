@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-class  MissingUserIdError extends Error
+export class MissingUserIdError extends Error
 {
     constructor(message : string = '')
     {
@@ -12,5 +12,4 @@ class  MissingUserIdError extends Error
     }
 }
 
-export = MissingUserIdError;
 
