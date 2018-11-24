@@ -17,14 +17,15 @@ import EventReactionBox = require("./lib/api/eventReactionBox");
 import AuthenticationNeededError = require("./lib/helper/error/authenticationNeededError");
 import ConnectionAbortError = require("./lib/helper/error/connectionAbortError");
 import ConnectionNeededError = require("./lib/helper/error/connectionNeededError");
-import DeauthenticationFailError = require("./lib/helper/error/deauthenticationFailError");
+import DeauthenticationFailedError = require("./lib/helper/error/deauthenticationFailedError");
 import DeauthenticationNeededError = require("./lib/helper/error/deauthenticationNeededError");
 import MissingAuthUserGroupError = require("./lib/helper/error/missingAuthUserGroupError");
 import MissingUserIdError = require("./lib/helper/error/missingUserIdError");
-import PublishFailError = require("./lib/helper/error/publishFailError");
+import PublishFailedError = require("./lib/helper/error/publishFailedError");
 import ResultIsMissingError = require("./lib/helper/error/resultIsMissingError");
-import SignAuthenticationFailError = require("./lib/helper/error/signAuthenticationFailError");
-import SubscribeFailError = require("./lib/helper/error/subscribeFailError");
+import SignAuthenticationFailedError = require("./lib/helper/error/signAuthenticationFailedError");
+import AuthenticationFailedError = require("./lib/helper/error/authenticationFailedError");
+import SubscribeFailedError = require("./lib/helper/error/subscribeFailedError");
 import {ZationOptions} from "./lib/api/zationOptions";
 import {RequestAble} from "./lib/api/requestAble";
 import {ProtocolType} from "./lib/helper/constants/protocolType";
@@ -53,17 +54,18 @@ export = {
     ResponseReactionBox,
     EventReactionBox,
     Response,
+    AuthenticationFailedError,
     AuthenticationNeededError,
     ConnectionAbortError,
     ConnectionNeededError,
-    DeauthenticationFailError,
+    DeauthenticationFailedError,
     DeauthenticationNeededError,
     MissingAuthUserGroupError,
     MissingUserIdError,
-    PublishFailError,
+    PublishFailedError,
     ResultIsMissingError,
-    SignAuthenticationFailError,
-    SubscribeFailError,
+    SignAuthenticationFailedError,
+    SubscribeFailedError,
     ProtocolType
 }
 

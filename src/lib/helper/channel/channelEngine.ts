@@ -7,8 +7,8 @@ GitHub: LucaCode
 import Zation = require("../../api/zation");
 import ChannelReactionBox = require("../../api/channelReactionBox");
 import ConnectionNeededError = require("../error/connectionNeededError");
-import SubscribeFailError = require("../error/subscribeFailError");
-import PublishFailError = require("../error/publishFailError");
+import SubscribeFailError = require("../error/subscribeFailedError");
+import PublishFailError = require("../error/publishFailedError");
 import {ChannelTarget} from "./channelTarget";
 import {ZationChannel} from "../constants/internal";
 
@@ -169,13 +169,15 @@ class ChannelEngine
                const data : any = input['d'];
                const ssid : string | undefined = input['ssi'];
 
-               await this.zation._getChannelReactionMainBox().forEachAll(async (channelReactionBox : ChannelReactionBox) => {
+               const promises : Promise<void>[] = [];
+               promises.push(this.zation._getChannelReactionMainBox().forEachAll(async (channelReactionBox : ChannelReactionBox) => {
                    await channelReactionBox._triggerPub(target,event,data,infoObj,ssid);
-               });
+               }));
 
-               await this.zation._getChannelReactionMainBox().forEachAll(async (channelReactionBox : ChannelReactionBox) => {
+               promises.push(this.zation._getChannelReactionMainBox().forEachAll(async (channelReactionBox : ChannelReactionBox) => {
                    await channelReactionBox._triggerPub(ChannelTarget.ANY,event,data,{chFullName : channel},ssid);
-               });
+               }));
+               await Promise.all(promises);
            }
        });
     }

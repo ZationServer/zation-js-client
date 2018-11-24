@@ -11,9 +11,9 @@ import MissingUserIdError          = require("../error/missingUserIdError");
 import MissingAuthUserGroupError   = require("../error/missingAuthUserGroupError");
 import NotAuthenticatedNeededError = require("../error/deauthenticationNeededError");
 import AuthenticationNeededError   = require("../error/authenticationNeededError");
-import DeauthenticationFailError   = require("../error/deauthenticationFailError");
+import DeauthenticationFailError   = require("../error/deauthenticationFailedError");
 import ConnectionNeededError       = require("../error/connectionNeededError");
-import SignAuthenticationFailError = require("../error/signAuthenticationFailError");
+import SignAuthenticationFailError = require("../error/signAuthenticationFailedError");
 import {ZationToken}                 from "../constants/internal";
 
 class AuthEngine
@@ -26,8 +26,6 @@ class AuthEngine
 
     private readonly zation : Zation;
     private readonly chEngine : ChannelEngine;
-
-    private readonly fullOneTimeAuthEvents : Function[] = [];
 
     constructor(zation : Zation,channelEngine : ChannelEngine)
     {
@@ -51,7 +49,12 @@ class AuthEngine
         this.zation.getSocket().on('authenticate',async ()=> {
             const authToken = this.zation.getSocket().getAuthToken();
             const signToken = this.zation.getSocket().getSignedAuthToken();
-            await this.refreshToken(authToken,signToken);
+
+            //try because they can be an subscribion error
+            try {
+                await this.refreshToken(authToken, signToken);
+            }
+            catch (e) {}
         });
 
         this.zation.getSocket().on('connect',async () =>{
@@ -153,13 +156,14 @@ class AuthEngine
 
                 this.currentUserAuthGroup = authGroup;
 
-                if(this.zation.isDebug())
-                {
+                if(this.zation.isDebug()) {
                     Logger.printInfo
-                    (`User is Login with userId: '${this.currentUserId}' in user group: '${this.currentUserAuthGroup}'.`)
+                    (`User is Login with userId: '${this.currentUserId}' i n user group: '${this.currentUserAuthGroup}'.`)
                 }
 
-                await this.subAuthUserGroupCh();
+                if(this.zation.isAutoAuthUserGroupChSub()) {
+                    await this.subAuthUserGroupCh();
+                }
             }
             else {
                 //unregister old channels
@@ -169,7 +173,9 @@ class AuthEngine
 
                 this.currentUserAuthGroup = authGroup;
 
-                await this.subDefaultUserGroupCh();
+                if(this.zation.isAutoDefaultUserGroupChSub()) {
+                    await this.subDefaultUserGroupCh();
+                }
             }
         }
     }
@@ -244,21 +250,6 @@ class AuthEngine
         promises.push(this.updateAuthGroup(token.zationAuthUserGroup));
         promises.push(this.updateUserId(token.zationUserId));
         await Promise.all(promises);
-        if(this.isAuthenticated()) {
-            this.callOneTimeFullAuthEvents();
-        }
-    }
-
-    callOneTimeFullAuthEvents()
-    {
-        for(let i = 0; i < this.fullOneTimeAuthEvents.length; i++) {
-            this.fullOneTimeAuthEvents[i]();
-            this.fullOneTimeAuthEvents.slice(i,1);
-        }
-    }
-
-    addOneTimeFullAuthEvent(func : () => void) {
-        this.fullOneTimeAuthEvents.push(func);
     }
 
     getSignToken() : string | null {

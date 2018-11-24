@@ -4,13 +4,13 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-class SubscribeFailError extends Error
+class DeauthenticationFailedError extends Error
 {
     private readonly scError : Error;
 
     constructor(scError : Error)
     {
-        super(`Subscribe channel failed! ${scError.toString()}`);
+        super(`Deauthentication failed! ${scError.toString()}`);
         this.scError = scError;
     }
 
@@ -21,5 +21,5 @@ class SubscribeFailError extends Error
 
 }
 
-export = SubscribeFailError;
+export = DeauthenticationFailedError;
 

@@ -4,13 +4,13 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-class PublishFailError extends Error
+class SubscribeFailedError extends Error
 {
     private readonly scError : Error;
 
     constructor(scError : Error)
     {
-        super(`Publish to a channel failed! ${scError.toString()}`);
+        super(`Subscribe channel failed! ${scError.toString()}`);
         this.scError = scError;
     }
 
@@ -21,5 +21,5 @@ class PublishFailError extends Error
 
 }
 
-export = PublishFailError;
+export = SubscribeFailedError;
 

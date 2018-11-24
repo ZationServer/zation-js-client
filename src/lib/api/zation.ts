@@ -38,6 +38,7 @@ import {ChannelTarget} from "../helper/channel/channelTarget";
 import {SystemController} from "../helper/constants/systemController";
 import {ZationHttpInfo, ZationToken} from "../helper/constants/internal";
 import AuthenticationNeededError = require("../helper/error/authenticationNeededError");
+import AuthenticationFailedError = require("../helper/error/authenticationFailedError");
 
 //override for decide between client/server deauthenticate
 SocketClusterClient.SCClientSocket.prototype.deauthenticate = function (callback) {
@@ -345,25 +346,44 @@ class Zation
      * @description
      * Authenticate this connection (use authentication controller)
      * with authentication authData and returns the response.
-     * Note that it may take a while that the new auth token is set.
-     * Even if the response is already there.
-     * You have the possibility to wait for it with the method waitForAuth.
-     * Notice also that the zation response reaction boxes are not triggerd.
+     * This method automatically throws an AuthenticationFailedError
+     * if the response was successful and the client is not authenticated or the response has errors.
+     * At the AuthenticationFailedError you have the possibility to react exactly to the response.
+     * If you prefer to do it by yourself or for advanced use cases, you should use the other method authRequest.
+     * Also notice that the zation response reaction boxes are not triggerd.
      * Because then you have the opportunity to react with the response on specific things
-     * then trigger the zation response reaction boxes (using response.react().zationReact()).
+     * then trigger the zation response reaction boxes (using zationReact()).
      * @example
-     * await authenticate({userName : 'Tim', password : 'opqdjß2jdp1d'});
-     * @throws ConnectionNeededError(if using protocol type webSocket)
+     * try{
+     *  await client.authenticate({userName : 'Tim', password : 'opqdjß2jdp1d'});
+     * }
+     * catch (e : AuthenticationFailedError) {
+     *   const response = e.getResponse();
+     * }
+     * @throws
+     * ConnectionNeededError(if using protocol type webSocket)
+     * AuthenticationFailedError
      */
     async authenticate(authData : object = {}, protocolType : ProtocolType = ProtocolType.WebSocket) : Promise<Response> {
-        return await this.send(new AuthRequest(authData,protocolType),undefined,false);
+        const resp = await this.send(new AuthRequest(authData,protocolType),undefined,false);
+        resp.react().onSuccessful(() => {
+            if(!this.isAuthenticated()){
+                throw new AuthenticationFailedError
+                ('After authentication request the client is not authenticated.' +
+                    'It may have happened because authenticate was not called in the server auth cotroller.',resp);
+            }
+        }).onError(() => {
+            throw new AuthenticationFailedError
+            ('The request has an error that means that the authentication has failed.',resp);
+        });
+        return resp;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
      * Authenticate this connection by using an signed token.
-     * @throws ConnectionNeededError, SignAuthenticationFailError
+     * @throws ConnectionNeededError, SignAuthenticationFailedError
      */
     async signAuthenticate(signToken : string) : Promise<void> {
         await this.authEngine.signAuthenticate(signToken);
@@ -373,7 +393,7 @@ class Zation
     /**
      * @description
      * Deauthenticate the connection if it is authenticated.
-     * @throws DeauthenticationFailError
+     * @throws DeauthenticationFailedError
      */
     async deauthenticate() : Promise<void> {
         await this.authEngine.deauthenticate();
@@ -451,9 +471,6 @@ class Zation
      * Returns an auth request helper.
      * Where you can easy build an auth request with reactions and send it.
      * This is another way to authenticate this client.
-     * Note that it may take a while that the new auth token is set.
-     * Even if the response is already there.
-     * You have the possibility to wait for it with the method waitForAuth.
      * The default values are:
      * Protocol: WebSocket
      * AuthData: {}
@@ -895,7 +912,7 @@ class Zation
      * Subscribe the default user group channel.
      * Can be useful if auto sub is disabled.
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws SubscribeFailError, DeauthenticationNeededError
+     * @throws SubscribeFailedError, DeauthenticationNeededError
      */
     async subDefaultUserGroupCh() : Promise<void> {
         await this.authEngine.subDefaultUserGroupCh();
@@ -926,7 +943,7 @@ class Zation
      * Subscribe the all channel.
      * Can be useful if auto sub is disabled.
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws SubscribeFailError
+     * @throws SubscribeFailedError
      */
     async subAllCh() : Promise<void> {
         await this.channelEngine.subAllChannel();
@@ -956,7 +973,7 @@ class Zation
      * @description
      * Subscribe a custom channel.
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws SubscribeFailError
+     * @throws SubscribeFailedError
      * @param chName
      */
     async subCustomCh(chName : string) : Promise<void> {
@@ -1002,7 +1019,7 @@ class Zation
      * @description
      * Subscribe a custom id channel.
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws SubscribeFailError
+     * @throws SubscribeFailedError
      * @param chName
      * @param chId
      */
@@ -1056,7 +1073,7 @@ class Zation
      * By unsubscribe the all custom id channels with ch name and
      * subscribe the new one.
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws SubscribeFailError
+     * @throws SubscribeFailedError
      * @param channel
      * @param id
      */
@@ -1071,7 +1088,7 @@ class Zation
      * @description
      * Subscribe the panel out channel.
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws SubscribeFailError
+     * @throws SubscribeFailedError
      */
     async subPanelOutCh() : Promise<void> {
         await this.channelEngine.subPanelOutChannel();
@@ -1383,32 +1400,6 @@ class Zation
             throw new ConnectionNeededError('To send raw data.');
 
         }
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Waiting for client is full authenticated.
-     * That means token is updated and client has susbcribed
-     * the user and user group channel if auto subscribe is active.
-     * @throws Error (by timeout)
-     */
-    waitForAuth(timeoutMs : number = 500) : Promise<void>
-    {
-        return new Promise<void>((resolve, reject) => {
-            if(this.isAuthenticated()){
-                resolve();
-            }
-            else {
-                const timeout = setTimeout(() => {
-                    reject(new Error('Timeout to wait for auth'));
-                },timeoutMs);
-                this.authEngine.addOneTimeFullAuthEvent(() => {
-                    clearTimeout(timeout);
-                    resolve();
-                });
-            }
-        })
     }
 
     //Part Getter/Setter

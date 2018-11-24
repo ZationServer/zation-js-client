@@ -4,13 +4,13 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-class DeauthenticationFailError extends Error
+class PublishFailedError extends Error
 {
     private readonly scError : Error;
 
     constructor(scError : Error)
     {
-        super(`Deauthentication failed! ${scError.toString()}`);
+        super(`Publish to a channel failed! ${scError.toString()}`);
         this.scError = scError;
     }
 
@@ -21,5 +21,5 @@ class DeauthenticationFailError extends Error
 
 }
 
-export = DeauthenticationFailError;
+export = PublishFailedError;
 
