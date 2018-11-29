@@ -364,16 +364,17 @@ export class Zation
      */
     async authenticate(authData : object = {}, protocolType : ProtocolType = ProtocolType.WebSocket) : Promise<Response> {
         const resp = await this.send(new AuthRequest(authData,protocolType),undefined,false);
-        resp.react().onSuccessful(() => {
-            if(!this.isAuthenticated()){
+        if(resp.isSuccessful()) {
+            if(!this.isAuthenticated()) {
                 throw new AuthenticationFailedError
                 ('After authentication request the client is not authenticated.' +
                     'It may have happened because authenticate was not called in the server auth cotroller.',resp);
             }
-        }).onError(() => {
+        }
+        else {
             throw new AuthenticationFailedError
             ('The request has an error that means that the authentication has failed.',resp);
-        });
+        }
         return resp;
     }
 
