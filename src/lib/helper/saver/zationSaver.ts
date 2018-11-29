@@ -19,6 +19,6 @@ export class ZationSaver {
         if(!this.client.hasOwnProperty(key)) {
             throw new NoZationClientSetOnTheKey(key);
         }
-        return this[key];
+        return this.client[key];
     }
 }
