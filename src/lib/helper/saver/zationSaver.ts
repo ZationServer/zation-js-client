@@ -4,11 +4,12 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import {Zation} from "../../api/zation";
+import {Zation}                    from "../../api/zation";
+import {NoZationClientSetOnTheKey} from "../error/noZationClientSetOnTheKey";
 
 export class ZationSaver {
 
-    private static client : Record<string,Zation>;
+    private static client : Record<string,Zation> = {};
 
     static save(client : Zation,key : string) {
         this.client[key] = client;
@@ -16,8 +17,7 @@ export class ZationSaver {
 
     static load(key) : Zation {
         if(!this.client.hasOwnProperty(key)) {
-            //todo specific error that also exported
-            throw new Error('Key Not Found')
+            throw new NoZationClientSetOnTheKey(key);
         }
         return this[key];
     }

@@ -30,6 +30,7 @@ import {SignAuthenticationFailedError} from "./lib/helper/error/signAuthenticati
 import {SubscribeFailedError}          from "./lib/helper/error/subscribeFailedError";
 import {Response}                      from "./lib/api/response";
 import {ZationSaver}                   from "./lib/helper/saver/zationSaver";
+import {NoZationClientSetOnTheKey}     from "./lib/helper/error/noZationClientSetOnTheKey";
 
 // noinspection JSUnusedGlobalSymbols
 /**
@@ -77,6 +78,7 @@ export = {
     ResultIsMissingError,
     SignAuthenticationFailedError,
     SubscribeFailedError,
+    NoZationClientSetOnTheKey,
     ProtocolType
 }
 
