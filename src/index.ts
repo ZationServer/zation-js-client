@@ -29,6 +29,7 @@ import {ResultIsMissingError}          from "./lib/helper/error/resultIsMissingE
 import {SignAuthenticationFailedError} from "./lib/helper/error/signAuthenticationFailedError";
 import {SubscribeFailedError}          from "./lib/helper/error/subscribeFailedError";
 import {Response}                      from "./lib/api/response";
+import {ZationSaver}                   from "./lib/helper/saver/zationSaver";
 
 // noinspection JSUnusedGlobalSymbols
 /**
@@ -42,9 +43,19 @@ const create = (options ?: ZationOptions,...reactionBox : (ResponseReactionBox |
     return new Zation(options,...reactionBox);
 };
 
+const save = (client : Zation, key : string = 'default') => {
+    ZationSaver.save(client,key);
+};
+
+const load = (key : string = 'default') : Zation => {
+    return ZationSaver.load(key);
+};
+
 export = {
     Zation,
     create,
+    save,
+    load,
     RequestAble,
     WsRequest,
     HttpRequest,
