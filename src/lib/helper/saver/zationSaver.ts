@@ -15,6 +15,10 @@ export class ZationSaver {
     }
 
     static load(key) : Zation {
+        if(!this.client.hasOwnProperty(key)) {
+            //todo specific error that also exported
+            throw new Error('Key Not Found')
+        }
         return this[key];
     }
 }
