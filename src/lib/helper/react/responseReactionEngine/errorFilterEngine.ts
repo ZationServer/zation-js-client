@@ -16,11 +16,11 @@ export class ErrorFilterEngine
             return errors;
         }
         else {
-            let errors : TaskError[] = [];
+            let filteredErrors : TaskError[] = [];
             for(let i = 0; i < filters.length; i++) {
-                errors = errors.concat(ErrorFilterEngine.filterError(errors,filters[i]));
+                filteredErrors = filteredErrors.concat(ErrorFilterEngine.filterError(errors,filters[i]));
             }
-            return errors;
+            return filteredErrors;
         }
     }
 
@@ -81,7 +81,7 @@ export class ErrorFilterEngine
             }
         }
 
-        if(Array.isArray(filter['infoKey']))
+        if(Array.isArray(filter['infoKey']) || typeof filter['infoKey'] === 'string')
         {
             cachedFilterErrors =
                 FilterEngine.getWhoHasOneOfInputVar<TaskError>
@@ -89,7 +89,7 @@ export class ErrorFilterEngine
                     cachedFilterErrors,
                     filter['infoKey'],
                     (te) => {return te.getInfo();},
-                    FilterHandlerLib.objValuesAre
+                    FilterHandlerLib.objKeysAre
                 );
 
             if(cachedFilterErrors.length === 0) {
@@ -97,7 +97,7 @@ export class ErrorFilterEngine
             }
         }
 
-        if(Array.isArray(filter['infoValue']))
+        if(Array.isArray(filter['infoValue']) || typeof filter['infoValue'] === 'string')
         {
             cachedFilterErrors =
                 FilterEngine.getWhoHasOneOfInputVar<TaskError>
@@ -105,7 +105,7 @@ export class ErrorFilterEngine
                     cachedFilterErrors,
                     filter['infoValue'],
                     (te) => {return te.getInfo();},
-                    FilterHandlerLib.objKeysAre
+                    FilterHandlerLib.objValuesAre
                 );
 
             if(cachedFilterErrors.length === 0) {
