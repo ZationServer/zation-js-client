@@ -65,3 +65,7 @@ export type EventReactionOnConnectAbort             = (code : number | undefined
 export type EventReactionOnConnecting               = () => void | Promise<void>;
 export type EventReactionOnError                    = (err : any) => void | Promise<void>;
 export type EventReactionOnClose                    = (code : number | undefined, data : object | string | undefined) => void | Promise<void>;
+
+//ReactionBox
+export type WillProcess                  = () => void | Promise<void>;
+export type DidProcess                   = () => void | Promise<void>;

@@ -44,7 +44,7 @@ interface ChFilter {
     event ?: string
 }
 
-export class ChannelReactionBox extends ReactionBox
+export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
 {
 
     private readonly _mapPub: SboxMapper<FullReaction<any>> = new SboxMapper<FullReaction<any>>();
@@ -54,8 +54,6 @@ export class ChannelReactionBox extends ReactionBox
     private readonly _mapClientUnsub: SboxMapper<FullReaction<any>> = new SboxMapper<FullReaction<any>>();
     private readonly _mapUnsub: SboxMapper<FullReaction<any>> = new SboxMapper<FullReaction<any>>();
 
-    private lastFullReactionTmp : FullReaction<any>;
-
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
@@ -64,6 +62,7 @@ export class ChannelReactionBox extends ReactionBox
      */
     constructor() {
         super();
+        this.self = this;
     }
 
     //OnPub Handler
@@ -84,7 +83,7 @@ export class ChannelReactionBox extends ReactionBox
     onPubAnyCh(event: string | string[] | null, reaction: ChannelReactionOnPubAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubAnyCh>(reaction, {event: event});
         this._mapPub.add(ChannelTarget.ANY, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -116,7 +115,7 @@ export class ChannelReactionBox extends ReactionBox
     onPubUserCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event});
         this._mapPub.add(ChannelTarget.USER, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -148,7 +147,7 @@ export class ChannelReactionBox extends ReactionBox
     onPubAuthUserGroupCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event});
         this._mapPub.add(ChannelTarget.AUG, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -180,7 +179,7 @@ export class ChannelReactionBox extends ReactionBox
     onPubDefaultUserGroupCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event});
         this._mapPub.add(ChannelTarget.DUG, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -212,7 +211,7 @@ export class ChannelReactionBox extends ReactionBox
     onPubAllCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event});
         this._mapPub.add(ChannelTarget.ALL, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -247,7 +246,7 @@ export class ChannelReactionBox extends ReactionBox
     onPubCustomCh(chName: string | string[] | null, event: string | string[] | null, reaction: ChannelReactionOnPubCustomCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubCustomCh>(reaction, {chName: chName, event: event});
         this._mapPub.add(ChannelTarget.C, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -285,7 +284,7 @@ export class ChannelReactionBox extends ReactionBox
     onPubCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,event: string | string[] | null,reaction: ChannelReactionOnPubCustomIdCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubCustomIdCh>(reaction, {chName, event, chId});
         this._mapPub.add(ChannelTarget.CID, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -318,7 +317,7 @@ export class ChannelReactionBox extends ReactionBox
     onPubPanelOutCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event});
         this._mapPub.add(ChannelTarget.PANEL, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -348,7 +347,7 @@ export class ChannelReactionBox extends ReactionBox
     onKickOutAnyCh(reaction: ChannelReactionOnKickOutAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutAnyCh>(reaction);
         this._mapKick.add(ChannelTarget.ANY, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -377,7 +376,7 @@ export class ChannelReactionBox extends ReactionBox
     onKickOutUserCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction);
         this._mapKick.add(ChannelTarget.USER, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -406,7 +405,7 @@ export class ChannelReactionBox extends ReactionBox
     onKickOutAuthUserGroupCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction);
         this._mapKick.add(ChannelTarget.AUG, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -435,7 +434,7 @@ export class ChannelReactionBox extends ReactionBox
     onKickOutDefaultUserGroupCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction);
         this._mapKick.add(ChannelTarget.DUG, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -464,7 +463,7 @@ export class ChannelReactionBox extends ReactionBox
     onKickOutAllCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction);
         this._mapKick.add(ChannelTarget.ALL, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -496,7 +495,7 @@ export class ChannelReactionBox extends ReactionBox
     onKickOutCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnKickOutCustomCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutCustomCh>(reaction, {chName: chName});
         this._mapKick.add(ChannelTarget.C, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -531,7 +530,7 @@ export class ChannelReactionBox extends ReactionBox
     onKickOutCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,reaction: ChannelReactionOnKickOutCustomIdCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutCustomIdCh>(reaction, {chName, chId});
         this._mapKick.add(ChannelTarget.CID, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -561,7 +560,7 @@ export class ChannelReactionBox extends ReactionBox
     onKickOutPanelOutCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction);
         this._mapKick.add(ChannelTarget.PANEL, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -591,7 +590,7 @@ export class ChannelReactionBox extends ReactionBox
     onSubFailAnyCh(reaction: ChannelReactionOnSubFailAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailAnyCh>(reaction);
         this._mapSubFail.add(ChannelTarget.ANY, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -620,7 +619,7 @@ export class ChannelReactionBox extends ReactionBox
     onSubFailUserCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction);
         this._mapSubFail.add(ChannelTarget.USER, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -649,7 +648,7 @@ export class ChannelReactionBox extends ReactionBox
     onSubFailAuthUserGroupCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction);
         this._mapSubFail.add(ChannelTarget.AUG, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -678,7 +677,7 @@ export class ChannelReactionBox extends ReactionBox
     onSubFailDefaultUserGroupCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction);
         this._mapSubFail.add(ChannelTarget.DUG, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -707,7 +706,7 @@ export class ChannelReactionBox extends ReactionBox
     onSubFailAllCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction);
         this._mapSubFail.add(ChannelTarget.ALL, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -739,7 +738,7 @@ export class ChannelReactionBox extends ReactionBox
     onSubFailCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnSubFailCustomCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailCustomCh>(reaction, {chName: chName});
         this._mapSubFail.add(ChannelTarget.C, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -774,7 +773,7 @@ export class ChannelReactionBox extends ReactionBox
     onSubFailCustomIdCh(chName: string | string[] | null,chId: string | string[] | null, reaction: ChannelReactionOnSubFailCustomIdCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailCustomIdCh>(reaction, {chName,chId});
         this._mapSubFail.add(ChannelTarget.CID, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -803,7 +802,7 @@ export class ChannelReactionBox extends ReactionBox
     onSubFailPanelOutCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction);
         this._mapSubFail.add(ChannelTarget.PANEL, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -833,7 +832,7 @@ export class ChannelReactionBox extends ReactionBox
     onSubAnyCh(reaction: ChannelReactionOnSubAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubAnyCh>(reaction);
         this._mapSub.add(ChannelTarget.ANY, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -862,7 +861,7 @@ export class ChannelReactionBox extends ReactionBox
     onSubUserCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction);
         this._mapSub.add(ChannelTarget.USER, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -891,7 +890,7 @@ export class ChannelReactionBox extends ReactionBox
     onSubAuthUserGroupCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction);
         this._mapSub.add(ChannelTarget.AUG, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -920,7 +919,7 @@ export class ChannelReactionBox extends ReactionBox
     onSubDefaultUserGroupCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction);
         this._mapSub.add(ChannelTarget.DUG, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -949,7 +948,7 @@ export class ChannelReactionBox extends ReactionBox
     onSubAllCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction);
         this._mapSub.add(ChannelTarget.ALL, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -981,7 +980,7 @@ export class ChannelReactionBox extends ReactionBox
     onSubCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnSubCustomCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubCustomCh>(reaction, {chName: chName});
         this._mapSub.add(ChannelTarget.C, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -1016,7 +1015,7 @@ export class ChannelReactionBox extends ReactionBox
     onSubCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,reaction: ChannelReactionOnSubCustomIdCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubCustomIdCh>(reaction, {chName, chId});
         this._mapSub.add(ChannelTarget.CID, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -1046,7 +1045,7 @@ export class ChannelReactionBox extends ReactionBox
     onSubPanelOutCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction);
         this._mapSub.add(ChannelTarget.PANEL, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -1076,7 +1075,7 @@ export class ChannelReactionBox extends ReactionBox
     onClientUnsubAnyCh(reaction: ChannelReactionOnClientUnsubAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubAnyCh>(reaction);
         this._mapClientUnsub.add(ChannelTarget.ANY, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -1105,7 +1104,7 @@ export class ChannelReactionBox extends ReactionBox
     onClientUnsubUserCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction);
         this._mapClientUnsub.add(ChannelTarget.USER, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -1134,7 +1133,7 @@ export class ChannelReactionBox extends ReactionBox
     onClientUnsubAuthUserGroupCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction);
         this._mapClientUnsub.add(ChannelTarget.AUG, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -1163,7 +1162,7 @@ export class ChannelReactionBox extends ReactionBox
     onClientUnsubDefaultUserGroupCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction);
         this._mapClientUnsub.add(ChannelTarget.DUG, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -1192,7 +1191,7 @@ export class ChannelReactionBox extends ReactionBox
     onClientUnsubAllCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction);
         this._mapClientUnsub.add(ChannelTarget.ALL, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -1224,7 +1223,7 @@ export class ChannelReactionBox extends ReactionBox
     onClientUnsubCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnClientUnsubCustomCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubCustomCh>(reaction, {chName: chName});
         this._mapClientUnsub.add(ChannelTarget.C, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -1259,7 +1258,7 @@ export class ChannelReactionBox extends ReactionBox
     onClientUnsubCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,reaction: ChannelReactionOnClientUnsubCustomIdCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubCustomIdCh>(reaction, {chName, chId});
         this._mapClientUnsub.add(ChannelTarget.CID, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -1289,7 +1288,7 @@ export class ChannelReactionBox extends ReactionBox
     onClientUnsubPanelOutCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction);
         this._mapClientUnsub.add(ChannelTarget.PANEL, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -1319,7 +1318,7 @@ export class ChannelReactionBox extends ReactionBox
     onUnsubAnyCh(reaction: ChannelReactionOnUnsubAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubAnyCh>(reaction);
         this._mapUnsub.add(ChannelTarget.ANY, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -1348,7 +1347,7 @@ export class ChannelReactionBox extends ReactionBox
     onUnsubUserCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction);
         this._mapUnsub.add(ChannelTarget.USER, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -1377,7 +1376,7 @@ export class ChannelReactionBox extends ReactionBox
     onUnsubAuthUserGroupCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction);
         this._mapUnsub.add(ChannelTarget.AUG, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -1406,7 +1405,7 @@ export class ChannelReactionBox extends ReactionBox
     onUnsubDefaultUserGroupCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction);
         this._mapUnsub.add(ChannelTarget.DUG, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -1435,7 +1434,7 @@ export class ChannelReactionBox extends ReactionBox
     onUnsubAllCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction);
         this._mapUnsub.add(ChannelTarget.ALL, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -1467,7 +1466,7 @@ export class ChannelReactionBox extends ReactionBox
     onUnsubCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnUnsubCustomCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubCustomCh>(reaction, {chName: chName});
         this._mapUnsub.add(ChannelTarget.C, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -1502,7 +1501,7 @@ export class ChannelReactionBox extends ReactionBox
     onUnsubCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,reaction: ChannelReactionOnUnsubCustomIdCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubCustomIdCh>(reaction, {chName, chId});
         this._mapUnsub.add(ChannelTarget.CID, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -1532,7 +1531,7 @@ export class ChannelReactionBox extends ReactionBox
     onUnsubPanelOutCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction);
         this._mapUnsub.add(ChannelTarget.PANEL, fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -1584,6 +1583,7 @@ export class ChannelReactionBox extends ReactionBox
     async _triggerPub(target : ChannelTarget, event : string, data : any, {chName,chId,chFullName} : any, ssid ?: string) : Promise<void>
     {
         if(this.active) {
+            await this._triggerWillProcess();
             switch (target)
             {
                 case ChannelTarget.C:
@@ -1625,6 +1625,7 @@ export class ChannelReactionBox extends ReactionBox
                     }
                     break;
             }
+            await this._triggerDidProcess();
         }
     }
 
@@ -1637,6 +1638,7 @@ export class ChannelReactionBox extends ReactionBox
     async _triggerEvent(map : SboxMapper<FullReaction<any>>, target : ChannelTarget, {chName,chId,chFullName} : any, ...arg : any[]) : Promise<void>
     {
         if(this.active) {
+            await this._triggerWillProcess();
             switch (target)
             {
                 case ChannelTarget.C:
@@ -1673,19 +1675,8 @@ export class ChannelReactionBox extends ReactionBox
                     }
                     break;
             }
+            await this._triggerDidProcess();
         }
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns the last added EventReaction, you can use it to remove the reaction from the box
-     * by calling the specific off method.
-     * @return
-     * It returns the last added EventReaction.
-     */
-    getLastReaction() : FullReaction<any> {
-        return this.lastFullReactionTmp;
     }
 
     // noinspection JSUnusedGlobalSymbols

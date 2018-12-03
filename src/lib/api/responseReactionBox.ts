@@ -29,11 +29,10 @@ enum MapKey
    RESPONSE
 }
 
-export class ResponseReactionBox extends ReactionBox implements ResponseReactAble
+export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implements ResponseReactAble
 {
 
     private readonly map: SboxMapper<FullReaction<any>> = new SboxMapper<FullReaction<any>>();
-    private lastFullReactionTmp : FullReaction<any>;
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -43,6 +42,7 @@ export class ResponseReactionBox extends ReactionBox implements ResponseReactAbl
      */
     constructor() {
         super();
+        this.self = this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -105,7 +105,7 @@ export class ResponseReactionBox extends ReactionBox implements ResponseReactAbl
     {
         const fullReaction = new FullReaction<ResponseReactionOnError>(reaction,filter);
         this.map.add(MapKey.ERROR,fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -190,7 +190,7 @@ export class ResponseReactionBox extends ReactionBox implements ResponseReactAbl
     {
         const fullReaction = new FullReaction<ResponseReactionCatchError>(reaction,filter);
         this.map.add(MapKey.CATCH_ERROR,fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -233,7 +233,7 @@ export class ResponseReactionBox extends ReactionBox implements ResponseReactAbl
     {
         const fullReaction = new FullReaction<ResponseReactionOnSuccessful>(reaction,{statusCode : statusCode});
         this.map.add(MapKey.SUCCESSFUL,fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -265,7 +265,7 @@ export class ResponseReactionBox extends ReactionBox implements ResponseReactAbl
     {
         const fullReaction = new FullReaction<ResponseReactionOnResponse>(reaction);
         this.map.add(MapKey.RESPONSE,fullReaction);
-        this.lastFullReactionTmp = fullReaction;
+        this.lastReactionTmp = fullReaction;
         return this;
     }
 
@@ -291,6 +291,7 @@ export class ResponseReactionBox extends ReactionBox implements ResponseReactAbl
     {
         if(this.activate)
         {
+            await this._triggerWillProcess();
             if(response.isSuccessful()) {
                 const sucBox = this.map.tryGet(MapKey.SUCCESSFUL);
                 if(sucBox) {
@@ -321,19 +322,8 @@ export class ResponseReactionBox extends ReactionBox implements ResponseReactAbl
                     await fullReaction.getReactionHandler()(response);
                 });
             }
+            await this._triggerDidProcess();
         }
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns the last added FullReaction, you can use it to remove the reaction from the box
-     * by calling the specific off/rm method.
-     * @return
-     * It returns the last added FullReaction.
-     */
-    getLastReaction() : FullReaction<any> {
-        return this.lastFullReactionTmp;
     }
 }
 

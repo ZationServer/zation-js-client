@@ -27,10 +27,9 @@ type EventReaction = EventReactionOnAuthenticate | EventReactionOnConnect | Even
     EventReactionOnFirstConnect | EventReactionOnReconnect | EventReactionOnConnecting | EventReactionOnError |
     EventReactionOnClose;
 
-export class EventReactionBox extends ReactionBox
+export class EventReactionBox extends ReactionBox<EventReactionBox>
 {
     private readonly map: SboxMapper<any> = new SboxMapper<any>();
-    private lastEventReactionTmp : EventReaction;
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -40,6 +39,7 @@ export class EventReactionBox extends ReactionBox
      */
     constructor() {
         super();
+        this.self = this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -47,7 +47,7 @@ export class EventReactionBox extends ReactionBox
      * @description
      * React on clinet is connected (firstConnection and reconnections are included)
      * @example
-     * onConnect(() => {isFirstConnection});
+     * onConnect((isFirstConnection) => {});
      * @param reaction
      * @return
      * It returns the eventReactionBox, to remove the reaction from the box
@@ -55,7 +55,7 @@ export class EventReactionBox extends ReactionBox
      */
     onConnect(reaction : EventReactionOnConnect) : EventReactionBox {
         this.map.add(Events.Connect,reaction);
-        this.lastEventReactionTmp = reaction;
+        this.lastReactionTmp = reaction;
         return this;
     }
 
@@ -84,7 +84,7 @@ export class EventReactionBox extends ReactionBox
      */
     onFirstConnect(reaction : EventReactionOnFirstConnect) : EventReactionBox {
         this.map.add(Events.FirstConnect,reaction);
-        this.lastEventReactionTmp = reaction;
+        this.lastReactionTmp = reaction;
         return this;
     }
 
@@ -113,7 +113,7 @@ export class EventReactionBox extends ReactionBox
      */
     onReconnect(reaction : EventReactionOnReconnect) : EventReactionBox {
         this.map.add(Events.Reconnect,reaction);
-        this.lastEventReactionTmp = reaction;
+        this.lastReactionTmp = reaction;
         return this;
     }
 
@@ -142,7 +142,7 @@ export class EventReactionBox extends ReactionBox
      */
     onClinetDisconnect(reaction : EventReactionOnClientDisconnect) : EventReactionBox {
         this.map.add(Events.ClientDisconnect,reaction);
-        this.lastEventReactionTmp = reaction;
+        this.lastReactionTmp = reaction;
         return this;
     }
 
@@ -172,7 +172,7 @@ export class EventReactionBox extends ReactionBox
      */
     onServerDisconnect(reaction : EventReactionOnServerDisconnect) : EventReactionBox {
         this.map.add(Events.ServerDisconnect,reaction);
-        this.lastEventReactionTmp = reaction;
+        this.lastReactionTmp = reaction;
         return this;
     }
 
@@ -202,7 +202,7 @@ export class EventReactionBox extends ReactionBox
      */
     onDisconnect(reaction : EventReactionOnDisconnect) : EventReactionBox {
         this.map.add(Events.Disconnect,reaction);
-        this.lastEventReactionTmp = reaction;
+        this.lastReactionTmp = reaction;
         return this;
     }
 
@@ -231,7 +231,7 @@ export class EventReactionBox extends ReactionBox
      */
     onAuthenticate(reaction : EventReactionOnAuthenticate) : EventReactionBox {
         this.map.add(Events.Authenticate,reaction);
-        this.lastEventReactionTmp = reaction;
+        this.lastReactionTmp = reaction;
         return this;
     }
 
@@ -260,7 +260,7 @@ export class EventReactionBox extends ReactionBox
      */
     onClientDeauthenticate(reaction : EventReactionOnClinetDeauthenticate) : EventReactionBox {
         this.map.add(Events.ClientDeauthenticate,reaction);
-        this.lastEventReactionTmp = reaction;
+        this.lastReactionTmp = reaction;
         return this;
     }
 
@@ -290,7 +290,7 @@ export class EventReactionBox extends ReactionBox
      */
     onServerDeauthenticate(reaction : EventReactionOnServerDeauthenticate) : EventReactionBox {
         this.map.add(Events.ServerDeauthenticate,reaction);
-        this.lastEventReactionTmp = reaction;
+        this.lastReactionTmp = reaction;
         return this;
     }
 
@@ -320,7 +320,7 @@ export class EventReactionBox extends ReactionBox
      */
     onDeauthenticate(reaction : EventReactionOnDeauthenticate) : EventReactionBox {
         this.map.add(Events.Deauthenticate,reaction);
-        this.lastEventReactionTmp = reaction;
+        this.lastReactionTmp = reaction;
         return this;
     }
 
@@ -351,7 +351,7 @@ export class EventReactionBox extends ReactionBox
      */
     onConnectAbort(reaction : EventReactionOnConnectAbort) : EventReactionBox {
         this.map.add(Events.ConnectAbort,reaction);
-        this.lastEventReactionTmp = reaction;
+        this.lastReactionTmp = reaction;
         return this;
     }
 
@@ -381,7 +381,7 @@ export class EventReactionBox extends ReactionBox
      */
     onConnecting(reaction : EventReactionOnConnecting) : EventReactionBox {
         this.map.add(Events.Connecting,reaction);
-        this.lastEventReactionTmp = reaction;
+        this.lastReactionTmp = reaction;
         return this;
     }
 
@@ -410,7 +410,7 @@ export class EventReactionBox extends ReactionBox
      */
     onError(reaction : EventReactionOnError) : EventReactionBox {
         this.map.add(Events.Error,reaction);
-        this.lastEventReactionTmp = reaction;
+        this.lastReactionTmp = reaction;
         return this;
     }
 
@@ -439,7 +439,7 @@ export class EventReactionBox extends ReactionBox
      */
     onClose(reaction : EventReactionOnClose) : EventReactionBox {
         this.map.add(Events.Close,reaction);
-        this.lastEventReactionTmp = reaction;
+        this.lastReactionTmp = reaction;
         return this;
     }
 
@@ -475,6 +475,7 @@ export class EventReactionBox extends ReactionBox
     {
         if(this.active)
         {
+            await this._triggerWillProcess();
             switch (event)
             {
                 case Events.Connect:
@@ -520,20 +521,8 @@ export class EventReactionBox extends ReactionBox
                     await this._triggerDataEventBox(Events.Close,...arg);
                     break;
             }
+            await this._triggerDidProcess();
         }
     }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns the last added EventReaction, you can use it to remove the reaction from the box
-     * by calling the specific off method.
-     * @return
-     * It returns the last added EventReaction.
-     */
-    getLastReaction() : EventReaction {
-        return this.lastEventReactionTmp;
-    }
-
 }
 
