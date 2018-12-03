@@ -75,11 +75,11 @@ export abstract class AbstractErrorFilterBuilder<R>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Filter errors with the info.
-     * More infos are linked with OR.
+     * Filter errors with as all keys and values in the info.
+     * More info filters are linked with OR.
      * @param obj
      */
-    infoIs(...obj : object[]) : AbstractErrorFilterBuilder<R>
+    infoHas(...obj : object[]) : AbstractErrorFilterBuilder<R>
     {
         if(!Array.isArray(this.tmpFilter.info)) {
             this.tmpFilter.info = [];
@@ -288,19 +288,19 @@ export abstract class AbstractErrorFilterBuilder<R>
      * {type : 'errorType1'}
      * For errors with the types:
      * {type : ['errorType1','errorType2']}
-     * For errors with the info:
+     * For errors with has all keys and values in the info:
      * {info : {inputPath : 'name', inputValue : 'value'}}
-     * For errors with one of the info:
+     * For errors with has at least one of all keys and values in the info:
      * {info : [{inputPath : 'name'},{inputPath : 'firstName'}]}
      * For errors with the info key:
      * {infoKey : 'inputPath'}
-     * For errors with one of the info keys:
+     * For errors with at least one of the info keys:
      * {infoKey : ['inputPath','inputValue']}
      * For errors with all of the info keys:
      * {infoKey : [['inputPath','inputValue']]}
      * For errors with the info value:
      * {infoValue : 'name'}
-     * For errors with one of the info values:
+     * For errors with at least one of the info values:
      * {infoValue : ['name','firstName']}
      * For errors with all of the info values:
      * {infoValue : [['value1','value2']]}
@@ -335,19 +335,19 @@ export abstract class AbstractErrorFilterBuilder<R>
      * {type : 'errorType1'}
      * For errors with the types:
      * {type : ['errorType1','errorType2']}
-     * For errors with the info:
+     * For errors with has all keys and values in the info:
      * {info : {inputPath : 'name', inputValue : 'value'}}
-     * For errors with one of the info:
+     * For errors with has at least one of all keys and values in the info:
      * {info : [{inputPath : 'name'},{inputPath : 'firstName'}]}
      * For errors with the info key:
      * {infoKey : 'inputPath'}
-     * For errors with one of the info keys:
+     * For errors with at least one of the info keys:
      * {infoKey : ['inputPath','inputValue']}
      * For errors with all of the info keys:
      * {infoKey : [['inputPath','inputValue']]}
      * For errors with the info value:
      * {infoValue : 'name'}
-     * For errors with one of the info values:
+     * For errors with at least one of the info values:
      * {infoValue : ['name','firstName']}
      * For errors with all of the info values:
      * {infoValue : [['value1','value2']]}
