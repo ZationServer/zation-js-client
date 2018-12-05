@@ -19,6 +19,7 @@ export class RequestHelper extends AbstractRequestHelper<RequestHelper>
     private _controllerName : string = '';
     private _systemController : boolean = false;
     private _data : object = {};
+    private _httpAttachedContent : {key : string,data : string | Blob}[] = [];
 
     constructor(zation : Zation) {
         super(zation);
@@ -35,7 +36,6 @@ export class RequestHelper extends AbstractRequestHelper<RequestHelper>
         this._useAuth = useAuth;
         return this;
     }
-
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -76,6 +76,21 @@ export class RequestHelper extends AbstractRequestHelper<RequestHelper>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
+     * Attach http content to http request.
+     * The attached http content will only used by post requests.
+     * Can be used for attaching files.
+     * @param key
+     * @param data
+     * @default []
+     */
+    attachHttpContent(key : string,data : string | Blob) : RequestHelper{
+        this._httpAttachedContent.push({key,data});
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
      * Builds the request and return it.
      * Notice that the request not contains the reactions!
      */
@@ -87,7 +102,8 @@ export class RequestHelper extends AbstractRequestHelper<RequestHelper>
             request = new WsRequest(this._controllerName,this._data,this._systemController);
         }
         else {
-            request = new HttpRequest(this._controllerName,this._data,this._useAuth,this._systemController)
+            request = new HttpRequest(this._controllerName,this._data,this._useAuth,this._systemController);
+            request.setHttpAttachedContent(this._httpAttachedContent);
         }
         return request;
     }
@@ -96,6 +112,7 @@ export class RequestHelper extends AbstractRequestHelper<RequestHelper>
     /**
      * @description
      * Builds an get request.
+     * Get request is not contains the atteched http content.
      * @return
      * Returns the full get reuqest as an string.
      */

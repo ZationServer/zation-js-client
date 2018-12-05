@@ -14,6 +14,7 @@ export class HttpRequest extends ZationRequest
     private readonly controllerName : string;
     private readonly useAuth : boolean;
     private readonly isSystemController : boolean;
+    private httpAttachedContent : {key : string,data : string | Blob}[] = [];
 
     constructor(controllerName : string,data : object = {},useAuth : boolean = true,isSystemController : boolean = false)
     {
@@ -41,5 +42,35 @@ export class HttpRequest extends ZationRequest
             signToken
         )
     }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Attach http content to request.
+     * Can be used for attaching files.
+     */
+    attachHttpContent(key : string,data : string | Blob) {
+        this.httpAttachedContent.push({key,data});
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Set http attached content from request.
+     * Can be used for attaching files.
+     */
+    setHttpAttachedContent(content : {key : string,data : string | Blob}[]) {
+        this.httpAttachedContent = content;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns http atteched content as an array.
+     */
+    getAttachedHttpContent() : {key : string,data : string | Blob}[] {
+        return this.httpAttachedContent;
+    }
+
 }
 

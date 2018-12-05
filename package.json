@@ -45,7 +45,8 @@
     "path": "0.12.7",
     "socketcluster-client": "14.2.1",
     "object-path": "0.11.4",
-    "component-emitter": "1.2.1"
+    "component-emitter": "1.2.1",
+    "axios": "0.18.0"
   },
   "devDependencies": {
     "babel-cli": "7.0.0-beta.3",

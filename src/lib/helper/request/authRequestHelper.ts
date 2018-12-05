@@ -14,6 +14,7 @@ import {AuthRequest}           from "../../api/authRequest";
 export class AuthRequestHelper extends AbstractRequestHelper<AuthRequestHelper>
 {
     private _authData : object = {};
+    private _httpAttachedContent : {key : string,data : string | Blob}[] = [];
 
     constructor(zation : Zation) {
         super(zation);
@@ -39,13 +40,31 @@ export class AuthRequestHelper extends AbstractRequestHelper<AuthRequestHelper>
      */
     buildRequest() : ZationRequest
     {
-        return new AuthRequest(this._authData,this._protocol);
+        const req = new AuthRequest(this._authData,this._protocol);
+        req.setHttpAttachedContent(this._httpAttachedContent);
+        return req;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Attach http content to http request.
+     * Can be used for attaching files.
+     * The attached http content will only used by post requests.
+     * @param key
+     * @param data
+     * @default []
+     */
+    attachHttpContent(key : string,data : string | Blob) : AuthRequestHelper {
+        this._httpAttachedContent.push({key,data});
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
      * Builds an get request.
+     * Get request is not contains the atteched http content.
      * @return
      * Returns the full get reuqest as an string.
      */

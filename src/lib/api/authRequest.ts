@@ -11,6 +11,8 @@ import {RequestJsonBuilder} from "../helper/tools/requestJsonBuilder";
 
 export class AuthRequest extends ZationRequest
 {
+    private httpAttachedContent : {key : string,data : string | Blob}[] = [];
+
     constructor(data : object,protocol : ProtocolType)
     {
         super(data,protocol);
@@ -35,6 +37,35 @@ export class AuthRequest extends ZationRequest
                 signToken
             )
         }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Attach http content to request.
+     * Can be used for attaching files.
+     */
+    attachHttpContent(key : string,data : string | Blob) {
+        this.httpAttachedContent.push({key,data});
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Set http attached content from request.
+     * Can be used for attaching files.
+     */
+    setHttpAttachedContent(content : {key : string,data : string | Blob}[]) {
+        this.httpAttachedContent = content;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns http atteched content as an array.
+     */
+    getAttachedHttpContent() : {key : string,data : string | Blob}[] {
+        return this.httpAttachedContent;
     }
 }
 

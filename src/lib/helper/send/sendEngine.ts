@@ -11,6 +11,7 @@ import {Zation}                 from "../../api/zation";
 import {Response}               from "../../api/response";
 import {ResultIsMissingError}   from "../error/resultIsMissingError";
 import {ConnectionNeededError}  from "../error/connectionNeededError";
+import axios, {AxiosRequestConfig} from 'axios';
 
 export class SendEngine
 {
@@ -41,7 +42,6 @@ export class SendEngine
                     else {
                         reject(new ResultIsMissingError())
                     }
-
                 });
             }
             else {
@@ -50,29 +50,38 @@ export class SendEngine
         });
     }
 
-    static async httpSend(zation : Zation,data : object,progressHandler ?: ProgressHandler) : Promise<Response>
+    static async httpSend(zation : Zation,data : object,attachedContent ?: {key : string,data : Blob | string}[],progressHandler ?: ProgressHandler) : Promise<Response>
     {
-        return new Promise<Response>((resolve) =>
+        return new Promise<Response>(async (resolve,reject) =>
         {
+            const config : AxiosRequestConfig = {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            };
+
             if (!!progressHandler) {
-                progressHandler(0);
+                config.onUploadProgress = progressEvent => {
+                    progressHandler(Math.round( (progressEvent.loaded * 100) / progressEvent.total));
+                };
             }
 
-            fetch(zation.getServerAddress(),
-                {
-                    method : "POST",
-                    headers: {
-                        "Content-Type": "application/json; charset=utf-8",
-                    },
-                    body : JSON.stringify(data)
-                })
+            const bodyFormData = new FormData();
+
+            bodyFormData.append(zation.getPostKey(),JSON.stringify(data));
+
+            if(attachedContent) {
+                for(let i = 0; i < attachedContent.length; i ++) {
+                    bodyFormData.append(attachedContent[i].key,attachedContent[i].data);
+                }
+            }
+
+            axios.post(zation.getServerAddress(),bodyFormData,config)
                 .then(async (res) => {
-
-                    if (!!progressHandler) {
-                        progressHandler(100);
-                    }
-
-                    resolve(new Response(await res.json(),zation,ProtocolType.Http));
+                    resolve(new Response(await res.data,zation,ProtocolType.Http));
+                })
+                .catch((err) => {
+                    reject(err);
                 });
         });
     }

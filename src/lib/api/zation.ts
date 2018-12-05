@@ -4,6 +4,8 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
+import {HttpRequest} from "./httpRequest";
+
 const  Emitter                 = require('component-emitter');
 const  SocketClusterClient     = require('socketcluster-client');
 
@@ -443,6 +445,7 @@ export class Zation
      * Data: {}
      * SystemController: false
      * UseAuth: true
+     * AttachedHttpContent: []
      * @example
      * await zation.request()
      * .controller('sendMessage')
@@ -473,6 +476,7 @@ export class Zation
      * The default values are:
      * Protocol: WebSocket
      * AuthData: {}
+     * AttachedHttpContent: []
      * @example
      * await zation.authRequest()
      * .authData({userName : 'luca',password : '123'})
@@ -528,6 +532,7 @@ export class Zation
     /**
      * @description
      * Send a sendAble object.
+     * Should be used for sending AuthRequests,HttpRequests,ValidationRequests,WsRequests and ZationRequests.
      * Optional you can add a progressHandler and responseReactionBox/es.
      * Notice that the response boxes that are passed in are triggerd before the zation boxes.
      * But the zationBoxes are only triggerd if the triggerZationBoxes param is true.
@@ -555,7 +560,13 @@ export class Zation
             response = await SendEngine.wsSend(this,jsonObj,ph);
         }
         else {
-            response = await SendEngine.httpSend(this,jsonObj,ph);
+            let attachedHttpContent : undefined | {key : string, data : Blob | string}[] = undefined;
+
+            if(sendAble instanceof HttpRequest || sendAble instanceof AuthRequest) {
+                attachedHttpContent = sendAble.getAttachedHttpContent();
+            }
+
+            response = await SendEngine.httpSend(this,jsonObj,attachedHttpContent,ph);
         }
 
         await this._respondsActions(response);
@@ -1464,6 +1475,11 @@ export class Zation
     // noinspection JSUnusedGlobalSymbols
     getPort() : number {
         return this.zc.config.port;
+    };
+
+    // noinspection JSUnusedGlobalSymbols
+    getPostKey() : string {
+        return this.zc.config.postKey;
     };
 
     // noinspection JSUnusedGlobalSymbols
