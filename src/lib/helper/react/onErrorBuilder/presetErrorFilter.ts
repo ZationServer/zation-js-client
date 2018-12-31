@@ -1045,6 +1045,114 @@ export class PresetErrorFilter<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
+     * Preset for inputNotMatchWithMinByteSize.
+     * The task error can be thrown by input validation minByteSize:100000.
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * minByteSize
+     * @param inputPath
+     * Parameter can be used to check the inputPath in the info.
+     * @param inputValue
+     * Parameter can be used to check the inputValue in the info.
+     */
+    inputNotMatchWithMinByteSize(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._validationErrorBuild
+        ('inputNotMatchWithMinByteSize',inputPath,inputValue,ErrorGroup.BYTE_SIZE_ERROR));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Preset for inputNotMatchWithMaxByteSize.
+     * The task error can be thrown by input validation maxByteSize:100000.
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * maxByteSize
+     * @param inputPath
+     * Parameter can be used to check the inputPath in the info.
+     * @param inputValue
+     * Parameter can be used to check the inputValue in the info.
+     */
+    inputNotMatchWithMaxByteSize(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._validationErrorBuild
+        ('inputNotMatchWithMaxByteSize',inputPath,inputValue,ErrorGroup.BYTE_SIZE_ERROR));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Preset for inputByteSizeError.
+     * The task error can be thrown by input validation minByteSize,maxByteSize.
+     * @param inputPath
+     * Parameter can be used to check the inputPath in the info.
+     * @param inputValue
+     * Parameter can be used to check the inputValue in the info.
+     */
+    inputByteSizeError(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._validationErrorBuild
+        (undefined,inputPath,inputValue,ErrorGroup.BYTE_SIZE_ERROR));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Preset for inputNotMatchWithMimeType.
+     * The task error can be thrown by input validation mimeType:'image'.
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * mimeType
+     * @param inputPath
+     * Parameter can be used to check the inputPath in the info.
+     * @param inputValue
+     * Parameter can be used to check the inputValue in the info.
+     */
+    inputNotMatchWithMimeType(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._validationErrorBuild
+        ('inputNotMatchWithMimeType',inputPath,inputValue,ErrorGroup.CONTENT_TYPE_ERROR));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Preset for inputNotMatchWithSubType.
+     * The task error can be thrown by input validation subType:'jpg'.
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * subType
+     * @param inputPath
+     * Parameter can be used to check the inputPath in the info.
+     * @param inputValue
+     * Parameter can be used to check the inputValue in the info.
+     */
+    inputNotMatchWithSubType(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._validationErrorBuild
+        ('inputNotMatchWithSubType',inputPath,inputValue,ErrorGroup.CONTENT_TYPE_ERROR));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Preset for inputContentTypeError.
+     * The task error can be thrown by input validation mimeType,subType.
+     * @param inputPath
+     * Parameter can be used to check the inputPath in the info.
+     * @param inputValue
+     * Parameter can be used to check the inputValue in the info.
+     */
+    inputContentTypeError(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._validationErrorBuild
+        (undefined,inputPath,inputValue,ErrorGroup.CONTENT_TYPE_ERROR));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
      * Preset for noValidTypeWasFound.
      * The task error can be thrown by input validation type:['int','float'].
      * More info checks you need to do by yourself.
