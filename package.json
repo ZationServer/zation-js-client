@@ -8,7 +8,7 @@
   "scripts": {
     "prepublishOnly": "npm run build",
     "build": "gulp build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nyc --reporter=html mocha -- ./test/**/*.test.js"
   },
   "repository": {
     "type": "git",
@@ -68,6 +68,12 @@
     "vinyl-source-stream": "2.0.0",
     "ascjsify": "1.0.0",
     "gulp-optimize-js": "1.1.0",
-    "gulp-clean": "0.4.0"
+    "gulp-clean": "0.4.0",
+    "mocha": "5.2.0",
+    "@types/mocha": "5.2.5",
+    "chai": "4.2.0",
+    "@types/chai": "4.1.7",
+    "nyc": "13.1.0",
+    "sinon": "7.2.2"
   }
 }
