@@ -74,7 +74,7 @@ export class TaskError
     /**
      * @description
      * Returns the info of the task error.
-     * Returns empty object if it was not sended.
+     * If the info is not an object, it will return an empty object.
      */
     getInfo() : object {
         return typeof this.data.i === 'object' ?
@@ -84,7 +84,7 @@ export class TaskError
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns if the task error has info object.
+     * Returns if the task error has an info object.
      */
     hasInfo() : boolean {
         return typeof this.data.i === 'object';
