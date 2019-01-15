@@ -1118,19 +1118,19 @@ export class PresetErrorFilter<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputNotMatchWithSubType.
-     * The task error can be thrown by input validation subType:'jpg'.
+     * Preset for inputNotMatchWithMimeSubType.
+     * The task error can be thrown by input validation mimeSubType:'jpg'.
      * More info checks you need to do by yourself.
      * Possibilities are:
-     * subType
+     * mimeSubType
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputNotMatchWithSubType(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+    inputNotMatchWithMimeSubType(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithSubType',inputPath,inputValue,ErrorGroup.CONTENT_TYPE_ERROR));
+        ('inputNotMatchWithMimeSubType',inputPath,inputValue,ErrorGroup.CONTENT_TYPE_ERROR));
         return this.errorFilterBuilder;
     }
 
