@@ -594,6 +594,22 @@ export class PresetErrorFilter<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
+     * Preset for inputIsNotTypeLatLong.
+     * The task error can be thrown by input validation type:'latLong'.
+     * @param inputPath
+     * Parameter can be used to check the inputPath in the info.
+     * @param inputValue
+     * Parameter can be used to check the inputValue in the info.
+     */
+    inputIsNotTypeLatLong(inputPath ?: string,inputValue ?: any) : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._validationErrorBuild
+        ('inputIsNotTypeLatLong',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
      * Preset for inputValueLengthError.
      * The task error can be thrown by input validation minLength,maxLength,minLength.
      * @param inputPath

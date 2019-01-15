@@ -69,8 +69,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorFilter.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="508">
-              <caret line="583" column="38" selection-start-line="583" selection-start-column="38" selection-end-line="583" selection-end-column="38" />
+            <state relative-caret-position="581">
+              <caret line="607" column="5" lean-forward="true" selection-start-line="607" selection-start-column="5" selection-end-line="607" selection-end-column="5" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -452,7 +452,7 @@
       <workItem from="1547130075189" duration="367000" />
       <workItem from="1547216403413" duration="811000" />
       <workItem from="1547230437528" duration="1607000" />
-      <workItem from="1547559171197" duration="459000" />
+      <workItem from="1547559171197" duration="1049000" />
     </task>
     <task id="LOCAL-00010" summary="improve api and documentation&#10;add remove optional param option (to remove all)&#10;add new helper for validation and auth request&#10;fix bugs">
       <created>1539950666829</created>
@@ -801,7 +801,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="521388000" />
+    <option name="totallyTimeSpent" value="521978000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1340,8 +1340,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorFilter.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="508">
-          <caret line="583" column="38" selection-start-line="583" selection-start-column="38" selection-end-line="583" selection-end-column="38" />
+        <state relative-caret-position="581">
+          <caret line="607" column="5" lean-forward="true" selection-start-line="607" selection-start-column="5" selection-end-line="607" selection-end-column="5" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
