@@ -97,7 +97,7 @@ export class ErrorFilterEngine
             }
         }
 
-        if(Array.isArray(filter['infoValue']) || typeof filter['infoValue'] === 'string')
+        if(Array.isArray(filter['infoValue']) || typeof filter['infoValue'] !== 'undefined')
         {
             cachedFilterErrors =
                 FilterEngine.getWhoHasOneOfInputVar<TaskError>

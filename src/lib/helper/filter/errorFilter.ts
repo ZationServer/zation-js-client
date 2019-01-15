@@ -11,7 +11,7 @@ export interface ErrorFilter
     type ?: string[] | string,
     info ?: object[] | object,
     infoKey ?: (string | string[] )[] | string
-    infoValue ?: (string | string[] )[] | string
+    infoValue ?: (any | any[] )[] | any
     fromZationSystem ?: boolean
 }
 
