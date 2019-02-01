@@ -122,8 +122,12 @@ export class RequestHelper extends AbstractRequestHelper<RequestHelper>
         let params = `?${HttpGetReq.SYSTEM}=${this.zation.getSystem()}`;
         //version
         params += `&${HttpGetReq.VERSION}=${this.zation.getVersion()}`;
-        //input
-        params += `&${HttpGetReq.INPUT}=${JSON.stringify(this._data)}`;
+
+        if(this._data !== undefined){
+            //input
+            params += `&${HttpGetReq.INPUT}=${JSON.stringify(this._data)}`;
+        }
+
         //add sign token
         if(this._useAuth && this.zation._getAuthEngine().hasSignToken()) {
             params += `&${HttpGetReq.TOKEN}=${this.zation._getAuthEngine().getSignToken()}`;

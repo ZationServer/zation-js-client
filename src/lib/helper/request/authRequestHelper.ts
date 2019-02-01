@@ -74,8 +74,11 @@ export class AuthRequestHelper extends AbstractRequestHelper<AuthRequestHelper>
         let params = `?${HttpGetReq.SYSTEM}=${this.zation.getSystem()}`;
         //version
         params += `&${HttpGetReq.VALI_REQ}=${this.zation.getVersion()}`;
-        //input
-        params += `&${HttpGetReq.INPUT}=${JSON.stringify(this._authData)}`;
+
+        if(this._authData !== undefined){
+            //input
+            params += `&${HttpGetReq.INPUT}=${JSON.stringify(this._authData)}`;
+        }
         //auth req
         params += `&${HttpGetReq.AUTH_REQ}=true`;
         return this.zation.getServerAddress()+params;
