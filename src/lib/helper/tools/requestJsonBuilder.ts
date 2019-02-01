@@ -10,7 +10,7 @@ export class RequestJsonBuilder
 {
     static buildHttpRequestData
     (
-        data : object,
+        data : any,
         controllerName : string,
         isSystemController : boolean,
         system : string,
@@ -35,7 +35,7 @@ export class RequestJsonBuilder
 
     static buildWsRequestData
     (
-        data : object,
+        data : any,
         controllerName : string,
         isSystemController : boolean
     ) : ZationRequest
@@ -48,7 +48,7 @@ export class RequestJsonBuilder
         };
     }
 
-    static buildHttpAuthRequestData(data : object,system : string, version : number,signToken ?: string | null) : ZationRequest
+    static buildHttpAuthRequestData(data : any,system : string, version : number,signToken ?: string | null) : ZationRequest
     {
         const res : ZationRequest = {
             v : version,
@@ -63,7 +63,7 @@ export class RequestJsonBuilder
         return res;
     }
 
-    static buildWsAuthRequestData(data : object) : ZationRequest
+    static buildWsAuthRequestData(data : any) : ZationRequest
     {
         return {
            a : {

@@ -16,7 +16,7 @@ export class HttpRequest extends ZationRequest
     private readonly isSystemController : boolean;
     private httpAttachedContent : {key : string,data : string | Blob}[] = [];
 
-    constructor(controllerName : string,data : object = {},useAuth : boolean = true,isSystemController : boolean = false)
+    constructor(controllerName : string,data : any = undefined,useAuth : boolean = true,isSystemController : boolean = false)
     {
         super(data,ProtocolType.Http);
         this.controllerName = controllerName;

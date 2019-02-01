@@ -13,13 +13,13 @@ import {ProgressHandler}     from "./progressHandler";
 
 export abstract class ZationRequest extends SendAble
 {
-    private readonly data: object | any[];
+    private readonly data: any;
     private readonly type: ProtocolType;
 
     private compiledData : object | any[];
     private progressHandler: ProgressHandler | undefined = undefined;
 
-    protected constructor(data : object | any[], type : ProtocolType)
+    protected constructor(data : any, type : ProtocolType)
     {
         super();
         this.data = data;
@@ -33,6 +33,15 @@ export abstract class ZationRequest extends SendAble
      */
     getProtocol() : ProtocolType {
         return this.type;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the data of the request.
+     */
+    getData() : any {
+        return this.data;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -56,21 +65,43 @@ export abstract class ZationRequest extends SendAble
 
     async preCompile()
     {
-        if(Array.isArray(this.data)) {
-            this.compiledData = await this.compileArrayData(this.data);
-        }
-        else {
-            this.compiledData = await this.compileObjectData(this.data);
-        }
+        this.compiledData = this.compileValueData(this.data);
     }
 
-    async getCompiledData(): Promise<object | any[]>
+    async getCompiledData(): Promise<any>
     {
         if(this.compiledData === undefined) {
             await this.preCompile();
         }
-
         return this.compiledData;
+    }
+
+    private async compileValueData(data : any) : Promise<any>
+    {
+        let promises : Promise<void>[] = [];
+        if(data instanceof RequestAble) {
+            promises.push(new Promise<void>(async (resolve) =>
+            {
+                data = await data.toRequestData(this.type);
+                resolve();
+            }));
+        }
+        else if(Array.isArray(data))
+        {
+            promises.push(new Promise<void>(async (resolve) => {
+                data = await this.compileArrayData(data);
+                resolve();
+            }));
+        }
+        else if(typeof data === 'object') {
+            promises.push(new Promise<void>(async (resolve) =>
+            {
+                data = await this.compileObjectData(data);
+                resolve();
+            }));
+        }
+        await Promise.all(promises);
+        return data;
     }
 
     private async compileArrayData(data : any[]) : Promise<any[]>
@@ -78,27 +109,11 @@ export abstract class ZationRequest extends SendAble
         let promises : Promise<void>[] = [];
         for(let i = 0; i < data.length; i++)
         {
-            if(data[i] instanceof RequestAble) {
-                promises.push(new Promise<void>(async (resolve) =>
-                {
-                    data[i] = await data[i].toRequestData(this.type);
-                    resolve();
-                }));
-            }
-            else if(Array.isArray(data[i]))
+            promises.push(new Promise<void>(async (resolve) =>
             {
-                promises.push(new Promise<void>(async (resolve) => {
-                    data[i] = await this.compileArrayData(data[i]);
-                    resolve();
-                }));
-            }
-            else if(typeof data[i] === 'object') {
-                promises.push(new Promise<void>(async (resolve) =>
-                {
-                    data[i] = await this.compileObjectData(data[i]);
-                    resolve();
-                }));
-            }
+                data[i] = await this.compileValueData(data[i]);
+                resolve();
+            }));
         }
         await Promise.all(promises);
         return data;
@@ -110,36 +125,15 @@ export abstract class ZationRequest extends SendAble
         for(let key in data)
         {
             if(data.hasOwnProperty(key)) {
-                if(data[key] instanceof RequestAble) {
-                    promises.push(new Promise<void>(async (resolve) =>
-                    {
-                        data[key] = await this.compileRequestAble(data[key]);
-                        resolve();
-                    }));
-                }
-                else if(Array.isArray(data[key]))
+                promises.push(new Promise<void>(async (resolve) =>
                 {
-                    promises.push(new Promise<void>(async (resolve) => {
-                        data[key] = await this.compileArrayData(data[key]);
-                        resolve();
-                    }));
-                }
-                else if(typeof data[key] === 'object') {
-                    promises.push(new Promise<void>(async (resolve) =>
-                    {
-                        data[key] = await this.compileObjectData(data[key]);
-                        resolve();
-                    }));
-                }
+                    data[key] = await this.compileValueData(data[key]);
+                    resolve();
+                }));
             }
         }
         await Promise.all(promises);
         return data;
-    }
-
-    private async compileRequestAble(requestAble : RequestAble) : Promise<object>
-    {
-        return await requestAble.toRequestData(this.type);
     }
 }
 

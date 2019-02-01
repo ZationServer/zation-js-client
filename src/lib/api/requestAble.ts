@@ -9,5 +9,5 @@ import {ProtocolType} from "../helper/constants/protocolType";
 export class RequestAble
 {
     // noinspection JSUnusedLocalSymbols,JSMethodCanBeStatic
-    async toRequestData(protocolType : ProtocolType) : Promise<object> {return {};}
+    async toRequestData(protocolType : ProtocolType) : Promise<any> {return {};}
 }

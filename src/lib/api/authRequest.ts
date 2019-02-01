@@ -13,7 +13,7 @@ export class AuthRequest extends ZationRequest
 {
     private httpAttachedContent : {key : string,data : string | Blob}[] = [];
 
-    constructor(data : object,protocol : ProtocolType)
+    constructor(data : any = undefined,protocol : ProtocolType)
     {
         super(data,protocol);
     }

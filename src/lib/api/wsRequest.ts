@@ -16,7 +16,7 @@ export class WsRequest extends ZationRequest
     private readonly controllerName : string;
     private readonly isSystemController : boolean;
 
-    constructor(controllerName : string,data : object = {},isSystemController : boolean = false)
+    constructor(controllerName : string,data : any = undefined,isSystemController : boolean = false)
     {
         super(data,ProtocolType.WebSocket);
         this.controllerName = controllerName;

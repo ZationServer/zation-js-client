@@ -1,0 +1,21 @@
+
+_
+/src/lib/helper/request/abstractRequestHelper.ts,b/1/b1661bcbfd52ae2eebb1d1f29f06be970650d9b6
+W
+'src/lib/helper/request/zationRequest.ts,b/9/b9a6564a85d210b4ba9ef24a681d24f777632451
+J
+src/lib/api/httpRequest.ts,7/d/7d53abc9342462a496509b4368822a2b8b65c509
+H
+src/lib/api/wsRequest.ts,c/f/cfa13ef97788dceeda4a45cf7fc61ba0b6d49c01
+J
+src/lib/api/authRequest.ts,4/5/457612fdfa1dc7a7103ebb8eb0b274d28b5cd42c
+P
+ src/lib/api/validationRequest.ts,1/8/18341c88ca4e8d86bd88b2d41306006682f824ac
+J
+src/lib/api/requestAble.ts,0/b/0b2003c156922d3e059c8996ecd898d20e8c5c1b
+v
+Ftest/src/helper/react/responseReactionEngine/errorFilterEngine.test.js,f/5/f54ba767f46c37428e15267f602813f137626ac5
+Z
+*src/lib/helper/tools/requestJsonBuilder.ts,2/e/2e607adac00babf33be83b6a1af23bc5dada6509
+W
+'src/lib/helper/request/requestHelper.ts,9/7/97ea0e147ca7e8dfb3fd7c98b7d4a4879505e7a2

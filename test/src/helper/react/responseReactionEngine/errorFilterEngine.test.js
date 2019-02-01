@@ -2,7 +2,7 @@ const assert            = require("chai").assert;
 const ErrorFilterEngine = require('./../../../../../dist/lib/helper/react/responseReactionEngine/errorFilterEngine').ErrorFilterEngine;
 const TaskError         = require('./../../../../../dist/lib/helper/react/taskError/taskError').TaskError;
 
-describe('Error Filter Engine',() => {
+describe('HELPER.ErrorFilterEngine',() => {
 
     const demoErrors = [
         new TaskError({n : 'toOld',g : 'ageError', t : 'input', d : 'The age is to old', zs : true, i : {age : 50,maxAge : 45}}),
