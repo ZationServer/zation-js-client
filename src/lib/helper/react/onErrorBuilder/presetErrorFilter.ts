@@ -1485,6 +1485,21 @@ export class PresetErrorFilter<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
+     * Preset for wrongControllerInputType.
+     * The task error can be thrown if the request controller input type is wrong.
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * inputType
+     */
+    wrongControllerInputType() : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._zationErrorBuild
+        (ErrorType.INPUT_ERROR,'wrongControllerInputType'));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
      * Preset for JSONParseSyntaxError.
      * The task error can be thrown if the json parse with the input thwors an error.
      */
