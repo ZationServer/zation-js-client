@@ -1433,11 +1433,24 @@ export class PresetErrorFilter<T>
     /**
      * @description
      * Preset for wrongPanelAuthData.
-     * The task error can be thrown if the panel auth authData is wrong.
+     * The task error can be thrown if the panel authData is wrong.
      */
     wrongPanelAuthData() : AbstractErrorFilterBuilder<T> {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.AUTH_ERROR,'wrongPanelAuthData'));
+        return this.errorFilterBuilder;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Preset for panelIsNotActivated.
+     * The task error can be thrown if you try to authenticate for the panel,
+     * but the panel is not activated.
+     */
+    panelIsNotActivated() : AbstractErrorFilterBuilder<T> {
+        this._presetAdd(this._zationErrorBuild
+        (ErrorType.INPUT_ERROR,'panelIsNotActivated'));
         return this.errorFilterBuilder;
     }
 
