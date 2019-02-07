@@ -590,7 +590,7 @@ export class Zation
             const signToken = response.getNewSignedToken();
             const plainToken = response.getNewPlainToken();
             if(!!signToken && !!plainToken) {
-                if(this.isSocketConnected()) {
+                if(this.isConnected()) {
                     try{
                         await this.signAuthenticate(signToken);
                     }
@@ -633,7 +633,7 @@ export class Zation
      * @description
      * Returns if the socket is connected to the server.
      */
-    isSocketConnected() : boolean {
+    isConnected() : boolean {
         return this.socket !== undefined && this.socket.state === this.socket.OPEN;
     }
 
@@ -650,7 +650,7 @@ export class Zation
     {
         return new Promise<void>((resolve,reject)=>
         {
-            if(this.isSocketConnected()) {
+            if(this.isConnected()) {
                 resolve();
             }
             else {
@@ -688,7 +688,7 @@ export class Zation
      */
     disconnect(code ?: number, data : object = {}) : void
     {
-        if(this.isSocketConnected()) {
+        if(this.isConnected()) {
             data['#internal-fromZationClient'] = true;
             this.socket.disconnect(code,data);
             this.firstConnection = true;
@@ -1366,7 +1366,7 @@ export class Zation
      */
     on(event : string,handler : OnHandlerFunction) : void
     {
-        if(this.isSocketConnected()) {
+        if(this.isConnected()) {
             this.socket.on(event,handler);
         }
         else {
@@ -1384,7 +1384,7 @@ export class Zation
      */
     emit(event : string,data : any,callback ?: ResponseFunction) : void
     {
-        if(this.isSocketConnected()) {
+        if(this.isConnected()) {
             this.socket.emit(event,data,callback)
         }
         else {
@@ -1403,7 +1403,7 @@ export class Zation
      */
     sendRaw(data : any) : void
     {
-        if(this.isSocketConnected()) {
+        if(this.isConnected()) {
             this.socket.send(data);
         }
         else {

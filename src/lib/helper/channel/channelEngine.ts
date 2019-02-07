@@ -368,7 +368,7 @@ export class ChannelEngine
     publish(channelName : string,eventName : string,data : any) : Promise<void>
     {
         return new Promise<void>((resolve, reject) => {
-            if(this.zation.isSocketConnected())
+            if(this.zation.isConnected())
             {
                 this.zation.getSocket().publish(channelName,ChannelEngine.buildPubData(eventName,data),(err) =>
                 {

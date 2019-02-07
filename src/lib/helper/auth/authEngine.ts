@@ -82,7 +82,7 @@ export class AuthEngine
     signAuthenticate(signToken : string) : Promise<void>
     {
         return new Promise<void>((resolve, reject) => {
-            if(this.zation.isSocketConnected()) {
+            if(this.zation.isConnected()) {
                 this.zation.getSocket().authenticate(signToken,(err,authState)=>
                 {
                     if(err){

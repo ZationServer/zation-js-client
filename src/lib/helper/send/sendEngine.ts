@@ -20,7 +20,7 @@ export class SendEngine
         return new Promise(async (resolve, reject)=>
         {
             const socket = zation.getSocket();
-            if(zation.isSocketConnected() && socket) {
+            if(zation.isConnected() && socket) {
 
                 if (!!progressHandler) {
                     progressHandler(0);
