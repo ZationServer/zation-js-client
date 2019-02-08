@@ -43,7 +43,9 @@ export class ZationConfig
           autoAllChSub : true,
           autoUserChSub : true,
           autoDefaultUserGroupChSub : true,
-          autoAuthUserGroupChSub : true
+          autoAuthUserGroupChSub : true,
+          autoReconnect : true,
+          autoReconnectOptions : {}
         };
     }
 

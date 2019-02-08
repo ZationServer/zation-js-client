@@ -20,6 +20,14 @@ export interface ZationOptions {
     autoUserChSub ?: boolean;
     autoDefaultUserGroupChSub ?: boolean;
     autoAuthUserGroupChSub ?: boolean;
+
+    autoReconnect ?: boolean;
+    autoReconnectOptions ?: {
+        initialDelay ?: number,
+        randomness ?: number,
+        multiplier ?: number,
+        maxDelay ?: number
+    }
 }
 
 export interface ZationOptionsInternal extends ZationOptions{
@@ -37,4 +45,11 @@ export interface ZationOptionsInternal extends ZationOptions{
     autoUserChSub : boolean;
     autoDefaultUserGroupChSub : boolean;
     autoAuthUserGroupChSub : boolean;
+    autoReconnect : boolean;
+    autoReconnectOptions : {
+        initialDelay ?: number,
+        randomness ?: number,
+        multiplier ?: number,
+        maxDelay ?: number
+    }
 }

@@ -834,7 +834,8 @@ export class Zation
             secure: this.zc.config.secure,
             rejectUnauthorized: this.zc.config.rejectUnauthorized,
             path : this.zc.config.path,
-            autoReconnect: true,
+            autoReconnect: this.zc.config.autoReconnect,
+            autoReconnectOptions : this.zc.config.autoReconnectOptions,
             autoConnect : false,
             query: {
                 system : this.zc.config.system,
