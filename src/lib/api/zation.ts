@@ -1138,7 +1138,7 @@ export class Zation
      * @param event
      * @param data
      */
-    async pubUserCh(userId : string | number,event : string, data : any) : Promise<void> {
+    async pubUserCh(userId : string | number,event : string, data : any = {}) : Promise<void> {
         await this.channelEngine.pubUserCh(userId,event,data);
     }
 
@@ -1154,7 +1154,7 @@ export class Zation
      * @param event
      * @param data
      */
-    async pubAuthUserGroupCh(authUserGroup : string,event : string, data : any) : Promise<void> {
+    async pubAuthUserGroupCh(authUserGroup : string,event : string, data : any = {}) : Promise<void> {
         await this.channelEngine.pubAuthUserGroupCh(authUserGroup,event,data);
     }
 
@@ -1169,7 +1169,7 @@ export class Zation
      * @param event
      * @param data
      */
-    async pubDefaultUserGroupCh(event : string, data : any) : Promise<void> {
+    async pubDefaultUserGroupCh(event : string, data : any = {}) : Promise<void> {
         await this.channelEngine.pubDefaultUserGroupCh(event,data);
     }
 
@@ -1184,7 +1184,7 @@ export class Zation
      * @param event
      * @param data
      */
-    async pubAllCh(event : string, data : any) : Promise<void> {
+    async pubAllCh(event : string, data : any = {}) : Promise<void> {
         await this.channelEngine.pubAllCh(event,data);
     }
 
@@ -1197,7 +1197,7 @@ export class Zation
      * @param event
      * @param data
      */
-    async pubPanelInCh(event : string, data : any) : Promise<void> {
+    async pubPanelInCh(event : string, data : any = {}) : Promise<void> {
         await this.channelEngine.pubPanelInCh(event,data);
     }
 
@@ -1213,7 +1213,7 @@ export class Zation
      * @param event
      * @param data
      */
-    async pubCustomCh(chName : string,event : string, data : any) : Promise<void> {
+    async pubCustomCh(chName : string,event : string, data : any = {}) : Promise<void> {
         await this.channelEngine.pubCustomCh(chName,event,data);
     }
 
@@ -1230,7 +1230,7 @@ export class Zation
      * @param event
      * @param data
      */
-    async pubCustomIdCh(chName : string,id : string,event : string, data : any) : Promise<void> {
+    async pubCustomIdCh(chName : string,id : string,event : string, data : any = {}) : Promise<void> {
         await this.channelEngine.pubCustomIdCh(chName,id,event,data);
     }
 
