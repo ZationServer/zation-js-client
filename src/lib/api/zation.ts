@@ -660,9 +660,10 @@ export class Zation
 
                 this._registerSocketEvents();
 
+                this.authEngine.initAuthEngine();
+
                 //register
                 this.socket.on('connect',async () => {
-                    this.authEngine.initAuthEngine();
                     resolve();
                 });
 
@@ -737,7 +738,7 @@ export class Zation
 
         this.socket.on('disconnect',async (code,data) =>
         {
-            const fromClient = data['#internal-fromZationClient'];
+            const fromClient = data ? data['#internal-fromZationClient'] : false;
             if(typeof fromClient === "boolean" && fromClient){
                 if(this.zc.isDebug()) {
                     Logger.printInfo(`Client is disconnected from client. Code:'${code}' Data:'${data}'`);

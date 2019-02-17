@@ -50,15 +50,15 @@ export class AuthEngine
             const authToken = this.zation.getSocket().getAuthToken();
             const signToken = this.zation.getSocket().getSignedAuthToken();
 
-            //try because they can be an subscribion error
+            //try because they can be an subscription error
             try {
                 await this.refreshToken(authToken, signToken);
             }
             catch (e) {}
         });
 
-        this.zation.getSocket().on('connect',async () =>{
-            if(this.zation.getSocket().getSignedAuthToken() !== this.signToken &&
+        this.zation.getSocket().on('connect',async (state) =>{
+            if(!state.isAuthenticated && this.zation.getSocket().getSignedAuthToken() !== this.signToken &&
             this.signToken !== null) {
                 try{await this.zation.signAuthenticate(this.signToken);}
                 catch (e) {}
@@ -250,7 +250,6 @@ export class AuthEngine
             Logger.printInfo
             (`User is authenticated with userId: '${this.currentUserId}' and auth user group: '${this.currentUserAuthGroup}'.`)
         }
-
         await Promise.all(promises);
     }
 
