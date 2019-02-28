@@ -253,7 +253,7 @@ export class Response
      * Reset all catched errors.
      */
     resetNotCatchedErrors() : Response {
-        this.notCatchedErrors = this.erros;
+        this.notCatchedErrors = this.erros.slice();
         return this;
     }
 
