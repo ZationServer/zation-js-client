@@ -760,15 +760,15 @@ export class Zation
                 if(this.zc.isDebug()) {
                     Logger.printInfo('Client is deauthenticated from client.');
                 }
-                await this._triggerEventReactions(Events.ClientDisconnect,oldSignedJwtToken);
+                await this._triggerEventReactions(Events.ClientDeauthenticate,oldSignedJwtToken);
             }
             else{
                 if(this.zc.isDebug()) {
                     Logger.printInfo('Client is deauthenticated from server.');
                 }
-                await this._triggerEventReactions(Events.ServerDisconnect,oldSignedJwtToken);
+                await this._triggerEventReactions(Events.ServerDeauthenticate,oldSignedJwtToken);
             }
-            await this._triggerEventReactions(Events.Disconnect,fromClient,oldSignedJwtToken);
+            await this._triggerEventReactions(Events.Deauthenticate,fromClient,oldSignedJwtToken);
         });
 
         this.socket.on('connectAbort',async (code,data) => {
