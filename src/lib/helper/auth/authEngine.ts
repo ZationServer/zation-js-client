@@ -267,7 +267,7 @@ export class AuthEngine
             return this.signToken;
         }
         else {
-            throw new AuthenticationNeededError('To get access to token');
+            throw new AuthenticationNeededError('To get access to the token');
         }
     }
 
@@ -276,7 +276,7 @@ export class AuthEngine
             return this.plainToken;
         }
         else {
-            throw new AuthenticationNeededError('To get access to token');
+            throw new AuthenticationNeededError('To get access to the token');
         }
     }
 
@@ -300,7 +300,7 @@ export class AuthEngine
                 this.plainToken.zationCustomVariables : {};
         }
         else {
-            throw new AuthenticationNeededError('To get access to customTokenVar');
+            throw new AuthenticationNeededError('To get access to token variables');
         }
     }
 
