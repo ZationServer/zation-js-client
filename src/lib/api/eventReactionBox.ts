@@ -222,6 +222,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * @description
      * React on authenticate.
      * This event triggers if the client becomes authenticated.
+     * Notice that it also triggers every time when the token is updated from the server side.
      * @example
      * onAuthenticate((signJwtToken) => {});
      * @param reaction

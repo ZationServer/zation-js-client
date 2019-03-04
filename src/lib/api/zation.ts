@@ -1261,7 +1261,7 @@ export class Zation
      * But only change, delete or set on the server.
      * @example
      * getTokenVariable('person.email');
-     * @param path
+     * @param path Notice if you don't provide a path, it returns all variables in an object.
      * @throws AuthenticationNeededError
      */
     getTokenVariable(path ?: string | string[]) : any {
