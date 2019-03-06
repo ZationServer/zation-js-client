@@ -8,6 +8,7 @@ import {HttpRequest} from "./httpRequest";
 
 const  Emitter                 = require('component-emitter');
 const  SocketClusterClient     = require('socketcluster-client');
+const base64                   = require('base-64');
 
 import {SendAble}                    from "../helper/request/sendAble";
 import {ProtocolType}                from "../helper/constants/protocolType";
@@ -109,6 +110,22 @@ SocketClusterClient.SCClientSocket.prototype._triggerChannelUnsubscribe = functi
         Emitter.prototype.emit.call(this, 'subscribeStateChange', stateChangeData);
         Emitter.prototype.emit.call(this, 'unsubscribe', channelName, fromClient);
     }
+};
+
+SocketClusterClient.SCClientSocket.prototype.decodeBase64 = function (encodedString) {
+    const base64Normal = encodedString.replace(/\-/g, '+').replace(/_/g, '/');
+    let decodedString;
+    if (typeof Buffer === 'undefined') {
+        if (global['atob']) {
+            decodedString = global['atob'](base64Normal);
+        } else {
+            decodedString = base64.decode(base64Normal);
+        }
+    } else {
+        decodedString = Buffer.from(base64Normal, 'base64')
+            .toString('utf8');
+    }
+    return decodedString;
 };
 
 export class Zation

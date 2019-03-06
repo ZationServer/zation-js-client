@@ -43,6 +43,7 @@
     "lodash": "4.17.11",
     "minimatch": "3.0.4",
     "path": "0.12.7",
+    "base-64" : "^0.1.0",
     "socketcluster-client": "14.2.1",
     "object-path": "0.11.4",
     "component-emitter": "1.2.1",
