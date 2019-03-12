@@ -8,7 +8,6 @@ import {HttpRequest} from "./httpRequest";
 
 const  Emitter                 = require('component-emitter');
 const  SocketClusterClient     = require('socketcluster-client');
-const base64                   = require('base-64');
 
 import {SendAble}                    from "../helper/request/sendAble";
 import {ProtocolType}                from "../helper/constants/protocolType";
@@ -112,21 +111,60 @@ SocketClusterClient.SCClientSocket.prototype._triggerChannelUnsubscribe = functi
     }
 };
 
-SocketClusterClient.SCClientSocket.prototype.decodeBase64 = function (encodedString) {
-    const base64Normal = encodedString.replace(/\-/g, '+').replace(/_/g, '/');
-    let decodedString;
-    if (typeof Buffer === 'undefined') {
-        if (global['atob']) {
-            decodedString = global['atob'](base64Normal);
-        } else {
-            decodedString = base64.decode(base64Normal);
+SocketClusterClient.prototype._triggerChannelSubscribeFail = function (err, channel, subscriptionOptions) {
+    const channelName = channel.name;
+    const meetsAuthRequirements = !channel.waitForAuth || this.authState === this.AUTHENTICATED;
+
+    if (channel.state !== channel.UNSUBSCRIBED && meetsAuthRequirements) {
+        if(!channel.retrySubForever){
+            channel.state = channel.UNSUBSCRIBED;
         }
-    } else {
-        decodedString = Buffer.from(base64Normal, 'base64')
-            .toString('utf8');
+        channel.emit('subscribeFail', err, channelName, subscriptionOptions);
+        Emitter.prototype.emit.call(this, 'subscribeFail', err, channelName, subscriptionOptions);
     }
-    return decodedString;
 };
+
+SocketClusterClient.prototype._privateEventHandlerMap['#kickOut'] = function (data) {
+    const undecoratedChannelName = this._undecorateChannelName(data.channel);
+    const channel = this.channels[undecoratedChannelName];
+    if (channel) {
+        Emitter.prototype.emit.call(this, 'kickOut', data.message, undecoratedChannelName);
+        channel.emit('kickOut', data.message, undecoratedChannelName);
+        if(!channel.retrySubForever){
+            this._triggerChannelUnsubscribe(channel);
+        }
+        else {
+            this._triggerChannelUnsubscribe(channel,channel.PENDING);
+        }
+    }
+};
+
+SocketClusterClient.prototype._changeToAuthenticatedState = function (signedAuthToken) {
+    this.signedAuthToken = signedAuthToken;
+    this.authToken = this._extractAuthTokenData(signedAuthToken);
+
+    if (this.authState !== this.AUTHENTICATED) {
+        const oldState = this.authState;
+        this.authState = this.AUTHENTICATED;
+        const stateChangeData = {
+            oldState: oldState,
+            newState: this.authState,
+            signedAuthToken: signedAuthToken,
+            authToken: this.authToken
+        };
+        if (!this.preparingPendingSubscriptions) {
+            this.processPendingSubscriptions();
+        }
+
+        Emitter.prototype.emit.call(this, 'authStateChange', stateChangeData);
+    }
+    else {
+        this.processPendingSubscriptions();
+    }
+
+    Emitter.prototype.emit.call(this, 'authenticate', signedAuthToken);
+};
+
 
 export class Zation
 {
@@ -1004,9 +1042,14 @@ export class Zation
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
      * @throws SubscribeFailedError
      * @param chName
+     * @param retrySubForever
+     * This option indicates if the client should retry to sub the channel forever.
+     * So if the client is kicked from this channel or the subscription fail.
+     * It will automatically retry to subscribe it if the authentication token change or the client is reconnected.
+     * The default value is true.
      */
-    async subCustomCh(chName : string) : Promise<void> {
-        await this.channelEngine.subCustomCh(chName);
+    async subCustomCh(chName : string,retrySubForever : boolean = true) : Promise<void> {
+        await this.channelEngine.subCustomCh(chName,retrySubForever);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1051,9 +1094,14 @@ export class Zation
      * @throws SubscribeFailedError
      * @param chName
      * @param chId
+     * @param retrySubForever
+     * This option indicates if the client should retry to sub the channel forever.
+     * So if the client is kicked from this channel or the subscription fail.
+     * It will automatically retry to subscribe it if the authentication token change or the client is reconnected.
+     * The default value is true.
      */
-    async subCustomIdCh(chName : string, chId : string) : Promise<void> {
-        await this.channelEngine.subCustomIdCh(chName,chId);
+    async subCustomIdCh(chName : string, chId : string,retrySubForever : boolean = true) : Promise<void> {
+        await this.channelEngine.subCustomIdCh(chName,chId,retrySubForever);
     }
 
     // noinspection JSUnusedGlobalSymbols

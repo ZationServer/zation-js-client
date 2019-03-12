@@ -23,8 +23,8 @@ export class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    async subUserChannel(userId : string | number) {
-        await this.subZationChannel(ZationChannel.USER_CHANNEL_PREFIX + userId,ChannelTarget.USER);
+    async subUserChannel(userId : string | number,retrySubForever  : boolean = true) {
+        await this.subZationChannel(ZationChannel.USER_CHANNEL_PREFIX + userId,ChannelTarget.USER,retrySubForever);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -38,8 +38,8 @@ export class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    async subAuthUserGroupChannel(authGroup : string) {
-        await this.subZationChannel(ZationChannel.AUTH_USER_GROUP_PREFIX + authGroup,ChannelTarget.AUG);
+    async subAuthUserGroupChannel(authGroup : string,retrySubForever  : boolean = true) {
+        await this.subZationChannel(ZationChannel.AUTH_USER_GROUP_PREFIX + authGroup,ChannelTarget.AUG,retrySubForever);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -53,8 +53,8 @@ export class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    async subDefaultUserGroupChannel() {
-        await this.subZationChannel(ZationChannel.DEFAULT_USER_GROUP,ChannelTarget.DUG);
+    async subDefaultUserGroupChannel(retrySubForever  : boolean = true) {
+        await this.subZationChannel(ZationChannel.DEFAULT_USER_GROUP,ChannelTarget.DUG,retrySubForever);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -68,8 +68,8 @@ export class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    async subAllChannel() {
-        await this.subZationChannel(ZationChannel.ALL,ChannelTarget.ALL);
+    async subAllChannel(retrySubForever  : boolean = true) {
+        await this.subZationChannel(ZationChannel.ALL,ChannelTarget.ALL,retrySubForever);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -83,8 +83,8 @@ export class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    async subPanelOutChannel() {
-        await this.subZationChannel(ZationChannel.PANEL_OUT,ChannelTarget.PANEL);
+    async subPanelOutChannel(retrySubForever  : boolean =  true) {
+        await this.subZationChannel(ZationChannel.PANEL_OUT,ChannelTarget.PANEL,retrySubForever);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -97,13 +97,17 @@ export class ChannelEngine
         this.unsubChannel(ZationChannel.PANEL_OUT,andDestroy);
     }
 
-    async subChannel(channel : string,chTarget : ChannelTarget,chInfoObj, watcher : Function, subOptions ?: object) : Promise<void>
+    async subChannel(channel : string,chTarget : ChannelTarget,chInfoObj, watcher : Function,retrySubForever : boolean, subOptions ?: object) : Promise<void>
     {
         const socket = this.zation.getSocket();
-        if(!!socket && !socket.isSubscribed(channel))
+        if(!!socket)
         {
             await new Promise<void>(((resolve, reject) => {
                 const ch = socket.channel(channel);
+
+                if(retrySubForever){
+                    ch['retrySubForever'] = true;
+                }
 
                 //register
                 ch.on('subscribe',() => {
@@ -159,7 +163,7 @@ export class ChannelEngine
     }
 
 
-    async subZationChannel(channel : string, target : ChannelTarget) : Promise<void>
+    async subZationChannel(channel : string, target : ChannelTarget,retrySubForever  : boolean) : Promise<void>
     {
        const infoObj = {};
        await this.subChannel(channel,target,infoObj,async (input : any) =>
@@ -180,7 +184,7 @@ export class ChannelEngine
                }));
                await Promise.all(promises);
            }
-       });
+       },retrySubForever);
     }
 
     unsubChannel(channel : string,andDestroy : boolean = true) : void
@@ -206,7 +210,7 @@ export class ChannelEngine
     //Part Custom Channel
 
     // noinspection JSUnusedGlobalSymbols
-    async subCustomCh(channel : string) : Promise<void>
+    async subCustomCh(channel : string,retrySubForever  : boolean) : Promise<void>
     {
         const infoObj = {chName : channel};
         const chFullName = ZationChannel.CUSTOM_CHANNEL_PREFIX + channel;
@@ -233,11 +237,11 @@ export class ChannelEngine
                     await channelReactionBox._triggerPub(ChannelTarget.ANY,event,data,{chFullName : chFullName},ssid);
                 });
             }
-        });
+        },retrySubForever);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    async subCustomIdCh(channel : string, id : string) : Promise<void>
+    async subCustomIdCh(channel : string, id : string,retrySubForever  : boolean) : Promise<void>
     {
         const chFullName = ZationChannel.CUSTOM_ID_CHANNEL_PREFIX + channel + ZationChannel.CUSTOM_CHANNEL_ID + id;
         const infoObj = {chName : channel,chId : id};
@@ -266,7 +270,7 @@ export class ChannelEngine
                         await channelReactionBox._triggerPub(ChannelTarget.ANY,event,data,{chFullName : chFullName},ssid);
                     });
                 }
-        });
+        },retrySubForever);
     }
 
     // noinspection JSUnusedGlobalSymbols
