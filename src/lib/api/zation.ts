@@ -111,7 +111,7 @@ SocketClusterClient.SCClientSocket.prototype._triggerChannelUnsubscribe = functi
     }
 };
 
-SocketClusterClient.prototype._triggerChannelSubscribeFail = function (err, channel, subscriptionOptions) {
+SocketClusterClient.SCClientSocket.prototype._triggerChannelSubscribeFail = function (err, channel, subscriptionOptions) {
     const channelName = channel.name;
     const meetsAuthRequirements = !channel.waitForAuth || this.authState === this.AUTHENTICATED;
 
@@ -124,7 +124,7 @@ SocketClusterClient.prototype._triggerChannelSubscribeFail = function (err, chan
     }
 };
 
-SocketClusterClient.prototype._privateEventHandlerMap['#kickOut'] = function (data) {
+SocketClusterClient.SCClientSocket.prototype._privateEventHandlerMap['#kickOut'] = function (data) {
     const undecoratedChannelName = this._undecorateChannelName(data.channel);
     const channel = this.channels[undecoratedChannelName];
     if (channel) {
@@ -139,7 +139,7 @@ SocketClusterClient.prototype._privateEventHandlerMap['#kickOut'] = function (da
     }
 };
 
-SocketClusterClient.prototype._changeToAuthenticatedState = function (signedAuthToken) {
+SocketClusterClient.SCClientSocket.prototype._changeToAuthenticatedState = function (signedAuthToken) {
     this.signedAuthToken = signedAuthToken;
     this.authToken = this._extractAuthTokenData(signedAuthToken);
 
