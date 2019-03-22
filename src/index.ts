@@ -31,6 +31,10 @@ import {SubscribeFailedError}          from "./lib/helper/error/subscribeFailedE
 import {Response}                      from "./lib/api/response";
 import {ZationSaver}                   from "./lib/helper/saver/zationSaver";
 import {NoZationClientSetOnTheKey}     from "./lib/helper/error/noZationClientSetOnTheKey";
+import {AbstractRequestHelper}         from "./lib/helper/request/abstractRequestHelper";
+import {AuthRequestHelper}             from "./lib/helper/request/authRequestHelper";
+import {RequestHelper}                 from "./lib/helper/request/requestHelper";
+import {ValidationRequestHelper}       from "./lib/helper/request/validationRequestHelper";
 
 // noinspection JSUnusedGlobalSymbols
 /**
@@ -79,8 +83,13 @@ export {
     SignAuthenticationFailedError,
     SubscribeFailedError,
     NoZationClientSetOnTheKey,
-    ProtocolType
+    ProtocolType,
+    AbstractRequestHelper,
+    AuthRequestHelper,
+    RequestHelper,
+    ValidationRequestHelper
 };
+
 
 
 
