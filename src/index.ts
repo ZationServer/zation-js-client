@@ -52,7 +52,7 @@ const load = (key : string = 'default') : Zation => {
     return ZationSaver.load(key);
 };
 
-export = {
+export {
     Zation,
     create,
     save,
@@ -80,7 +80,7 @@ export = {
     SubscribeFailedError,
     NoZationClientSetOnTheKey,
     ProtocolType
-}
+};
 
 
 
