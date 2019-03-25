@@ -318,12 +318,12 @@ export class Response
 
     toString() : string
     {
-        return `Response: ->`+
+        return `Response: -> \n`+
             `   Successful: ${this.isSuccessful()}\n`+
             `   StatusCode: ${this.isSuccessful() ? this.getStatusCode() : 'ERROR'}\n` +
             (this.isSuccessful() ? `   Result: ${this.result}\n` : '') +
-            (!this.isSuccessful() ? `   Errors: ${this.erros.join("\n")}\n` : '') +
-            `   Protocol: ${this.getProtocolType()}\n` +
+            (!this.isSuccessful() ? `   Errors: ${this.erros.toString()}` : '') +
+            `   Protocol: ${ProtocolType[this.getProtocolType()]}\n` +
             (this.hasNewToken() ? `NewToken: ${this.getNewPlainToken() || 'UNKNOWN'}\n` : '');
     }
 }

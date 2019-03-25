@@ -121,7 +121,7 @@ export class TaskError
 
     toString() : string
     {
-        return `TaskError -> ` +
+        return `TaskError -> \n` +
             `   Name: ${this.getName()}\n` +
             `   Group: ${this.getGroup() || 'NO GROUP'}\n` +
             `   Type: ${this.getType()}\n` +
