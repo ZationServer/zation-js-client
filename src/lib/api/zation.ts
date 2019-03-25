@@ -504,7 +504,7 @@ export class Zation
      * @example
      * await zation.request()
      * .controller('sendMessage')
-     * .authData({msg : 'hallo'})
+     * .data({msg : 'hallo'})
      * .buildCatchError()
      * .presets()
      * .inputNotMatchWithMinLength('msg')

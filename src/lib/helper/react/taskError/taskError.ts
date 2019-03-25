@@ -119,6 +119,17 @@ export class TaskError
         return !!info ? info[key] : undefined;
     }
 
+    toString() : string
+    {
+        return `TaskError -> ` +
+            `   Name: ${this.getName()}\n` +
+            `   Group: ${this.getGroup() || 'NO GROUP'}\n` +
+            `   Type: ${this.getType()}\n` +
+            `   FromZationSystem: ${this.isFromZationSystem() || 'UNKNOWN'}\n`+
+            `   Description: ${this.getDescription() || 'UNKNOWN'}\n`+
+            `   Info: ${this.getInfo() || 'UNKNOWN'}\n`;
+    }
+
 }
 
 
