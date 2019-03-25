@@ -320,10 +320,10 @@ export class Response
     {
         return `Response: -> \n`+
             `   Successful: ${this.isSuccessful()}\n`+
-            `   StatusCode: ${this.isSuccessful() ? this.getStatusCode() : 'ERROR'}\n` +
+            `   StatusCode: ${this.isSuccessful() ? (this.getStatusCode() || 'NO STATUS CODE') : 'ERROR'}\n` +
             `   Protocol: ${ProtocolType[this.getProtocolType()]}\n` +
             (this.hasNewToken() ? `   NewToken: ${this.getNewPlainToken() || 'UNKNOWN'}\n` : '')+
-            (this.isSuccessful() ? `   Result: ${this.result}\n` : '') +
+            (this.isSuccessful() ? `   Result: ${this.result || 'NO RESULT'}\n` : '') +
             (!this.isSuccessful() ? `   Errors: (${this.erros.toString()})` : '');
     }
 }
