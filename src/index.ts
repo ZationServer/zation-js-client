@@ -35,6 +35,7 @@ import {AbstractRequestHelper}         from "./lib/helper/request/abstractReques
 import {AuthRequestHelper}             from "./lib/helper/request/authRequestHelper";
 import {RequestHelper}                 from "./lib/helper/request/requestHelper";
 import {ValidationRequestHelper}       from "./lib/helper/request/validationRequestHelper";
+import {ErrorFilterEngine}             from "./lib/helper/react/responseReactionEngine/errorFilterEngine";
 
 // noinspection JSUnusedGlobalSymbols
 /**
@@ -87,7 +88,8 @@ export {
     AbstractRequestHelper,
     AuthRequestHelper,
     RequestHelper,
-    ValidationRequestHelper
+    ValidationRequestHelper,
+    ErrorFilterEngine
 };
 
 
