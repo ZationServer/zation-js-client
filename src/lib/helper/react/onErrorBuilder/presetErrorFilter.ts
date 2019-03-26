@@ -16,8 +16,8 @@ export class PresetErrorFilter<T extends AbstractErrorFilterBuilder<T>> extends 
     constructor(errorFilterBuilder : T,pushPreset : boolean)
     {
         super();
-        this.self = errorFilterBuilder;
         this.pushPreset = pushPreset;
+        this.errorFilterBuilder = errorFilterBuilder;
     }
 
     protected _presetAdd(filter : ErrorFilter) : void
@@ -28,5 +28,9 @@ export class PresetErrorFilter<T extends AbstractErrorFilterBuilder<T>> extends 
         else {
             this.errorFilterBuilder.setTmpFilter(filter);
         }
+    }
+
+    protected self(): T {
+        return this.errorFilterBuilder;
     }
 }

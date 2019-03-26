@@ -10,8 +10,7 @@ import {ErrorType}   from "../../constants/errorType";
 
 export abstract class PresetErrorLib<T>
 {
-    protected self : T;
-
+    protected abstract self() : T;
     protected abstract _presetAdd(preset : ErrorFilter) : void;
     
     // noinspection JSUnusedGlobalSymbols
@@ -22,7 +21,7 @@ export abstract class PresetErrorLib<T>
     validationError() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.VALIDATION_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -38,7 +37,7 @@ export abstract class PresetErrorLib<T>
     inputTypeError(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -54,7 +53,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeObject(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeObject',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -70,7 +69,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeArray(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeArray',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -86,7 +85,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeString(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeString',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -102,7 +101,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeChar(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeChar',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -118,7 +117,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeNull(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeNull',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -134,7 +133,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeInt(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeInt',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -150,7 +149,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeFloat(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeFloat',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -166,7 +165,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeNumber(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeNumber',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -182,7 +181,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeDate(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeDate',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -198,7 +197,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeEmail(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeEmail',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -214,7 +213,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeBoolean(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeBoolean',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -230,7 +229,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeSha512(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeSha512',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -246,7 +245,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeSha256(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeSha256',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -262,7 +261,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeSha384(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeSha384',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -278,7 +277,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeSha1(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeSha1',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -294,7 +293,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeMd5(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeMd5',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -310,7 +309,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeHexColor(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeHexColor',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -326,7 +325,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeHexadecimal(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeHexadecimal',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -342,7 +341,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeIp4(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeIp4',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -358,7 +357,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeIp6(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeIp6',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -374,7 +373,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeIsbn10(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeIsbn10',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -390,7 +389,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeIsbn13(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeIsbn13',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -406,7 +405,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeJson(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeJson',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -422,7 +421,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeUrl(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeUrl',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -438,7 +437,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeMimeType(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeMimeType',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -454,7 +453,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeMacAddress(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeMacAddress',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -470,7 +469,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeMobileNumber(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeMobileNumber',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -486,7 +485,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeUuid3(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeUuid3',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -502,7 +501,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeUuid4(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeUuid4',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -518,7 +517,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeUuid5(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeUuid5',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -534,7 +533,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeBase64(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeBase64',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -550,7 +549,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeAscii(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypescii',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -566,7 +565,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeUserId(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeUserId',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -582,7 +581,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeMongoId(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeMongoId',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -598,7 +597,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotTypeLatLong(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeLatLong',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -614,7 +613,7 @@ export abstract class PresetErrorLib<T>
     inputValueLengthError(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroup.VALUE_LENGTH_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -633,7 +632,7 @@ export abstract class PresetErrorLib<T>
     inputNotMatchWithMinLength(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputNotMatchWithMinLength',inputPath,inputValue,ErrorGroup.VALUE_LENGTH_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -652,7 +651,7 @@ export abstract class PresetErrorLib<T>
     inputNotMatchWithMaxLength(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputNotMatchWithMaxLength',inputPath,inputValue,ErrorGroup.VALUE_LENGTH_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -671,7 +670,7 @@ export abstract class PresetErrorLib<T>
     inputNotMatchWithLength(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputNotMatchWithLength',inputPath,inputValue,ErrorGroup.VALUE_LENGTH_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -687,7 +686,7 @@ export abstract class PresetErrorLib<T>
     inputLettersFormatError(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroup.LETTERS_FORMAT_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -703,7 +702,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotUppercase(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotUppercase',inputPath,inputValue,ErrorGroup.LETTERS_FORMAT_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -719,7 +718,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotLowercase(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotLowercase',inputPath,inputValue,ErrorGroup.LETTERS_FORMAT_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -738,7 +737,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotMatchWithCharClass(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotMatchWithCharClass',inputPath,inputValue));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -754,7 +753,7 @@ export abstract class PresetErrorLib<T>
     inputDateError(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroup.DATE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -773,7 +772,7 @@ export abstract class PresetErrorLib<T>
     inputDateIsNotBefore(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputDateIsNotBefore',inputPath,inputValue,ErrorGroup.DATE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -792,7 +791,7 @@ export abstract class PresetErrorLib<T>
     inputDateIsNotAfter(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputDateIsNotAfter',inputPath,inputValue,ErrorGroup.DATE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -812,7 +811,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotContains(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotContains',inputPath,inputValue));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -831,7 +830,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotEquals(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotEquals',inputPath,inputValue));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -847,7 +846,7 @@ export abstract class PresetErrorLib<T>
     inputNumberSizeError(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroup.NUMBER_SIZE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -866,7 +865,7 @@ export abstract class PresetErrorLib<T>
     inputNotMatchWithMinValue(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputNotMatchWithMinValue',inputPath,inputValue,ErrorGroup.NUMBER_SIZE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -885,7 +884,7 @@ export abstract class PresetErrorLib<T>
     inputNotMatchWithMaxValue(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputNotMatchWithMaxValue',inputPath,inputValue,ErrorGroup.NUMBER_SIZE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -903,7 +902,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotMatchWithRegex(inputPath ?: string,inputValue ?: any,regexName ?: string) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotMatchWithRegex',inputPath,inputValue,undefined,'regexName',regexName));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -922,7 +921,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotStartsWith(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotStartsWith',inputPath,inputValue));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -941,7 +940,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotEndsWith(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotEndsWith',inputPath,inputValue));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -957,7 +956,7 @@ export abstract class PresetErrorLib<T>
     inputEnumError(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroup.ENUM_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -976,7 +975,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotMatchWithEnum(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotMatchWithEnum',inputPath,inputValue,ErrorGroup.ENUM_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -992,7 +991,7 @@ export abstract class PresetErrorLib<T>
     inputIsNotMatchWithPrivateEnum(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotMatchWithPrivateEnum',inputPath,inputValue,ErrorGroup.ENUM_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1008,7 +1007,7 @@ export abstract class PresetErrorLib<T>
     inputArrayLengthError(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroup.ARRAY_LENGTH_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1027,7 +1026,7 @@ export abstract class PresetErrorLib<T>
     inputArrayNotMatchWithMaxLength(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputArrayNotMatchWithMaxLength',inputPath,inputValue,ErrorGroup.ARRAY_LENGTH_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1046,7 +1045,7 @@ export abstract class PresetErrorLib<T>
     inputArrayNotMatchWithMinLength(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputArrayNotMatchWithMinLength',inputPath,inputValue,ErrorGroup.ARRAY_LENGTH_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1065,7 +1064,7 @@ export abstract class PresetErrorLib<T>
     inputArrayNotMatchWithLength(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputArrayNotMatchWithLength',inputPath,inputValue,ErrorGroup.ARRAY_LENGTH_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1084,7 +1083,7 @@ export abstract class PresetErrorLib<T>
     inputNotMatchWithMinByteSize(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputNotMatchWithMinByteSize',inputPath,inputValue,ErrorGroup.BYTE_SIZE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1103,7 +1102,7 @@ export abstract class PresetErrorLib<T>
     inputNotMatchWithMaxByteSize(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputNotMatchWithMaxByteSize',inputPath,inputValue,ErrorGroup.BYTE_SIZE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1119,7 +1118,7 @@ export abstract class PresetErrorLib<T>
     inputByteSizeError(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroup.BYTE_SIZE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1138,7 +1137,7 @@ export abstract class PresetErrorLib<T>
     inputNotMatchWithMimeType(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputNotMatchWithMimeType',inputPath,inputValue,ErrorGroup.CONTENT_TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1157,7 +1156,7 @@ export abstract class PresetErrorLib<T>
     inputNotMatchWithMimeSubType(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('inputNotMatchWithMimeSubType',inputPath,inputValue,ErrorGroup.CONTENT_TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1173,7 +1172,7 @@ export abstract class PresetErrorLib<T>
     inputContentTypeError(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroup.CONTENT_TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1192,7 +1191,7 @@ export abstract class PresetErrorLib<T>
     noValidTypeWasFound(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('noValidTypeWasFound',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1208,7 +1207,7 @@ export abstract class PresetErrorLib<T>
     noAnyOfMatch(inputPath ?: string,inputValue ?: any) : T {
         this._presetAdd(this._validationErrorBuild
         ('noAnyOfMatch',inputPath,inputValue));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1223,7 +1222,7 @@ export abstract class PresetErrorLib<T>
     controllerNotFound() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'controllerNotFound'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1238,7 +1237,7 @@ export abstract class PresetErrorLib<T>
     systemControllerNotFound() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'systemControllerNotFound'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1250,7 +1249,7 @@ export abstract class PresetErrorLib<T>
     authControllerNotSet() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'authControllerNotSet'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1265,7 +1264,7 @@ export abstract class PresetErrorLib<T>
     systemNotCompatible() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.COMPATIBILITY_ERROR,'systemNotCompatible'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1280,7 +1279,7 @@ export abstract class PresetErrorLib<T>
     versionNotCompatible() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.COMPATIBILITY_ERROR,'versionNotCompatible'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1291,7 +1290,7 @@ export abstract class PresetErrorLib<T>
     codeError() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.CODE_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1303,7 +1302,7 @@ export abstract class PresetErrorLib<T>
     authenticationError() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.SYSTEM_ERROR,'authenticationError'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1314,7 +1313,7 @@ export abstract class PresetErrorLib<T>
     inputError() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1329,7 +1328,7 @@ export abstract class PresetErrorLib<T>
     inputPropertyIsMissing() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'inputPropertyIsMissing'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1343,7 +1342,7 @@ export abstract class PresetErrorLib<T>
     unknownInputProperty() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'unknownInputProperty'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1358,7 +1357,7 @@ export abstract class PresetErrorLib<T>
     inputNotAssignable() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'inputNotAssignable'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1373,7 +1372,7 @@ export abstract class PresetErrorLib<T>
     arrayWasExpected() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'arrayWasExpected'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1388,7 +1387,7 @@ export abstract class PresetErrorLib<T>
     objectWasExpected() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'objectWasExpected'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1405,7 +1404,7 @@ export abstract class PresetErrorLib<T>
     objectPropertyIsMissing() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'objectPropertyIsMissing'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1420,7 +1419,7 @@ export abstract class PresetErrorLib<T>
     unknownObjectProperty() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'unknownObjectProperty'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1432,7 +1431,7 @@ export abstract class PresetErrorLib<T>
     wrongPanelAuthData() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.AUTH_ERROR,'wrongPanelAuthData'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1445,7 +1444,7 @@ export abstract class PresetErrorLib<T>
     panelIsNotActivated() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'panelIsNotActivated'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1458,7 +1457,7 @@ export abstract class PresetErrorLib<T>
     authStartActive() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.TIME_ERROR,'authStartActive'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1474,7 +1473,7 @@ export abstract class PresetErrorLib<T>
     noAccessToController() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.AUTH_ERROR,'noAccessToController'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1486,7 +1485,7 @@ export abstract class PresetErrorLib<T>
     wrongInputDataStructure() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'wrongInputDataStructure'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1501,7 +1500,7 @@ export abstract class PresetErrorLib<T>
     wrongControllerInputType() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'wrongControllerInputType'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1513,7 +1512,7 @@ export abstract class PresetErrorLib<T>
     JSONParseSyntaxError() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'JSONParseSyntaxError'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1529,7 +1528,7 @@ export abstract class PresetErrorLib<T>
     wrongValidationCheckStructure() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'wrongValidationCheckStructure'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1547,7 +1546,7 @@ export abstract class PresetErrorLib<T>
     inputPathInControllerNotFound() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'inputPathInControllerNotFound'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1564,7 +1563,7 @@ export abstract class PresetErrorLib<T>
     inputPathNotHasAtLeastOneEntry() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'inputPathNotHasAtLeastOneEntry'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1575,7 +1574,7 @@ export abstract class PresetErrorLib<T>
     protocolError() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.PROTOCOL_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1592,7 +1591,7 @@ export abstract class PresetErrorLib<T>
     noAccessWithProtocol() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.PROTOCOL_ERROR,'noAccessWithProtocol'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1610,7 +1609,7 @@ export abstract class PresetErrorLib<T>
     noAccessWithHttpMethod() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.PROTOCOL_ERROR,'noAccessWithHttpMethod'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1621,7 +1620,7 @@ export abstract class PresetErrorLib<T>
     systemError() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.SYSTEM_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1636,7 +1635,7 @@ export abstract class PresetErrorLib<T>
     unknownError() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.SYSTEM_ERROR,'unknownError'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1647,7 +1646,7 @@ export abstract class PresetErrorLib<T>
     tokenError() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.TOKEN_ERROR));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1660,7 +1659,7 @@ export abstract class PresetErrorLib<T>
     unknownTokenVerifyError() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.TOKEN_ERROR,'unknownTokenVerifyError'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1673,7 +1672,7 @@ export abstract class PresetErrorLib<T>
     unknownTokenSignError() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.TOKEN_ERROR,'unknownTokenSignError'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1688,7 +1687,7 @@ export abstract class PresetErrorLib<T>
     tokenExpiredError() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.TOKEN_ERROR,'tokenExpiredError'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1703,7 +1702,7 @@ export abstract class PresetErrorLib<T>
     jsonWebTokenError() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.TOKEN_ERROR,'jsonWebTokenError'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1718,7 +1717,7 @@ export abstract class PresetErrorLib<T>
     authenticateMiddlewareBlock() : T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.TOKEN_ERROR,'authenticateMiddlewareBlock'));
-        return this.self;
+        return this.self();
     }
 
     // noinspection JSMethodCanBeStatic
