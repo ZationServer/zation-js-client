@@ -18,13 +18,13 @@ export class ErrorFilterEngine
         else {
             let filteredErrors : TaskError[] = [];
             for(let i = 0; i < filters.length; i++) {
-                filteredErrors = filteredErrors.concat(ErrorFilterEngine.filterError(errors,filters[i]));
+                filteredErrors = filteredErrors.concat(ErrorFilterEngine._oneFilterErrors(errors,filters[i]));
             }
             return filteredErrors;
         }
     }
 
-    static filterError(errors : TaskError[],filter : ErrorFilter) : TaskError[]
+    private static _oneFilterErrors(errors : TaskError[],filter : ErrorFilter) : TaskError[]
     {
         if(filter === {}) {
             return errors;
