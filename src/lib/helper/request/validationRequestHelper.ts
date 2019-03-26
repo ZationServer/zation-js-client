@@ -23,7 +23,7 @@ export class ValidationRequestHelper extends AbstractRequestHelper<ValidationReq
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Set the controller name from the request.
+     * Set the controller name of the request.
      * @param controllerName
      * @default ''
      */
@@ -35,7 +35,7 @@ export class ValidationRequestHelper extends AbstractRequestHelper<ValidationReq
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Set is systemController from the request.
+     * Set is systemController of the request.
      * @default false
      * @param isSystemController
      */

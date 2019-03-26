@@ -556,7 +556,7 @@ export class Zation
      * @description
      * Returns an validation request helper.
      * Where you can easy build an validation request with reactions and send it.
-     * This is useful for checking the verification of individual controller parameters.
+     * This is useful for validate individual controller parameters.
      * The default values are:
      * Protocol: WebSocket
      * ControllerName: ''

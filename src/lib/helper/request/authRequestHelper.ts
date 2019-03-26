@@ -23,7 +23,7 @@ export class AuthRequestHelper extends AbstractRequestHelper<AuthRequestHelper>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Set the authData from the request.
+     * Set the authData of the request.
      * @param data
      * @default {}
      */

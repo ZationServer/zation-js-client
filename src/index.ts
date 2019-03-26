@@ -15,7 +15,7 @@ import {EventReactionBox}              from "./lib/api/eventReactionBox";
 import {WsRequest}                     from "./lib/api/wsRequest";
 import {HttpRequest}                   from "./lib/api/httpRequest";
 import {AuthRequest}                   from "./lib/api/authRequest";
-import {ValidationRequest}             from "./lib/api/validationRequest";
+import {ValidationCheck, ValidationRequest} from "./lib/api/validationRequest";
 import {AuthenticationFailedError}     from "./lib/helper/error/authenticationFailedError";
 import {AuthenticationNeededError}     from "./lib/helper/error/authenticationNeededError";
 import {ConnectionAbortError}          from "./lib/helper/error/connectionAbortError";
@@ -95,7 +95,8 @@ export {
     ErrorFilterEngine,
     PresetErrorLib,
     ErrorFilter,
-    TaskError
+    TaskError,
+    ValidationCheck
 };
 
 
