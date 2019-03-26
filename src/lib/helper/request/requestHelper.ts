@@ -28,7 +28,7 @@ export class RequestHelper extends AbstractRequestHelper<RequestHelper>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Set request should use authentication if it is an http requst and client is authenticated.
+     * Set request should use authentication if it is an http request and client is authenticated.
      * @param useAuth
      * @default true
      */
