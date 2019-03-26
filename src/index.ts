@@ -39,6 +39,7 @@ import {ErrorFilterEngine}             from "./lib/helper/react/responseReaction
 import {PresetErrorLib}                from "./lib/helper/react/onErrorBuilder/presetErrorLib";
 import {ErrorFilter}                   from "./lib/helper/filter/errorFilter";
 import {TaskError}                     from "./lib/helper/react/taskError/taskError";
+import {AbstractErrorFilterBuilder} from "./lib/helper/react/onErrorBuilder/abstractErrorFilterBuilder";
 
 // noinspection JSUnusedGlobalSymbols
 /**
@@ -96,7 +97,8 @@ export {
     PresetErrorLib,
     ErrorFilter,
     TaskError,
-    ValidationCheck
+    ValidationCheck,
+    AbstractErrorFilterBuilder
 };
 
 

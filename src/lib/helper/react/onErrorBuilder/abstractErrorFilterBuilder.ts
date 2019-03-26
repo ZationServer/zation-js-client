@@ -6,14 +6,16 @@ GitHub: LucaCode
 
 import {OrBuilder}               from "../statementBuilder/orBuilder";
 import {PairOrAndBuilder}        from "../statementBuilder/pairOrAndBuilder";
-import {ResponseReactionOnError} from "../reaction/reactionHandler";
+// noinspection TypeScriptPreferShortImport
 import {ErrorFilter}             from "../../filter/errorFilter";
 import {PresetErrorFilter}       from "./presetErrorFilter";
 
-export abstract class AbstractErrorFilterBuilder<R>
+export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBuilder<R>>
 {
-    private filter : ErrorFilter[] = [];
-    private tmpFilter : ErrorFilter = {};
+    protected filter : ErrorFilter[] = [];
+    protected tmpFilter : ErrorFilter = {};
+
+    protected abstract self() : R;
 
     protected constructor() {
     }
@@ -25,13 +27,13 @@ export abstract class AbstractErrorFilterBuilder<R>
      * More names are linked with OR.
      * @param name
      */
-    nameIs(...name : string[]) : AbstractErrorFilterBuilder<R>
+    nameIs(...name : string[]) : R
     {
         if(!Array.isArray(this.tmpFilter.name)) {
             this.tmpFilter.name = [];
         }
         this.tmpFilter.name.push(...name);
-        return this;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -40,9 +42,9 @@ export abstract class AbstractErrorFilterBuilder<R>
      * Reset the filter property name.
      * Than all names are allowed.
      */
-    resetName() : AbstractErrorFilterBuilder<R> {
+    resetName() : R {
         delete this.tmpFilter.name;
-        return this;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -52,13 +54,13 @@ export abstract class AbstractErrorFilterBuilder<R>
      * More types are linked with OR.
      * @param type
      */
-    typeIs(...type : string[]) : AbstractErrorFilterBuilder<R>
+    typeIs(...type : string[]) : R
     {
         if(!Array.isArray(this.tmpFilter.type)) {
             this.tmpFilter.type = [];
         }
         this.tmpFilter.type.push(...type);
-        return this;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -67,9 +69,9 @@ export abstract class AbstractErrorFilterBuilder<R>
      * Reset the filter property type.
      * Than all types are allowed.
      */
-    resetType() : AbstractErrorFilterBuilder<R> {
+    resetType() : R {
         delete this.tmpFilter.type;
-        return this;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -79,14 +81,14 @@ export abstract class AbstractErrorFilterBuilder<R>
      * More info filters are linked with OR.
      * @param obj
      */
-    infoHas(...obj : object[]) : AbstractErrorFilterBuilder<R>
+    infoHas(...obj : object[]) : R
     {
         if(!Array.isArray(this.tmpFilter.info)) {
             this.tmpFilter.info = [];
         }
         // @ts-ignore
         this.tmpFilter.info.push(...obj);
-        return this;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -95,9 +97,9 @@ export abstract class AbstractErrorFilterBuilder<R>
      * Reset the filter property info.
      * Than all infos are allowed.
      */
-    resetInfo() : AbstractErrorFilterBuilder<R>{
+    resetInfo() : R {
         delete this.tmpFilter.info;
-        return this;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -106,14 +108,14 @@ export abstract class AbstractErrorFilterBuilder<R>
      * Returns an easy builder for the filter property info.
      * Notice that the infos will be added to the tmpFilter with OR.
      */
-    infoIsBuilder() : PairOrAndBuilder<AbstractErrorFilterBuilder<R>>
+    infoIsBuilder() : PairOrAndBuilder<R>
     {
         if(!Array.isArray(this.tmpFilter.info)) {
             this.tmpFilter.info = [];
         }
-        return new PairOrAndBuilder<AbstractErrorFilterBuilder<R>>
+        return new PairOrAndBuilder<R>
         (
-            this,
+            this.self(),
             (res : object[]) => {
                 if(Array.isArray(this.tmpFilter.info)) {
                     this.tmpFilter.info.push(...res);
@@ -129,13 +131,13 @@ export abstract class AbstractErrorFilterBuilder<R>
      * More keys are linked with AND.
      * Every invoke will be linked with OR.
      */
-    infoKeys(...keys : string[]) : AbstractErrorFilterBuilder<R>
+    infoKeys(...keys : string[]) : R
     {
         if(!Array.isArray(this.tmpFilter.infoKey)) {
             this.tmpFilter.infoKey = [];
         }
         this.tmpFilter.infoKey.push(keys);
-        return this;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -144,9 +146,9 @@ export abstract class AbstractErrorFilterBuilder<R>
      * Reset the filter property infoKey.
      * Than all info keys are allowed.
      */
-    resetInfoKeys() : AbstractErrorFilterBuilder<R> {
+    resetInfoKeys() : R {
         delete this.tmpFilter.infoKey;
-        return this;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -155,12 +157,12 @@ export abstract class AbstractErrorFilterBuilder<R>
      * Returns an easy builder for the filter property infoKey.
      * Notice that the info keys will be added to the tmpFilter with OR.
      */
-    infoKeysBuilder() : OrBuilder<AbstractErrorFilterBuilder<R>,string>
+    infoKeysBuilder() : OrBuilder<R,string>
     {
         this.tmpFilter.infoKey = [];
-        return new OrBuilder<AbstractErrorFilterBuilder<R>,string>
+        return new OrBuilder<R,string>
         (
-            this,
+            this.self(),
             (res) =>
             {
                 if(Array.isArray(this.tmpFilter.infoKey)) {
@@ -177,13 +179,13 @@ export abstract class AbstractErrorFilterBuilder<R>
      * More values are linked with AND.
      * Every invoke will be linked with OR.
      */
-    infoValues(...values : string[]) : AbstractErrorFilterBuilder<R>
+    infoValues(...values : string[]) : R
     {
         if(!Array.isArray(this.tmpFilter.infoValue)) {
             this.tmpFilter.infoValue = [];
         }
         this.tmpFilter.infoValue.push(values);
-        return this;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -192,9 +194,9 @@ export abstract class AbstractErrorFilterBuilder<R>
      * Reset the filter property infoValue.
      * Than all info values are allowed.
      */
-    resetInfoValues() : AbstractErrorFilterBuilder<R> {
+    resetInfoValues() : R {
         delete this.tmpFilter.infoValue;
-        return this;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -203,12 +205,12 @@ export abstract class AbstractErrorFilterBuilder<R>
      * Returns an easy builder for the filter property infoValue.
      * Notice that the info values will be added to the tmpFilter with OR.
      */
-    infoValuesBuilder() : OrBuilder<AbstractErrorFilterBuilder<R>,string>
+    infoValuesBuilder() : OrBuilder<R,string>
     {
         this.tmpFilter.infoValue = [];
-        return new OrBuilder<AbstractErrorFilterBuilder<R>,string>
+        return new OrBuilder<R,string>
         (
-            this,
+            this.self(),
             (res) =>
             {
                 if(Array.isArray(this.tmpFilter.infoValue)) {
@@ -227,25 +229,10 @@ export abstract class AbstractErrorFilterBuilder<R>
      * Undefined means it dosent matter (like a reset).
      * Notice that the filter property fromZationSystem will be reseted when you calling this method.
      */
-    fromZationSystem(fromZationSystem : boolean | undefined) : AbstractErrorFilterBuilder<R>
+    fromZationSystem(fromZationSystem : boolean | undefined) : R
     {
         this.tmpFilter.fromZationSystem = fromZationSystem;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Add the reactions that are triggered when the filters
-     * have filtered at least one error.
-     * @param reactions
-     * You also can add more than one reaction.
-     */
-    react(...reactions : ResponseReactionOnError[]) : R
-    {
-        //save last tmp
-        this._pushTmpFilter();
-        return this._save(this._mergeReaction(reactions),this.filter);
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -253,16 +240,14 @@ export abstract class AbstractErrorFilterBuilder<R>
      * @description
      * Add the filter and beginn with new one.
      * The filter are linked with OR so the filtered errors
-     * of each filter are countend together.
-     * If there is more than one error at the end,
-     * the reaction wil be triggerd with all filtered errors.
+     * of each filter are counted together.
      */
-    or() : AbstractErrorFilterBuilder<R>
+    or() : R
     {
         this._pushTmpFilter();
         //reset tmpFilter
         this.tmpFilter = {};
-        return this;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -270,9 +255,7 @@ export abstract class AbstractErrorFilterBuilder<R>
      * @description
      * Add a raw filter to the filters of this builder.
      * The filter are linked with OR so the filtered errors
-     * of each filter are countend together.
-     * If there is more than one error at the end,
-     * the reaction wil be triggerd with all filtered errors.
+     * of each filter are counted together.
      * This method is used internal.
      * @example
      * -FilterExamples-
@@ -310,9 +293,9 @@ export abstract class AbstractErrorFilterBuilder<R>
      * {fromZationSystem : false}
      * You can combine all of this properties.
      */
-    addErrorFilter(filter : ErrorFilter) : AbstractErrorFilterBuilder<R> {
+    addErrorFilter(filter : ErrorFilter) : R {
         this.filter.push(filter);
-        return this;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -357,9 +340,9 @@ export abstract class AbstractErrorFilterBuilder<R>
      * {fromZationSystem : false}
      * You can combine all of this properties.
      */
-    setTmpFilter(filter : ErrorFilter) : AbstractErrorFilterBuilder<R> {
+    setTmpFilter(filter : ErrorFilter) : R {
         this.tmpFilter = filter;
-        return this;
+        return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -382,26 +365,11 @@ export abstract class AbstractErrorFilterBuilder<R>
      * Indicates if you want to push the preset error filter directly into the filters.
      * If not you can modify it later with this builder.
      */
-    presets(pushPreset : boolean = false) : PresetErrorFilter<R>
-    {
-        return new PresetErrorFilter<R>(this,pushPreset);
+    presets(pushPreset : boolean = false) : PresetErrorFilter<R> {
+        return new PresetErrorFilter<R>(this.self(),pushPreset);
     }
 
-    protected abstract _save(reaction : ResponseReactionOnError, filter : object[]) : R;
-
-    private _mergeReaction(reactions : ResponseReactionOnError[]) : ResponseReactionOnError
-    {
-        return (resp,filteredErrors) =>
-        {
-            reactions.forEach((reaction) =>
-            {
-                reaction(resp,filteredErrors);
-            })
-        }
-    }
-
-    private _pushTmpFilter() : void
-    {
+    protected _pushTmpFilter() : void {
         this.filter.push(this.tmpFilter);
     }
 }

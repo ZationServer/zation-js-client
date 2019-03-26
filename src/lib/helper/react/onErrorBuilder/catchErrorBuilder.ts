@@ -7,8 +7,9 @@ GitHub: LucaCode
 import {ResponseReactionOnError}    from "../reaction/reactionHandler";
 import {AbstractErrorFilterBuilder} from "./abstractErrorFilterBuilder";
 import {ResponseReactAble}          from "../responseReactionEngine/responseReactAble";
+import {ReactionUtil}               from "./reactionUtil";
 
-export class CatchErrorBuilder<T extends ResponseReactAble,R> extends AbstractErrorFilterBuilder<R>
+export class CatchErrorBuilder<T extends ResponseReactAble,R> extends AbstractErrorFilterBuilder<CatchErrorBuilder<T,R>>
 {
     private readonly target  : T;
 
@@ -17,8 +18,24 @@ export class CatchErrorBuilder<T extends ResponseReactAble,R> extends AbstractEr
         this.target = target;
     }
 
-    protected _save(reaction : ResponseReactionOnError, filter : object[]) : R
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Add the reactions that are triggered when the filter
+     * have filtered at least one error.
+     * If there is more than one error,
+     * the reaction wil be triggered with all filtered errors.
+     * @param reactions
+     * You also can add more than one reaction.
+     */
+    react(...reactions : ResponseReactionOnError[]) : R
     {
-        return this.target.catchError(reaction,...filter);
+        //save last tmp
+        this._pushTmpFilter();
+        return this.target.catchError(ReactionUtil.mergeReaction(reactions),...this.filter);
+    }
+
+    protected self(): CatchErrorBuilder<T, R> {
+        return this;
     }
 }

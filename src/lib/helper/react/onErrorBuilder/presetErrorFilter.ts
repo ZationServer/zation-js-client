@@ -8,12 +8,12 @@ import {AbstractErrorFilterBuilder} from "./abstractErrorFilterBuilder";
 import {ErrorFilter}                from "../../filter/errorFilter";
 import {PresetErrorLib}             from "./presetErrorLib";
 
-export class PresetErrorFilter<T> extends PresetErrorLib<AbstractErrorFilterBuilder<T>>
+export class PresetErrorFilter<T extends AbstractErrorFilterBuilder<T>> extends PresetErrorLib<T>
 {
-    private readonly errorFilterBuilder : AbstractErrorFilterBuilder<T>;
-    private  readonly pushPreset : boolean;
+    private readonly errorFilterBuilder : T;
+    private readonly pushPreset : boolean;
 
-    constructor(errorFilterBuilder : AbstractErrorFilterBuilder<T>,pushPreset : boolean)
+    constructor(errorFilterBuilder : T,pushPreset : boolean)
     {
         super();
         this.self = errorFilterBuilder;
