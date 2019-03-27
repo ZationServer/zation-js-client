@@ -8,9 +8,11 @@ export class FullReaction<T extends Function>
 {
     private readonly reactionHandler : T;
     private readonly filter : object;
+    private readonly once : boolean;
 
-    constructor(reactionHandler : T,filter ?: object)
+    constructor(reactionHandler : T,filter ?: object,once : boolean = false)
     {
+        this.once = once;
         this.reactionHandler = reactionHandler;
 
         if(filter !== undefined) {
@@ -19,6 +21,14 @@ export class FullReaction<T extends Function>
         else {
             this.filter = {};
         }
+    }
+
+    /**
+     * @description
+     * Returns if it is a once reaction.
+     */
+    isOnce() : boolean {
+        return this.once;
     }
 
     /**
