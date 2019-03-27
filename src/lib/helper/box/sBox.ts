@@ -29,6 +29,10 @@ export class SBox<T>
         await Promise.all(promise);
     }
 
+    getItems() : T[] {
+        return this.items;
+    }
+
     //Part Items
 
     // noinspection JSUnusedGlobalSymbols
