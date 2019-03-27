@@ -39,11 +39,9 @@ export class Box<T> extends SBox<T>
     //Part Fixed Items
 
     // noinspection JSUnusedGlobalSymbols
-    addFixedItem(item : T) : void
-    {
+    addFixedItem(item : T) : void {
         this.fixedItems.push(item)
     }
-
 
 }
 
