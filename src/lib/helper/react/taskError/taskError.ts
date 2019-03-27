@@ -127,7 +127,7 @@ export class TaskError
             `   Type: ${this.getType()}\n` +
             `   FromZationSystem: ${this.isFromZationSystem() || 'UNKNOWN'}\n`+
             `   Description: ${this.getDescription() || 'UNKNOWN'}\n`+
-            `   Info: ${this.getInfo() || 'UNKNOWN'}\n`;
+            `   Info: ${typeof this.getInfo() === 'object' ? JSON.stringify(this.getInfo()) : (this.getInfo() || 'UNKNOWN')}\n`;
     }
 
 }
