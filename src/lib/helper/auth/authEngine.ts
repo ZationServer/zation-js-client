@@ -185,7 +185,7 @@ export class AuthEngine
         }
     }
 
-    isSubUserCh() : boolean
+    hasSubUserCh() : boolean
     {
         if(!!this.currentUserId) {
             return this.chEngine.hasSubUserChannel(this.currentUserId)
@@ -211,7 +211,7 @@ export class AuthEngine
         }
     }
 
-    isSubAuthUserGroupCh() : boolean {
+    hasSubAuthUserGroupCh() : boolean {
         if(!!this.currentUserAuthGroup) {
             return this.chEngine.hasSubAuthUserGroupChannel(this.currentUserAuthGroup);
         }

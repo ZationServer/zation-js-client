@@ -926,7 +926,7 @@ export class Zation
      * @throws MissingUserIdError
      */
     hasSubUserCh() : boolean {
-       return this.authEngine.isSubUserCh();
+       return this.authEngine.hasSubUserCh();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -959,7 +959,7 @@ export class Zation
      * @throws MissingAuthUserGroupError
      */
     hasSubAuthUserGroupCh() : boolean {
-        return this.authEngine.isSubAuthUserGroupCh();
+        return this.authEngine.hasSubAuthUserGroupCh();
     }
 
     // noinspection JSUnusedGlobalSymbols
