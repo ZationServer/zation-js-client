@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="76638f38-4a15-47c2-ad03-534e2aa2a298" name="Default" comment="add support for attach http content&#10;add support for http progressHandler &#10;update documentation">
-      <change beforePath="$PROJECT_DIR$/src/lib/api/zation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/api/zation.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/auth/authEngine.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/auth/authEngine.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -16,13 +18,35 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/package.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="545">
+              <caret line="58" column="10" lean-forward="true" selection-start-line="58" selection-start-column="10" selection-end-line="58" selection-end-column="10" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/lib/helper/auth/authEngine.ts">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-1221">
-              <caret line="140" column="17" lean-forward="true" selection-start-line="140" selection-start-column="17" selection-end-line="140" selection-end-column="17" />
+              <caret line="140" column="17" selection-start-line="140" selection-start-column="17" selection-end-line="140" selection-end-column="17" />
               <folding>
                 <element signature="e#81#149#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="235">
+              <caret line="71" column="17" selection-start-line="71" selection-start-column="17" selection-end-line="71" selection-end-column="17" />
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+                <element signature="e#82#147#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -38,39 +62,13 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib/api/responseReactionBox.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4350">
-              <caret line="290" column="5" selection-start-line="290" selection-start-column="5" selection-end-line="290" selection-end-column="5" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-                <element signature="e#81#161#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/lib/api/zation.ts">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="624">
-              <caret line="993" column="45" lean-forward="true" selection-start-line="993" selection-start-column="45" selection-end-line="993" selection-end-column="45" />
+              <caret line="993" column="45" selection-start-line="993" selection-start-column="45" selection-end-line="993" selection-end-column="45" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="e#255#326#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib/api/channelReactionBox.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6750">
-              <caret line="450" column="27" selection-start-line="450" selection-start-column="27" selection-end-line="450" selection-end-column="27" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-                <element signature="e#81#1021#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -142,7 +140,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>getPlain</find>
       <find>isAuthen</find>
       <find>authenticate'</find>
       <find>connect</find>
@@ -170,8 +167,9 @@
       <find>this.self</find>
       <find>setTmpFilter</find>
       <find>react</find>
-      <find>hasSubDe</find>
       <find>hasSub</find>
+      <find>hasSubDe</find>
+      <find>FormDa</find>
     </findStrings>
     <replaceStrings>
       <replace>ZATION</replace>
@@ -222,7 +220,6 @@
         <option value="$PROJECT_DIR$/src/lib/helper/react/reaction/reactionHandler.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/react/box/reactionBox.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/react/reaction/responseReact.ts" />
-        <option value="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/request/abstractRequestHelper.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/constants/errorGroup.ts" />
         <option value="$PROJECT_DIR$/LICENSE" />
@@ -259,9 +256,10 @@
         <option value="$PROJECT_DIR$/src/lib/helper/react/reaction/fullReaction.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/react/taskError/taskError.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/channel/channelEngine.ts" />
-        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/lib/helper/auth/authEngine.ts" />
         <option value="$PROJECT_DIR$/src/lib/api/zation.ts" />
+        <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" />
       </list>
     </option>
   </component>
@@ -320,6 +318,22 @@
               <item name="lib" type="462c0819:PsiDirectoryNode" />
               <item name="helper" type="462c0819:PsiDirectoryNode" />
               <item name="auth" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
+              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="lib" type="462c0819:PsiDirectoryNode" />
+              <item name="helper" type="462c0819:PsiDirectoryNode" />
+              <item name="send" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
+              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="lib" type="462c0819:PsiDirectoryNode" />
+              <item name="helper" type="462c0819:PsiDirectoryNode" />
+              <item name="tools" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -543,7 +557,7 @@
       <workItem from="1553511347924" duration="9468000" />
       <workItem from="1553730913441" duration="238000" />
       <workItem from="1553743170748" duration="500000" />
-      <workItem from="1553769400553" duration="1456000" />
+      <workItem from="1553769400553" duration="2058000" />
     </task>
     <task id="LOCAL-00010" summary="improve api and documentation&#10;add remove optional param option (to remove all)&#10;add new helper for validation and auth request&#10;fix bugs">
       <created>1539950666829</created>
@@ -924,7 +938,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="590854000" />
+    <option name="totallyTimeSpent" value="591456000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -939,7 +953,7 @@
     <frame x="0" y="0" width="1680" height="1050" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.7456556" visible="true" weight="0.29234478" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.7456556" visible="true" weight="0.29234478" />
       <window_info id="Structure" order="1" sideWeight="0.2543444" side_tool="true" weight="0.10970464" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="Gulp" order="3" side_tool="true" />
@@ -953,7 +967,7 @@
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.4996986" weight="0.32857144" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Statistic" order="8" weight="0.32857144" />
-      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49608198" weight="0.32142857" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" sideWeight="0.49608198" visible="true" weight="0.32142857" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50391805" side_tool="true" weight="0.4612245" />
       <window_info anchor="bottom" id="Version Control" order="11" weight="0.32857144" />
       <window_info anchor="bottom" id="TypeScript" order="12" weight="0.32891566" />
@@ -1023,13 +1037,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="add support for attach http content&#10;add support for http progressHandler &#10;update documentation" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="9" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/coverage/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
@@ -1377,13 +1384,6 @@
     <entry file="file://$PROJECT_DIR$/dist/zation.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="4" selection-start-line="11" selection-start-column="4" selection-end-line="11" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/lib/api/responseReactionBox.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4350">
@@ -1451,7 +1451,7 @@
     <entry file="file://$PROJECT_DIR$/src/lib/api/zation.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="624">
-          <caret line="993" column="45" lean-forward="true" selection-start-line="993" selection-start-column="45" selection-end-line="993" selection-end-column="45" />
+          <caret line="993" column="45" selection-start-line="993" selection-start-column="45" selection-end-line="993" selection-end-column="45" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#255#326#0" expanded="true" />
@@ -1469,9 +1469,27 @@
     <entry file="file://$PROJECT_DIR$/src/lib/helper/auth/authEngine.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1221">
-          <caret line="140" column="17" lean-forward="true" selection-start-line="140" selection-start-column="17" selection-end-line="140" selection-end-column="17" />
+          <caret line="140" column="17" selection-start-line="140" selection-start-column="17" selection-end-line="140" selection-end-column="17" />
           <folding>
             <element signature="e#81#149#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="545">
+          <caret line="58" column="10" lean-forward="true" selection-start-line="58" selection-start-column="10" selection-end-line="58" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="235">
+          <caret line="71" column="17" selection-start-line="71" selection-start-column="17" selection-end-line="71" selection-end-column="17" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="e#82#147#0" expanded="true" />
           </folding>
         </state>
       </provider>

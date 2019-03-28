@@ -188,7 +188,7 @@ export class AuthEngine
     hasSubUserCh() : boolean
     {
         if(!!this.currentUserId) {
-            return this.chEngine.hasSubUserChannel(this.currentUserId)
+            return this.chEngine.hasSubUserChannel(this.currentUserId);
         }
         else{
             throw new MissingUserIdError('To check if socket is subscribe user channel.');

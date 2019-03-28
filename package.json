@@ -47,7 +47,8 @@
     "socketcluster-client": "14.2.2",
     "object-path": "0.11.4",
     "component-emitter": "1.2.1",
-    "axios": "0.18.0"
+    "axios": "0.18.0",
+    "form-data": "2.3.3"
   },
   "devDependencies": {
     "babel-cli": "7.0.0-beta.3",

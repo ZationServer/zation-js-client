@@ -12,6 +12,7 @@ import {Response}               from "../../api/response";
 import {ResultIsMissingError}   from "../error/resultIsMissingError";
 import {ConnectionNeededError}  from "../error/connectionNeededError";
 import axios, {AxiosRequestConfig} from 'axios';
+const FormData                = require('form-data');
 
 export class SendEngine
 {
