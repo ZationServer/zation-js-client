@@ -717,6 +717,11 @@ export class Zation
 
                 this.authEngine.initAuthEngine();
 
+                //if it is used the same socket
+                if(this.isConnected()) {
+                    resolve();
+                }
+
                 //register
                 this.socket.on('connect',async () => {
                     resolve();
