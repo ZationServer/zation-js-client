@@ -97,3 +97,9 @@ J
 dist/zation.js,6/6/665df6c3ea8981d0410575d6263e46d80d25e9ef
 Q
 !src/lib/helper/send/sendEngine.ts,b/f/bf36a9bb3e622c165fb302a9504e414d0050187d
+P
+ src/lib/helper/box/sBoxMapper.ts,3/a/3ad180839864d24fca84d9dbc98aac3f2100543e
+]
+-src/lib/helper/error/connectionNeededError.ts,9/6/9653c7b3114217a099b18d1f16b3d41f212f2832
+X
+(src/lib/helper/error/socketNotCreated.ts,9/5/95f02a790f9d40d432dd113d1072e631c3f3b466
