@@ -5,7 +5,7 @@ GitHub: LucaCode
  */
 
 //Api Classes
-import {ZationOptions}                 from "./lib/api/zationOptions";
+import {ZationOptions as  Options}     from "./lib/api/zationOptions";
 import {RequestAble}                   from "./lib/api/requestAble";
 import {ProtocolType}                  from "./lib/helper/constants/protocolType";
 import {Zation}                        from "./lib/api/zation";
@@ -49,7 +49,7 @@ import {SocketNotCreatedError}         from "./lib/helper/error/socketNotCreated
  * @param options
  * @param reactionBox
  */
-const create = (options ?: ZationOptions,...reactionBox : (ResponseReactionBox | ChannelReactionBox | EventReactionBox)[]) : Zation =>
+const create = (options ?: Options,...reactionBox : (ResponseReactionBox | ChannelReactionBox | EventReactionBox)[]) : Zation =>
 {
     return new Zation(options,...reactionBox);
 };
@@ -67,6 +67,7 @@ export {
     create,
     save,
     load,
+    Options,
     RequestAble,
     WsRequest,
     HttpRequest,
