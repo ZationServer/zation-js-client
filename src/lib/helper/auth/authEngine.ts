@@ -188,7 +188,7 @@ export class AuthEngine
     isSubUserCh() : boolean
     {
         if(!!this.currentUserId) {
-            return this.chEngine.isSubUserChannel(this.currentUserId)
+            return this.chEngine.hasSubUserChannel(this.currentUserId)
         }
         else{
             throw new MissingUserIdError('To check if socket is subscribe user channel.');
@@ -213,7 +213,7 @@ export class AuthEngine
 
     isSubAuthUserGroupCh() : boolean {
         if(!!this.currentUserAuthGroup) {
-            return this.chEngine.isSubAuthUserGroupChannel(this.currentUserAuthGroup);
+            return this.chEngine.hasSubAuthUserGroupChannel(this.currentUserAuthGroup);
         }
         else{
             throw new MissingAuthUserGroupError('To check if socket is subscribe the auth user group channel.');

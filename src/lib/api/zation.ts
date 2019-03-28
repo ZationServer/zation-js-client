@@ -922,10 +922,10 @@ export class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns if the socket is subscribes the user channel.
+     * Returns if the socket has subscribed the user channel.
      * @throws MissingUserIdError
      */
-    isSubUserCh() : boolean {
+    hasSubUserCh() : boolean {
        return this.authEngine.isSubUserCh();
     }
 
@@ -955,10 +955,10 @@ export class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns if the socket is subscribes the auth user group channel.
+     * Returns if the socket has subscribed the auth user group channel.
      * @throws MissingAuthUserGroupError
      */
-    isSubAuthUserGroupCh() : boolean {
+    hasSubAuthUserGroupCh() : boolean {
         return this.authEngine.isSubAuthUserGroupCh();
     }
 
@@ -988,10 +988,10 @@ export class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns if the socket is subscribes the default user group channel.
+     * Returns if the socket has subscribed the default user group channel.
      */
-    isSubDefaultUserGroupCh() : boolean {
-        return this.channelEngine.isSubDefaultUserGroupChannel();
+    hasSubDefaultUserGroupCh() : boolean {
+        return this.channelEngine.hasSubDefaultUserGroupChannel();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1019,10 +1019,10 @@ export class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns if the socket is subscribes the all channel.
+     * Returns if the socket has subscribed the all channel.
      */
-    isSubAllCh() : boolean {
-        return this.channelEngine.isSubAllChannel();
+    hasSubAllCh() : boolean {
+        return this.channelEngine.hasSubAllChannel();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1055,12 +1055,12 @@ export class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns if the socket is subscribes the custom channel.
+     * Returns if the socket has subscribed the custom channel.
      * @param chName if not provided it checks
-     * if the socket is subscribe any custom channel.
+     * if the socket has subscribed any custom channel.
      */
-    isSubCustomCh(chName ?: string) : boolean {
-        return this.channelEngine.isSubCustomCh(chName);
+    hasSubCustomCh(chName ?: string) : boolean {
+        return this.channelEngine.hasSubCustomCh(chName);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1107,14 +1107,14 @@ export class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns if the socket is subscribes the custom id channel.
+     * Returns if the socket has subscribed the custom id channel.
      * @param chName if not provided it checks
-     * if the socket is subscribe any custom channel.
+     * if the socket has subscribed any custom channel.
      * @param chId if not provided it checks
-     * if the socket is subscribe any custom channel with channel name.
+     * if the socket has subscribed any custom channel with channel name.
      */
-    isSubCustomIdCh(chName ?: string, chId ?: string) : boolean {
-        return this.channelEngine.isSubCustomIdCh(chName,chId);
+    hasSubCustomIdCh(chName ?: string, chId ?: string) : boolean {
+        return this.channelEngine.hasSubCustomIdCh(chName,chId);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1174,10 +1174,10 @@ export class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns if the socket is subscribes the panel out channel.
+     * Returns if the socket has subscribed the panel out channel.
      */
-    isSubPanelOutCh() : boolean {
-        return this.channelEngine.isSubPanelOutChannel();
+    hasSubPanelOutCh() : boolean {
+        return this.channelEngine.hasSubPanelOutChannel();
     }
 
     // noinspection JSUnusedGlobalSymbols

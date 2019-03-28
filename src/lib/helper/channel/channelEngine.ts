@@ -28,8 +28,8 @@ export class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    isSubUserChannel(userId : string | number) : boolean  {
-        return this.isSubChannel(ZationChannel.USER_CHANNEL_PREFIX + userId);
+    hasSubUserChannel(userId : string | number) : boolean  {
+        return this.hasSubChannel(ZationChannel.USER_CHANNEL_PREFIX + userId);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -43,8 +43,8 @@ export class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    isSubAuthUserGroupChannel(authGroup : string) : boolean  {
-        return this.isSubChannel(ZationChannel.AUTH_USER_GROUP_PREFIX + authGroup);
+    hasSubAuthUserGroupChannel(authGroup : string) : boolean  {
+        return this.hasSubChannel(ZationChannel.AUTH_USER_GROUP_PREFIX + authGroup);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -58,8 +58,8 @@ export class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    isSubDefaultUserGroupChannel() : boolean {
-        return this.isSubChannel(ZationChannel.DEFAULT_USER_GROUP);
+    hasSubDefaultUserGroupChannel() : boolean {
+        return this.hasSubChannel(ZationChannel.DEFAULT_USER_GROUP);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -73,8 +73,8 @@ export class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    isSubAllChannel() : boolean {
-        return this.isSubChannel(ZationChannel.ALL);
+    hasSubAllChannel() : boolean {
+        return this.hasSubChannel(ZationChannel.ALL);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -88,8 +88,8 @@ export class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    isSubPanelOutChannel() : boolean {
-        return this.isSubChannel(ZationChannel.PANEL_OUT);
+    hasSubPanelOutChannel() : boolean {
+        return this.hasSubChannel(ZationChannel.PANEL_OUT);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -201,7 +201,7 @@ export class ChannelEngine
         }
     }
 
-    isSubChannel(channel) : boolean
+    hasSubChannel(channel) : boolean
     {
         const socket : any = this.zation.getSocket();
         return !!(!!socket && socket.isSubscribed(channel));
@@ -308,7 +308,7 @@ export class ChannelEngine
         return this.getSubsWithIndex(ChannelEngine.getCustomIdChName(channel,id));
     }
 
-    isSubCustomIdCh(channel ?: string,id ?: string) : boolean
+    hasSubCustomIdCh(channel ?: string,id ?: string) : boolean
     {
         return this.getSubCustomIdCh(channel,id).length > 0;
     }
@@ -324,7 +324,7 @@ export class ChannelEngine
         return this.getSubsWithIndex(ChannelEngine.getCustomChName(channel));
     }
 
-    isSubCustomCh(channel ?: string) : boolean
+    hasSubCustomCh(channel ?: string) : boolean
     {
         return this.getSubCustomCh(channel).length > 0;
     }
