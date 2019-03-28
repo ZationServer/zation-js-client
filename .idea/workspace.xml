@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="76638f38-4a15-47c2-ad03-534e2aa2a298" name="Default" comment="add support for attach http content&#10;add support for http progressHandler &#10;update documentation">
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api/zation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/api/zation.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/config/zationConfig.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/config/zationConfig.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -39,11 +36,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="389">
-              <caret line="79" column="37" selection-start-line="79" selection-start-column="37" selection-end-line="79" selection-end-column="37" />
+            <state relative-caret-position="402">
+              <caret line="74" lean-forward="true" selection-start-line="74" selection-end-line="74" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="e#82#147#0" expanded="true" />
@@ -61,11 +58,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/lib/api/zation.ts">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="376">
-              <caret line="1576" lean-forward="true" selection-start-line="1576" selection-end-line="1576" />
+              <caret line="1576" selection-start-line="1576" selection-end-line="1576" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="e#255#326#0" expanded="true" />
@@ -139,7 +136,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>connect(</find>
       <find>console</find>
       <find>send</find>
       <find>getToken</find>
@@ -169,6 +165,7 @@
       <find>hasSub</find>
       <find>console.</find>
       <find>path</find>
+      <find>serverP</find>
     </findStrings>
     <replaceStrings>
       <replace>ZATION</replace>
@@ -254,11 +251,11 @@
         <option value="$PROJECT_DIR$/src/lib/helper/react/reaction/fullReaction.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/react/taskError/taskError.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/channel/channelEngine.ts" />
-        <option value="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/auth/authEngine.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/config/zationConfig.ts" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/lib/api/zation.ts" />
+        <option value="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" />
       </list>
     </option>
   </component>
@@ -564,7 +561,7 @@
       <workItem from="1553511347924" duration="9468000" />
       <workItem from="1553730913441" duration="238000" />
       <workItem from="1553743170748" duration="500000" />
-      <workItem from="1553769400553" duration="3494000" />
+      <workItem from="1553769400553" duration="3838000" />
     </task>
     <task id="LOCAL-00010" summary="improve api and documentation&#10;add remove optional param option (to remove all)&#10;add new helper for validation and auth request&#10;fix bugs">
       <created>1539950666829</created>
@@ -945,7 +942,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="592892000" />
+    <option name="totallyTimeSpent" value="593236000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1455,17 +1452,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="389">
-          <caret line="79" column="37" selection-start-line="79" selection-start-column="37" selection-end-line="79" selection-end-column="37" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#82#147#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="446">
@@ -1493,10 +1479,21 @@
     <entry file="file://$PROJECT_DIR$/src/lib/api/zation.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="376">
-          <caret line="1576" lean-forward="true" selection-start-line="1576" selection-end-line="1576" />
+          <caret line="1576" selection-start-line="1576" selection-end-line="1576" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#255#326#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="402">
+          <caret line="74" lean-forward="true" selection-start-line="74" selection-end-line="74" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="e#82#147#0" expanded="true" />
           </folding>
         </state>
       </provider>

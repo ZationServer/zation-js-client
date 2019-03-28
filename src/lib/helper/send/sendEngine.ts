@@ -55,11 +55,7 @@ export class SendEngine
     {
         return new Promise<Response>(async (resolve,reject) =>
         {
-            const config : AxiosRequestConfig = {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            };
+            const config : AxiosRequestConfig = {};
 
             if (!!progressHandler) {
                 config.onUploadProgress = progressEvent => {
@@ -76,6 +72,8 @@ export class SendEngine
                     bodyFormData.append(attachedContent[i].key,attachedContent[i].data);
                 }
             }
+
+            config.headers = bodyFormData.getHeaders();
 
             axios.post(zation.getServerAddress(),bodyFormData,config)
                 .then(async (res) => {
