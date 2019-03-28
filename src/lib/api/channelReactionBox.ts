@@ -32,7 +32,7 @@ import {
 } from "../helper/react/reaction/reactionHandler";
 import {ChannelTarget} from "../helper/channel/channelTarget";
 import {ReactionBox}   from "../helper/react/box/reactionBox";
-import {SboxMapper}    from "../helper/box/sboxMapper";
+import {SBoxMapper}    from "../helper/box/sBoxMapper";
 import {FullReaction}  from "../helper/react/reaction/fullReaction";
 import {SBox}          from "../helper/box/sBox";
 
@@ -47,12 +47,12 @@ interface ChFilter {
 export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
 {
 
-    private readonly _mapPub: SboxMapper<FullReaction<any>> = new SboxMapper<FullReaction<any>>();
-    private readonly _mapKick: SboxMapper<FullReaction<any>> = new SboxMapper<FullReaction<any>>();
-    private readonly _mapSubFail: SboxMapper<FullReaction<any>> = new SboxMapper<FullReaction<any>>();
-    private readonly _mapSub: SboxMapper<FullReaction<any>> = new SboxMapper<FullReaction<any>>();
-    private readonly _mapClientUnsub: SboxMapper<FullReaction<any>> = new SboxMapper<FullReaction<any>>();
-    private readonly _mapUnsub: SboxMapper<FullReaction<any>> = new SboxMapper<FullReaction<any>>();
+    private readonly _mapPub: SBoxMapper<FullReaction<any>> = new SBoxMapper<FullReaction<any>>();
+    private readonly _mapKick: SBoxMapper<FullReaction<any>> = new SBoxMapper<FullReaction<any>>();
+    private readonly _mapSubFail: SBoxMapper<FullReaction<any>> = new SBoxMapper<FullReaction<any>>();
+    private readonly _mapSub: SBoxMapper<FullReaction<any>> = new SBoxMapper<FullReaction<any>>();
+    private readonly _mapClientUnsub: SBoxMapper<FullReaction<any>> = new SBoxMapper<FullReaction<any>>();
+    private readonly _mapUnsub: SBoxMapper<FullReaction<any>> = new SBoxMapper<FullReaction<any>>();
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -2677,7 +2677,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * Used internally.
      * Only use this method carefully.
      */
-    async _triggerEvent(map : SboxMapper<FullReaction<any>>, target : ChannelTarget, {chName,chId,chFullName} : any, ...arg : any[]) : Promise<void>
+    async _triggerEvent(map : SBoxMapper<FullReaction<any>>, target : ChannelTarget, {chName,chId,chFullName} : any, ...arg : any[]) : Promise<void>
     {
         if(this.active) {
             await this._triggerWillProcess();
@@ -2727,7 +2727,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * Used internally.
      * Only use this method carefully.
      */
-    get mapPub(): SboxMapper<FullReaction<any>> {
+    get mapPub(): SBoxMapper<FullReaction<any>> {
         return this._mapPub;
     }
 
@@ -2737,7 +2737,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * Used internally.
      * Only use this method carefully.
      */
-    get mapKick(): SboxMapper<FullReaction<any>> {
+    get mapKick(): SBoxMapper<FullReaction<any>> {
         return this._mapKick;
     }
 
@@ -2747,7 +2747,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * Used internally.
      * Only use this method carefully.
      */
-    get mapSubFail(): SboxMapper<FullReaction<any>> {
+    get mapSubFail(): SBoxMapper<FullReaction<any>> {
         return this._mapSubFail;
     }
 
@@ -2757,7 +2757,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * Used internally.
      * Only use this method carefully.
      */
-    get mapSub(): SboxMapper<FullReaction<any>> {
+    get mapSub(): SBoxMapper<FullReaction<any>> {
         return this._mapSub;
     }
 
@@ -2767,7 +2767,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * Used internally.
      * Only use this method carefully.
      */
-    get mapClientUnsub(): SboxMapper<FullReaction<any>> {
+    get mapClientUnsub(): SBoxMapper<FullReaction<any>> {
         return this._mapClientUnsub;
     }
 
@@ -2777,7 +2777,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * Used internally.
      * Only use this method carefully.
      */
-    get mapUnsub(): SboxMapper<FullReaction<any>> {
+    get mapUnsub(): SBoxMapper<FullReaction<any>> {
         return this._mapUnsub;
     }
 }

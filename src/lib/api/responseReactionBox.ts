@@ -18,7 +18,7 @@ import {TriggerResponseEngine} from "../helper/react/responseReactionEngine/trig
 import {ReactionBox}           from "../helper/react/box/reactionBox";
 import {ResponseReactAble}     from "../helper/react/responseReactionEngine/responseReactAble";
 import {FullReaction}          from "../helper/react/reaction/fullReaction";
-import {SboxMapper}            from "../helper/box/sboxMapper";
+import {SBoxMapper}            from "../helper/box/sBoxMapper";
 import {Response}              from "./response";
 
 enum MapKey
@@ -32,7 +32,7 @@ enum MapKey
 export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implements ResponseReactAble
 {
 
-    private readonly map: SboxMapper<FullReaction<any>> = new SboxMapper<FullReaction<any>>();
+    private readonly map: SBoxMapper<FullReaction<any>> = new SBoxMapper<FullReaction<any>>();
 
     // noinspection JSUnusedGlobalSymbols
     /**

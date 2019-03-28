@@ -6,7 +6,7 @@ GitHub: LucaCode
 
 import {SBox} from "./sBox";
 
-export class SboxMapper<T>
+export class SBoxMapper<T>
 {
     private map : object = {};
 

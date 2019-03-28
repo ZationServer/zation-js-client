@@ -19,7 +19,7 @@ import {
 } from "../helper/react/reaction/reactionHandler";
 import {Events}      from "../helper/constants/events";
 import {ReactionBox} from "../helper/react/box/reactionBox";
-import {SboxMapper}  from "../helper/box/sboxMapper";
+import {SBoxMapper}  from "../helper/box/sBoxMapper";
 
 type EventReaction = EventReactionOnAuthenticate | EventReactionOnConnect | EventReactionOnClinetDeauthenticate |
     EventReactionOnDisconnect | EventReactionOnClientDisconnect | EventReactionOnServerDisconnect |
@@ -29,8 +29,8 @@ type EventReaction = EventReactionOnAuthenticate | EventReactionOnConnect | Even
 
 export class EventReactionBox extends ReactionBox<EventReactionBox>
 {
-    private readonly map: SboxMapper<any> = new SboxMapper<any>();
-    private readonly onceMap: SboxMapper<any> = new SboxMapper<any>();
+    private readonly map: SBoxMapper<any> = new SBoxMapper<any>();
+    private readonly onceMap: SBoxMapper<any> = new SBoxMapper<any>();
 
     // noinspection JSUnusedGlobalSymbols
     /**
