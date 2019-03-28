@@ -913,7 +913,7 @@ export class Zation
      * Subscribe the user channel.
      * Can be useful if auto sub is disabled.
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws MissingUserIdError, SubscribeFailError
+     * @throws MissingUserIdError, SubscribeFailError, SocketNotCreatedError
      */
     async subUserCh() : Promise<void> {
         await this.authEngine.subUserCh();
@@ -946,7 +946,7 @@ export class Zation
      * Subscribe the auth user group channel.
      * Can be useful if auto sub is disabled.
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws MissingAuthUserGroupError, SubscribeFailError
+     * @throws MissingAuthUserGroupError, SubscribeFailError, SocketNotCreatedError
      */
     async subAuthUserGroupCh() : Promise<void> {
         await this.authEngine.subAuthUserGroupCh();
@@ -979,7 +979,7 @@ export class Zation
      * Subscribe the default user group channel.
      * Can be useful if auto sub is disabled.
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws SubscribeFailedError, DeauthenticationNeededError
+     * @throws SubscribeFailedError, DeauthenticationNeededError, SocketNotCreatedError
      */
     async subDefaultUserGroupCh() : Promise<void> {
         await this.authEngine.subDefaultUserGroupCh();
@@ -1010,7 +1010,7 @@ export class Zation
      * Subscribe the all channel.
      * Can be useful if auto sub is disabled.
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws SubscribeFailedError
+     * @throws SubscribeFailedError, SocketNotCreatedError
      */
     async subAllCh() : Promise<void> {
         await this.channelEngine.subAllChannel();
@@ -1040,7 +1040,7 @@ export class Zation
      * @description
      * Subscribe a custom channel.
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws SubscribeFailedError
+     * @throws SubscribeFailedError, SocketNotCreatedError
      * @param chName
      * @param retrySubForever
      * This option indicates if the client should retry to sub the channel forever.
@@ -1091,7 +1091,7 @@ export class Zation
      * @description
      * Subscribe a custom id channel.
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws SubscribeFailedError
+     * @throws SubscribeFailedError, SocketNotCreatedError
      * @param chName
      * @param chId
      * @param retrySubForever
@@ -1165,7 +1165,7 @@ export class Zation
      * @description
      * Subscribe the panel out channel.
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws SubscribeFailedError
+     * @throws SubscribeFailedError, SocketNotCreatedError
      */
     async subPanelOutCh() : Promise<void> {
         await this.channelEngine.subPanelOutChannel();

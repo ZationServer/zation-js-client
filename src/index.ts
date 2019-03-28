@@ -39,7 +39,8 @@ import {ErrorFilterEngine}             from "./lib/helper/react/responseReaction
 import {PresetErrorLib}                from "./lib/helper/react/onErrorBuilder/presetErrorLib";
 import {ErrorFilter}                   from "./lib/helper/filter/errorFilter";
 import {TaskError}                     from "./lib/helper/react/taskError/taskError";
-import {AbstractErrorFilterBuilder} from "./lib/helper/react/onErrorBuilder/abstractErrorFilterBuilder";
+import {AbstractErrorFilterBuilder}    from "./lib/helper/react/onErrorBuilder/abstractErrorFilterBuilder";
+import {SocketNotCreatedError}         from "./lib/helper/error/socketNotCreated";
 
 // noinspection JSUnusedGlobalSymbols
 /**
@@ -86,6 +87,7 @@ export {
     PublishFailedError,
     ResultIsMissingError,
     SignAuthenticationFailedError,
+    SocketNotCreatedError,
     SubscribeFailedError,
     NoZationClientSetOnTheKey,
     ProtocolType,

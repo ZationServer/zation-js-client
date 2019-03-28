@@ -12,6 +12,7 @@ import {SubscribeFailedError}  from "../error/subscribeFailedError";
 import {ChannelReactionBox}    from "../../api/channelReactionBox";
 import {PublishFailedError}    from "../error/publishFailedError";
 import {ConnectionNeededError} from "../error/connectionNeededError";
+import {SocketNotCreatedError} from "../error/socketNotCreated";
 
 export class ChannelEngine
 {
@@ -159,6 +160,9 @@ export class ChannelEngine
                 //sub
                 ch.subscribe(subOptions);
             }));
+        }
+        else {
+            throw new SocketNotCreatedError('subscribe a channel');
         }
     }
 
