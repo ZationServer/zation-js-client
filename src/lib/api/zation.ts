@@ -898,6 +898,8 @@ export class Zation
             autoReconnect: this.zc.config.autoReconnect,
             autoReconnectOptions : this.zc.config.autoReconnectOptions,
             autoConnect : false,
+            multiplex : this.zc.config.multiplex,
+            timestampRequests : this.zc.config.timestampRequests,
             query: {
                 system : this.zc.config.system,
                 version : this.zc.config.version

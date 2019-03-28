@@ -15,6 +15,8 @@ export interface ZationOptions {
     secure ?: boolean;
     rejectUnauthorized ?: boolean;
     postKey ?: string;
+    multiplex ?: boolean;
+    timestampRequests ?: boolean;
 
     autoAllChSub ?: boolean;
     autoUserChSub ?: boolean;
@@ -41,6 +43,7 @@ export interface ZationOptionsInternal extends ZationOptions{
     secure : boolean;
     rejectUnauthorized : boolean;
     postKey : string;
+    multiplex : boolean;
     autoAllChSub : boolean;
     autoUserChSub : boolean;
     autoDefaultUserGroupChSub : boolean;

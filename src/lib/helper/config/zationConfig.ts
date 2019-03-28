@@ -48,6 +48,7 @@ export class ZationConfig
           secure : false,
           rejectUnauthorized : false,
           postKey : 'zation',
+          multiplex : true,
           autoAllChSub : true,
           autoUserChSub : true,
           autoDefaultUserGroupChSub : true,
