@@ -17,6 +17,14 @@ export class ZationConfig
         if(config) {
             this.addToConfig(config,true);
         }
+        ZationConfig._preBuildConfig(this._config);
+    }
+
+    static _preBuildConfig(config : ZationOptionsInternal) {
+        //path slash
+        if(!config.path.startsWith('/')) {
+            config.path = ('/'+config.path);
+        }
     }
 
     addToConfig(obj : object,override : boolean = false)
