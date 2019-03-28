@@ -1562,14 +1562,15 @@ export class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the full server address with hostname, port and path.
+     * Returns the full server address with protocol (http/https), hostname, port and path.
      */
     getServerAddress() : string
     {
         const path = this.zc.config.path;
         const hostname = this.zc.config.hostname;
         const port = this.zc.config.port;
-        return `${hostname}:${port}${path}`;
+        const secure = this.zc.config.secure;
+        return `${secure ? 'https' : 'http'}://${hostname}:${port}${path}`;
     };
 
     //Part trigger
