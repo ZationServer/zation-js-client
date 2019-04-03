@@ -9,6 +9,8 @@ import {ZationOptions as  Options}     from "./lib/api/zationOptions";
 import {RequestAble}                   from "./lib/api/requestAble";
 import {ProtocolType}                  from "./lib/helper/constants/protocolType";
 import {Zation}                        from "./lib/api/zation";
+import {Zation as Client}              from "./lib/api/zation";
+import {Zation as ZationClient}        from "./lib/api/zation";
 import {ResponseReactionBox}           from "./lib/api/responseReactionBox";
 import {ChannelReactionBox}            from "./lib/api/channelReactionBox";
 import {EventReactionBox}              from "./lib/api/eventReactionBox";
@@ -51,19 +53,21 @@ import {SocketNotCreatedError}         from "./lib/helper/error/socketNotCreated
  */
 const create = (options ?: Options,...reactionBox : (ResponseReactionBox | ChannelReactionBox | EventReactionBox)[]) : Zation =>
 {
-    return new Zation(options,...reactionBox);
+    return new ZationClient(options,...reactionBox);
 };
 
-const save = (client : Zation, key : string = 'default') => {
+const save = (client : ZationClient, key : string = 'default') => {
     ZationSaver.save(client,key);
 };
 
-const load = (key : string = 'default') : Zation => {
+const load = (key : string = 'default') : ZationClient => {
     return ZationSaver.load(key);
 };
 
 export {
     Zation,
+    Client,
+    ZationClient,
     create,
     save,
     load,
