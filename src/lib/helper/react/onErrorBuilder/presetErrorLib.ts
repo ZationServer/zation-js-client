@@ -1520,7 +1520,7 @@ export abstract class PresetErrorLib<T>
      * @description
      * Preset for wrongValidationCheckStructure.
      * The task error can be thrown if the input validation check has a wrong structure.
-     * Can only throw by an validation request.
+     * Can only thrown by an validation request.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * checkIndex
@@ -1536,7 +1536,7 @@ export abstract class PresetErrorLib<T>
      * @description
      * Preset for inputPathInControllerNotFound.
      * The task error can be thrown if the input path in the controller is not found.
-     * Can only throw by an validation request.
+     * Can only thrown by an validation request.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * controllerName
@@ -1552,17 +1552,17 @@ export abstract class PresetErrorLib<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputPathNotHasAtLeastOneEntry.
-     * The task error can be thrown if the input path has not at least one entry.
-     * Can only throw by an validation request.
+     * Preset for validationCheckLimitReached.
+     * The task error can be thrown if the limit of validation checks is reached.
+     * Can only thrown by an validation request.
      * More info checks you need to do by yourself.
      * Possibilities are:
-     * inputPath
-     * checkIndex
+     * limit
+     * checksCount
      */
-    inputPathNotHasAtLeastOneEntry() : T {
+    validationCheckLimitReached() : T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'inputPathNotHasAtLeastOneEntry'));
+        (ErrorType.INPUT_ERROR,'validationCheckLimitReached'));
         return this.self();
     }
 
