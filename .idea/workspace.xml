@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="76638f38-4a15-47c2-ad03-534e2aa2a298" name="Default" comment="add support for attach http content&#10;add support for http progressHandler &#10;update documentation">
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorLib.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/abstractRequestHelper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/request/abstractRequestHelper.ts" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -15,15 +15,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/package.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="23" column="4" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts">
           <provider selected="true" editor-type-id="text-editor">
@@ -87,14 +78,26 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorLib.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="339">
+            <state relative-caret-position="244">
               <caret line="1558" column="25" lean-forward="true" selection-start-line="1558" selection-start-column="25" selection-end-line="1558" selection-end-column="25" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="e#81#134#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/lib/helper/request/abstractRequestHelper.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="195">
+              <caret line="63" column="42" lean-forward="true" selection-start-line="63" selection-start-column="42" selection-end-line="63" selection-end-column="42" />
+              <folding>
+                <element signature="e#81#131#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -147,7 +150,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>getTokenV</find>
       <find>onAuthen</find>
       <find>authenticate</find>
       <find>getSignT</find>
@@ -177,6 +179,7 @@
       <find>hasSub</find>
       <find>connect()</find>
       <find>create</find>
+      <find>inputPathInController</find>
     </findStrings>
     <replaceStrings>
       <replace>ZATION</replace>
@@ -226,7 +229,6 @@
         <option value="$PROJECT_DIR$/src/lib/helper/react/reaction/reactionHandler.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/react/box/reactionBox.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/react/reaction/responseReact.ts" />
-        <option value="$PROJECT_DIR$/src/lib/helper/request/abstractRequestHelper.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/constants/errorGroup.ts" />
         <option value="$PROJECT_DIR$/LICENSE" />
         <option value="$PROJECT_DIR$/.gitignore" />
@@ -267,6 +269,7 @@
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/index.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorLib.ts" />
+        <option value="$PROJECT_DIR$/src/lib/helper/request/abstractRequestHelper.ts" />
       </list>
     </option>
   </component>
@@ -337,6 +340,14 @@
               <item name="react" type="462c0819:PsiDirectoryNode" />
               <item name="onErrorBuilder" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
+              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="lib" type="462c0819:PsiDirectoryNode" />
+              <item name="helper" type="462c0819:PsiDirectoryNode" />
+              <item name="request" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -348,9 +359,15 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="javascript.nodejs.core.library.configured.version" value="9.11.2" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.prettier" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.prettier" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.prettier" value="" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs.mocha.mocha_node_package_dir" value="$PROJECT_DIR$/node_modules/mocha" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="C:/Program Files/nodejs/node" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -561,7 +578,7 @@
       <workItem from="1553743170748" duration="500000" />
       <workItem from="1553769400553" duration="4460000" />
       <workItem from="1554304223872" duration="119000" />
-      <workItem from="1554743134768" duration="1087000" />
+      <workItem from="1554743134768" duration="1654000" />
     </task>
     <task id="LOCAL-00010" summary="improve api and documentation&#10;add remove optional param option (to remove all)&#10;add new helper for validation and auth request&#10;fix bugs">
       <created>1539950666829</created>
@@ -942,7 +959,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="596615000" />
+    <option name="totallyTimeSpent" value="597182000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1258,13 +1275,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/request/abstractRequestHelper.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="239" column="19" selection-start-line="239" selection-start-column="19" selection-end-line="239" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorFilter.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
@@ -1499,11 +1509,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorLib.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="339">
+        <state relative-caret-position="244">
           <caret line="1558" column="25" lean-forward="true" selection-start-line="1558" selection-start-column="25" selection-end-line="1558" selection-end-column="25" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#81#134#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/helper/request/abstractRequestHelper.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="63" column="42" lean-forward="true" selection-start-line="63" selection-start-column="42" selection-end-line="63" selection-end-column="42" />
+          <folding>
+            <element signature="e#81#131#0" expanded="true" />
           </folding>
         </state>
       </provider>

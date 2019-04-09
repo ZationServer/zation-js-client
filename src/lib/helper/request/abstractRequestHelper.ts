@@ -10,14 +10,14 @@ import {
     ResponseReactionOnResponse,
     ResponseReactionOnSuccessful
 } from "../react/reaction/reactionHandler";
-import {OnErrorBuilder}      from "../react/onErrorBuilder/onErrorBuilder";
-import {CatchErrorBuilder}   from "../react/onErrorBuilder/catchErrorBuilder";
-import {ErrorFilter}         from "../filter/errorFilter";
-import {ProtocolType}        from "../constants/protocolType";
-import {Zation}              from "../../api/zation";
+import {OnErrorBuilder} from "../react/onErrorBuilder/onErrorBuilder";
+import {CatchErrorBuilder} from "../react/onErrorBuilder/catchErrorBuilder";
+import {ErrorFilter} from "../filter/errorFilter";
+import {ProtocolType} from "../constants/protocolType";
+import {Zation} from "../../api/zation";
 import {ResponseReactionBox} from "../../api/responseReactionBox";
-import {ZationRequest}       from "./zationRequest";
-import {Response}            from "../../api/response";
+import {ZationRequest} from "./zationRequest";
+import {Response} from "../../api/response";
 
 export abstract class AbstractRequestHelper<T>
 {
@@ -50,30 +50,33 @@ export abstract class AbstractRequestHelper<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Set the protocolType to web socket
+     * Set the protocolType to web socket.
+     * @param value
      */
-    isWs() : T {
-        this._protocol = ProtocolType.WebSocket;
+    isWs(value : boolean = true) : T {
+        this._protocol = value ? ProtocolType.WebSocket : ProtocolType.Http;
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Set the protocolType to web socket
+     * Set the protocolType to web socket.
+     * @param value
      */
-    isWebSocket() : T {
-        this.isWs();
+    isWebSocket(value : boolean = true) : T {
+        this.isWs(value);
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Set the protocolType to http
+     * Set the protocolType to http.
+     * @param value
      */
-    isHttp() : T {
-        this._protocol = ProtocolType.Http;
+    isHttp(value : boolean = true) : T {
+        this._protocol = value ? ProtocolType.Http : ProtocolType.WebSocket;
         return this.self();
     }
 
