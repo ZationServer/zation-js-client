@@ -4,7 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-export enum TaskErrorInfo {
+export enum BackErrorInfo {
     MAIN = 'main'
 }
 
@@ -26,7 +26,7 @@ export interface ZationRequest {
     } | number
 }
 
-export interface ResponseTaskError {
+export interface ResponseBackError {
     n : string,
     g ?: string,
     t : string
@@ -51,7 +51,7 @@ export enum ZationHttpInfo {
 }
 
 export interface ZationResponse {
-    e : ResponseTaskError[],
+    e : ResponseBackError[],
     s : boolean,
     r : {
         r ?: any,

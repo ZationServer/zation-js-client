@@ -4,13 +4,13 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import {TaskErrorInfo, ResponseTaskError} from "../../constants/internal";
+import {BackErrorInfo, ResponseBackError} from "../../constants/internal";
 
 export class BackError
 {
-    private readonly data : ResponseTaskError;
+    private readonly data : ResponseBackError;
 
-    constructor(data : ResponseTaskError) {
+    constructor(data : ResponseBackError) {
         this.data = data
     }
 
@@ -96,7 +96,7 @@ export class BackError
      * Returns the main info of the BackError.
      */
     getMainInfo() : string | undefined {
-        return this.getInfo()[TaskErrorInfo.MAIN];
+        return this.getInfo()[BackErrorInfo.MAIN];
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -105,7 +105,7 @@ export class BackError
      * Returns if the BackError has main info.
      */
     hasMainInfo() : boolean {
-        return this.getInfo()[TaskErrorInfo.MAIN] !== undefined;
+        return this.getInfo()[BackErrorInfo.MAIN] !== undefined;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -121,7 +121,7 @@ export class BackError
 
     toString() : string
     {
-        return `TaskError -> \n` +
+        return `BackError -> \n` +
             `   Name: ${this.getName()}\n` +
             `   Group: ${this.getGroup() || 'NO GROUP'}\n` +
             `   Type: ${this.getType()}\n` +
