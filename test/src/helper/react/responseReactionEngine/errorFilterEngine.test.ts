@@ -1,6 +1,11 @@
+/*
+Author: Luca Scaringella
+GitHub: LucaCode
+©Copyright by Luca Scaringella
+ */
+
+import {ErrorFilterEngine, TaskError} from "../../../../../src";
 const assert            = require("chai").assert;
-const ErrorFilterEngine = require('./../../../../../dist/lib/helper/react/responseReactionEngine/errorFilterEngine').ErrorFilterEngine;
-const TaskError         = require('./../../../../../dist/lib/helper/react/taskError/taskError').TaskError;
 
 describe('HELPER.ErrorFilterEngine',() => {
 

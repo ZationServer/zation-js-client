@@ -103,3 +103,6 @@ P
 -src/lib/helper/error/connectionNeededError.ts,9/6/9653c7b3114217a099b18d1f16b3d41f212f2832
 X
 (src/lib/helper/error/socketNotCreated.ts,9/5/95f02a790f9d40d432dd113d1072e631c3f3b466
+:
+
+.gitignore,a/5/a5cc2925ca8258af241be7e5b0381edf30266302

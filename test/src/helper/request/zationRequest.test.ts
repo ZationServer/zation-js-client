@@ -1,7 +1,13 @@
+/*
+Author: Luca Scaringella
+GitHub: LucaCode
+©Copyright by Luca Scaringella
+ */
+
+import {ZationRequest} from "../../../../src/lib/helper/request/zationRequest";
+import {ProtocolType, RequestAble} from "../../../../src";
+
 const assert            = require("chai").assert;
-const ZationRequest     = require('./../../../../dist/lib/helper/request/zationRequest').ZationRequest;
-const ProtocolType      = require('./../../../../dist/lib/helper/constants/protocolType').ProtocolType;
-const RequestAble       = require('./../../../../dist/lib/api/requestAble').RequestAble;
 
 describe('HELPER.ZationRequest',() => {
 
@@ -9,6 +15,7 @@ describe('HELPER.ZationRequest',() => {
 
         it('Default', () => {
             const data = {name : 'luca'};
+            // @ts-ignore
             const zr = new ZationRequest(data,ProtocolType.WebSocket);
             assert.equal(zr.getProtocol(),ProtocolType.WebSocket);
             assert.equal(zr.getData(),data);
@@ -29,6 +36,7 @@ describe('HELPER.ZationRequest',() => {
             ].forEach(([data],index) =>
             {
                 it('Test-'+index,async () => {
+                    // @ts-ignore
                     const zr = new ZationRequest(data,ProtocolType.WebSocket);
                     assert.equal(await zr.getCompiledData(),data);
                 });
@@ -52,6 +60,7 @@ describe('HELPER.ZationRequest',() => {
             ].forEach(([data,expected],index) =>
             {
                 it('Test-'+index,async () => {
+                    // @ts-ignore
                     const zr = new ZationRequest(data,ProtocolType.WebSocket);
                     assert.deepEqual(await zr.getCompiledData(),expected);
                 });
