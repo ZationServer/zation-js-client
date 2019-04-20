@@ -12,14 +12,8 @@ export class FilterEngine
 {
     static getWhoHasOneOfInputVar<T>(input : any[], filter : any[] | any, howToGet : HowToGetFunction<T>, searchFilter = FilterHandlerLib.equals) : any[]
     {
-        let res : any[] = [];
-        if(Array.isArray(filter)) {
-            res = FilterEngine.getWhoHasOneOf<T>(input,filter,howToGet,searchFilter);
-        }
-        else {
-            res = FilterEngine.getWhoHas<T>(input,filter,howToGet,searchFilter);
-        }
-        return res;
+        return Array.isArray(filter) ? FilterEngine.getWhoHasOneOf<T>(input,filter,howToGet,searchFilter) :
+            FilterEngine.getWhoHas<T>(input,filter,howToGet,searchFilter);
     }
 
     static getWhoHas<T>(input : any[], filter : any, howToGet : HowToGetFunction<T>, searchFilter = FilterHandlerLib.equals) : object[]
