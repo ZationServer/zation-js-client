@@ -105,6 +105,7 @@ export class RequestHelper extends AbstractRequestHelper<RequestHelper>
             request = new HttpRequest(this._controllerName,this._data,this._useAuth,this._systemController);
             request.setHttpAttachedContent(this._httpAttachedContent);
         }
+        request.setAckTimeout(this._ackTimeout);
         return request;
     }
 

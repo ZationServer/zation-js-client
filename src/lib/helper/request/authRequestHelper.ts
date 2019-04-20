@@ -41,6 +41,7 @@ export class AuthRequestHelper extends AbstractRequestHelper<AuthRequestHelper>
     buildRequest() : ZationRequest
     {
         const req = new AuthRequest(this._authData,this._protocol);
+        req.setAckTimeout(this._ackTimeout);
         req.setHttpAttachedContent(this._httpAttachedContent);
         return req;
     }

@@ -8,6 +8,10 @@ import {HttpRequest} from "./httpRequest";
 
 const  Emitter                 = require('component-emitter');
 const  SocketClusterClient     = require('socketcluster-client');
+const clone                    = require('clone');
+const LinkedList               = require('linked-list');
+const scErrors                 = require('sc-errors');
+const InvalidActionError       = scErrors.InvalidActionError;
 
 import {SendAble}                    from "../helper/request/sendAble";
 import {ProtocolType}                from "../helper/constants/protocolType";
@@ -111,6 +115,7 @@ SocketClusterClient.SCClientSocket.prototype._triggerChannelUnsubscribe = functi
     }
 };
 
+//override for add feature retrySubForever
 SocketClusterClient.SCClientSocket.prototype._triggerChannelSubscribeFail = function (err, channel, subscriptionOptions) {
     const channelName = channel.name;
     const meetsAuthRequirements = !channel.waitForAuth || this.authState === this.AUTHENTICATED;
@@ -163,6 +168,54 @@ SocketClusterClient.SCClientSocket.prototype._changeToAuthenticatedState = funct
     }
 
     Emitter.prototype.emit.call(this, 'authenticate', signedAuthToken);
+};
+
+//override for ackTimeout to emit function
+SocketClusterClient.SCClientSocket.prototype._emit = function (event, data, callback, ackTimeout) {
+    let self = this;
+
+    if (this.state === this.CLOSED) {
+        this.connect();
+    }
+    let eventObject = {
+        event: event,
+        callback: callback
+    };
+
+    let eventNode = new LinkedList.Item();
+
+    if (this.options.cloneData) {
+        eventObject['data'] = clone(data);
+    } else {
+        eventObject['data'] = data;
+    }
+    eventNode.data = eventObject;
+
+    if(ackTimeout === undefined){
+        ackTimeout = this.ackTimeout;
+    }
+
+    if(typeof ackTimeout === 'number'){
+        eventObject['timeout'] = setTimeout(function () {
+            self._handleEventAckTimeout(eventObject, eventNode);
+        }, ackTimeout);
+    }
+
+    this._emitBuffer.append(eventNode);
+    if (this.state === this.OPEN) {
+        this._flushEmitBuffer();
+    }
+};
+
+SocketClusterClient.SCClientSocket.prototype.emit = function (event, data, callback,ackTimeout) {
+    if (this._localEvents[event] == null) {
+        this._emit(event, data, callback,ackTimeout);
+    } else if (event === 'error') {
+        Emitter.prototype.emit.call(this, event, data);
+    } else {
+        var error = new InvalidActionError('The "' + event + '" event is reserved and cannot be emitted on a client socket');
+        this._onSCError(error);
+    }
 };
 
 
@@ -612,7 +665,7 @@ export class Zation
 
         let response : Response;
         if(sendAble.getProtocol() === ProtocolType.WebSocket) {
-            response = await SendEngine.wsSend(this,jsonObj,ph);
+            response = await SendEngine.wsSend(this,jsonObj,sendAble.getAckTimeout(),ph);
         }
         else {
             let attachedHttpContent : undefined | {key : string, data : Blob | string}[] = undefined;

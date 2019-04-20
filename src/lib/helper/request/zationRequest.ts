@@ -15,6 +15,7 @@ export abstract class ZationRequest extends SendAble
 {
     private readonly data: any;
     private readonly type: ProtocolType;
+    private ackTimeout : null | number | undefined;
 
     private compiledData : object | any[];
     private progressHandler: ProgressHandler | undefined = undefined;
@@ -33,6 +34,33 @@ export abstract class ZationRequest extends SendAble
      */
     getProtocol() : ProtocolType {
         return this.type;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the ack timeout of the request.
+     * Value can be null which means the ack timeout is disabled or
+     * undefined that means use the default from socketCluster that is 10s or
+     * it can be a number that indicates the milliseconds.
+     * Notice that the ack timeout works only with WebSocket requests.
+     */
+    getAckTimeout(): number | null | undefined {
+        return this.ackTimeout;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Set the ack timeout of the request.
+     * Value can be null which means the ack timeout is disabled or
+     * undefined that means use the default from socketCluster that is 10s or
+     * it can be a number that indicates the milliseconds.
+     * Notice that the ack timeout works only with WebSocket requests.
+     * @param ackTimeout
+     */
+    setAckTimeout(ackTimeout : number | null | undefined): void {
+        this.ackTimeout = ackTimeout;
     }
 
     // noinspection JSUnusedGlobalSymbols

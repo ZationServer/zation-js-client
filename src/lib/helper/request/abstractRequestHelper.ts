@@ -24,6 +24,7 @@ export abstract class AbstractRequestHelper<T>
     protected readonly zation : Zation;
 
     protected _protocol : ProtocolType = ProtocolType.WebSocket;
+    protected _ackTimeout : null | number | undefined;
     private _progressHandler : ProgressHandler[] = [];
     private _responseReactionBox : ResponseReactionBox;
     private _reactionAdded : boolean = false;
@@ -77,6 +78,21 @@ export abstract class AbstractRequestHelper<T>
      */
     isHttp(value : boolean = true) : T {
         this._protocol = value ? ProtocolType.Http : ProtocolType.WebSocket;
+        return this.self();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Set the ack timeout of the request.
+     * Value can be null which means the ack timeout is disabled or
+     * undefined that means use the default from socketCluster that is 10s or
+     * it can be a number that indicates the milliseconds.
+     * Notice that the ack timeout works only with WebSocket requests.
+     * @param timeout
+     */
+    ackTimeout(timeout : null | undefined | number) : T {
+        this._ackTimeout = timeout;
         return this.self();
     }
 

@@ -75,7 +75,9 @@ export class ValidationRequestHelper extends AbstractRequestHelper<ValidationReq
      */
     buildRequest() : ZationRequest
     {
-        return new ValidationRequest(this._controllerName,this._checks,this._systemController,this._protocol)
+        const req = new ValidationRequest(this._controllerName,this._checks,this._systemController,this._protocol)
+        req.setAckTimeout(this._ackTimeout);
+        return req;
     }
 
     // noinspection JSUnusedGlobalSymbols

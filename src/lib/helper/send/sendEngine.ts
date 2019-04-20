@@ -16,7 +16,7 @@ const FormData                = require('form-data');
 
 export class SendEngine
 {
-    static wsSend(zation : Zation,data : object,progressHandler ?: ProgressHandler) : Promise<Response>
+    static wsSend(zation : Zation,data : object,ackTimeout : null | number | undefined,progressHandler ?: ProgressHandler) : Promise<Response>
     {
         return new Promise(async (resolve, reject)=>
         {
@@ -43,7 +43,7 @@ export class SendEngine
                     else {
                         reject(new ResultIsMissingError())
                     }
-                });
+                },ackTimeout);
             }
             else {
                 reject(new ConnectionNeededError('By sending an webSocket request!'));
