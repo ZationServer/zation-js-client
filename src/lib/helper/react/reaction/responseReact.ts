@@ -88,7 +88,7 @@ export class ResponseReact implements ResponseReactAble
      * You can combine all of this properties.
      * @param reaction
      * @param filter
-     * The purpose of this param is to filter the task errors.
+     * The purpose of this param is to filter the BackErrors errors.
      * Look in the examples how you can use it.
      * You also can add more than one filter.
      * The filter are linked with OR so the filtered errors
@@ -148,7 +148,7 @@ export class ResponseReact implements ResponseReactAble
      * You can combine all of this properties.
      * @param reaction
      * @param filter
-     * The purpose of this param is to filter the task errors.
+     * The purpose of this param is to filter the BackErrors errors.
      * Look in the examples how you can use it.
      * You also can add more than one filter.
      * The filter are linked with OR so the filtered errors

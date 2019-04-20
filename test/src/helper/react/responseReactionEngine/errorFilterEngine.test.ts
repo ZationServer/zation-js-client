@@ -4,14 +4,14 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import {ErrorFilterEngine, TaskError} from "../../../../../src";
+import {ErrorFilterEngine, BackError} from "../../../../../src";
 const assert            = require("chai").assert;
 
 describe('HELPER.ErrorFilterEngine',() => {
 
     const demoErrors = [
-        new TaskError({n : 'toOld',g : 'ageError', t : 'input', d : 'The age is to old', zs : true, i : {age : 50,maxAge : 45}}),
-        new TaskError({n : 'nameNotAllow',g : 'nameError', t : 'input2', d : 'The name is not allowed', zs : true, i : {name : 'peter'}}),
+        new BackError({n : 'toOld',g : 'ageError', t : 'input', d : 'The age is to old', zs : true, i : {age : 50,maxAge : 45}}),
+        new BackError({n : 'nameNotAllow',g : 'nameError', t : 'input2', d : 'The name is not allowed', zs : true, i : {name : 'peter'}}),
     ];
 
     describe('Name filer', () => {

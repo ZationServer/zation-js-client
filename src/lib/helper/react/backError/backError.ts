@@ -6,7 +6,7 @@ GitHub: LucaCode
 
 import {TaskErrorInfo, ResponseTaskError} from "../../constants/internal";
 
-export class TaskError
+export class BackError
 {
     private readonly data : ResponseTaskError;
 
@@ -17,7 +17,7 @@ export class TaskError
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the name of the task error.
+     * Returns the name of the BackError.
      */
     getName() : string {
         return this.data.n;
@@ -26,7 +26,7 @@ export class TaskError
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the group of the task error.
+     * Returns the group of the BackError.
      */
     getGroup() : string | undefined {
         return this.data.g;
@@ -35,7 +35,7 @@ export class TaskError
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns if the task error has a group.
+     * Returns if the BackError has a group.
      */
     hasGroup() : boolean {
         return this.data.g !== undefined;
@@ -44,7 +44,7 @@ export class TaskError
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the type of the task error.
+     * Returns the type of the BackError.
      */
     getType() : string {
         return this.data.t
@@ -53,7 +53,7 @@ export class TaskError
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the description of the task error.
+     * Returns the description of the BackError.
      * Is undefined if it was not sended.
      */
     getDescription() : string | undefined {
@@ -63,7 +63,7 @@ export class TaskError
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns if the task error is from zation system.
+     * Returns if the BackError is from zation system.
      * Is undefined if it was not sended.
      */
     isFromZationSystem() : boolean | undefined {
@@ -73,7 +73,7 @@ export class TaskError
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the info of the task error.
+     * Returns the info of the BackError.
      * If the info is not an object, it will return an empty object.
      */
     getInfo() : object {
@@ -84,7 +84,7 @@ export class TaskError
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns if the task error has an info object.
+     * Returns if the BackError has an info object.
      */
     hasInfo() : boolean {
         return typeof this.data.i === 'object';
@@ -93,7 +93,7 @@ export class TaskError
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the main info of the task error.
+     * Returns the main info of the BackError.
      */
     getMainInfo() : string | undefined {
         return this.getInfo()[TaskErrorInfo.MAIN];
@@ -102,7 +102,7 @@ export class TaskError
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns if the task error has main info.
+     * Returns if the BackError has main info.
      */
     hasMainInfo() : boolean {
         return this.getInfo()[TaskErrorInfo.MAIN] !== undefined;

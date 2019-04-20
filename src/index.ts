@@ -40,7 +40,7 @@ import {ValidationRequestHelper}       from "./lib/helper/request/validationRequ
 import {ErrorFilterEngine}             from "./lib/helper/react/responseReactionEngine/errorFilterEngine";
 import {PresetErrorLib}                from "./lib/helper/react/onErrorBuilder/presetErrorLib";
 import {ErrorFilter}                   from "./lib/helper/filter/errorFilter";
-import {TaskError}                     from "./lib/helper/react/taskError/taskError";
+import {BackError}                     from "./lib/helper/react/backError/backError";
 import {AbstractErrorFilterBuilder}    from "./lib/helper/react/onErrorBuilder/abstractErrorFilterBuilder";
 import {SocketNotCreatedError}         from "./lib/helper/error/socketNotCreated";
 
@@ -103,7 +103,7 @@ export {
     ErrorFilterEngine,
     PresetErrorLib,
     ErrorFilter,
-    TaskError,
+    BackError,
     ValidationCheck,
     AbstractErrorFilterBuilder
 };

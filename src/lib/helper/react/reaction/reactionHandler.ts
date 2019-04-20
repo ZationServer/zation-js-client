@@ -5,13 +5,13 @@ GitHub: LucaCode
  */
 
 import {Response}  from "../../../api/response";
-import {TaskError} from "../taskError/taskError";
+import {BackError} from "../backError/backError";
 
 //Response
 export type ResponseReactionOnSuccessful = (result : any, response : Response) => void | Promise<void>;
 export type ResponseReactionOnResponse   = (response : Response) => void | Promise<void>;
-export type ResponseReactionOnError      = (filteredErrors : TaskError[], response : Response) => void | Promise<void>;
-export type ResponseReactionCatchError   = (catchedErrors : TaskError[], response : Response) => void | Promise<void>;
+export type ResponseReactionOnError      = (filteredErrors : BackError[], response : Response) => void | Promise<void>;
+export type ResponseReactionCatchError   = (catchedErrors : BackError[], response : Response) => void | Promise<void>;
 
 //Channel
 //Pub

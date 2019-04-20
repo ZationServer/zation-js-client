@@ -6,7 +6,7 @@ GitHub: LucaCode
 
 // noinspection TypeScriptPreferShortImport
 import {ProtocolType}    from "../helper/constants/protocolType";
-import {TaskError}       from "../helper/react/taskError/taskError";
+import {BackError}       from "../helper/react/backError/backError";
 import {ZationResponse}  from "../helper/constants/internal";
 import {Zation}          from "./zation";
 import {ResponseReact}   from "../helper/react/reaction/responseReact";
@@ -19,8 +19,8 @@ export class Response
 
     private result : any;
     private statusCode : string | number | undefined;
-    private readonly erros : TaskError[] = [];
-    private notCatchedErrors : TaskError[] = [];
+    private readonly erros : BackError[] = [];
+    private notCatchedErrors : BackError[] = [];
 
     private zationInfo : string[] = [];
 
@@ -137,7 +137,7 @@ export class Response
      * If there is no error it returns an empty array.
      * @param useFiltered if true than it returns only the errors there are not catched.
      */
-    getErrors(useFiltered : boolean = true) : TaskError[]
+    getErrors(useFiltered : boolean = true) : BackError[]
     {
         if(useFiltered) {
             return this.notCatchedErrors;
@@ -257,13 +257,13 @@ export class Response
         return this;
     }
 
-    _getNotCatchedErrors() : TaskError[] {
+    _getNotCatchedErrors() : BackError[] {
         return this.notCatchedErrors;
     }
 
-    _errorsAreCatched(errors : TaskError[])
+    _errorsAreCatched(errors : BackError[])
     {
-        errors.forEach((error : TaskError) => {
+        errors.forEach((error : BackError) => {
             const index = this.notCatchedErrors.indexOf(error);
             if (index > -1) {this.notCatchedErrors.splice(index, 1);}
         });
@@ -295,7 +295,7 @@ export class Response
             for(let i = 0; i < errors.length; i++)
             {
                 if(typeof errors[i] === 'object') {
-                    this.erros.push(new TaskError(errors[i]));
+                    this.erros.push(new BackError(errors[i]));
                 }
             }
         }

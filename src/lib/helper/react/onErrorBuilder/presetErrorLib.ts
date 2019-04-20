@@ -4,6 +4,7 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
+// noinspection TypeScriptPreferShortImport
 import {ErrorFilter} from "../../filter/errorFilter";
 import {ErrorGroup}  from "../../constants/errorGroup";
 import {ErrorType}   from "../../constants/errorType";
@@ -12,7 +13,7 @@ export abstract class PresetErrorLib<T>
 {
     protected abstract self() : T;
     protected abstract _presetAdd(preset : ErrorFilter) : void;
-    
+
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
@@ -28,7 +29,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputTypeError.
-     * The task error can be thrown by input validation type.
+     * The BackError error can be thrown by input validation type.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -44,7 +45,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeObject.
-     * The task error can be thrown by input validation type:'object'.
+     * The BackError error can be thrown by input validation type:'object'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -60,7 +61,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeArray.
-     * The task error can be thrown by input validation type:'array'.
+     * The BackError error can be thrown by input validation type:'array'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -76,7 +77,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeString.
-     * The task error can be thrown by input validation type:'string'.
+     * The BackError error can be thrown by input validation type:'string'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -92,7 +93,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeChar.
-     * The task error can be thrown by input validation type:'char'.
+     * The BackError error can be thrown by input validation type:'char'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -108,7 +109,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeNull.
-     * The task error can be thrown by input validation type:'null'.
+     * The BackError error can be thrown by input validation type:'null'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -124,7 +125,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeInt.
-     * The task error can be thrown by input validation type:'int'.
+     * The BackError error can be thrown by input validation type:'int'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -140,7 +141,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeFloat.
-     * The task error can be thrown by input validation type:'float'.
+     * The BackError error can be thrown by input validation type:'float'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -156,7 +157,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeNumber.
-     * The task error can be thrown by input validation type:'number'.
+     * The BackError error can be thrown by input validation type:'number'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -172,7 +173,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeDate.
-     * The task error can be thrown by input validation type:'date'.
+     * The BackError error can be thrown by input validation type:'date'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -188,7 +189,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeEmail.
-     * The task error can be thrown by input validation type:'email'.
+     * The BackError error can be thrown by input validation type:'email'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -204,7 +205,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeBoolean.
-     * The task error can be thrown by input validation type:'boolean'.
+     * The BackError error can be thrown by input validation type:'boolean'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -220,7 +221,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeSha512.
-     * The task error can be thrown by input validation type:'sha512'.
+     * The BackError error can be thrown by input validation type:'sha512'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -236,7 +237,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeSha256.
-     * The task error can be thrown by input validation type:'sha256'.
+     * The BackError error can be thrown by input validation type:'sha256'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -252,7 +253,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeSha384.
-     * The task error can be thrown by input validation type:'sha384'.
+     * The BackError error can be thrown by input validation type:'sha384'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -268,7 +269,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeSha1.
-     * The task error can be thrown by input validation type:'sha1'.
+     * The BackError error can be thrown by input validation type:'sha1'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -284,7 +285,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeMd5.
-     * The task error can be thrown by input validation type:'md5'.
+     * The BackError error can be thrown by input validation type:'md5'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -300,7 +301,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeHexColor.
-     * The task error can be thrown by input validation type:'hexColor'.
+     * The BackError error can be thrown by input validation type:'hexColor'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -316,7 +317,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeHexadecimal.
-     * The task error can be thrown by input validation type:'hexadecimal'.
+     * The BackError error can be thrown by input validation type:'hexadecimal'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -332,7 +333,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeIp4.
-     * The task error can be thrown by input validation type:'ip4'.
+     * The BackError error can be thrown by input validation type:'ip4'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -348,7 +349,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeIp6.
-     * The task error can be thrown by input validation type:'ip6'.
+     * The BackError error can be thrown by input validation type:'ip6'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -364,7 +365,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeIsbn10.
-     * The task error can be thrown by input validation type:'isbn10'.
+     * The BackError error can be thrown by input validation type:'isbn10'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -380,7 +381,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeIsbn13.
-     * The task error can be thrown by input validation type:'isbn13'.
+     * The BackError error can be thrown by input validation type:'isbn13'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -396,7 +397,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeJson.
-     * The task error can be thrown by input validation type:'json'.
+     * The BackError error can be thrown by input validation type:'json'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -412,7 +413,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeUrl.
-     * The task error can be thrown by input validation type:'url'.
+     * The BackError error can be thrown by input validation type:'url'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -428,7 +429,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeMimeType.
-     * The task error can be thrown by input validation type:'mimeType'.
+     * The BackError error can be thrown by input validation type:'mimeType'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -444,7 +445,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeMacAddress.
-     * The task error can be thrown by input validation type:'macAddress'.
+     * The BackError error can be thrown by input validation type:'macAddress'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -460,7 +461,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeMobileNumber.
-     * The task error can be thrown by input validation type:'mobileNumber'.
+     * The BackError error can be thrown by input validation type:'mobileNumber'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -476,7 +477,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeUuid3.
-     * The task error can be thrown by input validation type:'uuid3'.
+     * The BackError error can be thrown by input validation type:'uuid3'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -492,7 +493,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeUuid4.
-     * The task error can be thrown by input validation type:'uuid4'.
+     * The BackError error can be thrown by input validation type:'uuid4'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -508,7 +509,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeUuid5.
-     * The task error can be thrown by input validation type:'uuid5'.
+     * The BackError error can be thrown by input validation type:'uuid5'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -524,7 +525,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeBase64.
-     * The task error can be thrown by input validation type:'base64'.
+     * The BackError error can be thrown by input validation type:'base64'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -540,7 +541,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeAscii.
-     * The task error can be thrown by input validation type:'ascii'.
+     * The BackError error can be thrown by input validation type:'ascii'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -556,7 +557,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeUserId.
-     * The task error can be thrown by input validation type:'userId'.
+     * The BackError error can be thrown by input validation type:'userId'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -572,7 +573,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeMongoId.
-     * The task error can be thrown by input validation type:'mongoId'.
+     * The BackError error can be thrown by input validation type:'mongoId'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -588,7 +589,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotTypeLatLong.
-     * The task error can be thrown by input validation type:'latLong'.
+     * The BackError error can be thrown by input validation type:'latLong'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -604,7 +605,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputValueLengthError.
-     * The task error can be thrown by input validation minLength,maxLength,minLength.
+     * The BackError error can be thrown by input validation minLength,maxLength,minLength.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -620,7 +621,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputNotMatchWithMinLength.
-     * The task error can be thrown by input validation minLength:4.
+     * The BackError error can be thrown by input validation minLength:4.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * minLength
@@ -639,7 +640,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputNotMatchWithMaxLength.
-     * The task error can be thrown by input validation maxLength:4.
+     * The BackError error can be thrown by input validation maxLength:4.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * maxLength
@@ -658,7 +659,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputNotMatchWithLength.
-     * The task error can be thrown by input validation length:4.
+     * The BackError error can be thrown by input validation length:4.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * length
@@ -677,7 +678,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputLettersFormatError.
-     * The task error can be thrown by input validation isLetters.
+     * The BackError error can be thrown by input validation isLetters.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -693,7 +694,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotUppercase.
-     * The task error can be thrown by input validation isLetters:'uppercase'.
+     * The BackError error can be thrown by input validation isLetters:'uppercase'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -709,7 +710,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotLowercase.
-     * The task error can be thrown by input validation isLetters:'lowercase'.
+     * The BackError error can be thrown by input validation isLetters:'lowercase'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -725,7 +726,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotMatchWithCharClass.
-     * The task error can be thrown by input validation charClass:'a-zA-Z0-9'.
+     * The BackError error can be thrown by input validation charClass:'a-zA-Z0-9'.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * regex
@@ -744,7 +745,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputDateError.
-     * The task error can be thrown by input validation before and after.
+     * The BackError error can be thrown by input validation before and after.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -760,7 +761,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputDateIsNotBefore.
-     * The task error can be thrown by input validation before:Date.now().
+     * The BackError error can be thrown by input validation before:Date.now().
      * More info checks you need to do by yourself.
      * Possibilities are:
      * shouldBefore
@@ -779,7 +780,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputDateIsNotAfter.
-     * The task error can be thrown by input validation after:Date.now().
+     * The BackError error can be thrown by input validation after:Date.now().
      * More info checks you need to do by yourself.
      * Possibilities are:
      * shouldAfter
@@ -798,7 +799,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotContains.
-     * The task error can be thrown by input validation contains:'hallo'.
+     * The BackError error can be thrown by input validation contains:'hallo'.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * shouldContain
@@ -818,7 +819,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotEquals.
-     * The task error can be thrown by input validation equals:'hallo'.
+     * The BackError error can be thrown by input validation equals:'hallo'.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * shouldEqual
@@ -837,7 +838,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputNumberSizeError.
-     * The task error can be thrown by input validation minValue,maxValue.
+     * The BackError error can be thrown by input validation minValue,maxValue.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -853,7 +854,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputNotMatchWithMinValue.
-     * The task error can be thrown by input validation minValue:10.
+     * The BackError error can be thrown by input validation minValue:10.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * minValue
@@ -872,7 +873,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputNotMatchWithMaxValue.
-     * The task error can be thrown by input validation maxValue:10.
+     * The BackError error can be thrown by input validation maxValue:10.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * maxValue
@@ -891,7 +892,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotMatchWithRegex.
-     * The task error can be thrown by input validation regex:'/^\/user\/.+/'.
+     * The BackError error can be thrown by input validation regex:'/^\/user\/.+/'.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -909,7 +910,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotStartsWith.
-     * The task error can be thrown by input validation startsWith:'user'.
+     * The BackError error can be thrown by input validation startsWith:'user'.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * shouldStartsWith
@@ -928,7 +929,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotEndsWith.
-     * The task error can be thrown by input validation endsWith:'user'.
+     * The BackError error can be thrown by input validation endsWith:'user'.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * shouldEndsWith
@@ -947,7 +948,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputEnumError.
-     * The task error can be thrown by input validation enum,privateEnum.
+     * The BackError error can be thrown by input validation enum,privateEnum.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -963,7 +964,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotMatchWithEnum.
-     * The task error can be thrown by input validation enum:['red','blue'].
+     * The BackError error can be thrown by input validation enum:['red','blue'].
      * More info checks you need to do by yourself.
      * Possibilities are:
      * enum (array)
@@ -982,7 +983,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputIsNotMatchWithPrivateEnum.
-     * The task error can be thrown by input validation privateEnum:['red','blue'].
+     * The BackError error can be thrown by input validation privateEnum:['red','blue'].
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -998,7 +999,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputArrayLengthError.
-     * The task error can be thrown by array validation length,minLength,maxLength.
+     * The BackError error can be thrown by array validation length,minLength,maxLength.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -1014,7 +1015,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputArrayNotMatchWithMaxLength.
-     * The task error can be thrown by array validation maxLength:10.
+     * The BackError error can be thrown by array validation maxLength:10.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * maxLength
@@ -1033,7 +1034,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputArrayNotMatchWithMinLength.
-     * The task error can be thrown by array validation minLength:5.
+     * The BackError error can be thrown by array validation minLength:5.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * minLength
@@ -1052,7 +1053,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputArrayNotMatchWithLength.
-     * The task error can be thrown by array validation length:10.
+     * The BackError error can be thrown by array validation length:10.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * length
@@ -1071,7 +1072,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputNotMatchWithMinByteSize.
-     * The task error can be thrown by input validation minByteSize:100000.
+     * The BackError error can be thrown by input validation minByteSize:100000.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * minByteSize
@@ -1090,7 +1091,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputNotMatchWithMaxByteSize.
-     * The task error can be thrown by input validation maxByteSize:100000.
+     * The BackError error can be thrown by input validation maxByteSize:100000.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * maxByteSize
@@ -1109,7 +1110,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputByteSizeError.
-     * The task error can be thrown by input validation minByteSize,maxByteSize.
+     * The BackError error can be thrown by input validation minByteSize,maxByteSize.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -1125,7 +1126,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputNotMatchWithMimeType.
-     * The task error can be thrown by input validation mimeType:'image'.
+     * The BackError error can be thrown by input validation mimeType:'image'.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * mimeType
@@ -1144,7 +1145,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputNotMatchWithMimeSubType.
-     * The task error can be thrown by input validation mimeSubType:'jpg'.
+     * The BackError error can be thrown by input validation mimeSubType:'jpg'.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * mimeSubType
@@ -1163,7 +1164,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputContentTypeError.
-     * The task error can be thrown by input validation mimeType,subType.
+     * The BackError error can be thrown by input validation mimeType,subType.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -1179,7 +1180,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for noValidTypeWasFound.
-     * The task error can be thrown by input validation type:['int','float'].
+     * The BackError error can be thrown by input validation type:['int','float'].
      * More info checks you need to do by yourself.
      * Possibilities are:
      * types (array)
@@ -1198,7 +1199,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for noAnyOfMatch.
-     * The task error can be thrown by input anyOf usage.
+     * The BackError error can be thrown by input anyOf usage.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
@@ -1214,7 +1215,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for controllerNotFound.
-     * The task error can be thrown when the controller name is not found.
+     * The BackError error can be thrown when the controller name is not found.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * controllerName
@@ -1229,7 +1230,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for systemControllerNotFound.
-     * The task error can be thrown when the system controller name is not found.
+     * The BackError error can be thrown when the system controller name is not found.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * controllerName
@@ -1244,7 +1245,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for authControllerNotSet.
-     * The task error can be thrown when no auth controller is set.
+     * The BackError error can be thrown when no auth controller is set.
      */
     authControllerNotSet() : T {
         this._presetAdd(this._zationErrorBuild
@@ -1256,7 +1257,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for systemNotCompatible.
-     * The task error can be thrown when the system is not compatible with the controller.
+     * The BackError error can be thrown when the system is not compatible with the controller.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * system
@@ -1271,7 +1272,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for versionNotCompatible.
-     * The task error can be thrown when the version is not compatible with the controller.
+     * The BackError error can be thrown when the version is not compatible with the controller.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * version
@@ -1297,7 +1298,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for authenticationError.
-     * The task error can be thrown by trying to authenticate an sc.
+     * The BackError error can be thrown by trying to authenticate an sc.
      */
     authenticationError() : T {
         this._presetAdd(this._zationErrorBuild
@@ -1320,7 +1321,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputPropertyIsMissing.
-     * The task error can be thrown if an input property is missing.
+     * The BackError error can be thrown if an input property is missing.
      * Possibilities are:
      * propertyName (the name of the missing property)
      * input (the input object where the property is missing)
@@ -1335,7 +1336,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for unknownInputProperty.
-     * The task error can be thrown if the input object has an unknown input property.
+     * The BackError error can be thrown if the input object has an unknown input property.
      * Possibilities are:
      * propertyName (the unknown input property name)
      */
@@ -1349,7 +1350,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputNotAssignable.
-     * The task error can be thrown if you send the input with type array and the input is not assignable.
+     * The BackError error can be thrown if you send the input with type array and the input is not assignable.
      * Possibilities are:
      * index (index of input that is not assignable)
      * value (input value that is not assignable)
@@ -1364,7 +1365,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for arrayWasExpected.
-     * The task error can be thrown if array was expected in the input.
+     * The BackError error can be thrown if array was expected in the input.
      * Possibilities are:
      * inputPath (full path to the value where an array was expected)
      * inputValue (the input value that is not from type array)
@@ -1379,7 +1380,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for objectWasExpected.
-     * The task error can be thrown if object was expected in the input.
+     * The BackError error can be thrown if object was expected in the input.
      * Possibilities are:
      * inputPath (full path to the value where an object was expected)
      * inputValue (the input value that is not from type object)
@@ -1394,7 +1395,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for objectPropertyIsMissing.
-     * The task error can be thrown if object property is missing.
+     * The BackError error can be thrown if object property is missing.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * object (the input object where the property is missing)
@@ -1411,7 +1412,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for unknownObjectProperty.
-     * The task error can be thrown if input object has an unknow property.
+     * The BackError error can be thrown if input object has an unknow property.
      * Possibilities are:
      * propertyName (name of the unknown property)
      * inputPath (full input path to unknown property)
@@ -1426,7 +1427,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for wrongPanelAuthData.
-     * The task error can be thrown if the panel authData is wrong.
+     * The BackError error can be thrown if the panel authData is wrong.
      */
     wrongPanelAuthData() : T {
         this._presetAdd(this._zationErrorBuild
@@ -1438,7 +1439,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for panelIsNotActivated.
-     * The task error can be thrown if you try to authenticate for the panel,
+     * The BackError error can be thrown if you try to authenticate for the panel,
      * but the panel is not activated.
      */
     panelIsNotActivated() : T {
@@ -1451,7 +1452,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for authStartActive.
-     * The task error can be thrown if the server is in auth start mode
+     * The BackError error can be thrown if the server is in auth start mode
      * and you send an normal request.
      */
     authStartActive() : T {
@@ -1464,7 +1465,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for noAccessToController.
-     * The task error can be thrown if you have no access to the controller.
+     * The BackError error can be thrown if you have no access to the controller.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * authIn (if you auth in)
@@ -1480,7 +1481,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for wrongInputDataStructure.
-     * The task error can be thrown if the request has a wrong structure.
+     * The BackError error can be thrown if the request has a wrong structure.
      */
     wrongInputDataStructure() : T {
         this._presetAdd(this._zationErrorBuild
@@ -1492,7 +1493,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for wrongControllerInputType.
-     * The task error can be thrown if the request controller input type is wrong.
+     * The BackError error can be thrown if the request controller input type is wrong.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * inputType
@@ -1507,7 +1508,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for JSONParseSyntaxError.
-     * The task error can be thrown if the json parse with the input thwors an error.
+     * The BackError error can be thrown if the json parse with the input thwors an error.
      */
     JSONParseSyntaxError() : T {
         this._presetAdd(this._zationErrorBuild
@@ -1519,7 +1520,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for wrongValidationCheckStructure.
-     * The task error can be thrown if the input validation check has a wrong structure.
+     * The BackError error can be thrown if the input validation check has a wrong structure.
      * Can only thrown by an validation request.
      * More info checks you need to do by yourself.
      * Possibilities are:
@@ -1535,7 +1536,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for inputPathInControllerNotFound.
-     * The task error can be thrown if the input path in the controller is not found.
+     * The BackError error can be thrown if the input path in the controller is not found.
      * Can only thrown by an validation request.
      * More info checks you need to do by yourself.
      * Possibilities are:
@@ -1553,7 +1554,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for validationCheckLimitReached.
-     * The task error can be thrown if the limit of validation checks is reached.
+     * The BackError error can be thrown if the limit of validation checks is reached.
      * Can only thrown by an validation request.
      * More info checks you need to do by yourself.
      * Possibilities are:
@@ -1581,7 +1582,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for noAccessWithProtocol.
-     * The task error can be thrown if you have no access to the controller
+     * The BackError error can be thrown if you have no access to the controller
      * with the requested protocol.
      * More info checks you need to do by yourself.
      * Possibilities are:
@@ -1598,7 +1599,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for noAccessWithHttpMethod.
-     * The task error can be thrown if you have no access to the controller
+     * The BackError error can be thrown if you have no access to the controller
      * with the requested http method.
      * So the error can only throws by an http request.
      * More info checks you need to do by yourself.
@@ -1627,7 +1628,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for unknownError.
-     * The task error can be thrown by any unknown error on the server.
+     * The BackError error can be thrown by any unknown error on the server.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * info (only server is running in debug mode)
@@ -1653,7 +1654,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for unknownTokenVerifyError.
-     * The task error can be thrown by any unknown error by verify a token.
+     * The BackError error can be thrown by any unknown error by verify a token.
      * More info checks you need to do by yourself.
      */
     unknownTokenVerifyError() : T {
@@ -1666,7 +1667,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for unknownTokenSignError.
-     * The task error can be thrown by any unknown error by sign a token.
+     * The BackError error can be thrown by any unknown error by sign a token.
      * More info checks you need to do by yourself.
      */
     unknownTokenSignError() : T {
@@ -1679,7 +1680,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for tokenExpiredError.
-     * The task error can be thrown if a token is expired.
+     * The BackError error can be thrown if a token is expired.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * expiredAt
@@ -1694,7 +1695,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for jsonWebTokenError.
-     * The task error can be thrown by any json web token error on the server.
+     * The BackError error can be thrown by any json web token error on the server.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * message
@@ -1709,7 +1710,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for authenticateMiddlewareBlock.
-     * The task error can be thrown by authenticate middleware block.
+     * The BackError error can be thrown by authenticate middleware block.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * err
