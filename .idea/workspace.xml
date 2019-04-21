@@ -2,18 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="76638f38-4a15-47c2-ad03-534e2aa2a298" name="Default" comment="add support for attach http content&#10;add support for http progressHandler &#10;update documentation">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api/zation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/api/zation.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/abstractRequestHelper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/request/abstractRequestHelper.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/authRequestHelper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/request/authRequestHelper.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/requestHelper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/request/requestHelper.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/sendAble.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/request/sendAble.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/validationRequestHelper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/request/validationRequestHelper.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/zationRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/request/zationRequest.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/sc/socket.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/sc/socket.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/constants/errorType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/constants/errorType.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorLib.ts" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -39,7 +29,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="60">
@@ -49,10 +39,36 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib/helper/sc/socket.ts">
+        <entry file="file://$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorFilter.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
-              <caret line="40" selection-start-line="40" selection-end-line="40" />
+            <state>
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorLib.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="457">
+              <caret line="1483" column="19" lean-forward="true" selection-start-line="1483" selection-start-column="19" selection-end-line="1483" selection-end-column="19" />
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lib/helper/constants/errorType.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="300">
+              <caret line="20" selection-start-line="20" selection-end-line="20" />
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -78,30 +94,6 @@
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="e#228#290#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib/api/authRequest.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="11" column="40" selection-start-line="11" selection-start-column="40" selection-end-line="11" selection-end-column="40" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib/helper/request/sendAble.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="16" selection-start-line="16" selection-end-line="16" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -157,7 +149,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>liveForever</find>
       <find>request</find>
       <find>request(</find>
       <find>: AbstractErrorFilterBuilder&lt;T&gt;</find>
@@ -187,6 +178,7 @@
       <find>task</find>
       <find>Task</find>
       <find>send</find>
+      <find>compati</find>
     </findStrings>
     <replaceStrings>
       <replace>private</replace>
@@ -227,7 +219,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/lib/helper/react/reaction/reactionHandler.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/react/box/reactionBox.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/constants/errorGroup.ts" />
         <option value="$PROJECT_DIR$/LICENSE" />
@@ -264,7 +255,6 @@
         <option value="$PROJECT_DIR$/test/src/helper/react/responseReactionEngine/errorFilterEngine.test.ts" />
         <option value="$PROJECT_DIR$/src/lib/api/responseReactionBox.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/error/connectionNeededError.ts" />
-        <option value="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorLib.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/react/reaction/responseReact.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/filter/filterEngine.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/react/backError/backError.ts" />
@@ -278,6 +268,8 @@
         <option value="$PROJECT_DIR$/src/lib/helper/request/requestHelper.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/request/validationRequestHelper.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" />
+        <option value="$PROJECT_DIR$/src/lib/helper/constants/errorType.ts" />
+        <option value="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorLib.ts" />
       </list>
     </option>
   </component>
@@ -771,7 +763,7 @@
       <workItem from="1554304223872" duration="119000" />
       <workItem from="1554743134768" duration="2305000" />
       <workItem from="1555396213487" duration="457000" />
-      <workItem from="1555695643383" duration="4366000" />
+      <workItem from="1555695643383" duration="5094000" />
     </task>
     <task id="LOCAL-00010" summary="improve api and documentation&#10;add remove optional param option (to remove all)&#10;add new helper for validation and auth request&#10;fix bugs">
       <created>1539950666829</created>
@@ -1152,7 +1144,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="602656000" />
+    <option name="totallyTimeSpent" value="603384000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1288,25 +1280,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorLib.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-42">
-          <caret line="25" column="4" selection-start-line="25" selection-start-column="4" selection-end-line="25" selection-end-column="4" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorFilter.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/onErrorBuilder.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -1415,15 +1388,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/lib/helper/constants/events.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/constants/errorType.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <folding>
@@ -1722,6 +1686,35 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="18" column="86" selection-start-line="18" selection-start-column="86" selection-end-line="18" selection-end-column="86" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorFilter.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/helper/constants/errorType.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" selection-start-line="20" selection-end-line="20" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorLib.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="457">
+          <caret line="1483" column="19" lean-forward="true" selection-start-line="1483" selection-start-column="19" selection-end-line="1483" selection-end-column="19" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

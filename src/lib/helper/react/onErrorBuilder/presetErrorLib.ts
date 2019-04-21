@@ -1256,30 +1256,30 @@ export abstract class PresetErrorLib<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for systemNotCompatible.
-     * The BackError error can be thrown when the system is not compatible with the controller.
+     * Preset for noAccessWithSystem.
+     * The BackError error can be thrown when the current system has no access to the controller.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * system
      */
-    systemNotCompatible() : T {
+    noAccessWithSystem() : T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.COMPATIBILITY_ERROR,'systemNotCompatible'));
+        (ErrorType.NO_ACCESS_ERROR,'noAccessWithSystem'));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for versionNotCompatible.
-     * The BackError error can be thrown when the version is not compatible with the controller.
+     * Preset for noAccessWithVersion.
+     * The BackError error can be thrown when the current version has no access to the controller.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * version
      */
-    versionNotCompatible() : T {
+    noAccessWithVersion() : T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.COMPATIBILITY_ERROR,'versionNotCompatible'));
+        (ErrorType.NO_ACCESS_ERROR,'noAccessWithVersion'));
         return this.self();
     }
 
@@ -1464,16 +1464,18 @@ export abstract class PresetErrorLib<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for noAccessToController.
-     * The BackError error can be thrown if you have no access to the controller.
+     * Preset for noAccessWithAuth.
+     * The BackError error can be thrown
+     * if you have no access to the controller with your current auth state.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * authIn (if you auth in)
-     * authUserGroup (you auth user group)
+     * authUserGroup (your auth user group)
+     * userId (your user id)
      */
-    noAccessToController() : T {
+    noAccessWithAuth() : T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.AUTH_ERROR,'noAccessToController'));
+        (ErrorType.NO_ACCESS_ERROR,'noAccessWithAuth'));
         return this.self();
     }
 
