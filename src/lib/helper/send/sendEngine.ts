@@ -13,6 +13,7 @@ import {ResultIsMissingError}   from "../error/resultIsMissingError";
 import {ConnectionNeededError}  from "../error/connectionNeededError";
 import axios, {AxiosRequestConfig} from 'axios';
 const FormData                = require('form-data');
+import stringify                from "fast-stringify";
 
 export class SendEngine
 {
@@ -65,7 +66,7 @@ export class SendEngine
 
             const bodyFormData = new FormData();
 
-            bodyFormData.append(zation.getPostKey(),JSON.stringify(data));
+            bodyFormData.append(zation.getPostKey(),stringify(data));
 
             if(attachedContent) {
                 for(let i = 0; i < attachedContent.length; i ++) {

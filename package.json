@@ -50,8 +50,9 @@
     "linked-list": "2.0.0",
     "object-path": "0.11.4",
     "component-emitter": "1.2.1",
-    "axios": "0.19.0-beta.1",
-    "form-data": "2.3.3"
+    "axios": "0.18.0",
+    "form-data": "2.3.3",
+    "fast-stringify": "1.1.1"
   },
   "devDependencies": {
     "babel-cli": "7.0.0-beta.3",
