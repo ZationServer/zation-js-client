@@ -23,6 +23,11 @@ export interface ZationOptions {
     autoDefaultUserGroupChSub ?: boolean;
     autoAuthUserGroupChSub ?: boolean;
 
+    /**
+     * These variables will be sent to the server when the client is creating his connection.
+     */
+    handshakeVariables ?: object;
+
     autoReconnect ?: boolean;
     autoReconnectOptions ?: {
         initialDelay ?: number,
@@ -48,6 +53,7 @@ export interface ZationOptionsInternal extends ZationOptions{
     autoUserChSub : boolean;
     autoDefaultUserGroupChSub : boolean;
     autoAuthUserGroupChSub : boolean;
+    handshakeVariables : object;
     autoReconnect : boolean;
     autoReconnectOptions : {
         initialDelay ?: number,

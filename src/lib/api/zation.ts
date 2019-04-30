@@ -6,13 +6,6 @@ GitHub: LucaCode
 
 import {HttpRequest} from "./httpRequest";
 
-const  Emitter                 = require('component-emitter');
-const  SocketClusterClient     = require('socketcluster-client');
-const clone                    = require('clone');
-const LinkedList               = require('linked-list');
-const scErrors                 = require('sc-errors');
-const InvalidActionError       = scErrors.InvalidActionError;
-
 import {SendAble}                    from "../helper/request/sendAble";
 import {ProtocolType}                from "../helper/constants/protocolType";
 import {ZationOptions}               from "./zationOptions";
@@ -43,181 +36,8 @@ import {EventReactionBox}            from "./eventReactionBox";
 import {WsRequest}                   from "./wsRequest";
 import {Response}                    from "./response";
 import {AuthEngine}                  from "../helper/auth/authEngine";
-
-//override for decide between client/server deauthenticate
-SocketClusterClient.SCClientSocket.prototype.deauthenticate = function (callback) {
-    const self = this;
-    this.auth.removeToken(this.authTokenName, function (err, oldToken) {
-        if (err) {
-            // Non-fatal error - Do not close the connection
-            self._onSCError(err);
-        } else {
-            Emitter.prototype.emit.call(self, 'removeAuthToken', oldToken);
-            if (self.state !== self.CLOSED) {
-                self.emit('#removeAuthToken');
-            }
-            self._changeToUnauthenticatedStateAndClearTokens(true);
-        }
-        callback && callback(err);
-    });
-};
-
-SocketClusterClient.SCClientSocket.prototype._changeToUnauthenticatedStateAndClearTokens = function (fromClient : boolean = false) {
-    if (this.authState !== this.UNAUTHENTICATED) {
-        const oldState = this.authState;
-        const oldSignedToken = this.signedAuthToken;
-        this.authState = this.UNAUTHENTICATED;
-        this.signedAuthToken = null;
-        this.authToken = null;
-
-        const stateChangeData = {
-            oldState: oldState,
-            newState: this.authState
-        };
-        Emitter.prototype.emit.call(this, 'authStateChange', stateChangeData);
-        Emitter.prototype.emit.call(this, 'deauthenticate', oldSignedToken,fromClient);
-    }
-};
-
-//override for decide between client/server unsub channel
-SocketClusterClient.SCClientSocket.prototype.unsubscribe = function (channelName) {
-    const channel = this.channels[channelName];
-
-    if (channel) {
-        if (channel.state !== channel.UNSUBSCRIBED) {
-            this._triggerChannelUnsubscribe(channel,undefined,true);
-            this._tryUnsubscribe(channel);
-        }
-    }
-};
-
-SocketClusterClient.SCClientSocket.prototype._triggerChannelUnsubscribe = function (channel, newState, fromClient : boolean = false) {
-    const channelName = channel.name;
-    const oldState = channel.state;
-
-    if (newState) {
-        channel.state = newState;
-    } else {
-        channel.state = channel.UNSUBSCRIBED;
-    }
-    this._cancelPendingSubscribeCallback(channel);
-
-    if (oldState === channel.SUBSCRIBED) {
-        const stateChangeData = {
-            channel: channelName,
-            oldState: oldState,
-            newState: channel.state
-        };
-        channel.emit('subscribeStateChange', stateChangeData);
-        channel.emit('unsubscribe', channelName,fromClient);
-        Emitter.prototype.emit.call(this, 'subscribeStateChange', stateChangeData);
-        Emitter.prototype.emit.call(this, 'unsubscribe', channelName, fromClient);
-    }
-};
-
-//override for add feature retrySubForever
-SocketClusterClient.SCClientSocket.prototype._triggerChannelSubscribeFail = function (err, channel, subscriptionOptions) {
-    const channelName = channel.name;
-    const meetsAuthRequirements = !channel.waitForAuth || this.authState === this.AUTHENTICATED;
-
-    if (channel.state !== channel.UNSUBSCRIBED && meetsAuthRequirements) {
-        if(!channel.retrySubForever){
-            channel.state = channel.UNSUBSCRIBED;
-        }
-        channel.emit('subscribeFail', err, channelName, subscriptionOptions);
-        Emitter.prototype.emit.call(this, 'subscribeFail', err, channelName, subscriptionOptions);
-    }
-};
-
-SocketClusterClient.SCClientSocket.prototype._privateEventHandlerMap['#kickOut'] = function (data) {
-    const undecoratedChannelName = this._undecorateChannelName(data.channel);
-    const channel = this.channels[undecoratedChannelName];
-    if (channel) {
-        Emitter.prototype.emit.call(this, 'kickOut', data.message, undecoratedChannelName);
-        channel.emit('kickOut', data.message, undecoratedChannelName);
-        if(!channel.retrySubForever){
-            this._triggerChannelUnsubscribe(channel);
-        }
-        else {
-            this._triggerChannelUnsubscribe(channel,channel.PENDING);
-        }
-    }
-};
-
-SocketClusterClient.SCClientSocket.prototype._changeToAuthenticatedState = function (signedAuthToken) {
-    this.signedAuthToken = signedAuthToken;
-    this.authToken = this._extractAuthTokenData(signedAuthToken);
-
-    if (this.authState !== this.AUTHENTICATED) {
-        const oldState = this.authState;
-        this.authState = this.AUTHENTICATED;
-        const stateChangeData = {
-            oldState: oldState,
-            newState: this.authState,
-            signedAuthToken: signedAuthToken,
-            authToken: this.authToken
-        };
-        if (!this.preparingPendingSubscriptions) {
-            this.processPendingSubscriptions();
-        }
-
-        Emitter.prototype.emit.call(this, 'authStateChange', stateChangeData);
-    }
-    else {
-        this.processPendingSubscriptions();
-    }
-
-    Emitter.prototype.emit.call(this, 'authenticate', signedAuthToken);
-};
-
-//override for ackTimeout to emit function
-SocketClusterClient.SCClientSocket.prototype._emit = function (event, data, callback, ackTimeout) {
-    let self = this;
-
-    if (this.state === this.CLOSED) {
-        this.connect();
-    }
-    let eventObject = {
-        event: event,
-        callback: callback
-    };
-
-    let eventNode = new LinkedList.Item();
-
-    if (this.options.cloneData) {
-        eventObject['data'] = clone(data);
-    } else {
-        eventObject['data'] = data;
-    }
-    eventNode.data = eventObject;
-
-    if(ackTimeout === undefined){
-        ackTimeout = this.ackTimeout;
-    }
-
-    if(typeof ackTimeout === 'number'){
-        eventObject['timeout'] = setTimeout(function () {
-            self._handleEventAckTimeout(eventObject, eventNode);
-        }, ackTimeout);
-    }
-
-    this._emitBuffer.append(eventNode);
-    if (this.state === this.OPEN) {
-        this._flushEmitBuffer();
-    }
-};
-
-SocketClusterClient.SCClientSocket.prototype.emit = function (event, data, callback,ackTimeout) {
-    if (this._localEvents[event] == null) {
-        this._emit(event, data, callback,ackTimeout);
-    } else if (event === 'error') {
-        Emitter.prototype.emit.call(this, event, data);
-    } else {
-        var error = new InvalidActionError('The "' + event + '" event is reserved and cannot be emitted on a client socket');
-        this._onSCError(error);
-    }
-};
-
+import {ModifiedScClient}            from "./modifiedScClient";
+import stringify                     from "fast-stringify";
 
 export class Zation
 {
@@ -310,10 +130,7 @@ export class Zation
                 this.channelReactionMainBox.addItem(box);
             }
             else {
-                // noinspection SuspiciousInstanceOfGuard
-                if(box instanceof EventReactionBox) {
-                    this.eventReactionMainBox.addItem(box);
-                }
+                this.eventReactionMainBox.addItem(box);
             }
         }
     }
@@ -342,7 +159,7 @@ export class Zation
                 }
             }
             else {
-                // noinspection SuspiciousInstanceOfGuard
+                // noinspection SuspiciousInstanceOfGuard,SuspiciousTypeOfGuard
                 if(box instanceof EventReactionBox) {
                     if(this.eventReactionMainBox.removeItem(box)){
                         box._unlink();
@@ -519,6 +336,7 @@ export class Zation
      * then trigger the zation response reaction boxes (using response.react().zationReact()).
      * @example
      * await conAndAuth({userName : 'Tim', password : 'opqdjß2jdp1d'});
+     * @param authData The authentication credentials for the client.
      * @throws connectionAbortError
      */
     async conAuth(authData : object) : Promise<Response>
@@ -851,7 +669,7 @@ export class Zation
 
         this.socket.on('disconnect',async (code,data) =>
         {
-            const fromClient = data ? data['#internal-fromZationClient'] : false;
+            const fromClient : any = data ? data['#internal-fromZationClient'] : false;
             if(typeof fromClient === "boolean" && fromClient){
                 if(this.zc.isDebug()) {
                     Logger.printInfo(`Client is disconnected from client. Code:'${code}' Data:'${data}'`);
@@ -955,7 +773,8 @@ export class Zation
             timestampRequests : this.zc.config.timestampRequests,
             query: {
                 system : this.zc.config.system,
-                version : this.zc.config.version
+                version : this.zc.config.version,
+                variables : stringify(this.zc.config.handshakeVariables)
             }
         };
     }
@@ -963,7 +782,7 @@ export class Zation
     private _buildWsConnection()
     {
         // noinspection JSUnresolvedVariable
-        this.socket = SocketClusterClient.create(this._buildScOptions());
+        this.socket = ModifiedScClient.create(this._buildScOptions());
     }
 
     //Part Channel Subscribtion

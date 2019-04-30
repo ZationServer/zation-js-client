@@ -53,6 +53,7 @@ export class ZationConfig
           autoUserChSub : true,
           autoDefaultUserGroupChSub : true,
           autoAuthUserGroupChSub : true,
+          handshakeVariables : {},
           autoReconnect : true,
           autoReconnectOptions : {}
         };
@@ -92,7 +93,7 @@ export class ZationConfig
 
     isDebug() : boolean
     {
-        return !!this.config.debug;
+        return this.config.debug;
     }
 
     setConfig(key : any,value : any) : void
