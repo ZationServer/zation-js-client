@@ -12,7 +12,7 @@ export class ZationConfig
 
     constructor(config ?: ZationOptions)
     {
-        this.loadDefaults();
+        this.loadDefaults(config);
         this.loadSettingsFromClientPrepare();
         if(config) {
             this.addToConfig(config,true);
@@ -36,26 +36,42 @@ export class ZationConfig
         }
     }
 
-    loadDefaults()
+    private static getDefaultPort(customOptions,defaultSecure) {
+        const isSecure = customOptions && typeof customOptions.secure === 'boolean' ?
+            customOptions.secure : defaultSecure;
+
+        return (window && window.location && window.location.port) ?
+            parseInt(window.location.port) : isSecure ? 443 : 80;
+    }
+
+    private static getDefaultSecure() {
+        return window && window.location && window.location.protocol ?
+            (window.location.protocol === 'https:') : false;
+    }
+
+    loadDefaults(customOptions ?: ZationOptions)
     {
+        const defaultSecure = ZationConfig.getDefaultSecure();
+        const defaultPort = ZationConfig.getDefaultPort(customOptions,defaultSecure);
         this._config = {
-          debug : false,
-          system : 'Default',
-          version : 1.0,
-          hostname : 'localhost',
-          path : '/zation',
-          port : 3000,
-          secure : false,
-          rejectUnauthorized : false,
-          postKey : 'zation',
-          multiplex : true,
-          autoAllChSub : true,
-          autoUserChSub : true,
-          autoDefaultUserGroupChSub : true,
-          autoAuthUserGroupChSub : true,
-          handshakeVariables : {},
-          autoReconnect : true,
-          autoReconnectOptions : {}
+            debug : false,
+            system : 'Default',
+            version : 1.0,
+            hostname : window && window.location.hostname || 'localhost',
+            path : '/zation',
+            port : defaultPort,
+            secure : defaultSecure,
+            rejectUnauthorized : false,
+            postKey : 'zation',
+            multiplex : true,
+            autoAllChSub : true,
+            autoUserChSub : true,
+            autoDefaultUserGroupChSub : true,
+            autoAuthUserGroupChSub : true,
+            handshakeVariables : {},
+            useAllServerSettings : false,
+            autoReconnect : true,
+            autoReconnectOptions : {}
         };
     }
 
@@ -68,17 +84,17 @@ export class ZationConfig
             // @ts-ignore
             let zss = ZATION_SERVER_SETTINGS;
 
-            if(!!zss['HOSTNAME']) {
+            if(this._config.useAllServerSettings && !!zss['HOSTNAME']) {
                 this._config.hostname = zss['HOSTNAME'];
             }
-            if(!!zss['PORT']) {
+            if(this._config.useAllServerSettings && !!zss['PORT']) {
                 this._config.port = zss['PORT'];
+            }
+            if(this._config.useAllServerSettings && !!zss['SECURE']) {
+                this._config.secure = zss['SECURE'];
             }
             if(!!zss['PATH']) {
                 this._config.path = zss['PATH'];
-            }
-            if(!!zss['SECURE']) {
-                this._config.secure = zss['SECURE'];
             }
             if(!!zss['POST_KEY']) {
                 this._config.postKey = zss['POST_KEY'];
