@@ -278,17 +278,15 @@ export class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    static getCustomIdChName(channel ?: string, id ?: string) : string
+    static getCustomIdChName(channel : string | undefined, id : string = '') : string
     {
-        let res : string = ZationChannel.CUSTOM_ID_CHANNEL_PREFIX;
-        if(channel !== undefined) {
-            res += channel;
-            if(id !== undefined) {
-                res += ZationChannel.CUSTOM_CHANNEL_ID;
-                res += id;
-            }
+        if(name !== undefined) {
+            return ZationChannel.CUSTOM_ID_CHANNEL_PREFIX + name
+                + ZationChannel.CUSTOM_CHANNEL_ID + id;
         }
-        return res;
+        else {
+            return ZationChannel.CUSTOM_ID_CHANNEL_PREFIX;
+        }
     }
 
     // noinspection JSUnusedGlobalSymbols
