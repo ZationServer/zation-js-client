@@ -13,8 +13,6 @@ P
  src/lib/api/validationRequest.ts,1/8/18341c88ca4e8d86bd88b2d41306006682f824ac
 J
 src/lib/api/requestAble.ts,0/b/0b2003c156922d3e059c8996ecd898d20e8c5c1b
-v
-Ftest/src/helper/react/responseReactionEngine/errorFilterEngine.test.js,f/5/f54ba767f46c37428e15267f602813f137626ac5
 Z
 *src/lib/helper/tools/requestJsonBuilder.ts,2/e/2e607adac00babf33be83b6a1af23bc5dada6509
 W
@@ -27,8 +25,6 @@ X
 (src/lib/helper/constants/protocolType.ts,c/9/c90adc391a9699f6c136b75d95e91f3ae159645e
 R
 "src/lib/helper/request/sendAble.ts,c/9/c9a1f151897b44f0305a3d94cb3b78d1fd7efe74
-]
--test/src/helper/request/zationRequest.test.js,6/7/676a6738406b589625c27d4fcf6f303ce97dfdae
 Q
 !src/lib/api/channelReactionBox.ts,c/f/cf8dbe89bec32248d778f981da8171a8488fe0af
 O
@@ -69,8 +65,6 @@ t
 Dsrc/lib/helper/react/responseReactionEngine/triggerResponseEngine.ts,9/f/9fcdc30dbbe633cf92269c2b7ea688e3b21609cb
 A
 package-lock.json,f/a/fa288d1472d29beccb489a676f68739ad365fc47
-[
-+src/lib/helper/react/taskError/taskError.ts,8/5/850254ce150e5bd548fd7e1aaf1d08ac6b3556c1
 U
 %src/lib/helper/filter/filterEngine.ts,8/d/8d7cc64529583472094fcd6c54ba576c23538c0e
 Y
@@ -106,3 +100,7 @@ X
 :
 
 .gitignore,a/5/a5cc2925ca8258af241be7e5b0381edf30266302
+U
+%src/lib/helper/constants/errorType.ts,5/c/5c6dc60965a7ca32f28a3542795efefc260fad02
+C
+coverage/index.html,b/4/b4648a16e3820b5f064d6b4273ba59f2082f04c0

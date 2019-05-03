@@ -2,8 +2,57 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="76638f38-4a15-47c2-ad03-534e2aa2a298" name="Default" comment="add support for attach http content&#10;add support for http progressHandler &#10;update documentation">
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/constants/errorType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/constants/errorType.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorLib.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/6/7/676a6738406b589625c27d4fcf6f303ce97dfdae" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/8/5/850254ce150e5bd548fd7e1aaf1d08ac6b3556c1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/5/f54ba767f46c37428e15267f602813f137626ac5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/api/authRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/main/authRequest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/api/channelReactionBox.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/reactionBoxes/channelReactionBox.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/api/eventReactionBox.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/reactionBoxes/eventReactionBox.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/api/httpRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/main/httpRequest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/api/modifiedScClient.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/sc/modifiedScClient.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/api/requestAble.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/helper/requestAble.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/api/response.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/response/response.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/api/responseReactionBox.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/reactionBoxes/responseReactionBox.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/api/validationRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/main/validationRequest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/api/wsRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/main/wsRequest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/api/zation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/mainApi/zation.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/api/zationOptions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/mainApi/zationOptions.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/auth/authEngine.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/auth/authEngine.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/channel/channelEngine.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/channel/channelEngine.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/config/zationConfig.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/config/zationConfig.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/error/authenticationFailedError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/error/authenticationFailedError.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/filter/errorFilter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/error/errorFilter.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/backError/backError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/response/backError.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/box/reactionBox.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/reactionBoxes/reactionBox.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/abstractErrorFilterBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/error/abstractErrorFilterBuilder.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/catchErrorBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/error/catchErrorBuilder.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/onErrorBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/error/onErrorBuilder.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorFilter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/error/presetErrorFilter.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/error/presetErrorLib.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/reactionUtil.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/error/reactionUtil.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/reaction/fullReaction.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/reaction/fullReaction.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/reaction/reactionHandler.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/reaction/reactionHandler.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/reaction/responseReact.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/response/responseReact.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/responseReactionEngine/errorFilterEngine.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/respReactEngines/errorFilterEngine.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/responseReactionEngine/responseReactAble.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/response/responseReactAble.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/responseReactionEngine/triggerResponseEngine.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/respReactEngines/triggerResponseEngine.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/statementBuilder/orBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/utils/orBuilder.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/statementBuilder/pairOrAndBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/utils/pairOrAndBuilder.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/abstractRequestHelper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/fluent/abstractRequestHelper.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/authRequestHelper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/fluent/authRequestHelper.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/progressHandler.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/helper/progressHandler.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/requestHelper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/fluent/requestHelper.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/sendAble.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/helper/sendAble.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/validationRequestHelper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/fluent/validationRequestHelper.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/zationRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/main/zationRequest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/saver/zationSaver.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/mainApi/zationSaver.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/tools/objectPath.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/utils/objectPath.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/helper/tools/requestJsonBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/utils/requestJsonBuilder.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/src/helper/request/zationRequest.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test/src/helper/request/zationRequest.test.ts" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -17,29 +66,7 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib/api/zation.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="276">
-              <caret line="667" column="42" selection-start-line="667" selection-start-column="42" selection-end-line="667" selection-end-column="42" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-                <element signature="e#255#326#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="18" column="86" selection-start-line="18" selection-start-column="86" selection-end-line="18" selection-end-column="86" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorFilter.ts">
+        <entry file="file://$PROJECT_DIR$/src/lib/react/response/responseReactAble.ts">
           <provider selected="true" editor-type-id="text-editor">
             <state>
               <folding>
@@ -49,11 +76,90 @@
           </provider>
         </entry>
       </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lib/react/reactionBoxes/responseReactionBox.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lib/react/response/responseReact.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2040">
+              <caret line="150" column="60" selection-start-line="150" selection-start-column="60" selection-end-line="150" selection-end-column="60" />
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lib/react/respReactEngines/errorFilterEngine.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lib/react/respReactEngines/triggerResponseEngine.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/index.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="18" column="33" lean-forward="true" selection-start-line="18" selection-start-column="33" selection-end-line="18" selection-end-column="33" />
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lib/react/reaction/reactionHandler.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lib/react/reactionBoxes/channelReactionBox.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-36491">
+              <caret line="49" column="26" selection-start-line="49" selection-start-column="26" selection-end-line="49" selection-end-column="26" />
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorLib.ts">
+        <entry file="file://$PROJECT_DIR$/src/lib/react/reactionBoxes/eventReactionBox.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="457">
-              <caret line="1483" column="19" lean-forward="true" selection-start-line="1483" selection-start-column="19" selection-end-line="1483" selection-end-column="19" />
+            <state relative-caret-position="-1962">
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -62,72 +168,9 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib/helper/constants/errorType.ts">
+        <entry file="file://$PROJECT_DIR$/src/lib/react/reactionBoxes/reactionBox.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="20" selection-start-line="20" selection-end-line="20" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib/helper/request/abstractRequestHelper.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3894">
-              <caret line="38" column="41" selection-start-line="38" selection-start-column="41" selection-end-line="38" selection-end-column="41" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-                <element signature="e#81#131#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib/helper/request/zationRequest.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="156">
-              <caret line="47" column="46" selection-start-line="47" selection-start-column="46" selection-end-line="47" selection-end-column="46" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-                <element signature="e#228#290#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib/helper/request/authRequestHelper.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="43" column="44" selection-start-line="43" selection-start-column="44" selection-end-line="43" selection-end-column="44" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib/helper/request/requestHelper.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="392">
-              <caret line="106" column="9" selection-start-line="106" selection-start-column="9" selection-end-line="106" selection-end-column="9" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib/helper/request/validationRequestHelper.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="415">
-              <caret line="80" column="5" selection-start-line="80" selection-start-column="5" selection-end-line="80" selection-end-column="5" />
+            <state>
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -149,11 +192,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>request</find>
-      <find>request(</find>
-      <find>: AbstractErrorFilterBuilder&lt;T&gt;</find>
-      <find>return this.errorFilterBuilder</find>
-      <find>useAuth</find>
       <find>useA</find>
       <find>count</find>
       <find>trigger</find>
@@ -179,6 +217,11 @@
       <find>Task</find>
       <find>send</find>
       <find>compati</find>
+      <find>connect</find>
+      <find>handshakeVa</find>
+      <find>ha</find>
+      <find>buikld</find>
+      <find>JSON</find>
     </findStrings>
     <replaceStrings>
       <replace>private</replace>
@@ -219,18 +262,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/lib/helper/react/box/reactionBox.ts" />
-        <option value="$PROJECT_DIR$/src/lib/helper/constants/errorGroup.ts" />
-        <option value="$PROJECT_DIR$/LICENSE" />
-        <option value="$PROJECT_DIR$/src/lib/helper/filter/errorFilter.ts" />
-        <option value="$PROJECT_DIR$/src/lib/api/wsRequest.ts" />
-        <option value="$PROJECT_DIR$/test/src/helper/react/responseReactionEngine/errorFilterEngine.test.js" />
-        <option value="$PROJECT_DIR$/src/lib/api/requestAble.ts" />
-        <option value="$PROJECT_DIR$/test/src/helper/request/zationRequest.test.js" />
-        <option value="$PROJECT_DIR$/src/lib/api/httpRequest.ts" />
-        <option value="$PROJECT_DIR$/src/lib/api/authRequest.ts" />
-        <option value="$PROJECT_DIR$/src/lib/helper/tools/requestJsonBuilder.ts" />
-        <option value="$PROJECT_DIR$/src/lib/helper/react/responseReactionEngine/triggerResponseEngine.ts" />
         <option value="$PROJECT_DIR$/src/lib/api/response.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/react/responseReactionEngine/errorFilterEngine.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/reactionUtil.ts" />
@@ -247,8 +278,6 @@
         <option value="$PROJECT_DIR$/src/lib/helper/auth/authEngine.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/error/socketNotCreated.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/channel/channelEngine.ts" />
-        <option value="$PROJECT_DIR$/src/lib/helper/config/zationConfig.ts" />
-        <option value="$PROJECT_DIR$/src/lib/api/zationOptions.ts" />
         <option value="$PROJECT_DIR$/src/index.ts" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/test/src/helper/request/zationRequest.test.ts" />
@@ -258,18 +287,32 @@
         <option value="$PROJECT_DIR$/src/lib/helper/react/reaction/responseReact.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/filter/filterEngine.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/react/backError/backError.ts" />
-        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/lib/helper/sc/socket.ts" />
-        <option value="$PROJECT_DIR$/src/lib/api/zation.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/request/sendAble.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/request/abstractRequestHelper.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/request/authRequestHelper.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/request/zationRequest.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/request/requestHelper.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/request/validationRequestHelper.ts" />
-        <option value="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/constants/errorType.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorLib.ts" />
+        <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/src/lib/api/modifiedScClient.ts" />
+        <option value="$PROJECT_DIR$/src/lib/api/zation.ts" />
+        <option value="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" />
+        <option value="$PROJECT_DIR$/src/lib/helper/config/zationConfig.ts" />
+        <option value="$PROJECT_DIR$/src/lib/api/zationOptions.ts" />
+        <option value="$PROJECT_DIR$/src/lib/helper/request/fluent/authRequestHelper.ts" />
+        <option value="$PROJECT_DIR$/src/lib/helper/request/fluent/validationRequestHelper.ts" />
+        <option value="$PROJECT_DIR$/src/lib/helper/request/fluent/requestHelper.ts" />
+        <option value="$PROJECT_DIR$/src/lib/helper/request/httpRequest.ts" />
+        <option value="$PROJECT_DIR$/src/lib/helper/request/requestAble.ts" />
+        <option value="$PROJECT_DIR$/src/lib/api/reactionBoxes/responseReactionBox.ts" />
+        <option value="$PROJECT_DIR$/src/lib/fetch/wsRequest.ts" />
+        <option value="$PROJECT_DIR$/src/lib/request/main/wsRequest.ts" />
+        <option value="$PROJECT_DIR$/src/lib/react/reactionBoxes/responseReactionBox.ts" />
+        <option value="$PROJECT_DIR$/src/lib/mainApi/zationSaver.ts" />
+        <option value="$PROJECT_DIR$/src/lib/react/response/responseReact.ts" />
       </list>
     </option>
   </component>
@@ -279,9 +322,9 @@
     <other-services-enabled>true</other-services-enabled>
     <auto-save>true</auto-save>
   </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
-    <option name="y" value="53" />
-    <option name="width" value="1680" />
+  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
+    <option name="y" value="23" />
+    <option name="width" value="680" />
     <option name="height" value="984" />
   </component>
   <component name="ProjectView">
@@ -312,85 +355,6 @@
               <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="api" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="auth" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="box" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="channel" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="config" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="constants" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="error" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="filter" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="logger" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
               <item name="react" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -398,94 +362,15 @@
               <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
               <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="backError" type="462c0819:PsiDirectoryNode" />
+              <item name="reactionBoxes" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
               <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="box" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="onErrorBuilder" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="reaction" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="responseReactionEngine" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="statementBuilder" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
               <item name="request" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="saver" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="sc" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="send" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zation-js-client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-              <item name="tools" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="zation-js-client" type="b2602c69:ProjectViewProjectNode" />
@@ -560,18 +445,18 @@
     <property name="typescript-compiler-editor-notification" value="false" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/lib/react/response" />
+      <recent name="$PROJECT_DIR$/src/lib/helper/utils" />
+      <recent name="$PROJECT_DIR$/src/lib/react" />
+      <recent name="$PROJECT_DIR$/src/lib/react/reactionBoxes" />
+      <recent name="$PROJECT_DIR$/src/lib/mainApi" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/lib/helper/constants" />
       <recent name="$PROJECT_DIR$/src/lib/helper/tools" />
       <recent name="D:\MyProjekts\GitHub\zation-js-client\src\lib\helper\constants" />
       <recent name="D:\MyProjekts\GitHub\zation-js-client" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/lib/helper/saver" />
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/src/lib/helper/react/taskError" />
-      <recent name="$PROJECT_DIR$/src/lib/helper/react/reaction" />
-      <recent name="$PROJECT_DIR$/src/lib/helper/react/responseReactionEngine" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -763,7 +648,10 @@
       <workItem from="1554304223872" duration="119000" />
       <workItem from="1554743134768" duration="2305000" />
       <workItem from="1555396213487" duration="457000" />
-      <workItem from="1555695643383" duration="5094000" />
+      <workItem from="1555695643383" duration="5489000" />
+      <workItem from="1556095712383" duration="237000" />
+      <workItem from="1556096285790" duration="2301000" />
+      <workItem from="1556631935684" duration="15350000" />
     </task>
     <task id="LOCAL-00010" summary="improve api and documentation&#10;add remove optional param option (to remove all)&#10;add new helper for validation and auth request&#10;fix bugs">
       <created>1539950666829</created>
@@ -1144,7 +1032,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="603384000" />
+    <option name="totallyTimeSpent" value="621667000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1156,7 +1044,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
+    <frame x="0" y="0" width="1680" height="1050" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.7456556" visible="true" weight="0.29234478" />
@@ -1173,7 +1061,7 @@
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.4996986" weight="0.32857144" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Statistic" order="8" weight="0.32857144" />
-      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49608198" visible="true" weight="0.29897958" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49608198" weight="0.037755102" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50391805" side_tool="true" weight="0.4612245" />
       <window_info anchor="bottom" id="Version Control" order="11" weight="0.32857144" />
       <window_info anchor="bottom" id="TypeScript" order="12" weight="0.32891566" />
@@ -1243,7 +1131,7 @@
     <option name="LAST_COMMIT_MESSAGE" value="add support for attach http content&#10;add support for http progressHandler &#10;update documentation" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/react/responseReactionEngine/responseReactAble.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/helper/box/sBox.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <folding>
@@ -1252,17 +1140,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/react/responseReactionEngine/errorFilterEngine.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-57">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#81#137#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/react/reaction/fullReaction.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/helper/box/sBoxMapper.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <folding>
@@ -1271,7 +1149,74 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/reactionUtil.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/mainApi/zationOptions.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="43" column="7" selection-start-line="43" selection-start-column="7" selection-end-line="43" selection-end-column="7" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/mainApi/zation.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1468">
+          <caret line="39" selection-start-line="39" selection-end-line="39" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/config/zationConfig.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="397">
+          <caret line="96" column="48" selection-start-line="96" selection-start-column="48" selection-end-line="96" selection-end-column="48" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/response/backError.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="652">
+          <caret line="121" column="23" selection-start-line="121" selection-start-column="23" selection-end-line="121" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/response/response.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="e#125#190#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/helper/sc/modifiedScClient.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="562">
+          <caret line="167" column="23" selection-start-line="167" selection-start-column="23" selection-end-line="167" selection-end-column="23" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/request/main/authRequest.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="20" column="33" selection-start-line="20" selection-start-column="33" selection-end-line="20" selection-end-column="33" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/request/main/httpRequest.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <folding>
@@ -1280,7 +1225,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/onErrorBuilder.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/request/main/validationRequest.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <folding>
@@ -1289,7 +1234,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/catchErrorBuilder.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/request/main/wsRequest.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <folding>
@@ -1298,32 +1243,57 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/abstractErrorFilterBuilder.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/request/main/zationRequest.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-57">
+        <state relative-caret-position="109">
+          <caret line="47" column="46" selection-start-line="47" selection-start-column="46" selection-end-line="47" selection-end-column="46" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/react/box/reactionBox.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/request/fluent/abstractRequestHelper.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-57">
+        <state relative-caret-position="375">
+          <caret line="38" column="41" selection-start-line="38" selection-start-column="41" selection-end-line="38" selection-end-column="41" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/react/backError/backError.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/request/fluent/authRequestHelper.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="121" column="23" lean-forward="true" selection-start-line="121" selection-start-column="23" selection-end-line="121" selection-end-column="23" />
+        <state relative-caret-position="82">
+          <caret line="43" column="44" selection-start-line="43" selection-start-column="44" selection-end-line="43" selection-end-column="44" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/logger/logger.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/request/fluent/requestHelper.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1440">
+          <caret line="106" column="9" selection-start-line="106" selection-start-column="9" selection-end-line="106" selection-end-column="9" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/request/fluent/validationRequestHelper.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="629">
+          <caret line="80" column="5" selection-start-line="80" selection-start-column="5" selection-end-line="80" selection-end-column="5" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/request/helper/progressHandler.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <folding>
@@ -1332,26 +1302,129 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/filter/filterHandlerLib.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/request/helper/requestAble.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-57">
+        <state>
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/filter/filterEngine.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/request/helper/sendAble.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="615">
-          <caret line="41" column="5" lean-forward="true" selection-start-line="41" selection-start-column="5" selection-end-line="41" selection-end-column="5" />
+        <state relative-caret-position="225">
+          <caret line="16" selection-start-line="16" selection-end-line="16" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/filter/errorFilter.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/react/error/abstractErrorFilterBuilder.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/react/error/errorFilter.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/react/error/catchErrorBuilder.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/react/error/onErrorBuilder.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/react/error/presetErrorFilter.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/react/error/presetErrorLib.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="629">
+          <caret line="1478" column="27" selection-start-line="1478" selection-start-column="27" selection-end-line="1478" selection-end-column="27" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/react/error/reactionUtil.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="45" selection-start-line="10" selection-start-column="45" selection-end-line="10" selection-end-column="45" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/helper/channel/channelTarget.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/helper/channel/channelEngine.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-5574">
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="e#82#136#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/helper/constants/errorGroup.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/helper/constants/errorType.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" selection-start-line="20" selection-end-line="20" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/helper/constants/events.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <folding>
@@ -1380,14 +1453,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/lib/helper/constants/internal.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-57">
+        <state>
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/constants/events.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/helper/filter/filterEngine.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <folding>
@@ -1396,7 +1469,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/constants/errorGroup.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/helper/filter/filterHandlerLib.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-240">
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/mainApi/zationSaver.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <folding>
@@ -1405,16 +1487,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/config/zationConfig.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-57">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/channel/channelTarget.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/helper/utils/orBuilder.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <folding>
@@ -1423,7 +1496,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/box/sBoxMapper.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/helper/utils/pairOrAndBuilder.ts">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/react/reaction/fullReaction.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <folding>
@@ -1432,16 +1508,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/box/sBox.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-57">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/box/box.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/react/reaction/reactionHandler.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <folding>
@@ -1450,17 +1517,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/auth/authEngine.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-57">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#81#149#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/api/validationRequest.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/react/reactionBoxes/reactionBox.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <folding>
@@ -1469,27 +1526,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/api/responseReactionBox.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-57">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#81#161#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/api/response.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-57">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#125#190#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/api/requestAble.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/react/reactionBoxes/responseReactionBox.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <folding>
@@ -1498,57 +1535,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/api/httpRequest.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/react/response/responseReactAble.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-57">
+        <state>
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/api/eventReactionBox.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/react/response/responseReact.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-57">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#81#589#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/api/channelReactionBox.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-57">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#81#1021#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/channel/channelEngine.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1227">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#82#136#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/react/reaction/responseReact.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2250">
+        <state relative-caret-position="2040">
           <caret line="150" column="60" selection-start-line="150" selection-start-column="60" selection-end-line="150" selection-end-column="60" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
-            <element signature="e#81#243#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/react/reaction/reactionHandler.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/react/respReactEngines/errorFilterEngine.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <folding>
@@ -1557,7 +1563,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/api/zationOptions.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/react/respReactEngines/triggerResponseEngine.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <folding>
@@ -1568,150 +1574,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/index.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
+        <state relative-caret-position="270">
+          <caret line="18" column="33" lean-forward="true" selection-start-line="18" selection-start-column="33" selection-end-line="18" selection-end-column="33" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
+    <entry file="file://$PROJECT_DIR$/src/lib/react/reactionBoxes/channelReactionBox.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="960">
-          <caret line="64" column="36" selection-start-line="64" selection-start-column="36" selection-end-line="64" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/api/wsRequest.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#126#194#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/api/authRequest.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="11" column="40" selection-start-line="11" selection-start-column="40" selection-end-line="11" selection-end-column="40" />
+        <state relative-caret-position="-36491">
+          <caret line="49" column="26" selection-start-line="49" selection-start-column="26" selection-end-line="49" selection-end-column="26" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/sc/socket.ts">
+    <entry file="file://$PROJECT_DIR$/src/lib/react/reactionBoxes/eventReactionBox.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="40" selection-start-line="40" selection-end-line="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/request/sendAble.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="16" selection-start-line="16" selection-end-line="16" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/request/zationRequest.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="47" column="46" selection-start-line="47" selection-start-column="46" selection-end-line="47" selection-end-column="46" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#228#290#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/request/abstractRequestHelper.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3894">
-          <caret line="38" column="41" selection-start-line="38" selection-start-column="41" selection-end-line="38" selection-end-column="41" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#81#131#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/request/authRequestHelper.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="43" column="44" selection-start-line="43" selection-start-column="44" selection-end-line="43" selection-end-column="44" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/request/requestHelper.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="392">
-          <caret line="106" column="9" selection-start-line="106" selection-start-column="9" selection-end-line="106" selection-end-column="9" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/request/validationRequestHelper.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="415">
-          <caret line="80" column="5" selection-start-line="80" selection-start-column="5" selection-end-line="80" selection-end-column="5" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/api/zation.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="667" column="42" selection-start-line="667" selection-start-column="42" selection-end-line="667" selection-end-column="42" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#255#326#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="18" column="86" selection-start-line="18" selection-start-column="86" selection-end-line="18" selection-end-column="86" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorFilter.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/constants/errorType.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" selection-start-line="20" selection-end-line="20" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorLib.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="457">
-          <caret line="1483" column="19" lean-forward="true" selection-start-line="1483" selection-start-column="19" selection-end-line="1483" selection-end-column="19" />
+        <state relative-caret-position="-1962">
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>

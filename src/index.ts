@@ -5,19 +5,19 @@ GitHub: LucaCode
  */
 
 //Api Classes
-import {ZationOptions as  Options}     from "./lib/api/zationOptions";
-import {RequestAble}                   from "./lib/api/requestAble";
+import {ZationOptions as  Options}     from "./lib/mainApi/zationOptions";
+import {RequestAble}                   from "./lib/request/helper/requestAble";
 import {ProtocolType}                  from "./lib/helper/constants/protocolType";
-import {Zation}                        from "./lib/api/zation";
-import {Zation as Client}              from "./lib/api/zation";
-import {Zation as ZationClient}        from "./lib/api/zation";
-import {ResponseReactionBox}           from "./lib/api/responseReactionBox";
-import {ChannelReactionBox}            from "./lib/api/channelReactionBox";
-import {EventReactionBox}              from "./lib/api/eventReactionBox";
-import {WsRequest}                     from "./lib/api/wsRequest";
-import {HttpRequest}                   from "./lib/api/httpRequest";
-import {AuthRequest}                   from "./lib/api/authRequest";
-import {ValidationCheck, ValidationRequest} from "./lib/api/validationRequest";
+import {Zation}                        from "./lib/mainApi/zation";
+import {Zation as Client}              from "./lib/mainApi/zation";
+import {Zation as ZationClient}        from "./lib/mainApi/zation";
+import {ResponseReactionBox}           from "./lib/react/reactionBoxes/responseReactionBox";
+import {ChannelReactionBox}            from "./lib/react/reactionBoxes/channelReactionBox";
+import {EventReactionBox}              from "./lib/react/reactionBoxes/eventReactionBox";
+import {WsRequest}                     from "./lib/request/main/wsRequest";
+import {HttpRequest}                   from "./lib/request/main/httpRequest";
+import {AuthRequest}                   from "./lib/request/main/authRequest";
+import {ValidationCheck, ValidationRequest} from "./lib/request/main/validationRequest";
 import {AuthenticationFailedError}     from "./lib/helper/error/authenticationFailedError";
 import {AuthenticationNeededError}     from "./lib/helper/error/authenticationNeededError";
 import {ConnectionAbortError}          from "./lib/helper/error/connectionAbortError";
@@ -30,18 +30,18 @@ import {PublishFailedError}            from "./lib/helper/error/publishFailedErr
 import {ResultIsMissingError}          from "./lib/helper/error/resultIsMissingError";
 import {SignAuthenticationFailedError} from "./lib/helper/error/signAuthenticationFailedError";
 import {SubscribeFailedError}          from "./lib/helper/error/subscribeFailedError";
-import {Response}                      from "./lib/api/response";
-import {ZationSaver}                   from "./lib/helper/saver/zationSaver";
+import {Response}                      from "./lib/response/response";
+import {ZationSaver}                   from "./lib/mainApi/zationSaver";
 import {NoZationClientSetOnTheKey}     from "./lib/helper/error/noZationClientSetOnTheKey";
-import {AbstractRequestHelper}         from "./lib/helper/request/abstractRequestHelper";
-import {AuthRequestHelper}             from "./lib/helper/request/authRequestHelper";
-import {RequestHelper}                 from "./lib/helper/request/requestHelper";
-import {ValidationRequestHelper}       from "./lib/helper/request/validationRequestHelper";
-import {ErrorFilterEngine}             from "./lib/helper/react/responseReactionEngine/errorFilterEngine";
-import {PresetErrorLib}                from "./lib/helper/react/onErrorBuilder/presetErrorLib";
-import {ErrorFilter}                   from "./lib/helper/filter/errorFilter";
-import {BackError}                     from "./lib/helper/react/backError/backError";
-import {AbstractErrorFilterBuilder}    from "./lib/helper/react/onErrorBuilder/abstractErrorFilterBuilder";
+import {AbstractRequestHelper}         from "./lib/request/fluent/abstractRequestHelper";
+import {AuthRequestHelper}             from "./lib/request/fluent/authRequestHelper";
+import {RequestHelper}                 from "./lib/request/fluent/requestHelper";
+import {ValidationRequestHelper}       from "./lib/request/fluent/validationRequestHelper";
+import {ErrorFilterEngine}             from "./lib/react/respReactEngines/errorFilterEngine";
+import {PresetErrorLib}                from "./lib/react/error/presetErrorLib";
+import {ErrorFilter}                   from "./lib/react/error/errorFilter";
+import {BackError}                     from "./lib/response/backError";
+import {AbstractErrorFilterBuilder}    from "./lib/react/error/abstractErrorFilterBuilder";
 import {SocketNotCreatedError}         from "./lib/helper/error/socketNotCreated";
 
 // noinspection JSUnusedGlobalSymbols

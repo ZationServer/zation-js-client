@@ -6,9 +6,9 @@ GitHub: LucaCode
 
 
 import {ProtocolType}           from "../constants/protocolType";
-import {ProgressHandler}        from "../request/progressHandler";
-import {Zation}                 from "../../api/zation";
-import {Response}               from "../../api/response";
+import {ProgressHandler}        from "../../request/helper/progressHandler";
+import {Zation}                 from "../../mainApi/zation";
+import {Response}               from "../../response/response";
 import {ResultIsMissingError}   from "../error/resultIsMissingError";
 import {ConnectionNeededError}  from "../error/connectionNeededError";
 import axios, {AxiosRequestConfig} from 'axios';

@@ -5,7 +5,7 @@ GitHub: LucaCode
  */
 
 import {ZationToken}                   from "../constants/internal";
-import {Zation}                        from "../../api/zation";
+import {Zation}                        from "../../mainApi/zation";
 import {ChannelEngine}                 from "../channel/channelEngine";
 import {SignAuthenticationFailedError} from "../error/signAuthenticationFailedError";
 import {ConnectionNeededError}         from "../error/connectionNeededError";

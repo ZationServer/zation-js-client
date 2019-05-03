@@ -7,9 +7,9 @@ GitHub: LucaCode
 
 import {ChannelTarget}         from "./channelTarget";
 import {ZationChannel}         from "../constants/internal";
-import {Zation}                from "../../api/zation";
+import {Zation}                from "../../mainApi/zation";
 import {SubscribeFailedError}  from "../error/subscribeFailedError";
-import {ChannelReactionBox}    from "../../api/channelReactionBox";
+import {ChannelReactionBox}    from "../../react/reactionBoxes/channelReactionBox";
 import {PublishFailedError}    from "../error/publishFailedError";
 import {ConnectionNeededError} from "../error/connectionNeededError";
 import {SocketNotCreatedError} from "../error/socketNotCreated";
