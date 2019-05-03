@@ -8,7 +8,26 @@
   "scripts": {
     "prepublishOnly": "npm run build",
     "build": "gulp build",
-    "test": "nyc --reporter=html mocha -r ts-node/register ./test/**/*.test.ts"
+    "test": "nyc mocha"
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.ts",
+      "src/**/*.tsx"
+    ],
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
+    "sourceMap": true,
+    "instrument": true
   },
   "repository": {
     "type": "git",

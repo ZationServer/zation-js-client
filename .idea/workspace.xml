@@ -2,57 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="76638f38-4a15-47c2-ad03-534e2aa2a298" name="Default" comment="add support for attach http content&#10;add support for http progressHandler &#10;update documentation">
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/6/7/676a6738406b589625c27d4fcf6f303ce97dfdae" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/8/5/850254ce150e5bd548fd7e1aaf1d08ac6b3556c1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/5/f54ba767f46c37428e15267f602813f137626ac5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/mocha.opts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api/authRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/main/authRequest.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api/channelReactionBox.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/reactionBoxes/channelReactionBox.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api/eventReactionBox.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/reactionBoxes/eventReactionBox.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api/httpRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/main/httpRequest.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api/modifiedScClient.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/sc/modifiedScClient.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api/requestAble.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/helper/requestAble.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api/response.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/response/response.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api/responseReactionBox.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/reactionBoxes/responseReactionBox.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api/validationRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/main/validationRequest.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api/wsRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/main/wsRequest.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api/zation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/mainApi/zation.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api/zationOptions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/mainApi/zationOptions.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/auth/authEngine.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/auth/authEngine.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/channel/channelEngine.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/channel/channelEngine.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/config/zationConfig.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/config/zationConfig.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/error/authenticationFailedError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/error/authenticationFailedError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/filter/errorFilter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/error/errorFilter.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/backError/backError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/response/backError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/box/reactionBox.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/reactionBoxes/reactionBox.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/abstractErrorFilterBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/error/abstractErrorFilterBuilder.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/catchErrorBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/error/catchErrorBuilder.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/onErrorBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/error/onErrorBuilder.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorFilter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/error/presetErrorFilter.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/error/presetErrorLib.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/reactionUtil.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/error/reactionUtil.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/reaction/fullReaction.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/reaction/fullReaction.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/reaction/reactionHandler.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/reaction/reactionHandler.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/reaction/responseReact.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/response/responseReact.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/responseReactionEngine/errorFilterEngine.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/respReactEngines/errorFilterEngine.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/responseReactionEngine/responseReactAble.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/response/responseReactAble.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/responseReactionEngine/triggerResponseEngine.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/react/respReactEngines/triggerResponseEngine.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/statementBuilder/orBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/utils/orBuilder.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/react/statementBuilder/pairOrAndBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/utils/pairOrAndBuilder.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/abstractRequestHelper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/fluent/abstractRequestHelper.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/authRequestHelper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/fluent/authRequestHelper.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/progressHandler.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/helper/progressHandler.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/requestHelper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/fluent/requestHelper.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/sendAble.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/helper/sendAble.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/validationRequestHelper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/fluent/validationRequestHelper.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/request/zationRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/request/main/zationRequest.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/saver/zationSaver.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/mainApi/zationSaver.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/tools/objectPath.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/utils/objectPath.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/helper/tools/requestJsonBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/helper/utils/requestJsonBuilder.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/src/helper/request/zationRequest.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test/src/helper/request/zationRequest.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -125,18 +77,7 @@
         <entry file="file://$PROJECT_DIR$/src/index.ts">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="270">
-              <caret line="18" column="33" lean-forward="true" selection-start-line="18" selection-start-column="33" selection-end-line="18" selection-end-column="33" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib/react/reaction/reactionHandler.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
+              <caret line="18" column="33" selection-start-line="18" selection-start-column="33" selection-end-line="18" selection-end-column="33" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -156,10 +97,10 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/lib/react/reactionBoxes/eventReactionBox.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1962">
+            <state>
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -168,12 +109,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib/react/reactionBoxes/reactionBox.ts">
+        <entry file="file://$PROJECT_DIR$/test/mocha.opts">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-              </folding>
+            <state relative-caret-position="75">
+              <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/package.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="285">
+              <caret line="19" column="12" selection-start-line="19" selection-start-column="12" selection-end-line="19" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -262,7 +210,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/lib/api/response.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/react/responseReactionEngine/errorFilterEngine.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/reactionUtil.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/catchErrorBuilder.ts" />
@@ -296,7 +243,6 @@
         <option value="$PROJECT_DIR$/src/lib/helper/request/validationRequestHelper.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/constants/errorType.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/react/onErrorBuilder/presetErrorLib.ts" />
-        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/lib/api/modifiedScClient.ts" />
         <option value="$PROJECT_DIR$/src/lib/api/zation.ts" />
         <option value="$PROJECT_DIR$/src/lib/helper/send/sendEngine.ts" />
@@ -313,6 +259,8 @@
         <option value="$PROJECT_DIR$/src/lib/react/reactionBoxes/responseReactionBox.ts" />
         <option value="$PROJECT_DIR$/src/lib/mainApi/zationSaver.ts" />
         <option value="$PROJECT_DIR$/src/lib/react/response/responseReact.ts" />
+        <option value="$PROJECT_DIR$/test/mocha.opts" />
+        <option value="$PROJECT_DIR$/package.json" />
       </list>
     </option>
   </component>
@@ -651,7 +599,7 @@
       <workItem from="1555695643383" duration="5489000" />
       <workItem from="1556095712383" duration="237000" />
       <workItem from="1556096285790" duration="2301000" />
-      <workItem from="1556631935684" duration="15350000" />
+      <workItem from="1556631935684" duration="16173000" />
     </task>
     <task id="LOCAL-00010" summary="improve api and documentation&#10;add remove optional param option (to remove all)&#10;add new helper for validation and auth request&#10;fix bugs">
       <created>1539950666829</created>
@@ -1032,7 +980,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="621667000" />
+    <option name="totallyTimeSpent" value="622490000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1045,9 +993,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.7456556" visible="true" weight="0.29234478" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.7456556" visible="true" weight="0.29234478" />
       <window_info id="Structure" order="1" sideWeight="0.2543444" side_tool="true" weight="0.10970464" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="Gulp" order="3" side_tool="true" />
@@ -1061,7 +1008,7 @@
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.4996986" weight="0.32857144" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Statistic" order="8" weight="0.32857144" />
-      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49608198" weight="0.037755102" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" sideWeight="0.49608198" visible="true" weight="0.43469387" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50391805" side_tool="true" weight="0.4612245" />
       <window_info anchor="bottom" id="Version Control" order="11" weight="0.32857144" />
       <window_info anchor="bottom" id="TypeScript" order="12" weight="0.32891566" />
@@ -1131,24 +1078,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="add support for attach http content&#10;add support for http progressHandler &#10;update documentation" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/box/sBox.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/helper/box/sBoxMapper.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/lib/mainApi/zationOptions.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
@@ -1575,7 +1504,7 @@
     <entry file="file://$PROJECT_DIR$/src/index.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
-          <caret line="18" column="33" lean-forward="true" selection-start-line="18" selection-start-column="33" selection-end-line="18" selection-end-column="33" />
+          <caret line="18" column="33" selection-start-line="18" selection-start-column="33" selection-end-line="18" selection-end-column="33" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
@@ -1594,10 +1523,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/lib/react/reactionBoxes/eventReactionBox.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1962">
+        <state>
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/mocha.opts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="12" selection-start-line="19" selection-start-column="12" selection-end-line="19" selection-end-column="12" />
         </state>
       </provider>
     </entry>
