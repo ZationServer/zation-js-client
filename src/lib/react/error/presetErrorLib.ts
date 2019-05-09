@@ -1494,15 +1494,15 @@ export abstract class PresetErrorLib<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for wrongControllerInputType.
-     * The BackError error can be thrown if the request controller input type is wrong.
+     * Preset for wrongInputTypeInParamBasedInput.
+     * The BackError error can be thrown if the input in a param based input configuration is not an array or object.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * inputType
      */
-    wrongControllerInputType() : T {
+    wrongInputTypeInParamBasedInput() : T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'wrongControllerInputType'));
+        (ErrorType.INPUT_ERROR,'wrongInputTypeInParamBasedInput'));
         return this.self();
     }
 
