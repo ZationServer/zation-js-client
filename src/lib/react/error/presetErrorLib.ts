@@ -1320,44 +1320,46 @@ export abstract class PresetErrorLib<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputPropertyIsMissing.
-     * The BackError error can be thrown if an input property is missing.
+     * Preset for inputParamIsMissing.
+     * The BackError error can be thrown if an input param is missing.
      * Possibilities are:
-     * propertyName (the name of the missing property)
-     * input (the input object where the property is missing)
+     * paramName (the name of the missing param)
+     * input (the input object where the param is missing)
      */
-    inputPropertyIsMissing() : T {
+    inputParamIsMissing() : T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'inputPropertyIsMissing'));
+        (ErrorType.INPUT_ERROR,'inputParamIsMissing'));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for unknownInputProperty.
-     * The BackError error can be thrown if the input object has an unknown input property.
+     * Preset for unknownInputParam.
+     * The BackError error can be thrown if the input object has an unknown input param.
      * Possibilities are:
-     * propertyName (the unknown input property name)
+     * paramName (the unknown input param name)
      */
-    unknownInputProperty() : T {
+    unknownInputParam() : T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'unknownInputProperty'));
+        (ErrorType.INPUT_ERROR,'unknownInputParam'));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputNotAssignable.
-     * The BackError error can be thrown if you send the input with type array and the input is not assignable.
+     * Preset for inputParamNotAssignable.
+     * The BackError error can be thrown if you send input to a
+     * parameter based input with data type array and the array
+     * index is not assignable to a param name.
      * Possibilities are:
-     * index (index of input that is not assignable)
-     * value (input value that is not assignable)
+     * index (index of the input param that is not assignable)
+     * value (input value of the input param that is not assignable)
      */
-    inputNotAssignable() : T {
+    inputParamNotAssignable() : T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'inputNotAssignable'));
+        (ErrorType.INPUT_ERROR,'inputParamNotAssignable'));
         return this.self();
     }
 
