@@ -52,7 +52,6 @@ export enum ZationHttpInfo {
 
 export interface ZationResponse {
     e : ResponseBackError[],
-    s : boolean,
     r : {
         r ?: any,
         s ?: string | number

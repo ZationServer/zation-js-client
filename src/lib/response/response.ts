@@ -273,10 +273,6 @@ export class Response
 
     private _readData(data : ZationResponse)
     {
-        if (typeof data.s === 'boolean') {
-            this.successful = data.s;
-        }
-
         if (typeof data.r === 'object') {
             if (data.r.r !== undefined) {
                 this.result = data.r.r;
@@ -292,12 +288,18 @@ export class Response
         if (Array.isArray(data.e))
         {
             const errors : any[] = data.e;
+
+            this.successful = errors.length === 0;
+
             for(let i = 0; i < errors.length; i++)
             {
                 if(typeof errors[i] === 'object') {
                     this.erros.push(new BackError(errors[i]));
                 }
             }
+        }
+        else {
+            this.successful = true;
         }
 
         if(Array.isArray(data.zhi)) {
@@ -307,6 +309,7 @@ export class Response
         if(this.isHttpProtocolType() && typeof data.t === 'object')
         {
             const token = data.t;
+            // noinspection SuspiciousTypeOfGuard
             if(typeof token.pt === 'object' &&
                typeof token.st === 'string')
             {
