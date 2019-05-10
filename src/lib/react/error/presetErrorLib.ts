@@ -1539,18 +1539,17 @@ export abstract class PresetErrorLib<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputPathInControllerNotFound.
-     * The BackError error can be thrown if the input path in the controller is not found.
-     * Can only thrown by an validation request.
+     * Preset for inputPathNotResolvable.
+     * The BackError error can be thrown if the input path is not resolvable.
+     * Can only be thrown by a validation request.
      * More info checks you need to do by yourself.
      * Possibilities are:
-     * controllerName
      * inputPath
      * checkIndex
      */
-    inputPathInControllerNotFound() : T {
+    inputPathNotResolvable() : T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'inputPathInControllerNotFound'));
+        (ErrorType.INPUT_ERROR,'inputPathNotResolvable'));
         return this.self();
     }
 
