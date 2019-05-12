@@ -71,7 +71,8 @@ export class ZationConfig
             handshakeVariables : {},
             useAllServerSettings : false,
             autoReconnect : true,
-            autoReconnectOptions : {}
+            autoReconnectOptions : {},
+            requestTimeout : 10000
         };
     }
 

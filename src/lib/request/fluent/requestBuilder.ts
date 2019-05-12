@@ -106,7 +106,7 @@ export class RequestBuilder extends AbstractRequestBuilder<RequestBuilder>
             request.setHttpAttachedContent(this._httpAttachedContent);
         }
         request.setApiLevel(this._apiLevel);
-        request.setAckTimeout(this._ackTimeout);
+        request.setTimeout(this._timeout);
         return request;
     }
 

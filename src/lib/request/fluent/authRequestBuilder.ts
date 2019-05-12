@@ -42,7 +42,7 @@ export class AuthRequestBuilder extends AbstractRequestBuilder<AuthRequestBuilde
     {
         const req = new AuthRequest(this._authData,this._protocol);
         req.setApiLevel(this._apiLevel);
-        req.setAckTimeout(this._ackTimeout);
+        req.setTimeout(this._timeout);
         req.setHttpAttachedContent(this._httpAttachedContent);
         return req;
     }

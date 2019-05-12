@@ -483,7 +483,7 @@ export class Zation
 
         let response : Response;
         if(sendAble.getProtocol() === ProtocolType.WebSocket) {
-            response = await SendEngine.wsSend(this,jsonObj,sendAble.getAckTimeout(),ph);
+            response = await SendEngine.wsSend(this,jsonObj,sendAble.getTimeout(),ph);
         }
         else {
             let attachedHttpContent : undefined | {key : string, data : Blob | string}[] = undefined;
@@ -492,7 +492,7 @@ export class Zation
                 attachedHttpContent = sendAble.getAttachedHttpContent();
             }
 
-            response = await SendEngine.httpSend(this,jsonObj,attachedHttpContent,ph);
+            response = await SendEngine.httpSend(this,jsonObj,sendAble.getTimeout(),attachedHttpContent,ph);
         }
 
         await this._respondsActions(response);
@@ -771,6 +771,7 @@ export class Zation
             autoConnect : false,
             multiplex : this.zc.config.multiplex,
             timestampRequests : this.zc.config.timestampRequests,
+            ackTimeout : this.zc.config.requestTimeout,
             query: {
                 system : this.zc.config.system,
                 version : this.zc.config.version,
@@ -1490,5 +1491,16 @@ export class Zation
             await eventReactionBox._trigger(event,...arg);
         });
     }
-}
 
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the zation config.
+     * Used internally.
+     * Only use this method carefully.
+     */
+    getZc() : ZationConfig {
+        return this.zc;
+    }
+
+}

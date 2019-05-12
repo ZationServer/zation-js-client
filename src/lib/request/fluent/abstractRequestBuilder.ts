@@ -25,7 +25,7 @@ export abstract class AbstractRequestBuilder<T>
 
     protected _protocol : ProtocolType = ProtocolType.WebSocket;
     protected _apiLevel : number | undefined = undefined;
-    protected _ackTimeout : null | number | undefined;
+    protected _timeout : null | number | undefined = undefined;
     private _progressHandler : ProgressHandler[] = [];
     private _responseReactionBox : ResponseReactionBox;
     private _reactionAdded : boolean = false;
@@ -97,15 +97,14 @@ export abstract class AbstractRequestBuilder<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Set the ack timeout of the request.
-     * Value can be null which means the ack timeout is disabled or
-     * undefined that means use the default from socketCluster that is 10s or
-     * it can be a number that indicates the milliseconds.
-     * Notice that the ack timeout works only with WebSocket requests.
+     * Set the timeout of the request.
+     * Value can be null which means the timeout is disabled or
+     * undefined then it will use the default timeout of the zation config,
+     * or it can be a number that indicates the milliseconds.
      * @param timeout
      */
-    ackTimeout(timeout : null | undefined | number) : T {
-        this._ackTimeout = timeout;
+    timeout(timeout : null | undefined | number) : T {
+        this._timeout = timeout;
         return this.self();
     }
 

@@ -148,6 +148,12 @@ export interface ZationOptions {
          */
         maxDelay ?: number
     }
+
+    /**
+     * Specifies the default request timeout.
+     * @default 10000
+     */
+    requestTimeout ?: number;
 }
 
 export interface ZationOptionsInternal extends ZationOptions{
@@ -175,4 +181,5 @@ export interface ZationOptionsInternal extends ZationOptions{
         multiplier ?: number,
         maxDelay ?: number
     }
+    requestTimeout : number;
 }

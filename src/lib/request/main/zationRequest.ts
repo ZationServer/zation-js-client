@@ -16,7 +16,7 @@ export abstract class ZationRequest extends SendAble
     private readonly data: any;
     private readonly type: ProtocolType;
     protected apiLevel : number | undefined;
-    private ackTimeout : null | number | undefined;
+    private timeout : null | number | undefined = undefined;
 
     private compiledData : object | any[];
     private progressHandler: ProgressHandler | undefined = undefined;
@@ -49,14 +49,13 @@ export abstract class ZationRequest extends SendAble
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the ack timeout of the request.
-     * Value can be null which means the ack timeout is disabled or
-     * undefined that means use the default from socketCluster that is 10s or
-     * it can be a number that indicates the milliseconds.
-     * Notice that the ack timeout works only with WebSocket requests.
+     * Returns the timeout of the request.
+     * Value can be null which means the timeout is disabled or
+     * undefined then it will use the default timeout of the zation config,
+     * or it can be a number that indicates the milliseconds.
      */
-    getAckTimeout(): number | null | undefined {
-        return this.ackTimeout;
+    getTimeout(): number | null | undefined {
+        return this.timeout;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -72,15 +71,14 @@ export abstract class ZationRequest extends SendAble
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Set the ack timeout of the request.
-     * Value can be null which means the ack timeout is disabled or
-     * undefined that means use the default from socketCluster that is 10s or
-     * it can be a number that indicates the milliseconds.
-     * Notice that the ack timeout works only with WebSocket requests.
-     * @param ackTimeout
+     * Set the timeout of the request.
+     * Value can be null which means the timeout is disabled or
+     * undefined then it will use the default timeout of the zation config,
+     * or it can be a number that indicates the milliseconds.
+     * @param timeout
      */
-    setAckTimeout(ackTimeout : number | null | undefined): void {
-        this.ackTimeout = ackTimeout;
+    setTimeout(timeout : number | null | undefined): void {
+        this.timeout = timeout;
     }
 
     // noinspection JSUnusedGlobalSymbols

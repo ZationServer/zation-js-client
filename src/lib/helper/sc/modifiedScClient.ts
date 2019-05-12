@@ -159,7 +159,7 @@ SocketClusterClient.SCClientSocket.prototype._emit = function (event, data, call
     eventNode.data = eventObject;
 
     if(ackTimeout === undefined){
-        ackTimeout = this.ackTimeout;
+        ackTimeout = this.timeout;
     }
 
     if(typeof ackTimeout === 'number'){

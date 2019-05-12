@@ -17,7 +17,7 @@ import stringify                from "fast-stringify";
 
 export class SendEngine
 {
-    static wsSend(zation : Zation,data : object,ackTimeout : null | number | undefined,progressHandler ?: ProgressHandler) : Promise<Response>
+    static wsSend(zation : Zation,data : object,timeout : null | number | undefined,progressHandler ?: ProgressHandler) : Promise<Response>
     {
         return new Promise(async (resolve, reject)=>
         {
@@ -44,7 +44,7 @@ export class SendEngine
                     else {
                         reject(new ResultIsMissingError())
                     }
-                },ackTimeout);
+                },timeout);
             }
             else {
                 reject(new ConnectionNeededError('By sending an webSocket request!'));
@@ -52,7 +52,13 @@ export class SendEngine
         });
     }
 
-    static async httpSend(zation : Zation,data : object,attachedContent ?: {key : string,data : Blob | string}[],progressHandler ?: ProgressHandler) : Promise<Response>
+    static async httpSend(
+        zation : Zation,
+        data : object,
+        timeout : null | number | undefined,
+        attachedContent ?: {key : string,data : Blob | string}[],
+        progressHandler ?: ProgressHandler
+    ) : Promise<Response>
     {
         return new Promise<Response>(async (resolve,reject) =>
         {
@@ -62,6 +68,10 @@ export class SendEngine
                 config.onUploadProgress = progressEvent => {
                     progressHandler(Math.round( (progressEvent.loaded * 100) / progressEvent.total));
                 };
+            }
+
+            if(timeout !== null){
+               config.timeout = timeout === undefined ? zation.getZc().config.requestTimeout : timeout;
             }
 
             const bodyFormData = new FormData();
