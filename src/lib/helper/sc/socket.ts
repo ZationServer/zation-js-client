@@ -32,7 +32,7 @@ export interface Socket
     getAuthToken() : null | object;
     getSignedAuthToken() : null | string;
     disconnect(code ?: number, data ?: string | object) : void;
-    emit(event : string,data : any, callback : ResponseFunction | undefined,ackTimeout ?: null | number) : void;
+    emit(event : string,data : any, callback : ResponseFunction | undefined,timeout ?: null | number) : void;
     on(event : string, handler : OnHandlerFunction) : void;
     off(event ?: string, handler ?: Function) : void;
     send(data : any, options ?: object) : void;
