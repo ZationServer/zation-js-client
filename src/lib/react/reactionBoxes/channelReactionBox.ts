@@ -71,7 +71,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on publish for any channel.
      * @example
-     * onPubAnyCh((data,socketSrcSid,eventName,fullChName) => {});
+     * onPubAnyCh('myEvent',(data,socketSrcSid,eventName,fullChName) => {});
      * @param event
      * You can also respond to multiple events by giving an event array.
      * Or to all events if you pass as parameter null.
@@ -94,7 +94,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * oncePubAnyCh((data,socketSrcSid,eventName,fullChName) => {});
+     * oncePubAnyCh('myEvent',(data,socketSrcSid,eventName,fullChName) => {});
      * @param event
      * You can also respond to multiple events by giving an event array.
      * Or to all events if you pass as parameter null.
@@ -126,7 +126,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on publish for the user channel.
      * @example
-     * onPubUserCh((data,socketSrcSid,event) => {});
+     * onPubUserCh('myEvent',(data,socketSrcSid,event) => {});
      * @param event
      * You can also respond to multiple events by giving an event array.
      * Or to all events if you pass as parameter null.
@@ -149,7 +149,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * oncePubUserCh((data,socketSrcSid,event) => {});
+     * oncePubUserCh('myEvent',(data,socketSrcSid,event) => {});
      * @param event
      * You can also respond to multiple events by giving an event array.
      * Or to all events if you pass as parameter null.
@@ -181,7 +181,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on publish for the auth user group channel.
      * @example
-     * onPubAuthUserGroupCh((data,socketSrcSid,event) => {});
+     * onPubAuthUserGroupCh('myEvent',(data,socketSrcSid,event) => {});
      * @param event
      * You can also respond to multiple events by giving an event array.
      * Or to all events if you pass as parameter null.
@@ -204,7 +204,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * oncePubAuthUserGroupCh((data,socketSrcSid,event) => {});
+     * oncePubAuthUserGroupCh('myEvent',(data,socketSrcSid,event) => {});
      * @param event
      * You can also respond to multiple events by giving an event array.
      * Or to all events if you pass as parameter null.
@@ -236,7 +236,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on publish for the default user group channel.
      * @example
-     * onPubDefaultUserGroupCh((data,socketSrcSid,event) => {});
+     * onPubDefaultUserGroupCh('myEvent',(data,socketSrcSid,event) => {});
      * @param event
      * You can also respond to multiple events by giving an event array.
      * Or to all events if you pass as parameter null.
@@ -259,7 +259,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * oncePubDefaultUserGroupCh((data,socketSrcSid,event) => {});
+     * oncePubDefaultUserGroupCh('myEvent',(data,socketSrcSid,event) => {});
      * @param event
      * You can also respond to multiple events by giving an event array.
      * Or to all events if you pass as parameter null.
@@ -291,7 +291,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on publish for the all channel.
      * @example
-     * onPubAllCh((data,socketSrcSid,event) => {});
+     * onPubAllCh('myEvent',(data,socketSrcSid,event) => {});
      * @param event
      * You can also respond to multiple events by giving an event array.
      * Or to all events if you pass as parameter null.
@@ -314,7 +314,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * oncePubAllCh((data,socketSrcSid,event) => {});
+     * oncePubAllCh('myEvent',(data,socketSrcSid,event) => {});
      * @param event
      * You can also respond to multiple events by giving an event array.
      * Or to all events if you pass as parameter null.
@@ -346,7 +346,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on publish for an custom channel.
      * @example
-     * onPubCustomCh((data,socketSrcSid,event,chName) => {});
+     * onPubCustomCh('name','myEvent',(data,socketSrcSid,event,chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -372,7 +372,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * oncePubCustomCh((data,socketSrcSid,event,chName) => {});
+     * oncePubCustomCh('name','myEvent',(data,socketSrcSid,event,chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -407,7 +407,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on publish for an custom id channel.
      * @example
-     * onPubCustomIdCh((data,socketSrcSid,event,chId,chName) => {});
+     * onPubCustomIdCh('name','id','myEvent',(data,socketSrcSid,event,chId,chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -436,7 +436,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * oncePubCustomIdCh((data,socketSrcSid,event,chId,chName) => {});
+     * oncePubCustomIdCh('name','id','myEvent',(data,socketSrcSid,event,chId,chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -475,7 +475,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on publish for the panel out channel.
      * @example
-     * onPubPanelOutCh((data,socketSrcSid,event) => {});
+     * onPubPanelOutCh('myEvent',(data,socketSrcSid,event) => {});
      * @param event
      * You can also respond to multiple events by giving an event array.
      * Or to all events if you pass as parameter null.
@@ -498,7 +498,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * oncePubPanelOutCh((data,socketSrcSid,event) => {});
+     * oncePubPanelOutCh('myEvent',(data,socketSrcSid,event) => {});
      * @param event
      * You can also respond to multiple events by giving an event array.
      * Or to all events if you pass as parameter null.
@@ -776,7 +776,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on kick out for an custom channel.
      * @example
-     * onKickOutCustomCh((message,chName) => {});
+     * onKickOutCustomCh('name',(message,chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -799,7 +799,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * onceKickOutCustomCh((message,chName) => {});
+     * onceKickOutCustomCh('name',(message,chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -831,7 +831,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on kick out for an custom id channel.
      * @example
-     * onKickOutCustomCh((message,chId,chName) => {});
+     * onKickOutCustomCh('name','id',(message,chId,chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -857,7 +857,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * onceKickOutCustomCh((message,chId,chName) => {});
+     * onceKickOutCustomCh('name','id',(message,chId,chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -1187,7 +1187,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on sub fail for an custom channel.
      * @example
-     * onSubFailCustomCh((error,chName) => {});
+     * onSubFailCustomCh('name',(error,chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -1210,7 +1210,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * onceSubFailCustomCh((error,chName) => {});
+     * onceSubFailCustomCh('name',(error,chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -1242,7 +1242,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on sub fail for an custom id channel.
      * @example
-     * onSubFailCustomIdCh((error,chId,chName) => {});
+     * onSubFailCustomIdCh('name','id',(error,chId,chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -1268,7 +1268,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * onceSubFailCustomIdCh((error,chId,chName) => {});
+     * onceSubFailCustomIdCh('name','id',(error,chId,chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -1598,7 +1598,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on sub for an custom channel.
      * @example
-     * onSubCustomCh((chName) => {});
+     * onSubCustomCh('name',(chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -1621,7 +1621,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * onceSubCustomCh((chName) => {});
+     * onceSubCustomCh('name',(chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -1653,7 +1653,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on sub for an custom id channel.
      * @example
-     * onSubCustomCh((chId,chName) => {});
+     * onSubCustomCh('name','id',(chId,chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -1679,7 +1679,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * onceSubCustomCh((chId,chName) => {});
+     * onceSubCustomCh('name','id',(chId,chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -2010,7 +2010,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on client unsub for an custom channel.
      * @example
-     * onClientUnsubCustomCh((chName) => {});
+     * onClientUnsubCustomCh('name',(chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -2033,7 +2033,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * onceClientUnsubCustomCh((chName) => {});
+     * onceClientUnsubCustomCh('name',(chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -2065,7 +2065,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on client unsub for an custom id channel.
      * @example
-     * onClientUnsubCustomCh((chId,chName) => {});
+     * onClientUnsubCustomCh('name','id',(chId,chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -2091,7 +2091,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * onceClientUnsubCustomCh((chId,chName) => {});
+     * onceClientUnsubCustomCh('name','id',(chId,chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -2422,7 +2422,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on unsub for an custom channel.
      * @example
-     * onUnsubCustomCh((fromClient,chName) => {});
+     * onUnsubCustomCh('name',(fromClient,chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -2445,7 +2445,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * onceUnsubCustomCh((fromClient,chName) => {});
+     * onceUnsubCustomCh('name',(fromClient,chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -2477,7 +2477,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on unsub for an custom id channel.
      * @example
-     * onUnsubCustomCh((fromClient,chId,chName) => {});
+     * onUnsubCustomCh('name','id',(fromClient,chId,chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
@@ -2503,7 +2503,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * onceUnsubCustomCh((fromClient,chId,chName) => {});
+     * onceUnsubCustomCh('name','id',(fromClient,chId,chName) => {});
      * @param chName
      * You can also respond to multiple channel names by giving an channel name array.
      * Or to all channel names if you pass as parameter null.
