@@ -33,10 +33,10 @@ import {SubscribeFailedError}          from "./lib/helper/error/subscribeFailedE
 import {Response}                      from "./lib/response/response";
 import {ZationSaver}                   from "./lib/mainApi/zationSaver";
 import {NoZationClientSetOnTheKey}     from "./lib/helper/error/noZationClientSetOnTheKey";
-import {AbstractRequestHelper}         from "./lib/request/fluent/abstractRequestHelper";
-import {AuthRequestHelper}             from "./lib/request/fluent/authRequestHelper";
-import {RequestHelper}                 from "./lib/request/fluent/requestHelper";
-import {ValidationRequestHelper}       from "./lib/request/fluent/validationRequestHelper";
+import {AbstractRequestBuilder}         from "./lib/request/fluent/abstractRequestBuilder";
+import {AuthRequestBuilder}             from "./lib/request/fluent/authRequestBuilder";
+import {RequestBuilder}                 from "./lib/request/fluent/requestBuilder";
+import {ValidationRequestBuilder}       from "./lib/request/fluent/validationRequestBuilder";
 import {ErrorFilterEngine}             from "./lib/react/respReactEngines/errorFilterEngine";
 import {PresetErrorLib}                from "./lib/react/error/presetErrorLib";
 import {ErrorFilter}                   from "./lib/react/error/errorFilter";
@@ -96,10 +96,10 @@ export {
     SubscribeFailedError,
     NoZationClientSetOnTheKey,
     ProtocolType,
-    AbstractRequestHelper,
-    AuthRequestHelper,
-    RequestHelper,
-    ValidationRequestHelper,
+    AbstractRequestBuilder,
+    AuthRequestBuilder,
+    RequestBuilder,
+    ValidationRequestBuilder,
     ErrorFilterEngine,
     PresetErrorLib,
     ErrorFilter,

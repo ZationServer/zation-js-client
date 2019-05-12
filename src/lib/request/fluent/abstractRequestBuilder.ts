@@ -19,11 +19,12 @@ import {ResponseReactionBox} from "../../react/reactionBoxes/responseReactionBox
 import {ZationRequest} from "../main/zationRequest";
 import {Response} from "../../response/response";
 
-export abstract class AbstractRequestHelper<T>
+export abstract class AbstractRequestBuilder<T>
 {
     protected readonly zation : Zation;
 
     protected _protocol : ProtocolType = ProtocolType.WebSocket;
+    protected _apiLevel : number | undefined = undefined;
     protected _ackTimeout : null | number | undefined;
     private _progressHandler : ProgressHandler[] = [];
     private _responseReactionBox : ResponseReactionBox;
@@ -39,12 +40,24 @@ export abstract class AbstractRequestHelper<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Set the protocolType
+     * Set the protocolType.
      * @param protocolType
      * @default webSocket
      */
     protocol(protocolType : ProtocolType) : T {
         this._protocol = protocolType;
+        return this.self();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Set the apiLevel of the request.
+     * @param apiLevel.
+     * @default undefined.
+     */
+    apiLevel(apiLevel : number | undefined) : T {
+        this._apiLevel = apiLevel;
         return this.self();
     }
 
@@ -250,8 +263,8 @@ export abstract class AbstractRequestHelper<T>
      * @description
      * Returns an OnErrorBuilder to easy react on error.
      */
-    buildOnError() : OnErrorBuilder<AbstractRequestHelper<T>,T> {
-        return new OnErrorBuilder<AbstractRequestHelper<T>,T>(this);
+    buildOnError() : OnErrorBuilder<AbstractRequestBuilder<T>,T> {
+        return new OnErrorBuilder<AbstractRequestBuilder<T>,T>(this);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -259,8 +272,8 @@ export abstract class AbstractRequestHelper<T>
      * @description
      * Returns an CatchErrorBuilder to easy catch an error.
      */
-    buildCatchError() : CatchErrorBuilder<AbstractRequestHelper<T>,T> {
-        return new CatchErrorBuilder<AbstractRequestHelper<T>,T>(this);
+    buildCatchError() : CatchErrorBuilder<AbstractRequestBuilder<T>,T> {
+        return new CatchErrorBuilder<AbstractRequestBuilder<T>,T>(this);
     }
 
     // noinspection JSUnusedGlobalSymbols

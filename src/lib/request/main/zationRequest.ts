@@ -15,6 +15,7 @@ export abstract class ZationRequest extends SendAble
 {
     private readonly data: any;
     private readonly type: ProtocolType;
+    protected apiLevel : number | undefined;
     private ackTimeout : null | number | undefined;
 
     private compiledData : object | any[];
@@ -39,6 +40,15 @@ export abstract class ZationRequest extends SendAble
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
+     * Returns the api level of the request.
+     */
+    getApiLevel() : number | undefined {
+        return this.apiLevel;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
      * Returns the ack timeout of the request.
      * Value can be null which means the ack timeout is disabled or
      * undefined that means use the default from socketCluster that is 10s or
@@ -47,6 +57,16 @@ export abstract class ZationRequest extends SendAble
      */
     getAckTimeout(): number | null | undefined {
         return this.ackTimeout;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Set the API level of the request.
+     * If you don't provide one the connection API level or server default API level will be used.
+     */
+    setApiLevel(apiLevel : number | undefined) : void {
+        this.apiLevel = apiLevel;
     }
 
     // noinspection JSUnusedGlobalSymbols

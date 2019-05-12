@@ -7,13 +7,13 @@ GitHub: LucaCode
 // noinspection TypeScriptPreferShortImport
 import {ProtocolType}          from "../../helper/constants/protocolType";
 import {HttpGetReq}            from "../../helper/constants/internal";
-import {AbstractRequestHelper} from "./abstractRequestHelper";
+import {AbstractRequestBuilder} from "./abstractRequestBuilder";
 import {Zation}                from "../../mainApi/zation";
 import {ZationRequest}         from "../main/zationRequest";
 import {HttpRequest}           from "../main/httpRequest";
 import {WsRequest}             from "../main/wsRequest";
 
-export class RequestHelper extends AbstractRequestHelper<RequestHelper>
+export class RequestBuilder extends AbstractRequestBuilder<RequestBuilder>
 {
     private _useAuth : boolean = true;
     private _controllerName : string = '';
@@ -32,7 +32,7 @@ export class RequestHelper extends AbstractRequestHelper<RequestHelper>
      * @param useAuth
      * @default true
      */
-    useAuth(useAuth : boolean) : RequestHelper {
+    useAuth(useAuth : boolean) : RequestBuilder {
         this._useAuth = useAuth;
         return this;
     }
@@ -44,7 +44,7 @@ export class RequestHelper extends AbstractRequestHelper<RequestHelper>
      * @param controllerName
      * @default ''
      */
-    controller(controllerName : string) : RequestHelper {
+    controller(controllerName : string) : RequestBuilder {
         this._controllerName = controllerName;
         return this;
     }
@@ -56,7 +56,7 @@ export class RequestHelper extends AbstractRequestHelper<RequestHelper>
      * @default false
      * @param isSystemController
      */
-    systemController(isSystemController : boolean) : RequestHelper {
+    systemController(isSystemController : boolean) : RequestBuilder {
         this._systemController = isSystemController;
         return this;
     }
@@ -68,7 +68,7 @@ export class RequestHelper extends AbstractRequestHelper<RequestHelper>
      * @param data
      * @default {}
      */
-    data(data : object | any[]) : RequestHelper {
+    data(data : object | any[]) : RequestBuilder {
         this._data = data;
         return this;
     }
@@ -83,7 +83,7 @@ export class RequestHelper extends AbstractRequestHelper<RequestHelper>
      * @param data
      * @default []
      */
-    attachHttpContent(key : string,data : string | Blob) : RequestHelper{
+    attachHttpContent(key : string,data : string | Blob) : RequestBuilder{
         this._httpAttachedContent.push({key,data});
         return this;
     }
@@ -105,6 +105,7 @@ export class RequestHelper extends AbstractRequestHelper<RequestHelper>
             request = new HttpRequest(this._controllerName,this._data,this._useAuth,this._systemController);
             request.setHttpAttachedContent(this._httpAttachedContent);
         }
+        request.setApiLevel(this._apiLevel);
         request.setAckTimeout(this._ackTimeout);
         return request;
     }
@@ -123,6 +124,10 @@ export class RequestHelper extends AbstractRequestHelper<RequestHelper>
         let params = `?${HttpGetReq.SYSTEM}=${this.zation.getSystem()}`;
         //version
         params += `&${HttpGetReq.VERSION}=${this.zation.getVersion()}`;
+
+        if(this._apiLevel){
+            params += `&${HttpGetReq.API_LEVEL}=${this._apiLevel}`;
+        }
 
         if(this._data !== undefined){
             //input
@@ -143,7 +148,7 @@ export class RequestHelper extends AbstractRequestHelper<RequestHelper>
         return this.zation.getServerAddress()+params;
     }
 
-    protected self() : RequestHelper{
+    protected self() : RequestBuilder{
         return this;
     }
 

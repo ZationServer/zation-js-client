@@ -15,6 +15,7 @@ export class RequestJsonBuilder
         isSystemController : boolean,
         system : string,
         version : number,
+        apiLevel : number | undefined,
         signToken ?: string | null
     ) : ZationRequest
     {
@@ -23,7 +24,8 @@ export class RequestJsonBuilder
             s : system,
             t : {
                 i : data,
-                [!isSystemController ? 'c' : 'sc'] : controllerName
+                [!isSystemController ? 'c' : 'sc'] : controllerName,
+                ...(apiLevel ? {al : apiLevel} : {})
             }
         };
 
@@ -37,24 +39,27 @@ export class RequestJsonBuilder
     (
         data : any,
         controllerName : string,
-        isSystemController : boolean
+        isSystemController : boolean,
+        apiLevel : number | undefined
     ) : ZationRequest
     {
-        return {
+        return  {
             t : {
                 [!isSystemController ? 'c' : 'sc'] : controllerName,
-                i : data
+                i : data,
+                ...(apiLevel ? {al : apiLevel} : {})
             }
         };
     }
 
-    static buildHttpAuthRequestData(data : any,system : string, version : number,signToken ?: string | null) : ZationRequest
+    static buildHttpAuthRequestData(data : any,system : string, version : number,apiLevel : number | undefined,signToken ?: string | null) : ZationRequest
     {
         const res : ZationRequest = {
             v : version,
             s : system,
             a : {
-                i : data
+                i : data,
+                ...(apiLevel ? {al : apiLevel} : {})
             }
         };
         if(!!signToken) {
@@ -63,21 +68,23 @@ export class RequestJsonBuilder
         return res;
     }
 
-    static buildWsAuthRequestData(data : any) : ZationRequest
+    static buildWsAuthRequestData(data : any,apiLevel : number | undefined) : ZationRequest
     {
         return {
            a : {
-               i : data
+               i : data,
+               ...(apiLevel ? {al : apiLevel} : {})
            }
         };
     }
 
-    static buildValidationRequestData(input : object | any[],controllerName : string,isSystemController : boolean) : ZationRequest
+    static buildValidationRequestData(input : object | any[],controllerName : string,isSystemController : boolean,apiLevel : number | undefined) : ZationRequest
     {
         return {
             v : {
                 [!isSystemController ? 'c' : 'sc'] : controllerName,
-                i : input
+                i : input,
+                ...(apiLevel ? {al : apiLevel} : {})
             }
         };
     }

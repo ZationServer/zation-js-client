@@ -21,9 +21,9 @@ import {ZationConfig}                from "../config/zationConfig";
 import {Box}                         from "../helper/box/box";
 import {ResponseReactionBox}         from "../react/reactionBoxes/responseReactionBox";
 import {ChannelReactionBox}          from "../react/reactionBoxes/channelReactionBox";
-import {RequestHelper}               from "../request/fluent/requestHelper";
-import {AuthRequestHelper}           from "../request/fluent/authRequestHelper";
-import {ValidationRequestHelper}     from "../request/fluent/validationRequestHelper";
+import {RequestBuilder}               from "../request/fluent/requestBuilder";
+import {AuthRequestBuilder}           from "../request/fluent/authRequestBuilder";
+import {ValidationRequestBuilder}     from "../request/fluent/validationRequestBuilder";
 import {ZationRequest}               from "../request/main/zationRequest";
 import {SendEngine}                  from "../helper/send/sendEngine";
 import {ConnectionAbortError}        from "../helper/error/connectionAbortError";
@@ -386,8 +386,8 @@ export class Zation
      * @param controllerName
      * @param data
      */
-    request(controllerName : string = '',data : object = {}) : RequestHelper {
-        const helper = new RequestHelper(this);
+    request(controllerName : string = '',data : object = {}) : RequestBuilder {
+        const helper = new RequestBuilder(this);
         helper.controller(controllerName);
         helper.data(data);
         return helper;
@@ -415,8 +415,8 @@ export class Zation
      * @param authData
      * @param protocolType
      */
-    authRequest(authData : object = {}, protocolType : ProtocolType = ProtocolType.WebSocket) : AuthRequestHelper {
-        const helper = new AuthRequestHelper(this);
+    authRequest(authData : object = {}, protocolType : ProtocolType = ProtocolType.WebSocket) : AuthRequestBuilder {
+        const helper = new AuthRequestBuilder(this);
         helper.protocol(protocolType);
         helper.authData(authData);
         return helper;
@@ -446,8 +446,8 @@ export class Zation
      * @param controllerName
      * @param checks
      */
-    validationRequest(controllerName : string = '',...checks : ValidationCheck[]) : ValidationRequestHelper {
-        const helper = new ValidationRequestHelper(this);
+    validationRequest(controllerName : string = '',...checks : ValidationCheck[]) : ValidationRequestBuilder {
+        const helper = new ValidationRequestBuilder(this);
         helper.controller(controllerName);
         helper.checks(...checks);
         return helper;
@@ -774,6 +774,7 @@ export class Zation
             query: {
                 system : this.zc.config.system,
                 version : this.zc.config.version,
+                apiLevel : this.zc.config.apiLevel,
                 variables : stringify(this.zc.config.handshakeVariables)
             }
         };

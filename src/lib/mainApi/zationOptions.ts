@@ -25,6 +25,13 @@ export interface ZationOptions {
      */
     version ?: number;
     /**
+     * The default connection API level that the client can support, it can be any integer number.
+     * Notice that you can define for every request a more specific API level that will override the connection API level.
+     * If you don't provide a connection or request API level the server will use a default API level.
+     * @default undefined
+     */
+    apiLevel ?: number;
+    /**
      * The hostname where the client should connect to.
      * Notice the default value can be overwritten from the server settings file
      * (if the data is available and the option useAllServerSettings is active).

@@ -6,11 +6,11 @@ GitHub: LucaCode
 
 import {ValidationCheck, ValidationRequest} from "../main/validationRequest";
 import {HttpGetReq}                         from "../../helper/constants/internal";
-import {AbstractRequestHelper}              from "./abstractRequestHelper";
+import {AbstractRequestBuilder}              from "./abstractRequestBuilder";
 import {Zation}                             from "../../mainApi/zation";
 import {ZationRequest}                      from "../main/zationRequest";
 
-export class ValidationRequestHelper extends AbstractRequestHelper<ValidationRequestHelper>
+export class ValidationRequestBuilder extends AbstractRequestBuilder<ValidationRequestBuilder>
 {
     private _controllerName : string = '';
     private _systemController : boolean = false;
@@ -27,7 +27,7 @@ export class ValidationRequestHelper extends AbstractRequestHelper<ValidationReq
      * @param controllerName
      * @default ''
      */
-    controller(controllerName : string) : ValidationRequestHelper {
+    controller(controllerName : string) : ValidationRequestBuilder {
         this._controllerName = controllerName;
         return this;
     }
@@ -39,7 +39,7 @@ export class ValidationRequestHelper extends AbstractRequestHelper<ValidationReq
      * @default false
      * @param isSystemController
      */
-    systemController(isSystemController : boolean) : ValidationRequestHelper {
+    systemController(isSystemController : boolean) : ValidationRequestBuilder {
         this._systemController = isSystemController;
         return this;
     }
@@ -50,7 +50,7 @@ export class ValidationRequestHelper extends AbstractRequestHelper<ValidationReq
      * Add validation checks.
      * @param checks
      */
-    checks(...checks : ValidationCheck[]) : ValidationRequestHelper {
+    checks(...checks : ValidationCheck[]) : ValidationRequestBuilder {
         this._checks.push(...checks);
         return this;
     }
@@ -62,7 +62,7 @@ export class ValidationRequestHelper extends AbstractRequestHelper<ValidationReq
      * @param inputPath
      * @param value
      */
-    check(inputPath : string | string[],value : any) : ValidationRequestHelper {
+    check(inputPath : string | string[],value : any) : ValidationRequestBuilder {
         this._checks.push({ip : inputPath, v : value});
         return this;
     }
@@ -75,7 +75,8 @@ export class ValidationRequestHelper extends AbstractRequestHelper<ValidationReq
      */
     buildRequest() : ZationRequest
     {
-        const req = new ValidationRequest(this._controllerName,this._checks,this._systemController,this._protocol)
+        const req = new ValidationRequest(this._controllerName,this._checks,this._systemController,this._protocol);
+        req.setApiLevel(this._apiLevel);
         req.setAckTimeout(this._ackTimeout);
         return req;
     }
@@ -93,6 +94,11 @@ export class ValidationRequestHelper extends AbstractRequestHelper<ValidationReq
         let params = `?${HttpGetReq.INPUT}=${JSON.stringify(this._checks)}`;
         //vali req
         params += `&${HttpGetReq.VALI_REQ}=true`;
+
+        if(this._apiLevel){
+            params += `&${HttpGetReq.API_LEVEL}=${this._apiLevel}`;
+        }
+
         //controller
         if(this._systemController) {
             params += `&${HttpGetReq.SYSTEM_CONTROLLER}=${this._controllerName}`;
@@ -103,7 +109,7 @@ export class ValidationRequestHelper extends AbstractRequestHelper<ValidationReq
         return this.zation.getServerAddress()+params;
     }
 
-    protected self() : ValidationRequestHelper {
+    protected self() : ValidationRequestBuilder {
         return this;
     }
 

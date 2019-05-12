@@ -23,7 +23,7 @@ export class AuthRequest extends ZationRequest
         const compiledData = await this.getCompiledData();
 
         if(this.getProtocol() === ProtocolType.WebSocket) {
-            return RequestJsonBuilder.buildWsAuthRequestData(compiledData);
+            return RequestJsonBuilder.buildWsAuthRequestData(compiledData,this.apiLevel);
         }
         else {
             let signToken : null | string = null;
@@ -34,6 +34,7 @@ export class AuthRequest extends ZationRequest
                 compiledData,
                 zation.getSystem(),
                 zation.getVersion(),
+                this.apiLevel,
                 signToken
             )
         }

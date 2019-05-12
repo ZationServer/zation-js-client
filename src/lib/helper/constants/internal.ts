@@ -14,15 +14,18 @@ export interface ZationRequest {
     t ?: {
         i : object | any[]
         c ?: string,
-        sc ?: string
+        sc ?: string,
+        al ?: number
     }
     a ?: {
         i : object | any[],
+        al ?: number
     },
     v ?: {
         i : any[] | object,
         c ?: string,
-        sc ?: string
+        sc ?: string,
+        al ?: number
     } | number
 }
 
@@ -42,6 +45,7 @@ export enum HttpGetReq {
     VALI_REQ = 'vr',
     CONTROLLER = 'c',
     SYSTEM_CONTROLLER = 'sc',
+    API_LEVEL = 'al',
     INPUT = 'i',
     TOKEN = 't'
 }

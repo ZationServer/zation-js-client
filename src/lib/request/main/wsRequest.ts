@@ -31,7 +31,7 @@ export class WsRequest extends ZationRequest
             compiledData,
             this.controllerName,
             this.isSystemController,
-        )
+            this.apiLevel
+        );
     }
 }
-

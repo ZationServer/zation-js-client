@@ -6,12 +6,12 @@ GitHub: LucaCode
 
 
 import {HttpGetReq}            from "../../helper/constants/internal";
-import {AbstractRequestHelper} from "./abstractRequestHelper";
+import {AbstractRequestBuilder} from "./abstractRequestBuilder";
 import {Zation}                from "../../mainApi/zation";
 import {ZationRequest}         from "../main/zationRequest";
 import {AuthRequest}           from "../main/authRequest";
 
-export class AuthRequestHelper extends AbstractRequestHelper<AuthRequestHelper>
+export class AuthRequestBuilder extends AbstractRequestBuilder<AuthRequestBuilder>
 {
     private _authData : object = {};
     private _httpAttachedContent : {key : string,data : string | Blob}[] = [];
@@ -27,7 +27,7 @@ export class AuthRequestHelper extends AbstractRequestHelper<AuthRequestHelper>
      * @param data
      * @default {}
      */
-    authData(data : object | any[]) : AuthRequestHelper {
+    authData(data : object | any[]) : AuthRequestBuilder {
         this._authData = data;
         return this;
     }
@@ -41,6 +41,7 @@ export class AuthRequestHelper extends AbstractRequestHelper<AuthRequestHelper>
     buildRequest() : ZationRequest
     {
         const req = new AuthRequest(this._authData,this._protocol);
+        req.setApiLevel(this._apiLevel);
         req.setAckTimeout(this._ackTimeout);
         req.setHttpAttachedContent(this._httpAttachedContent);
         return req;
@@ -56,7 +57,7 @@ export class AuthRequestHelper extends AbstractRequestHelper<AuthRequestHelper>
      * @param data
      * @default []
      */
-    attachHttpContent(key : string,data : string | Blob) : AuthRequestHelper {
+    attachHttpContent(key : string,data : string | Blob) : AuthRequestBuilder {
         this._httpAttachedContent.push({key,data});
         return this;
     }
@@ -76,6 +77,10 @@ export class AuthRequestHelper extends AbstractRequestHelper<AuthRequestHelper>
         //version
         params += `&${HttpGetReq.VALI_REQ}=${this.zation.getVersion()}`;
 
+        if(this._apiLevel){
+            params += `&${HttpGetReq.API_LEVEL}=${this._apiLevel}`;
+        }
+
         if(this._authData !== undefined){
             //input
             params += `&${HttpGetReq.INPUT}=${JSON.stringify(this._authData)}`;
@@ -85,7 +90,7 @@ export class AuthRequestHelper extends AbstractRequestHelper<AuthRequestHelper>
         return this.zation.getServerAddress()+params;
     }
 
-    protected self() : AuthRequestHelper {
+    protected self() : AuthRequestBuilder {
         return this;
     }
 

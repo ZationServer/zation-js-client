@@ -29,7 +29,8 @@ export class ValidationRequest extends ZationRequest
         return RequestJsonBuilder.buildValidationRequestData(
             compiledData,
             this.controllerName,
-            this.isSystemController
+            this.isSystemController,
+            this.apiLevel
         )
     }
 }
