@@ -1,6 +1,6 @@
 {
   "name": "zation-client",
-  "version": "0.7.6",
+  "version": "0.7.7",
   "license": "MIT",
   "description": "Appication Server Framework JavaScript Client",
   "main": "dist/index.js",
