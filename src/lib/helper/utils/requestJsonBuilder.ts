@@ -22,10 +22,10 @@ export class RequestJsonBuilder
         const request : ZationRequest = {
             v : version,
             s : system,
+            ...(apiLevel ? {al : apiLevel} : {}),
             t : {
                 i : data,
-                [!isSystemController ? 'c' : 'sc'] : controllerName,
-                ...(apiLevel ? {al : apiLevel} : {})
+                [!isSystemController ? 'c' : 'sc'] : controllerName
             }
         };
 
@@ -44,10 +44,10 @@ export class RequestJsonBuilder
     ) : ZationRequest
     {
         return  {
+            ...(apiLevel ? {al : apiLevel} : {}),
             t : {
                 [!isSystemController ? 'c' : 'sc'] : controllerName,
-                i : data,
-                ...(apiLevel ? {al : apiLevel} : {})
+                i : data
             }
         };
     }
@@ -57,9 +57,9 @@ export class RequestJsonBuilder
         const res : ZationRequest = {
             v : version,
             s : system,
+            ...(apiLevel ? {al : apiLevel} : {}),
             a : {
                 i : data,
-                ...(apiLevel ? {al : apiLevel} : {})
             }
         };
         if(!!signToken) {
@@ -71,20 +71,20 @@ export class RequestJsonBuilder
     static buildWsAuthRequestData(data : any,apiLevel : number | undefined) : ZationRequest
     {
         return {
-           a : {
-               i : data,
-               ...(apiLevel ? {al : apiLevel} : {})
-           }
+            ...(apiLevel ? {al : apiLevel} : {}),
+            a : {
+                i : data
+            }
         };
     }
 
     static buildValidationRequestData(input : object | any[],controllerName : string,isSystemController : boolean,apiLevel : number | undefined) : ZationRequest
     {
         return {
+            ...(apiLevel ? {al : apiLevel} : {}),
             v : {
                 [!isSystemController ? 'c' : 'sc'] : controllerName,
-                i : input,
-                ...(apiLevel ? {al : apiLevel} : {})
+                i : input
             }
         };
     }

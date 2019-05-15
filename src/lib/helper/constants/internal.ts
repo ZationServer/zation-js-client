@@ -11,21 +11,19 @@ export enum BackErrorInfo {
 export interface ZationRequest {
     s ?: string,
     to ?: string,
+    al ?: number
     t ?: {
         i : object | any[]
         c ?: string,
         sc ?: string,
-        al ?: number
     }
     a ?: {
-        i : object | any[],
-        al ?: number
+        i : object | any[]
     },
     v ?: {
         i : any[] | object,
         c ?: string,
-        sc ?: string,
-        al ?: number
+        sc ?: string
     } | number
 }
 
