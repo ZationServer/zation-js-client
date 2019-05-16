@@ -1244,6 +1244,22 @@ export abstract class PresetErrorLib<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
+     * Preset for apiLevelNotCompatible.
+     * The BackError error can be thrown when the API level of the client is not compatible with the request.
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * controllerName
+     * apiLevel
+     */
+    apiLevelNotCompatible() : T {
+        this._presetAdd(this._zationErrorBuild
+        (ErrorType.INPUT_ERROR,'apiLevelNotCompatible'));
+        return this.self();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
      * Preset for authControllerNotSet.
      * The BackError error can be thrown when no auth controller is set.
      */
