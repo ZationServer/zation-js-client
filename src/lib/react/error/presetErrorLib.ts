@@ -1215,10 +1215,10 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for controllerNotFound.
-     * The BackError error can be thrown when the controller name is not found.
+     * The BackError error can be thrown when the controller is not found.
      * More info checks you need to do by yourself.
      * Possibilities are:
-     * controllerName
+     * controllerId
      */
     controllerNotFound() : T {
         this._presetAdd(this._zationErrorBuild
@@ -1230,10 +1230,10 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for systemControllerNotFound.
-     * The BackError error can be thrown when the system controller name is not found.
+     * The BackError error can be thrown when the system controller is not found.
      * More info checks you need to do by yourself.
      * Possibilities are:
-     * controllerName
+     * controllerId
      */
     systemControllerNotFound() : T {
         this._presetAdd(this._zationErrorBuild
@@ -1248,7 +1248,7 @@ export abstract class PresetErrorLib<T>
      * The BackError error can be thrown when the API level of the client is not compatible with the request.
      * More info checks you need to do by yourself.
      * Possibilities are:
-     * controllerName
+     * controllerId
      * apiLevel
      */
     apiLevelNotCompatible() : T {
@@ -1605,7 +1605,7 @@ export abstract class PresetErrorLib<T>
      * with the requested protocol.
      * More info checks you need to do by yourself.
      * Possibilities are:
-     * controllerName
+     * controllerId
      * protocol
      */
     noAccessWithProtocol() : T {
@@ -1623,7 +1623,7 @@ export abstract class PresetErrorLib<T>
      * So the error can only throws by an http request.
      * More info checks you need to do by yourself.
      * Possibilities are:
-     * controllerName
+     * controllerId
      * method
      */
     noAccessWithHttpMethod() : T {

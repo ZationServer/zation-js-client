@@ -11,15 +11,15 @@ import {ZationRequest}      from "./zationRequest";
 
 export class HttpRequest extends ZationRequest
 {
-    private readonly controllerName : string;
+    private readonly controllerId : string;
     private readonly useAuth : boolean;
     private readonly isSystemController : boolean;
     private httpAttachedContent : {key : string,data : string | Blob}[] = [];
 
-    constructor(controllerName : string,data : any = undefined,useAuth : boolean = true,isSystemController : boolean = false)
+    constructor(controllerId : string,data : any = undefined,useAuth : boolean = true,isSystemController : boolean = false)
     {
         super(data,ProtocolType.Http);
-        this.controllerName = controllerName;
+        this.controllerId = controllerId;
         this.useAuth = useAuth;
         this.isSystemController = isSystemController;
     }
@@ -35,7 +35,7 @@ export class HttpRequest extends ZationRequest
 
         return RequestJsonBuilder.buildHttpRequestData(
             compiledData,
-            this.controllerName,
+            this.controllerId,
             this.isSystemController,
             zation.getSystem(),
             zation.getVersion(),

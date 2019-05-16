@@ -12,13 +12,13 @@ import {RequestJsonBuilder} from "../../helper/utils/requestJsonBuilder";
 
 export class ValidationRequest extends ZationRequest
 {
-    private readonly controllerName : string;
+    private readonly controllerId : string;
     private readonly isSystemController : boolean;
 
-    constructor(controllerName : string,checks : ValidationCheck[],isSystemController : boolean = false,protocol : ProtocolType = ProtocolType.Http)
+    constructor(controllerId : string,checks : ValidationCheck[],isSystemController : boolean = false,protocol : ProtocolType = ProtocolType.Http)
     {
         super(checks,protocol);
-        this.controllerName = controllerName;
+        this.controllerId = controllerId;
         this.isSystemController = isSystemController;
     }
 
@@ -28,7 +28,7 @@ export class ValidationRequest extends ZationRequest
 
         return RequestJsonBuilder.buildValidationRequestData(
             compiledData,
-            this.controllerName,
+            this.controllerId,
             this.isSystemController,
             this.apiLevel
         )

@@ -367,7 +367,7 @@ export class Zation
      * Where you can easy build an request with reactions and send it.
      * The default values are:
      * Protocol: WebSocket
-     * ControllerName: ''
+     * ControllerId: ''
      * Data: {}
      * SystemController: false
      * UseAuth: true
@@ -383,12 +383,12 @@ export class Zation
      * .catchError(()=>{console.log('Something went wrong')})
      * .onSuccessful(()=>{console.log('Message sent successfully')})
      * .send();
-     * @param controllerName
+     * @param controllerId
      * @param data
      */
-    request(controllerName : string = '',data : object = {}) : RequestBuilder {
+    request(controllerId : string = '',data : object = {}) : RequestBuilder {
         const helper = new RequestBuilder(this);
-        helper.controller(controllerName);
+        helper.controller(controllerId);
         helper.data(data);
         return helper;
     }
@@ -430,7 +430,7 @@ export class Zation
      * This is useful for validate individual controller parameters.
      * The default values are:
      * Protocol: WebSocket
-     * ControllerName: ''
+     * ControllerId: ''
      * Checks: []
      * @example
      * await zation.validationRequest()
@@ -443,12 +443,12 @@ export class Zation
      * .catchError(()=>{console.log('Something went wrong')})
      * .onSuccessful(()=>{console.log('Message is ok')})
      * .send();
-     * @param controllerName
+     * @param controllerId
      * @param checks
      */
-    validationRequest(controllerName : string = '',...checks : ValidationCheck[]) : ValidationRequestBuilder {
+    validationRequest(controllerId : string = '',...checks : ValidationCheck[]) : ValidationRequestBuilder {
         const helper = new ValidationRequestBuilder(this);
-        helper.controller(controllerName);
+        helper.controller(controllerId);
         helper.checks(...checks);
         return helper;
     }

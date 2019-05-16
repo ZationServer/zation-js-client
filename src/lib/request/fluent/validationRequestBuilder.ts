@@ -12,7 +12,7 @@ import {ZationRequest}                      from "../main/zationRequest";
 
 export class ValidationRequestBuilder extends AbstractRequestBuilder<ValidationRequestBuilder>
 {
-    private _controllerName : string = '';
+    private _controllerId : string = '';
     private _systemController : boolean = false;
     private _checks : ValidationCheck[] = [];
 
@@ -23,12 +23,12 @@ export class ValidationRequestBuilder extends AbstractRequestBuilder<ValidationR
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Set the controller name of the request.
-     * @param controllerName
+     * Set the controller id of the request.
+     * @param controllerId
      * @default ''
      */
-    controller(controllerName : string) : ValidationRequestBuilder {
-        this._controllerName = controllerName;
+    controller(controllerId : string) : ValidationRequestBuilder {
+        this._controllerId = controllerId;
         return this;
     }
 
@@ -75,7 +75,7 @@ export class ValidationRequestBuilder extends AbstractRequestBuilder<ValidationR
      */
     buildRequest() : ZationRequest
     {
-        const req = new ValidationRequest(this._controllerName,this._checks,this._systemController,this._protocol);
+        const req = new ValidationRequest(this._controllerId,this._checks,this._systemController,this._protocol);
         req.setApiLevel(this._apiLevel);
         req.setTimeout(this._timeout);
         return req;
@@ -101,10 +101,10 @@ export class ValidationRequestBuilder extends AbstractRequestBuilder<ValidationR
 
         //controller
         if(this._systemController) {
-            params += `&${HttpGetReq.SYSTEM_CONTROLLER}=${this._controllerName}`;
+            params += `&${HttpGetReq.SYSTEM_CONTROLLER}=${this._controllerId}`;
         }
         else {
-            params += `&${HttpGetReq.CONTROLLER}=${this._controllerName}`;
+            params += `&${HttpGetReq.CONTROLLER}=${this._controllerId}`;
         }
         return this.zation.getServerAddress()+params;
     }

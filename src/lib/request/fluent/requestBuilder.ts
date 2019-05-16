@@ -16,7 +16,7 @@ import {WsRequest}             from "../main/wsRequest";
 export class RequestBuilder extends AbstractRequestBuilder<RequestBuilder>
 {
     private _useAuth : boolean = true;
-    private _controllerName : string = '';
+    private _controllerId : string = '';
     private _systemController : boolean = false;
     private _data : object = {};
     private _httpAttachedContent : {key : string,data : string | Blob}[] = [];
@@ -40,12 +40,12 @@ export class RequestBuilder extends AbstractRequestBuilder<RequestBuilder>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Set the controller name of the request.
-     * @param controllerName
+     * Set the controller id of the request.
+     * @param controllerId
      * @default ''
      */
-    controller(controllerName : string) : RequestBuilder {
-        this._controllerName = controllerName;
+    controller(controllerId : string) : RequestBuilder {
+        this._controllerId = controllerId;
         return this;
     }
 
@@ -99,10 +99,10 @@ export class RequestBuilder extends AbstractRequestBuilder<RequestBuilder>
         let request;
         //buildRequest
         if(this._protocol === ProtocolType.WebSocket) {
-            request = new WsRequest(this._controllerName,this._data,this._systemController);
+            request = new WsRequest(this._controllerId,this._data,this._systemController);
         }
         else {
-            request = new HttpRequest(this._controllerName,this._data,this._useAuth,this._systemController);
+            request = new HttpRequest(this._controllerId,this._data,this._useAuth,this._systemController);
             request.setHttpAttachedContent(this._httpAttachedContent);
         }
         request.setApiLevel(this._apiLevel);
@@ -140,10 +140,10 @@ export class RequestBuilder extends AbstractRequestBuilder<RequestBuilder>
         }
         //controller
         if(this._systemController) {
-            params += `&${HttpGetReq.SYSTEM_CONTROLLER}=${this._controllerName}`;
+            params += `&${HttpGetReq.SYSTEM_CONTROLLER}=${this._controllerId}`;
         }
         else {
-            params += `&${HttpGetReq.CONTROLLER}=${this._controllerName}`;
+            params += `&${HttpGetReq.CONTROLLER}=${this._controllerId}`;
         }
         return this.zation.getServerAddress()+params;
     }
