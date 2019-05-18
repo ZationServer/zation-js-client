@@ -12,7 +12,7 @@ import {ZationRequest}                      from "../main/zationRequest";
 
 export class ValidationRequestBuilder extends AbstractRequestBuilder<ValidationRequestBuilder>
 {
-    private _controllerId : string = '';
+    private _controller : string = '';
     private _systemController : boolean = false;
     private _checks : ValidationCheck[] = [];
 
@@ -23,12 +23,12 @@ export class ValidationRequestBuilder extends AbstractRequestBuilder<ValidationR
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Set the controller id of the request.
-     * @param controllerId
+     * Set the controller of the request.
+     * @param controller
      * @default ''
      */
-    controller(controllerId : string) : ValidationRequestBuilder {
-        this._controllerId = controllerId;
+    controller(controller : string) : ValidationRequestBuilder {
+        this._controller = controller;
         return this;
     }
 
@@ -75,7 +75,7 @@ export class ValidationRequestBuilder extends AbstractRequestBuilder<ValidationR
      */
     buildRequest() : ZationRequest
     {
-        const req = new ValidationRequest(this._controllerId,this._checks,this._systemController,this._protocol);
+        const req = new ValidationRequest(this._controller,this._checks,this._systemController,this._protocol);
         req.setApiLevel(this._apiLevel);
         req.setTimeout(this._timeout);
         return req;
@@ -101,10 +101,10 @@ export class ValidationRequestBuilder extends AbstractRequestBuilder<ValidationR
 
         //controller
         if(this._systemController) {
-            params += `&${HttpGetReq.SYSTEM_CONTROLLER}=${this._controllerId}`;
+            params += `&${HttpGetReq.SYSTEM_CONTROLLER}=${this._controller}`;
         }
         else {
-            params += `&${HttpGetReq.CONTROLLER}=${this._controllerId}`;
+            params += `&${HttpGetReq.CONTROLLER}=${this._controller}`;
         }
         return this.zation.getServerAddress()+params;
     }

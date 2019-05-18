@@ -11,7 +11,7 @@ export class RequestJsonBuilder
     static buildHttpRequestData
     (
         data : any,
-        controllerId : string,
+        controller : string,
         isSystemController : boolean,
         system : string,
         version : number,
@@ -25,7 +25,7 @@ export class RequestJsonBuilder
             ...(apiLevel ? {al : apiLevel} : {}),
             t : {
                 i : data,
-                [!isSystemController ? 'c' : 'sc'] : controllerId
+                [!isSystemController ? 'c' : 'sc'] : controller
             }
         };
 
@@ -38,7 +38,7 @@ export class RequestJsonBuilder
     static buildWsRequestData
     (
         data : any,
-        controllerId : string,
+        controller : string,
         isSystemController : boolean,
         apiLevel : number | undefined
     ) : ZationRequest
@@ -46,7 +46,7 @@ export class RequestJsonBuilder
         return  {
             ...(apiLevel ? {al : apiLevel} : {}),
             t : {
-                [!isSystemController ? 'c' : 'sc'] : controllerId,
+                [!isSystemController ? 'c' : 'sc'] : controller,
                 i : data
             }
         };
@@ -78,12 +78,12 @@ export class RequestJsonBuilder
         };
     }
 
-    static buildValidationRequestData(input : object | any[],controllerId : string,isSystemController : boolean,apiLevel : number | undefined) : ZationRequest
+    static buildValidationRequestData(input : object | any[],controller : string,isSystemController : boolean,apiLevel : number | undefined) : ZationRequest
     {
         return {
             ...(apiLevel ? {al : apiLevel} : {}),
             v : {
-                [!isSystemController ? 'c' : 'sc'] : controllerId,
+                [!isSystemController ? 'c' : 'sc'] : controller,
                 i : input
             }
         };
