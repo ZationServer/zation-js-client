@@ -28,7 +28,7 @@ export class SendEngine
                     progressHandler(0);
                 }
 
-                socket.emit('ZATION.SERVER.REQUEST',data,async (err,res) =>
+                socket.emit('>',data,async (err,res) =>
                 {
                     if (!!progressHandler) {
                         progressHandler(100);
