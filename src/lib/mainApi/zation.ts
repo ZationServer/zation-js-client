@@ -462,7 +462,7 @@ export class Zation
      * Optional you can add a progressHandler and responseReactionBox/es.
      * Notice that the response boxes that are passed in are triggerd before the zation boxes.
      * But the zationBoxes are only triggerd if the triggerZationBoxes param is true.
-     * @throws ConnectionNeededError
+     * @throws ConnectionNeededError,TimeoutError
      * @return Response
      * @param sendAble
      * @param progressHandler

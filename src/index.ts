@@ -27,16 +27,16 @@ import {DeauthenticationNeededError}   from "./lib/helper/error/deauthentication
 import {MissingAuthUserGroupError}     from "./lib/helper/error/missingAuthUserGroupError";
 import {MissingUserIdError}            from "./lib/helper/error/missingUserIdError";
 import {PublishFailedError}            from "./lib/helper/error/publishFailedError";
-import {ResultIsMissingError}          from "./lib/helper/error/resultIsMissingError";
+import {TimeoutError}                  from "./lib/helper/error/timeoutError";
 import {SignAuthenticationFailedError} from "./lib/helper/error/signAuthenticationFailedError";
 import {SubscribeFailedError}          from "./lib/helper/error/subscribeFailedError";
 import {Response}                      from "./lib/response/response";
 import {ZationSaver}                   from "./lib/mainApi/zationSaver";
 import {NoZationClientSetOnTheKey}     from "./lib/helper/error/noZationClientSetOnTheKey";
-import {AbstractRequestBuilder}         from "./lib/request/fluent/abstractRequestBuilder";
-import {AuthRequestBuilder}             from "./lib/request/fluent/authRequestBuilder";
-import {RequestBuilder}                 from "./lib/request/fluent/requestBuilder";
-import {ValidationRequestBuilder}       from "./lib/request/fluent/validationRequestBuilder";
+import {AbstractRequestBuilder}        from "./lib/request/fluent/abstractRequestBuilder";
+import {AuthRequestBuilder}            from "./lib/request/fluent/authRequestBuilder";
+import {RequestBuilder}                from "./lib/request/fluent/requestBuilder";
+import {ValidationRequestBuilder}      from "./lib/request/fluent/validationRequestBuilder";
 import {ErrorFilterEngine}             from "./lib/react/respReactEngines/errorFilterEngine";
 import {PresetErrorLib}                from "./lib/react/error/presetErrorLib";
 import {ErrorFilter}                   from "./lib/react/error/errorFilter";
@@ -90,7 +90,7 @@ export {
     MissingAuthUserGroupError,
     MissingUserIdError,
     PublishFailedError,
-    ResultIsMissingError,
+    TimeoutError,
     SignAuthenticationFailedError,
     SocketNotCreatedError,
     SubscribeFailedError,

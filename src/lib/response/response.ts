@@ -273,48 +273,50 @@ export class Response
 
     private _readData(data : ZationResponse)
     {
-        if (typeof data.r === 'object') {
-            if (data.r.r !== undefined) {
-                this.result = data.r.r;
-            }
+        if(typeof data === 'object'){
+            if (typeof data.r === 'object') {
+                if (data.r.r !== undefined) {
+                    this.result = data.r.r;
+                }
 
-            if (typeof data.r.s === 'string' ||
-                typeof data.r.s === 'number'
-            ) {
-                this.statusCode = data.r.s;
-            }
-        }
-
-        if (Array.isArray(data.e))
-        {
-            const errors : any[] = data.e;
-
-            this.successful = errors.length === 0;
-
-            for(let i = 0; i < errors.length; i++)
-            {
-                if(typeof errors[i] === 'object') {
-                    this.erros.push(new BackError(errors[i]));
+                if (typeof data.r.s === 'string' ||
+                    typeof data.r.s === 'number'
+                ) {
+                    this.statusCode = data.r.s;
                 }
             }
-        }
-        else {
-            this.successful = true;
-        }
 
-        if(Array.isArray(data.zhi)) {
-            this.zationInfo = data.zhi;
-        }
-
-        if(this.isHttpProtocolType() && typeof data.t === 'object')
-        {
-            const token = data.t;
-            // noinspection SuspiciousTypeOfGuard
-            if(typeof token.pt === 'object' &&
-               typeof token.st === 'string')
+            if (Array.isArray(data.e))
             {
-                this.newPlainToken = token.pt;
-                this.newSignedToken = token.st;
+                const errors : any[] = data.e;
+
+                this.successful = errors.length === 0;
+
+                for(let i = 0; i < errors.length; i++)
+                {
+                    if(typeof errors[i] === 'object') {
+                        this.erros.push(new BackError(errors[i]));
+                    }
+                }
+            }
+            else {
+                this.successful = true;
+            }
+
+            if(Array.isArray(data.zhi)) {
+                this.zationInfo = data.zhi;
+            }
+
+            if(this.isHttpProtocolType() && typeof data.t === 'object')
+            {
+                const token = data.t;
+                // noinspection SuspiciousTypeOfGuard
+                if(typeof token.pt === 'object' &&
+                    typeof token.st === 'string')
+                {
+                    this.newPlainToken = token.pt;
+                    this.newSignedToken = token.st;
+                }
             }
         }
     }

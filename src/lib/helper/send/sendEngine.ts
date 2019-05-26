@@ -9,7 +9,8 @@ import {ProtocolType}           from "../constants/protocolType";
 import {ProgressHandler}        from "../../request/helper/progressHandler";
 import {Zation}                 from "../../mainApi/zation";
 import {Response}               from "../../response/response";
-import {ResultIsMissingError}   from "../error/resultIsMissingError";
+import {TimeoutError}           from "../error/timeoutError";
+const scErrors                = require('sc-errors');
 import {ConnectionNeededError}  from "../error/connectionNeededError";
 import axios, {AxiosRequestConfig} from 'axios';
 const FormData                = require('form-data');
@@ -21,28 +22,32 @@ export class SendEngine
     {
         return new Promise(async (resolve, reject)=>
         {
-            const socket = zation.getSocket();
-            if(zation.isConnected() && socket) {
+            if(zation.isConnected()) {
 
-                if (!!progressHandler) {
+                if (progressHandler) {
                     progressHandler(0);
                 }
 
-                socket.emit('>',data,async (err,res) =>
+                if(timeout !== null){
+                    timeout = timeout === undefined ? zation.getZc().config.requestTimeout : timeout;
+                }
+
+                zation.getSocket().emit('>',data,async (err,res) =>
                 {
-                    if (!!progressHandler) {
+                    if (progressHandler) {
                         progressHandler(100);
                     }
 
                     if(err) {
-                        reject(err);
-                    }
-                    if(res !== undefined) {
-                        let response = new Response(res,zation,ProtocolType.WebSocket);
-                        resolve(response);
+                        if(err instanceof scErrors.TimeoutError){
+                            reject(new TimeoutError(err.message));
+                        }
+                        else {
+                            reject(err);
+                        }
                     }
                     else {
-                        reject(new ResultIsMissingError())
+                        resolve((new Response(res,zation,ProtocolType.WebSocket)));
                     }
                 },timeout);
             }
@@ -91,7 +96,12 @@ export class SendEngine
                     resolve(new Response(await res.data,zation,ProtocolType.Http));
                 })
                 .catch((err) => {
-                    reject(err);
+                    if (err.code === 'ECONNABORTED') {
+                        reject(new TimeoutError(err.message));
+                    }
+                    else {
+                        reject(err);
+                    }
                 });
         });
     }

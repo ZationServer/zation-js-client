@@ -139,17 +139,17 @@ SocketClusterClient.SCClientSocket.prototype._changeToAuthenticatedState = funct
 
 //override for ackTimeout to emit function
 SocketClusterClient.SCClientSocket.prototype._emit = function (event, data, callback, ackTimeout) {
-    let self = this;
+    const self = this;
 
     if (this.state === this.CLOSED) {
         this.connect();
     }
-    let eventObject = {
+    const eventObject = {
         event: event,
         callback: callback
     };
 
-    let eventNode = new LinkedList.Item();
+    const eventNode = new LinkedList.Item();
 
     if (this.options.cloneData) {
         eventObject['data'] = clone(data);
