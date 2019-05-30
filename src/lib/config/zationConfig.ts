@@ -6,6 +6,8 @@ GitHub: LucaCode
 
 import {ZationOptions, ZationOptionsInternal} from "../mainApi/zationOptions";
 
+const windowDefined = typeof window === 'object';
+
 export class ZationConfig
 {
     private _config : ZationOptionsInternal;
@@ -40,12 +42,12 @@ export class ZationConfig
         const isSecure = customOptions && typeof customOptions.secure === 'boolean' ?
             customOptions.secure : defaultSecure;
 
-        return (window && window.location && window.location.port) ?
+        return (windowDefined && window.location && window.location.port) ?
             parseInt(window.location.port) : isSecure ? 443 : 80;
     }
 
     private static getDefaultSecure() {
-        return window && window.location && window.location.protocol ?
+        return windowDefined && window.location && window.location.protocol ?
             (window.location.protocol === 'https:') : false;
     }
 
@@ -57,7 +59,7 @@ export class ZationConfig
             debug : false,
             system : 'Default',
             version : 1.0,
-            hostname : window && window.location.hostname || 'localhost',
+            hostname : windowDefined && window.location.hostname || 'localhost',
             path : '/zation',
             port : defaultPort,
             secure : defaultSecure,
