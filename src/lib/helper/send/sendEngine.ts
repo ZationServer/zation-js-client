@@ -10,7 +10,6 @@ import {ProgressHandler}        from "../../request/helper/progressHandler";
 import {Zation}                 from "../../mainApi/zation";
 import {Response}               from "../../response/response";
 import {TimeoutError}           from "../error/timeoutError";
-const scErrors                = require('sc-errors');
 import {ConnectionNeededError}  from "../error/connectionNeededError";
 import axios, {AxiosRequestConfig} from 'axios';
 const FormData                = require('form-data');
@@ -39,7 +38,7 @@ export class SendEngine
                     }
 
                     if(err) {
-                        if(err instanceof scErrors.TimeoutError){
+                        if(err.name === 'TimeoutError'){
                             reject(new TimeoutError(err.message));
                         }
                         else {
