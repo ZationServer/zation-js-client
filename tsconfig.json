@@ -12,7 +12,8 @@
     "declaration": true,
     "outDir": "assets",
     "strict": true,
-    "alwaysStrict" : true
+    "alwaysStrict" : true,
+    "noUnusedLocals": true
   },
   "include": [
     "src/**/*"
