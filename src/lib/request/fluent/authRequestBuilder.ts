@@ -13,7 +13,7 @@ import {AuthRequest}           from "../main/authRequest";
 
 export class AuthRequestBuilder extends AbstractRequestBuilder<AuthRequestBuilder>
 {
-    private _authData : object = {};
+    private _authData : any = undefined;
     private _httpAttachedContent : {key : string,data : string | Blob}[] = [];
 
     constructor(zation : Zation) {
@@ -25,9 +25,9 @@ export class AuthRequestBuilder extends AbstractRequestBuilder<AuthRequestBuilde
      * @description
      * Set the authData of the request.
      * @param data
-     * @default {}
+     * @default undefined (equals to {} on server parm based input).
      */
-    authData(data : object | any[]) : AuthRequestBuilder {
+    authData(data : any) : AuthRequestBuilder {
         this._authData = data;
         return this;
     }

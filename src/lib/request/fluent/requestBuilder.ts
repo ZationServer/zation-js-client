@@ -18,7 +18,7 @@ export class RequestBuilder extends AbstractRequestBuilder<RequestBuilder>
     private _useAuth : boolean = true;
     private _controller : string = '';
     private _systemController : boolean = false;
-    private _data : object = {};
+    private _data : any = undefined;
     private _httpAttachedContent : {key : string,data : string | Blob}[] = [];
 
     constructor(zation : Zation) {
@@ -66,9 +66,9 @@ export class RequestBuilder extends AbstractRequestBuilder<RequestBuilder>
      * @description
      * Set the data of the request.
      * @param data
-     * @default {}
+     * @default undefined (equals to {} on server parm based input).
      */
-    data(data : object | any[]) : RequestBuilder {
+    data(data : any) : RequestBuilder {
         this._data = data;
         return this;
     }
