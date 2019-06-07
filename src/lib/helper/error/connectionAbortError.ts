@@ -6,17 +6,17 @@ GitHub: LucaCode
 
 export class ConnectionAbortError extends Error
 {
-    private readonly scError : Error;
+    private readonly rawError : Error;
 
-    constructor(scError : Error)
+    constructor(rawError : Error)
     {
-        super(`Connection aborted: ${scError.toString()}`);
-        this.scError = scError;
+        super(`Connection aborted: ${rawError.toString()}`);
+        this.rawError = rawError;
     }
 
-    getScError() : Error
-    {
-        return this.scError;
+    // noinspection JSUnusedGlobalSymbols
+    getRawError() : Error {
+        return this.rawError;
     }
 
 }

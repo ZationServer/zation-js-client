@@ -6,9 +6,8 @@ GitHub: LucaCode
 
 export class MissingAuthUserGroupError extends Error
 {
-    constructor(message : string = '')
-    {
-        super(`User group is needed! ${message}`);
+    constructor(message : string = '') {
+        super(`The socket must have an auth user group. ${message}`);
     }
 }
 

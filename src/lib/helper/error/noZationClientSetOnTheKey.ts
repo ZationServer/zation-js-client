@@ -8,6 +8,6 @@ export class NoZationClientSetOnTheKey extends Error
 {
     constructor(key : string)
     {
-        super(`No zation client is set on this key: '${key}'`);
+        super(`Zation client on key: '${key}' not found.`);
     }
 }

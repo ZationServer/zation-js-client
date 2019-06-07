@@ -10,7 +10,7 @@ export class SubscribeFailedError extends Error
 
     constructor(scError : Error)
     {
-        super(`Subscribe channel failed! ${scError.toString()}`);
+        super(`Subscribe to the channel is failed. ${scError.toString()}`);
         this.scError = scError;
     }
 

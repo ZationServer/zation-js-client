@@ -8,7 +8,7 @@ export class DeauthenticationNeededError extends Error
 {
     constructor(message : string = '')
     {
-        super(`Socket needs to be deauthenticated! ${message}`);
+        super(`The socket must be deauthenticated. ${message}`);
     }
 }
 

@@ -6,19 +6,17 @@ GitHub: LucaCode
 
 export class DeauthenticationFailedError extends Error
 {
-    private readonly scError : Error;
+    private readonly rawError : Error;
 
-    constructor(scError : Error)
+    constructor(rawError : Error)
     {
-        super(`Deauthentication failed! ${scError.toString()}`);
-        this.scError = scError;
+        super(`The deauthentication of the socket is failed. ${rawError.toString()}`);
+        this.rawError = rawError;
     }
 
-    getScError() : Error
-    {
-        return this.scError;
+    getRawError() : Error {
+        return this.rawError;
     }
-
 }
 
 

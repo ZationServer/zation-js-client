@@ -12,7 +12,7 @@ export class AuthenticationFailedError extends Error
 
     constructor(message : string = '',response : Response)
     {
-        super(`Failed to authenticate client! ${message}`);
+        super(`Failed to authenticate this client. ${message}`);
         this.response = response;
     }
 

@@ -6,9 +6,8 @@ GitHub: LucaCode
 
 export class MissingUserIdError extends Error
 {
-    constructor(message : string = '')
-    {
-        super(`User id is needed! ${message}`);
+    constructor(message : string = '') {
+        super(`The socket must have a user id. ${message}`);
     }
 }
 

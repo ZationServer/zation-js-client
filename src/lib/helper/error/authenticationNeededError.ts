@@ -6,9 +6,8 @@ GitHub: LucaCode
 
 export class AuthenticationNeededError extends Error
 {
-    constructor(message : string = '')
-    {
-        super(`Socket needs to be authenticated! ${message}`);
+    constructor(message : string = '') {
+        super(`The socket must be authenticated. ${message}`);
     }
 }
 

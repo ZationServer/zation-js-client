@@ -10,7 +10,7 @@ export class SignAuthenticationFailedError extends Error
 
     constructor(scError : Error)
     {
-        super(`Sign authentication failed! ${scError.toString()}`);
+        super(`Sign authentication is failed. ${scError.toString()}`);
         this.scError = scError;
     }
 
