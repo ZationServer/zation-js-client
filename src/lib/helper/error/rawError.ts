@@ -46,6 +46,14 @@ export class RawError extends Error
     getErrorInfo() : Record<string,any> {
         return this.rawError['info'] || {};
     }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Returns the raw error code.
+     */
+    getErrorCode() : any {
+        return this.rawError['code'];
+    }
 }
 
 
