@@ -10,7 +10,7 @@ import {ProgressHandler}        from "../../request/helper/progressHandler";
 import {Zation}                 from "../../mainApi/zation";
 import {Response}               from "../../response/response";
 import {TimeoutError}           from "../error/timeoutError";
-import {ConnectionNeededError}  from "../error/connectionNeededError";
+import {ConnectionRequiredError}  from "../error/connectionRequiredError";
 import axios, {AxiosRequestConfig} from 'axios';
 const FormData                = require('form-data');
 import stringify                from "fast-stringify";
@@ -51,7 +51,7 @@ export class SendEngine
                 },timeout);
             }
             else {
-                reject(new ConnectionNeededError('By sending an webSocket request!'));
+                reject(new ConnectionRequiredError('By sending an webSocket request!'));
             }
         });
     }

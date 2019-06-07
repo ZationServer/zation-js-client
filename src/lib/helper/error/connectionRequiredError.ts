@@ -4,11 +4,9 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-export class MissingUserIdError extends Error
+export class ConnectionRequiredError extends Error
 {
     constructor(message : string = '') {
-        super(`The socket must have a user id. ${message}`);
+        super(`The socket must be connected. ${message}`);
     }
 }
-
-

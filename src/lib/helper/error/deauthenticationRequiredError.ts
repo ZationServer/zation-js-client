@@ -4,9 +4,11 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-export class ConnectionNeededError extends Error
+export class DeauthenticationRequiredError extends Error
 {
     constructor(message : string = '') {
-        super(`The socket must be connected. ${message}`);
+        super(`The socket must be deauthenticated. ${message}`);
     }
 }
+
+

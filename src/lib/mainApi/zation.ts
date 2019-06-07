@@ -21,15 +21,15 @@ import {ZationConfig}                from "../config/zationConfig";
 import {Box}                         from "../helper/box/box";
 import {ResponseReactionBox}         from "../react/reactionBoxes/responseReactionBox";
 import {ChannelReactionBox}          from "../react/reactionBoxes/channelReactionBox";
-import {RequestBuilder}               from "../request/fluent/requestBuilder";
-import {AuthRequestBuilder}           from "../request/fluent/authRequestBuilder";
-import {ValidationRequestBuilder}     from "../request/fluent/validationRequestBuilder";
+import {RequestBuilder}              from "../request/fluent/requestBuilder";
+import {AuthRequestBuilder}          from "../request/fluent/authRequestBuilder";
+import {ValidationRequestBuilder}    from "../request/fluent/validationRequestBuilder";
 import {ZationRequest}               from "../request/main/zationRequest";
 import {SendEngine}                  from "../helper/send/sendEngine";
 import {ConnectionAbortError}        from "../helper/error/connectionAbortError";
 import {Logger}                      from "../helper/logger/logger";
 import {ObjectPath}                  from "../helper/utils/objectPath";
-import {ConnectionNeededError}       from "../helper/error/connectionNeededError";
+import {ConnectionRequiredError}     from "../helper/error/connectionRequiredError";
 import {AuthenticationFailedError}   from "../helper/error/authenticationFailedError";
 import {AuthRequest}                 from "../request/main/authRequest";
 import {EventReactionBox}            from "../react/reactionBoxes/eventReactionBox";
@@ -247,7 +247,7 @@ export class Zation
      * and returns the ping time.
      * @example
      * const ping = await ping();
-     * @throws ConnectionNeededError
+     * @throws ConnectionRequiredError
      */
     async ping() : Promise<number>
     {
@@ -311,7 +311,7 @@ export class Zation
     /**
      * @description
      * Authenticate this connection by using an signed token.
-     * @throws ConnectionNeededError, SignAuthenticationFailedError
+     * @throws ConnectionRequiredError, SignAuthenticationFailedError
      */
     async signAuthenticate(signToken : string) : Promise<void> {
         await this.authEngine.signAuthenticate(signToken);
@@ -352,7 +352,7 @@ export class Zation
      * @description
      * Deauthenticate and disconnect the client.
      * @example
-     * @throws ConnectionNeededError, DeauthenticationFailError
+     * @throws ConnectionRequiredError, DeauthenticationFailError
      * @param code error code (disconnection)
      * @param data reason code for disconnection
      */
@@ -464,7 +464,7 @@ export class Zation
      * Optional you can add a progressHandler and responseReactionBox/es.
      * Notice that the response boxes that are passed in are triggerd before the zation boxes.
      * But the zationBoxes are only triggerd if the triggerZationBoxes param is true.
-     * @throws ConnectionNeededError,TimeoutError
+     * @throws ConnectionRequiredError,TimeoutError
      * @return Response
      * @param sendAble
      * @param progressHandler
@@ -781,7 +781,7 @@ export class Zation
      * Subscribe the user channel.
      * Can be useful if auto sub is disabled.
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws MissingUserIdError, SubscribeFailError, SocketNotCreatedError
+     * @throws UserIdRequiredError, SubscribeFailError, SocketNotCreatedError
      */
     async subUserCh() : Promise<void> {
         await this.authEngine.subUserCh();
@@ -791,7 +791,7 @@ export class Zation
     /**
      * @description
      * Returns if the socket has subscribed the user channel.
-     * @throws MissingUserIdError
+     * @throws UserIdRequiredError
      */
     hasSubUserCh() : boolean {
        return this.authEngine.hasSubUserCh();
@@ -801,7 +801,7 @@ export class Zation
     /**
      * @description
      * Unsubscribes the user channel.
-     * @throws MissingUserIdError
+     * @throws UserIdRequiredError
      * @param andDestroy
      */
     unsubUserCh(andDestroy : boolean = true) : void {
@@ -814,7 +814,7 @@ export class Zation
      * Subscribe the auth user group channel.
      * Can be useful if auto sub is disabled.
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws MissingAuthUserGroupError, SubscribeFailError, SocketNotCreatedError
+     * @throws AuthUserGroupRequiredError, SubscribeFailError, SocketNotCreatedError
      */
     async subAuthUserGroupCh() : Promise<void> {
         await this.authEngine.subAuthUserGroupCh();
@@ -824,7 +824,7 @@ export class Zation
     /**
      * @description
      * Returns if the socket has subscribed the auth user group channel.
-     * @throws MissingAuthUserGroupError
+     * @throws AuthUserGroupRequiredError
      */
     hasSubAuthUserGroupCh() : boolean {
         return this.authEngine.hasSubAuthUserGroupCh();
@@ -834,7 +834,7 @@ export class Zation
     /**
      * @description
      * Unsubscribes the auth user group channel.
-     * @throws MissingAuthUserGroupError
+     * @throws AuthUserGroupRequiredError
      * @param andDestroy
      */
     unsubAuthUserGroupCh(andDestroy : boolean = true) : void {
@@ -1067,7 +1067,7 @@ export class Zation
      * Notice that the channel needs to allow client publish.
      * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
      * This gives you better control over validation.
-     * @throws ConnectionNeededError, PublishFailError
+     * @throws ConnectionRequiredError, PublishFailError
      * @param userId
      * @param event
      * @param data
@@ -1083,7 +1083,7 @@ export class Zation
      * Notice that the channel needs to allow client publish.
      * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
      * This gives you better control over validation.
-     * @throws ConnectionNeededError, PublishFailError
+     * @throws ConnectionRequiredError, PublishFailError
      * @param authUserGroup
      * @param event
      * @param data
@@ -1099,7 +1099,7 @@ export class Zation
      * Notice that the channel needs to allow client publish.
      * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
      * This gives you better control over validation.
-     * @throws ConnectionNeededError, PublishFailError
+     * @throws ConnectionRequiredError, PublishFailError
      * @param event
      * @param data
      */
@@ -1114,7 +1114,7 @@ export class Zation
      * Notice that the channel needs to allow client publish.
      * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
      * This gives you better control over validation.
-     * @throws ConnectionNeededError, PublishFailError
+     * @throws ConnectionRequiredError, PublishFailError
      * @param event
      * @param data
      */
@@ -1127,7 +1127,7 @@ export class Zation
      * @description
      * Publish in the panel in channel with this client.
      * Notice the publish in middleware is used on server side.
-     * @throws ConnectionNeededError, PublishFailError
+     * @throws ConnectionRequiredError, PublishFailError
      * @param event
      * @param data
      */
@@ -1142,7 +1142,7 @@ export class Zation
      * Notice that the socket needs to have access for clientPublish.
      * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
      * This gives you better control over validation.
-     * @throws ConnectionNeededError, PublishFailError
+     * @throws ConnectionRequiredError, PublishFailError
      * @param chName
      * @param event
      * @param data
@@ -1158,7 +1158,7 @@ export class Zation
      * Notice that the socket needs to have access for clientPublish.
      * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
      * This gives you better control over validation.
-     * @throws ConnectionNeededError, PublishFailError
+     * @throws ConnectionRequiredError, PublishFailError
      * @param chName
      * @param id
      * @param event
@@ -1179,7 +1179,7 @@ export class Zation
      * @example
      * hasTokenVariable('person.email');
      * @param path
-     * @throws AuthenticationNeededError
+     * @throws AuthenticationRequiredError
      */
     hasTokenVariable(path ?: string | string[]) : boolean {
         return ObjectPath.has(this.authEngine.getCustomTokenVariable(),path);
@@ -1195,7 +1195,7 @@ export class Zation
      * @example
      * getTokenVariable('person.email');
      * @param path Notice if you don't provide a path, it returns all variables in an object.
-     * @throws AuthenticationNeededError
+     * @throws AuthenticationRequiredError
      */
     getTokenVariable(path ?: string | string[]) : any {
         return ObjectPath.get(this.authEngine.getCustomTokenVariable(),path);
@@ -1207,7 +1207,7 @@ export class Zation
     /**
      * @description
      * Returns token id of the token form the sc.
-     * @throws AuthenticationNeededError
+     * @throws AuthenticationRequiredError
      */
     getTokenId() : string
     {
@@ -1219,7 +1219,7 @@ export class Zation
     /**
      * @description
      * Returns the expire of the token from the sc.
-     * @throws AuthenticationNeededError
+     * @throws AuthenticationRequiredError
      */
     getTokenExpire() : number
     {
@@ -1231,7 +1231,7 @@ export class Zation
     /**
      * @description
      * Returns the panel access of the token from the sc.
-     * @throws AuthenticationNeededError
+     * @throws AuthenticationRequiredError
      */
     getTokenPanelAccess() : boolean
     {
@@ -1243,7 +1243,7 @@ export class Zation
     /**
      * @description
      * Returns the current plain token.
-     * @throws AuthenticationNeededError
+     * @throws AuthenticationRequiredError
      */
     getPlainToken() : ZationToken
     {
@@ -1254,7 +1254,7 @@ export class Zation
     /**
      * @description
      * Returns the current sign token.
-     * @throws AuthenticationNeededError
+     * @throws AuthenticationRequiredError
      */
     getSignToken() : string
     {
@@ -1297,7 +1297,7 @@ export class Zation
     /**
      * @description
      * Set on event when server is emit an event.
-     * @throws ConnectionNeededError
+     * @throws ConnectionRequiredError
      */
     on(event : string,handler : OnHandlerFunction) : void
     {
@@ -1305,7 +1305,7 @@ export class Zation
             this.socket.on(event,handler);
         }
         else {
-            throw new ConnectionNeededError('To set on event.');
+            throw new ConnectionRequiredError('To set on event.');
 
         }
     }
@@ -1315,7 +1315,7 @@ export class Zation
      * @description
      * Emit to server. You can react on the server side
      * by setting an on handler on the server socket. (use socket event).
-     * @throws ConnectionNeededError
+     * @throws ConnectionRequiredError
      */
     emit(event : string,data : any,callback ?: ResponseFunction) : void
     {
@@ -1323,7 +1323,7 @@ export class Zation
             this.socket.emit(event,data,callback)
         }
         else {
-            throw new ConnectionNeededError('To emit an event.');
+            throw new ConnectionRequiredError('To emit an event.');
 
         }
     }
@@ -1334,7 +1334,7 @@ export class Zation
      * Send some raw data to the server.
      * This will trigger the socketRaw event on the zation server
      * which will carry the provided data.
-     * @throws ConnectionNeededError
+     * @throws ConnectionRequiredError
      */
     sendRaw(data : any) : void
     {
@@ -1342,7 +1342,7 @@ export class Zation
             this.socket.send(data);
         }
         else {
-            throw new ConnectionNeededError('To send raw data.');
+            throw new ConnectionRequiredError('To send raw data.');
 
         }
     }

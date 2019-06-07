@@ -10,7 +10,7 @@ import {Zation}                from "../../mainApi/zation";
 import {SubscribeFailedError}  from "../error/subscribeFailedError";
 import {ChannelReactionBox}    from "../../react/reactionBoxes/channelReactionBox";
 import {PublishFailedError}    from "../error/publishFailedError";
-import {ConnectionNeededError} from "../error/connectionNeededError";
+import {ConnectionRequiredError} from "../error/connectionRequiredError";
 
 export class ChannelEngine
 {
@@ -378,7 +378,7 @@ export class ChannelEngine
                 });
             }
             else {
-                reject(new ConnectionNeededError('To publish data!'));
+                reject(new ConnectionRequiredError('To publish data!'));
             }
         });
     }

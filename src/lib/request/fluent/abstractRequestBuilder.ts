@@ -310,7 +310,7 @@ export abstract class AbstractRequestBuilder<T>
     /**
      * @description
      * Send the request and returns the response after trigger the reactions from the build.
-     * @throws ConnectionNeededError,TimeoutError
+     * @throws ConnectionRequiredError,TimeoutError
      * @param triggerZationBoxes
      * Specifies if the zation response boxes are triggerd.
      * The default value is true if at least one reaction is added in the requestBuilder.

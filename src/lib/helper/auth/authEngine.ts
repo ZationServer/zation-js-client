@@ -8,13 +8,13 @@ import {ZationToken}                   from "../constants/internal";
 import {Zation}                        from "../../mainApi/zation";
 import {ChannelEngine}                 from "../channel/channelEngine";
 import {SignAuthenticationFailedError} from "../error/signAuthenticationFailedError";
-import {ConnectionNeededError}         from "../error/connectionNeededError";
+import {ConnectionRequiredError}       from "../error/connectionRequiredError";
 import {DeauthenticationFailedError}   from "../error/deauthenticationFailedError";
 import {Logger}                        from "../logger/logger";
-import {MissingUserIdError}            from "../error/missingUserIdError";
-import {MissingAuthUserGroupError}     from "../error/missingAuthUserGroupError";
-import {DeauthenticationNeededError}   from "../error/deauthenticationNeededError";
-import {AuthenticationNeededError}     from "../error/authenticationNeededError";
+import {UserIdRequiredError}           from "../error/userIdRequiredError";
+import {AuthUserGroupRequiredError}    from "../error/authUserGroupRequiredError";
+import {DeauthenticationRequiredError} from "../error/deauthenticationRequiredError";
+import {AuthenticationRequiredError}   from "../error/authenticationRequiredError";
 
 export class AuthEngine
 {
@@ -97,7 +97,7 @@ export class AuthEngine
                 });
             }
             else {
-                reject(new ConnectionNeededError('To authenticate with sign token!'));
+                reject(new ConnectionRequiredError('To authenticate with sign token!'));
             }
         });
     }
@@ -175,7 +175,7 @@ export class AuthEngine
             await this.chEngine.subUserChannel(this.currentUserId);
         }
         else{
-            throw new MissingUserIdError('To subscribe user channel.');
+            throw new UserIdRequiredError('To subscribe user channel.');
         }
     }
 
@@ -185,7 +185,7 @@ export class AuthEngine
             return this.chEngine.hasSubUserChannel(this.currentUserId);
         }
         else{
-            throw new MissingUserIdError('To check if socket is subscribe user channel.');
+            throw new UserIdRequiredError('To check if socket is subscribe user channel.');
         }
     }
 
@@ -201,7 +201,7 @@ export class AuthEngine
             await this.chEngine.subAuthUserGroupChannel(this.currentUserAuthGroup);
         }
         else{
-            throw new MissingAuthUserGroupError('To subscribe the auth user group channel.');
+            throw new AuthUserGroupRequiredError('To subscribe the auth user group channel.');
         }
     }
 
@@ -210,7 +210,7 @@ export class AuthEngine
             return this.chEngine.hasSubAuthUserGroupChannel(this.currentUserAuthGroup);
         }
         else{
-            throw new MissingAuthUserGroupError('To check if socket is subscribe the auth user group channel.');
+            throw new AuthUserGroupRequiredError('To check if socket is subscribe the auth user group channel.');
         }
     }
 
@@ -225,7 +225,7 @@ export class AuthEngine
             await this.chEngine.subDefaultUserGroupChannel();
         }
         else{
-            throw new DeauthenticationNeededError('To subscribe the default user group channel');
+            throw new DeauthenticationRequiredError('To subscribe the default user group channel');
         }
     }
 
@@ -261,7 +261,7 @@ export class AuthEngine
             return this.signToken;
         }
         else {
-            throw new AuthenticationNeededError('To get access to the token');
+            throw new AuthenticationRequiredError('To get access to the token');
         }
     }
 
@@ -270,7 +270,7 @@ export class AuthEngine
             return this.plainToken;
         }
         else {
-            throw new AuthenticationNeededError('To get access to the token');
+            throw new AuthenticationRequiredError('To get access to the token');
         }
     }
 
@@ -294,7 +294,7 @@ export class AuthEngine
                 this.plainToken.zationCustomVariables : {};
         }
         else {
-            throw new AuthenticationNeededError('To get access to token variables');
+            throw new AuthenticationRequiredError('To get access to token variables');
         }
     }
 

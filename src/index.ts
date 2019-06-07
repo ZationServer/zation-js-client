@@ -19,20 +19,20 @@ import {HttpRequest}                   from "./lib/request/main/httpRequest";
 import {AuthRequest}                   from "./lib/request/main/authRequest";
 import {ValidationCheck, ValidationRequest} from "./lib/request/main/validationRequest";
 import {AuthenticationFailedError}     from "./lib/helper/error/authenticationFailedError";
-import {AuthenticationNeededError}     from "./lib/helper/error/authenticationNeededError";
+import {AuthenticationRequiredError}   from "./lib/helper/error/authenticationRequiredError";
 import {ConnectionAbortError}          from "./lib/helper/error/connectionAbortError";
-import {ConnectionNeededError}         from "./lib/helper/error/connectionNeededError";
+import {ConnectionRequiredError}       from "./lib/helper/error/connectionRequiredError";
 import {DeauthenticationFailedError}   from "./lib/helper/error/deauthenticationFailedError";
-import {DeauthenticationNeededError}   from "./lib/helper/error/deauthenticationNeededError";
-import {MissingAuthUserGroupError}     from "./lib/helper/error/missingAuthUserGroupError";
-import {MissingUserIdError}            from "./lib/helper/error/missingUserIdError";
+import {DeauthenticationRequiredError} from "./lib/helper/error/deauthenticationRequiredError";
+import {AuthUserGroupRequiredError}    from "./lib/helper/error/authUserGroupRequiredError";
+import {UserIdRequiredError}           from "./lib/helper/error/userIdRequiredError";
 import {PublishFailedError}            from "./lib/helper/error/publishFailedError";
 import {TimeoutError}                  from "./lib/helper/error/timeoutError";
 import {SignAuthenticationFailedError} from "./lib/helper/error/signAuthenticationFailedError";
 import {SubscribeFailedError}          from "./lib/helper/error/subscribeFailedError";
 import {Response}                      from "./lib/response/response";
 import {ZationSaver}                   from "./lib/mainApi/zationSaver";
-import {NoZationClientSetOnTheKey}     from "./lib/helper/error/noZationClientSetOnTheKey";
+import {ZationClientNotFoundError}     from "./lib/helper/error/zationClientNotFoundError";
 import {AbstractRequestBuilder}        from "./lib/request/fluent/abstractRequestBuilder";
 import {AuthRequestBuilder}            from "./lib/request/fluent/authRequestBuilder";
 import {RequestBuilder}                from "./lib/request/fluent/requestBuilder";
@@ -83,18 +83,18 @@ export {
     EventReactionBox,
     Response,
     AuthenticationFailedError,
-    AuthenticationNeededError,
+    AuthenticationRequiredError,
     ConnectionAbortError,
-    ConnectionNeededError,
+    ConnectionRequiredError,
     DeauthenticationFailedError,
-    DeauthenticationNeededError,
-    MissingAuthUserGroupError,
-    MissingUserIdError,
+    DeauthenticationRequiredError,
+    AuthUserGroupRequiredError,
+    UserIdRequiredError,
     PublishFailedError,
     TimeoutError,
     SignAuthenticationFailedError,
     SubscribeFailedError,
-    NoZationClientSetOnTheKey,
+    ZationClientNotFoundError,
     ProtocolType,
     AbstractRequestBuilder,
     AuthRequestBuilder,

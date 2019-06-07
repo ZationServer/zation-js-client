@@ -4,10 +4,11 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-export class AuthenticationNeededError extends Error
+export class AuthUserGroupRequiredError extends Error
 {
     constructor(message : string = '') {
-        super(`The socket must be authenticated. ${message}`);
+        super(`The socket must have an auth user group. ${message}`);
     }
 }
+
 

@@ -5,7 +5,7 @@ GitHub: LucaCode
  */
 
 import {Zation}                    from "./zation";
-import {NoZationClientSetOnTheKey} from "../helper/error/noZationClientSetOnTheKey";
+import {ZationClientNotFoundError} from "../helper/error/zationClientNotFoundError";
 
 export class ZationSaver {
 
@@ -17,7 +17,7 @@ export class ZationSaver {
 
     static load(key) : Zation {
         if(!this.client.hasOwnProperty(key)) {
-            throw new NoZationClientSetOnTheKey(key);
+            throw new ZationClientNotFoundError(key);
         }
         return this.client[key];
     }
