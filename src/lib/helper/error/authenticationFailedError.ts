@@ -23,8 +23,7 @@ export class AuthenticationFailedError extends Error
     }
 
     // noinspection JSUnusedGlobalSymbols
-    getResponse() : Response
-    {
+    getResponse() : Response {
         return this.response;
     }
 }

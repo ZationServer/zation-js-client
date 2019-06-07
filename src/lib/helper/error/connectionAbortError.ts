@@ -4,21 +4,13 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-export class ConnectionAbortError extends Error
+import {RawError} from "./rawError";
+
+export class ConnectionAbortError extends RawError
 {
-    private readonly rawError : Error;
-
-    constructor(rawError : Error)
-    {
-        super(`Connection aborted: ${rawError.toString()}`);
-        this.rawError = rawError;
+    constructor(rawError : Error) {
+        super(`Connection aborted: ${rawError.toString()}`,rawError);
     }
-
-    // noinspection JSUnusedGlobalSymbols
-    getRawError() : Error {
-        return this.rawError;
-    }
-
 }
 
 

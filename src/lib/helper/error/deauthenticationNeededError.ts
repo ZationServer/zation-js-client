@@ -6,8 +6,7 @@ GitHub: LucaCode
 
 export class DeauthenticationNeededError extends Error
 {
-    constructor(message : string = '')
-    {
+    constructor(message : string = '') {
         super(`The socket must be deauthenticated. ${message}`);
     }
 }

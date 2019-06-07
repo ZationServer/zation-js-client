@@ -4,21 +4,13 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-export class SignAuthenticationFailedError extends Error
+import {RawError} from "./rawError";
+
+export class SignAuthenticationFailedError extends RawError
 {
-    private readonly scError : Error;
-
-    constructor(scError : Error)
-    {
-        super(`Sign authentication is failed. ${scError.toString()}`);
-        this.scError = scError;
+    constructor(rawError : Error) {
+        super(`Sign authentication is failed. ${rawError.toString()}`,rawError);
     }
-
-    getScError() : Error
-    {
-        return this.scError;
-    }
-
 }
 
 

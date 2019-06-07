@@ -4,20 +4,12 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-export class SubscribeFailedError extends Error
+import {RawError} from "./rawError";
+
+export class SubscribeFailedError extends RawError
 {
-    private readonly scError : Error;
-
-    constructor(scError : Error)
-    {
-        super(`Subscribe to the channel is failed. ${scError.toString()}`);
-        this.scError = scError;
+    constructor(rawError : Error) {
+        super(`Subscribe to the channel is failed. ${rawError.toString()}`,rawError);
     }
-
-    getScError() : Error
-    {
-        return this.scError;
-    }
-
 }
 

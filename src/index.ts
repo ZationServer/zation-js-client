@@ -43,6 +43,7 @@ import {ErrorFilter}                   from "./lib/react/error/errorFilter";
 import {BackError}                     from "./lib/response/backError";
 import {AbstractErrorFilterBuilder}    from "./lib/react/error/abstractErrorFilterBuilder";
 import {ErrorName}                     from "./lib/helper/constants/errorName";
+import {RawError}                      from "./lib/helper/error/rawError";
 
 // noinspection JSUnusedGlobalSymbols
 /**
@@ -105,7 +106,8 @@ export {
     BackError,
     ValidationCheck,
     AbstractErrorFilterBuilder,
-    ErrorName
+    ErrorName,
+    RawError
 };
 
 

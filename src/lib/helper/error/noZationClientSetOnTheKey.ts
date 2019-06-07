@@ -6,8 +6,7 @@ GitHub: LucaCode
 
 export class NoZationClientSetOnTheKey extends Error
 {
-    constructor(key : string)
-    {
+    constructor(key : string) {
         super(`Zation client on key: '${key}' not found.`);
     }
 }

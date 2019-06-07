@@ -4,29 +4,12 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import {ErrorName} from "../constants/errorName";
+import {RawError} from "./rawError";
 
-export class PublishFailedError extends Error
+export class PublishFailedError extends RawError
 {
-    private readonly scError : Error;
-
-    constructor(scError : Error)
-    {
-        super(`Publish in the channel is failed. ${scError.toString()}`);
-        this.scError = scError;
-    }
-
-    getScError() : Error {
-        return this.scError;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * Returns the error name of the error,
-     * can be used to check more details.
-     */
-    getErrorName() : ErrorName {
-        return (this.scError.name as ErrorName);
+    constructor(rawError : Error) {
+        super(`Publish in the channel is failed. ${rawError.toString()}`,rawError);
     }
 }
 
