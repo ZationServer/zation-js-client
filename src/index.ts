@@ -42,7 +42,6 @@ import {PresetErrorLib}                from "./lib/react/error/presetErrorLib";
 import {ErrorFilter}                   from "./lib/react/error/errorFilter";
 import {BackError}                     from "./lib/response/backError";
 import {AbstractErrorFilterBuilder}    from "./lib/react/error/abstractErrorFilterBuilder";
-import {SocketNotCreatedError}         from "./lib/helper/error/socketNotCreated";
 import {ErrorName}                     from "./lib/helper/constants/errorName";
 
 // noinspection JSUnusedGlobalSymbols
@@ -93,7 +92,6 @@ export {
     PublishFailedError,
     TimeoutError,
     SignAuthenticationFailedError,
-    SocketNotCreatedError,
     SubscribeFailedError,
     NoZationClientSetOnTheKey,
     ProtocolType,

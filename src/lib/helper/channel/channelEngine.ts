@@ -4,7 +4,6 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-
 import {ChannelTarget}         from "./channelTarget";
 import {ZationChannel}         from "../constants/internal";
 import {Zation}                from "../../mainApi/zation";
@@ -12,7 +11,6 @@ import {SubscribeFailedError}  from "../error/subscribeFailedError";
 import {ChannelReactionBox}    from "../../react/reactionBoxes/channelReactionBox";
 import {PublishFailedError}    from "../error/publishFailedError";
 import {ConnectionNeededError} from "../error/connectionNeededError";
-import {SocketNotCreatedError} from "../error/socketNotCreated";
 
 export class ChannelEngine
 {
@@ -100,70 +98,63 @@ export class ChannelEngine
 
     async subChannel(channel : string,chTarget : ChannelTarget,chInfoObj, watcher : Function,retrySubForever : boolean, subOptions ?: object) : Promise<void>
     {
-        const socket = this.zation.getSocket();
-        if(!!socket)
-        {
-            await new Promise<void>(((resolve, reject) => {
-                const ch = socket.channel(channel);
+        await new Promise<void>(((resolve, reject) => {
+            const ch = this.zation.getSocket().channel(channel);
 
-                if(retrySubForever){
-                    ch['retrySubForever'] = true;
+            if(retrySubForever){
+                ch['retrySubForever'] = true;
+            }
+
+            //register
+            ch.on('subscribe',() => {
+                //watcher
+                ch.watch(watcher);
+                resolve();
+            });
+
+            ch.on('subscribeFail',async (err) => {
+                reject(new SubscribeFailedError(err));
+            });
+
+            ch.on('kickOut',async (msg) => {
+                await this.zation._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
+                    await chReactionBox._triggerEvent(chReactionBox.mapKick,chTarget,chInfoObj,msg);
+                });
+            });
+
+            ch.on('subscribeFail',async (err) => {
+                await this.zation._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
+                    await chReactionBox._triggerEvent(chReactionBox.mapSubFail,chTarget,chInfoObj,err);
+                });
+            });
+
+            ch.on('subscribe',async () => {
+                await this.zation._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
+                    await chReactionBox._triggerEvent(chReactionBox.mapSub,chTarget,chInfoObj);
+                });
+            });
+
+            ch.on('subscribe',async () => {
+                await this.zation._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
+                    await chReactionBox._triggerEvent(chReactionBox.mapSub,chTarget,chInfoObj);
+                });
+            });
+
+            ch.on('unsubscribe',async (name,fromClient) => {
+                if(fromClient) {
+                    await this.zation._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
+                        await chReactionBox._triggerEvent(chReactionBox.mapClientUnsub,chTarget,chInfoObj);
+                    });
                 }
 
-                //register
-                ch.on('subscribe',() => {
-                    //watcher
-                    ch.watch(watcher);
-                    resolve();
+                await this.zation._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
+                    await chReactionBox._triggerEvent(chReactionBox.mapUnsub,chTarget,chInfoObj,fromClient);
                 });
+            });
 
-                ch.on('subscribeFail',async (err) => {
-                    reject(new SubscribeFailedError(err));
-                });
-
-                ch.on('kickOut',async (msg) => {
-                    await this.zation._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
-                        await chReactionBox._triggerEvent(chReactionBox.mapKick,chTarget,chInfoObj,msg);
-                    });
-                });
-
-                ch.on('subscribeFail',async (err) => {
-                    await this.zation._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
-                        await chReactionBox._triggerEvent(chReactionBox.mapSubFail,chTarget,chInfoObj,err);
-                    });
-                });
-
-                ch.on('subscribe',async () => {
-                    await this.zation._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
-                        await chReactionBox._triggerEvent(chReactionBox.mapSub,chTarget,chInfoObj);
-                    });
-                });
-
-                ch.on('subscribe',async () => {
-                    await this.zation._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
-                        await chReactionBox._triggerEvent(chReactionBox.mapSub,chTarget,chInfoObj);
-                    });
-                });
-
-                ch.on('unsubscribe',async (name,fromClient) => {
-                    if(fromClient) {
-                        await this.zation._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
-                            await chReactionBox._triggerEvent(chReactionBox.mapClientUnsub,chTarget,chInfoObj);
-                        });
-                    }
-
-                    await this.zation._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
-                        await chReactionBox._triggerEvent(chReactionBox.mapUnsub,chTarget,chInfoObj,fromClient);
-                    });
-                });
-
-                //sub
-                ch.subscribe(subOptions);
-            }));
-        }
-        else {
-            throw new SocketNotCreatedError('subscribe a channel');
-        }
+            //sub
+            ch.subscribe(subOptions);
+        }));
     }
 
 

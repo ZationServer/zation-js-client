@@ -92,6 +92,8 @@ export class Zation
         this.channelReactionMainBox.addFixedItem(this.userChannelReactionBox);
         this.eventReactionMainBox.addFixedItem(this.userEventReactionBox);
         this.addReactionBox(...reactionBox);
+
+        this._buildWsSocket();
     }
 
     //Part Responds
@@ -539,7 +541,6 @@ export class Zation
     /**
      * @description
      * Returns the current socket.
-     * Is undefined if socket is not created.
      */
     getSocket() : Socket {
         return this.socket;
@@ -548,19 +549,10 @@ export class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns if client has a current socket.
-     */
-    hasSocket() : boolean {
-        return this.socket !== undefined;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
      * Returns if the socket is connected to the server.
      */
     isConnected() : boolean {
-        return this.socket !== undefined && this.socket.state === this.socket.OPEN;
+        return this.socket.state === this.socket.OPEN;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -580,10 +572,6 @@ export class Zation
                 resolve();
             }
             else {
-                if(this.socket === undefined) {
-                    this._buildWsConnection();
-                }
-
                 this._registerSocketEvents();
 
                 this.authEngine.initAuthEngine();
@@ -781,8 +769,7 @@ export class Zation
         };
     }
 
-    private _buildWsConnection()
-    {
+    private _buildWsSocket() {
         // noinspection JSUnresolvedVariable
         this.socket = ModifiedScClient.create(this._buildScOptions());
     }

@@ -105,18 +105,12 @@ export class AuthEngine
     deauthenticate() : Promise<void> {
         return new Promise<void>(async (resolve, reject) =>
         {
-            if(this.zation.hasSocket())
-            {
-                this.zation.getSocket().deauthenticate((e => {
-                    if(e){
-                        reject(new DeauthenticationFailedError(e));
-                    } else {
-                        resolve();
-                    }}));
-            }
-            else {
-                await this.refreshToken(null,null);
-            }
+            this.zation.getSocket().deauthenticate((e => {
+                if(e){
+                    reject(new DeauthenticationFailedError(e));
+                } else {
+                    resolve();
+                }}));
         });
     }
 
