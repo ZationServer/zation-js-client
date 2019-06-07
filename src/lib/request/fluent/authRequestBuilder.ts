@@ -25,7 +25,7 @@ export class AuthRequestBuilder extends AbstractRequestBuilder<AuthRequestBuilde
      * @description
      * Set the authData of the request.
      * @param data
-     * @default undefined (equals to {} on server parm based input).
+     * @default undefined (equals to {} on server param based input).
      */
     authData(data : any) : AuthRequestBuilder {
         this._authData = data;
