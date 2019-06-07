@@ -1482,18 +1482,18 @@ export abstract class PresetErrorLib<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for noAccessWithAuth.
+     * Preset for noAccessWithTokenState.
      * The BackError error can be thrown
-     * if you have no access to the controller with your current auth state.
+     * if you have no access to the controller with your current token state.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * authIn (if you auth in)
      * authUserGroup (your auth user group)
      * userId (your user id)
      */
-    noAccessWithAuth() : T {
+    noAccessWithTokenState() : T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.NO_ACCESS_ERROR,'noAccessWithAuth'));
+        (ErrorType.NO_ACCESS_ERROR,'noAccessWithTokenState'));
         return this.self();
     }
 
