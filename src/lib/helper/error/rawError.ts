@@ -32,6 +32,15 @@ export class RawError extends Error
 
     // noinspection JSUnusedGlobalSymbols
     /**
+     * Returns if the raw error name is equal to the argument error name.
+     * @param errorName
+     */
+    isErrorName(errorName : ErrorName) : boolean {
+        return this.rawError.name === errorName;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
      * Returns additional info of the raw error.
      */
     getErrorInfo() : Record<string,any> {
