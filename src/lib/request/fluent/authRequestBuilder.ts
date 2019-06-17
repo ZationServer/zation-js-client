@@ -83,7 +83,7 @@ export class AuthRequestBuilder extends AbstractRequestBuilder<AuthRequestBuilde
 
         if(this._authData !== undefined){
             //input
-            params += `&${HttpGetReq.INPUT}=${JSON.stringify(this._authData)}`;
+            params += `&${HttpGetReq.INPUT}=${encodeURIComponent(JSON.stringify(this._authData))}`;
         }
         //auth req
         params += `&${HttpGetReq.AUTH_REQ}=true`;

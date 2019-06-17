@@ -91,7 +91,7 @@ export class ValidationRequestBuilder extends AbstractRequestBuilder<ValidationR
     buildGetRequest() : string
     {
         //checks
-        let params = `?${HttpGetReq.INPUT}=${JSON.stringify(this._checks)}`;
+        let params = `?${HttpGetReq.INPUT}=${encodeURIComponent(JSON.stringify(this._checks))}`;
         //vali req
         params += `&${HttpGetReq.VALI_REQ}=true`;
 

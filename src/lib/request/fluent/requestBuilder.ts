@@ -131,7 +131,7 @@ export class RequestBuilder extends AbstractRequestBuilder<RequestBuilder>
 
         if(this._data !== undefined){
             //input
-            params += `&${HttpGetReq.INPUT}=${JSON.stringify(this._data)}`;
+            params += `&${HttpGetReq.INPUT}=${encodeURIComponent(JSON.stringify(this._data))}`;
         }
 
         //add sign token
