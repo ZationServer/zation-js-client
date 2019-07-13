@@ -7,27 +7,21 @@ GitHub: LucaCode
 import {
     ChannelReactionOnClientUnsubAnyCh,
     ChannelReactionOnClientUnsubCustomCh,
-    ChannelReactionOnClientUnsubCustomIdCh,
     ChannelReactionOnClientUnsubZationCh,
     ChannelReactionOnKickOutAnyCh,
     ChannelReactionOnKickOutCustomCh,
-    ChannelReactionOnKickOutCustomIdCh,
     ChannelReactionOnKickOutZationCh,
     ChannelReactionOnPubAnyCh,
     ChannelReactionOnPubCustomCh,
-    ChannelReactionOnPubCustomIdCh,
     ChannelReactionOnPubZationCh,
     ChannelReactionOnSubAnyCh,
     ChannelReactionOnSubCustomCh,
-    ChannelReactionOnSubCustomIdCh,
     ChannelReactionOnSubFailAnyCh,
     ChannelReactionOnSubFailCustomCh,
-    ChannelReactionOnSubFailCustomIdCh,
     ChannelReactionOnSubFailZationCh,
     ChannelReactionOnSubZationCh,
     ChannelReactionOnUnsubAnyCh,
     ChannelReactionOnUnsubCustomCh,
-    ChannelReactionOnUnsubCustomIdCh,
     ChannelReactionOnUnsubZationCh
 } from "../reaction/reactionHandler";
 import {ChannelTarget} from "../../helper/channel/channelTarget";
@@ -39,8 +33,8 @@ import {SBox}          from "../../helper/box/sBox";
 type ValidChecker = (filter : object) => boolean;
 
 interface ChFilter {
-    chId ?: string,
-    chName ?: string,
+    id ?: string,
+    name ?: string,
     event ?: string
 }
 
@@ -346,10 +340,14 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on publish for an custom channel.
      * @example
-     * onPubCustomCh('name','myEvent',(data,socketSrcSid,event,chName) => {});
-     * @param chName
+     * onPubCustomCh({name : 'name',id : 'id'},'myEvent',(data,socketSrcSid,event,name,id) => {});
+     * onPubCustomCh({name : 'name'},'myEvent',(data,socketSrcSid,event,name,id) => {});
+     * @param name
      * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
+     * Or to all channel names by providing no specific name.
+     * @param id
+     * You can also respond to multiple channel ids by giving an channel id array.
+     * Or to all channel ids by providing no specific id.
      * @param event
      * You can also respond to multiple events by giving an event array.
      * Or to all events if you pass as parameter null.
@@ -358,8 +356,8 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * It returns the channelReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onPubCustomCh(chName: string | string[] | null, event: string | string[] | null, reaction: ChannelReactionOnPubCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnPubCustomCh>(reaction, {chName: chName, event: event});
+    onPubCustomCh({name,id} : {name ?: string | string[], id ?: string | string[]},event: string | string[] | null,reaction: ChannelReactionOnPubCustomCh): ChannelReactionBox {
+        const fullReaction = new FullReaction<ChannelReactionOnPubCustomCh>(reaction, {name, event, id});
         this._mapPub.add(ChannelTarget.C, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
@@ -372,10 +370,14 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * oncePubCustomCh('name','myEvent',(data,socketSrcSid,event,chName) => {});
-     * @param chName
+     * oncePubCustomCh({name : 'name',id : 'id'},'myEvent',(data,socketSrcSid,event,name,id) => {});
+     * oncePubCustomCh({name : 'name'},'myEvent',(data,socketSrcSid,event,name,id) => {});
+     * @param name
      * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
+     * Or to all channel names by providing no specific name.
+     * @param id
+     * You can also respond to multiple channel ids by giving an channel id array.
+     * Or to all channel ids by providing no specific id.
      * @param event
      * You can also respond to multiple events by giving an event array.
      * Or to all events if you pass as parameter null.
@@ -384,8 +386,8 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * It returns the channelReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    oncePubCustomCh(chName: string | string[] | null, event: string | string[] | null, reaction: ChannelReactionOnPubCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnPubCustomCh>(reaction, {chName: chName, event: event},true);
+    oncePubCustomCh({name,id} : {name ?: string | string[], id ?: string | string[]},event: string | string[] | null,reaction: ChannelReactionOnPubCustomCh): ChannelReactionBox {
+        const fullReaction = new FullReaction<ChannelReactionOnPubCustomCh>(reaction, {name, event, id},true);
         this._mapPub.add(ChannelTarget.C, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
@@ -400,73 +402,6 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     offPubCustomCh(fullReaction ?: FullReaction<any>): void {
         this._mapPub.remove(ChannelTarget.C, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on publish for an custom id channel.
-     * @example
-     * onPubCustomIdCh('name','id','myEvent',(data,socketSrcSid,event,chId,chName) => {});
-     * @param chName
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
-     * @param chId
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids if you pass as parameter null.
-     * @param event
-     * You can also respond to multiple events by giving an event array.
-     * Or to all events if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onPubCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,event: string | string[] | null,reaction: ChannelReactionOnPubCustomIdCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnPubCustomIdCh>(reaction, {chName, event, chId});
-        this._mapPub.add(ChannelTarget.CID, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on publish for an custom id channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * oncePubCustomIdCh('name','id','myEvent',(data,socketSrcSid,event,chId,chName) => {});
-     * @param chName
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
-     * @param chId
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids if you pass as parameter null.
-     * @param event
-     * You can also respond to multiple events by giving an event array.
-     * Or to all events if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    oncePubCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,event: string | string[] | null,reaction: ChannelReactionOnPubCustomIdCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnPubCustomIdCh>(reaction, {chName, event, chId},true);
-        this._mapPub.add(ChannelTarget.CID, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on publish reaction for an custom id channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offPubCustomIdCh(fullReaction ?: FullReaction<any>): void {
-        this._mapPub.remove(ChannelTarget.CID, fullReaction);
     }
 
 
@@ -776,17 +711,21 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on kick out for an custom channel.
      * @example
-     * onKickOutCustomCh('name',(message,chName) => {});
-     * @param chName
+     * onKickOutCustomCh({name : 'name',id : 'id'},(message,name,id) => {});
+     * onKickOutCustomCh({name : 'name'},(message,name,id) => {});
+     * @param name
      * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
+     * Or to all channel names by providing no specific name.
+     * @param id
+     * You can also respond to multiple channel ids by giving an channel id array.
+     * Or to all channel ids by providing no specific id.
      * @param reaction
      * @return
      * It returns the channelReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onKickOutCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnKickOutCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnKickOutCustomCh>(reaction, {chName: chName});
+    onKickOutCustomCh({name,id} : {name ?: string | string[], id ?: string | string[]},reaction: ChannelReactionOnKickOutCustomCh): ChannelReactionBox {
+        const fullReaction = new FullReaction<ChannelReactionOnKickOutCustomCh>(reaction, {name,id});
         this._mapKick.add(ChannelTarget.C, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
@@ -799,17 +738,21 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * onceKickOutCustomCh('name',(message,chName) => {});
-     * @param chName
+     * onceKickOutCustomCh({name : 'name',id : 'id'},(message,name,id) => {});
+     * onceKickOutCustomCh({name : 'name'},(message,name,id) => {});
+     * @param name
      * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
+     * Or to all channel names by providing no specific name.
+     * @param id
+     * You can also respond to multiple channel ids by giving an channel id array.
+     * Or to all channel ids by providing no specific id.
      * @param reaction
      * @return
      * It returns the channelReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onceKickOutCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnKickOutCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnKickOutCustomCh>(reaction, {chName: chName},true);
+    onceKickOutCustomCh({name,id} : {name ?: string | string[], id ?: string | string[]},reaction: ChannelReactionOnKickOutCustomCh): ChannelReactionBox {
+        const fullReaction = new FullReaction<ChannelReactionOnKickOutCustomCh>(reaction, {name,id},true);
         this._mapKick.add(ChannelTarget.C, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
@@ -824,67 +767,6 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     offKickOutCustomCh(fullReaction ?: FullReaction<any>): void {
         this._mapKick.remove(ChannelTarget.C, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on kick out for an custom id channel.
-     * @example
-     * onKickOutCustomCh('name','id',(message,chId,chName) => {});
-     * @param chName
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
-     * @param chId
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onKickOutCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,reaction: ChannelReactionOnKickOutCustomIdCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnKickOutCustomIdCh>(reaction, {chName, chId});
-        this._mapKick.add(ChannelTarget.CID, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on kick out for an custom id channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceKickOutCustomCh('name','id',(message,chId,chName) => {});
-     * @param chName
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
-     * @param chId
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceKickOutCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,reaction: ChannelReactionOnKickOutCustomIdCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnKickOutCustomIdCh>(reaction, {chName, chId},true);
-        this._mapKick.add(ChannelTarget.CID, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on kick out reaction for an custom id channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offKickOutCustomIdCh(fullReaction ?: FullReaction<any>): void {
-        this._mapKick.remove(ChannelTarget.CID, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1187,17 +1069,21 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on sub fail for an custom channel.
      * @example
-     * onSubFailCustomCh('name',(error,chName) => {});
-     * @param chName
+     * onSubFailCustomCh({name : 'name',id : 'id'},(error,name,id) => {});
+     * onSubFailCustomCh({name : 'name'},(error,name,id) => {});
+     * @param name
      * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
+     * Or to all channel names by providing no specific name.
+     * @param id
+     * You can also respond to multiple channel ids by giving an channel id array.
+     * Or to all channel ids by providing no specific id.
      * @param reaction
      * @return
      * It returns the channelReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onSubFailCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnSubFailCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubFailCustomCh>(reaction, {chName: chName});
+    onSubFailCustomCh({name,id} : {name ?: string | string[], id ?: string | string[]}, reaction: ChannelReactionOnSubFailCustomCh): ChannelReactionBox {
+        const fullReaction = new FullReaction<ChannelReactionOnSubFailCustomCh>(reaction, {name,id});
         this._mapSubFail.add(ChannelTarget.C, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
@@ -1210,17 +1096,21 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * onceSubFailCustomCh('name',(error,chName) => {});
-     * @param chName
+     * onceSubFailCustomCh({name : 'name',id : 'id'},(error,name,id) => {});
+     * onceSubFailCustomCh({name : 'name'},(error,name,id) => {});
+     * @param name
      * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
+     * Or to all channel names by providing no specific name.
+     * @param id
+     * You can also respond to multiple channel ids by giving an channel id array.
+     * Or to all channel ids by providing no specific id.
      * @param reaction
      * @return
      * It returns the channelReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onceSubFailCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnSubFailCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubFailCustomCh>(reaction, {chName: chName},true);
+    onceSubFailCustomCh({name,id} : {name ?: string | string[], id ?: string | string[]}, reaction: ChannelReactionOnSubFailCustomCh): ChannelReactionBox {
+        const fullReaction = new FullReaction<ChannelReactionOnSubFailCustomCh>(reaction, {name,id},true);
         this._mapSubFail.add(ChannelTarget.C, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
@@ -1235,67 +1125,6 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     offSubFailCustomCh(fullReaction ?: FullReaction<any>): void {
         this._mapSubFail.remove(ChannelTarget.C, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub fail for an custom id channel.
-     * @example
-     * onSubFailCustomIdCh('name','id',(error,chId,chName) => {});
-     * @param chName
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
-     * @param chId
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onSubFailCustomIdCh(chName: string | string[] | null,chId: string | string[] | null, reaction: ChannelReactionOnSubFailCustomIdCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubFailCustomIdCh>(reaction, {chName,chId});
-        this._mapSubFail.add(ChannelTarget.CID, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub fail for an custom id channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceSubFailCustomIdCh('name','id',(error,chId,chName) => {});
-     * @param chName
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
-     * @param chId
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceSubFailCustomIdCh(chName: string | string[] | null,chId: string | string[] | null, reaction: ChannelReactionOnSubFailCustomIdCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubFailCustomIdCh>(reaction, {chName,chId},true);
-        this._mapSubFail.add(ChannelTarget.CID, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on sub fail reaction for an custom id channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offSubFailCustomIdCh(fullReaction ?: FullReaction<any>): void {
-        this._mapSubFail.remove(ChannelTarget.CID, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1598,17 +1427,21 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on sub for an custom channel.
      * @example
-     * onSubCustomCh('name',(chName) => {});
-     * @param chName
+     * onSubCustomCh({name : 'name',id : 'id'},(name,id) => {});
+     * onSubCustomCh({name : 'name'},(name,id) => {});
+     * @param name
      * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
+     * Or to all channel names by providing no specific name.
+     * @param id
+     * You can also respond to multiple channel ids by giving an channel id array.
+     * Or to all channel ids by providing no specific id.
      * @param reaction
      * @return
      * It returns the channelReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onSubCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnSubCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubCustomCh>(reaction, {chName: chName});
+    onSubCustomCh({name,id} : {name ?: string | string[], id ?: string | string[]},reaction: ChannelReactionOnSubCustomCh): ChannelReactionBox {
+        const fullReaction = new FullReaction<ChannelReactionOnSubCustomCh>(reaction, {name,id});
         this._mapSub.add(ChannelTarget.C, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
@@ -1621,17 +1454,21 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * onceSubCustomCh('name',(chName) => {});
-     * @param chName
+     * onceSubCustomCh({name : 'name',id : 'id'},(name,id) => {});
+     * onceSubCustomCh({name : 'name'},(name,id) => {});
+     * @param name
      * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
+     * Or to all channel names by providing no specific name.
+     * @param id
+     * You can also respond to multiple channel ids by giving an channel id array.
+     * Or to all channel ids by providing no specific id.
      * @param reaction
      * @return
      * It returns the channelReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onceSubCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnSubCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubCustomCh>(reaction, {chName: chName},true);
+    onceSubCustomCh({name,id} : {name ?: string | string[], id ?: string | string[]},reaction: ChannelReactionOnSubCustomCh): ChannelReactionBox {
+        const fullReaction = new FullReaction<ChannelReactionOnSubCustomCh>(reaction, {name,id},true);
         this._mapSub.add(ChannelTarget.C, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
@@ -1646,67 +1483,6 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     offSubCustomCh(fullReaction ?: FullReaction<any>): void {
         this._mapSub.remove(ChannelTarget.C, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub for an custom id channel.
-     * @example
-     * onSubCustomCh('name','id',(chId,chName) => {});
-     * @param chName
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
-     * @param chId
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onSubCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,reaction: ChannelReactionOnSubCustomIdCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubCustomIdCh>(reaction, {chName, chId});
-        this._mapSub.add(ChannelTarget.CID, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub for an custom id channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceSubCustomCh('name','id',(chId,chName) => {});
-     * @param chName
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
-     * @param chId
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceSubCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,reaction: ChannelReactionOnSubCustomIdCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubCustomIdCh>(reaction, {chName, chId},true);
-        this._mapSub.add(ChannelTarget.CID, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on sub reaction for an custom id channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offSubCustomIdCh(fullReaction ?: FullReaction<any>): void {
-        this._mapSub.remove(ChannelTarget.CID, fullReaction);
     }
 
 
@@ -2010,17 +1786,21 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on client unsub for an custom channel.
      * @example
-     * onClientUnsubCustomCh('name',(chName) => {});
-     * @param chName
+     * onClientUnsubCustomCh({name : 'name',id : 'id'},(name,id) => {});
+     * onClientUnsubCustomCh({name : 'name'},(name,id) => {});
+     * @param name
      * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
+     * Or to all channel names by providing no specific name.
+     * @param id
+     * You can also respond to multiple channel ids by giving an channel id array.
+     * Or to all channel ids by providing no specific id.
      * @param reaction
      * @return
      * It returns the channelReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onClientUnsubCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnClientUnsubCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnClientUnsubCustomCh>(reaction, {chName: chName});
+    onClientUnsubCustomCh({name,id} : {name ?: string | string[], id ?: string | string[]},reaction: ChannelReactionOnClientUnsubCustomCh): ChannelReactionBox {
+        const fullReaction = new FullReaction<ChannelReactionOnClientUnsubCustomCh>(reaction, {name,id});
         this._mapClientUnsub.add(ChannelTarget.C, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
@@ -2033,17 +1813,21 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * onceClientUnsubCustomCh('name',(chName) => {});
-     * @param chName
+     * onceClientUnsubCustomCh({name : 'name',id : 'id'},(name,id) => {});
+     * onceClientUnsubCustomCh({name : 'name'},(name,id) => {});
+     * @param name
      * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
+     * Or to all channel names by providing no specific name.
+     * @param id
+     * You can also respond to multiple channel ids by giving an channel id array.
+     * Or to all channel ids by providing no specific id.
      * @param reaction
      * @return
      * It returns the channelReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onceClientUnsubCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnClientUnsubCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnClientUnsubCustomCh>(reaction, {chName: chName},true);
+    onceClientUnsubCustomCh({name,id} : {name ?: string | string[], id ?: string | string[]},reaction: ChannelReactionOnClientUnsubCustomCh): ChannelReactionBox {
+        const fullReaction = new FullReaction<ChannelReactionOnClientUnsubCustomCh>(reaction, {name,id},true);
         this._mapClientUnsub.add(ChannelTarget.C, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
@@ -2058,67 +1842,6 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     offClientUnsubCustomCh(fullReaction ?: FullReaction<any>): void {
         this._mapClientUnsub.remove(ChannelTarget.C, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on client unsub for an custom id channel.
-     * @example
-     * onClientUnsubCustomCh('name','id',(chId,chName) => {});
-     * @param chName
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
-     * @param chId
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onClientUnsubCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,reaction: ChannelReactionOnClientUnsubCustomIdCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnClientUnsubCustomIdCh>(reaction, {chName, chId});
-        this._mapClientUnsub.add(ChannelTarget.CID, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on client unsub for an custom id channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceClientUnsubCustomCh('name','id',(chId,chName) => {});
-     * @param chName
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
-     * @param chId
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceClientUnsubCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,reaction: ChannelReactionOnClientUnsubCustomIdCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnClientUnsubCustomIdCh>(reaction, {chName, chId},true);
-        this._mapClientUnsub.add(ChannelTarget.CID, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on client unsub reaction for an custom id channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offClientUnsubCustomIdCh(fullReaction ?: FullReaction<any>): void {
-        this._mapClientUnsub.remove(ChannelTarget.CID, fullReaction);
     }
 
 
@@ -2422,17 +2145,21 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * @description
      * React on unsub for an custom channel.
      * @example
-     * onUnsubCustomCh('name',(fromClient,chName) => {});
-     * @param chName
+     * onUnsubCustomCh({name : 'name',id : 'id'},(fromClient,name,id) => {});
+     * onUnsubCustomCh({name : 'name'},(fromClient,name,id) => {});
+     * @param name
      * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
+     * Or to all channel names by providing no specific name.
+     * @param id
+     * You can also respond to multiple channel ids by giving an channel id array.
+     * Or to all channel ids by providing no specific id.
      * @param reaction
      * @return
      * It returns the channelReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onUnsubCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnUnsubCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnUnsubCustomCh>(reaction, {chName: chName});
+    onUnsubCustomCh({name,id} : {name ?: string | string[], id ?: string | string[]},reaction: ChannelReactionOnUnsubCustomCh): ChannelReactionBox {
+        const fullReaction = new FullReaction<ChannelReactionOnUnsubCustomCh>(reaction, {name,id});
         this._mapUnsub.add(ChannelTarget.C, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
@@ -2445,17 +2172,21 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example
-     * onceUnsubCustomCh('name',(fromClient,chName) => {});
-     * @param chName
+     * onceUnsubCustomCh({name : 'name',id : 'id'},(fromClient,name,id) => {});
+     * onceUnsubCustomCh({name : 'name'},(fromClient,name,id) => {});
+     * @param name
      * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
+     * Or to all channel names by providing no specific name.
+     * @param id
+     * You can also respond to multiple channel ids by giving an channel id array.
+     * Or to all channel ids by providing no specific id.
      * @param reaction
      * @return
      * It returns the channelReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onceUnsubCustomCh(chName: string | string[] | null,reaction: ChannelReactionOnUnsubCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnUnsubCustomCh>(reaction, {chName: chName},true);
+    onceUnsubCustomCh({name,id} : {name ?: string | string[], id ?: string | string[]},reaction: ChannelReactionOnUnsubCustomCh): ChannelReactionBox {
+        const fullReaction = new FullReaction<ChannelReactionOnUnsubCustomCh>(reaction, {name,id},true);
         this._mapUnsub.add(ChannelTarget.C, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
@@ -2470,67 +2201,6 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     offUnsubCustomCh(fullReaction ?: FullReaction<any>): void {
         this._mapUnsub.remove(ChannelTarget.C, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on unsub for an custom id channel.
-     * @example
-     * onUnsubCustomCh('name','id',(fromClient,chId,chName) => {});
-     * @param chName
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
-     * @param chId
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onUnsubCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,reaction: ChannelReactionOnUnsubCustomIdCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnUnsubCustomIdCh>(reaction, {chName, chId});
-        this._mapUnsub.add(ChannelTarget.CID, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on unsub for an custom id channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceUnsubCustomCh('name','id',(fromClient,chId,chName) => {});
-     * @param chName
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names if you pass as parameter null.
-     * @param chId
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceUnsubCustomIdCh(chName: string | string[] | null,chId: string | string[] | null,reaction: ChannelReactionOnUnsubCustomIdCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnUnsubCustomIdCh>(reaction, {chName, chId},true);
-        this._mapUnsub.add(ChannelTarget.CID, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on unsub reaction for an custom id channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offUnsubCustomIdCh(fullReaction ?: FullReaction<any>): void {
-        this._mapUnsub.remove(ChannelTarget.CID, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -2607,7 +2277,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
     }
 
     private static _multiFilter(value, check): boolean {
-        if (value === null) {
+        if (value === undefined || value === null) {
             return true;
         } else if (Array.isArray(value)) {
             return value.indexOf(check) !== -1;
@@ -2622,50 +2292,40 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * Used internally.
      * Only use this method carefully.
      */
-    async _triggerPub(target : ChannelTarget, event : string, data : any, {chName,chId,chFullName} : any, ssid ?: string) : Promise<void>
+    async _triggerPub(target : ChannelTarget, event : string, data : any, {name,id,chFullName} : any, ssid ?: string) : Promise<void>
     {
         if(this.active) {
             await this._triggerWillProcess();
-            switch (target)
-            {
-                case ChannelTarget.C:
-                    const sameEventAndChFilter : ValidChecker = (filter : ChFilter) : boolean => {
-                        return ChannelReactionBox._multiFilter(filter.event,event) &&
-                            ChannelReactionBox._multiFilter(filter.chName,chName);};
-                    await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.C),sameEventAndChFilter,data,ssid,event,chName);
-                    break;
-                case ChannelTarget.CID:
-                    const sameEventChOrIdFilter : ValidChecker = (filter : ChFilter) : boolean => {
-                        return ChannelReactionBox._multiFilter(filter.event,event) &&
-                            ChannelReactionBox._multiFilter(filter.chName,chName) &&
-                            ChannelReactionBox._multiFilter(filter.chId,chId);};
-                    await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.CID),sameEventChOrIdFilter,data,ssid,event,chId,chName);
-                    break;
-                default:
-                    const sameEventFilter : ValidChecker = (filter : ChFilter) : boolean => {
-                        return ChannelReactionBox._multiFilter(filter.event,event);
-                    };
-                    switch (target) {
-                        case ChannelTarget.ANY:
-                            await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.ANY),sameEventFilter,data,ssid,event,chFullName);
-                            break;
-                        case ChannelTarget.USER:
-                            await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.USER),sameEventFilter,data,ssid,event);
-                            break;
-                        case ChannelTarget.AUG:
-                            await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.AUG),sameEventFilter,data,ssid,event);
-                            break;
-                        case ChannelTarget.DUG:
-                            await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.DUG),sameEventFilter,data,ssid,event);
-                            break;
-                        case ChannelTarget.ALL:
-                            await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.ALL),sameEventFilter,data,ssid,event);
-                            break;
-                        case ChannelTarget.PANEL:
-                            await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.PANEL),sameEventFilter,data,ssid,event);
-                            break;
-                    }
-                    break;
+            if (target === ChannelTarget.C) {
+                const sameEventAndChFilter : ValidChecker = (filter : ChFilter) : boolean => {
+                    return ChannelReactionBox._multiFilter(filter.event,event) &&
+                        ChannelReactionBox._multiFilter(filter.name,name) &&
+                        ChannelReactionBox._multiFilter(filter.id,id);};
+                await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.C),sameEventAndChFilter,data,ssid,event,name,id);
+            } else {
+                const sameEventFilter : ValidChecker = (filter : ChFilter) : boolean => {
+                    return ChannelReactionBox._multiFilter(filter.event,event);
+                };
+                switch (target) {
+                    case ChannelTarget.ANY:
+                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.ANY),sameEventFilter,data,ssid,event,chFullName);
+                        break;
+                    case ChannelTarget.USER:
+                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.USER),sameEventFilter,data,ssid,event);
+                        break;
+                    case ChannelTarget.AUG:
+                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.AUG),sameEventFilter,data,ssid,event);
+                        break;
+                    case ChannelTarget.DUG:
+                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.DUG),sameEventFilter,data,ssid,event);
+                        break;
+                    case ChannelTarget.ALL:
+                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.ALL),sameEventFilter,data,ssid,event);
+                        break;
+                    case ChannelTarget.PANEL:
+                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.PANEL),sameEventFilter,data,ssid,event);
+                        break;
+                }
             }
             await this._triggerDidProcess();
         }
@@ -2677,45 +2337,37 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * Used internally.
      * Only use this method carefully.
      */
-    async _triggerEvent(map : SBoxMapper<FullReaction<any>>, target : ChannelTarget, {chName,chId,chFullName} : any, ...arg : any[]) : Promise<void>
+    async _triggerEvent(map : SBoxMapper<FullReaction<any>>, target : ChannelTarget, {name,id,chFullName} : any, ...arg : any[]) : Promise<void>
     {
         if(this.active) {
             await this._triggerWillProcess();
-            switch (target)
-            {
-                case ChannelTarget.C:
-                    const sameEventAndChFilter : ValidChecker = (filter : object) : boolean => {
-                        return ChannelReactionBox._multiFilter(filter['chName'],chName);};
-                    await this._triggerFilterDataEventBox(map.tryGet(ChannelTarget.C),sameEventAndChFilter,...arg,chName);
-                    break;
-                case ChannelTarget.CID:
-                    const sameEventChOrIdFilter : ValidChecker = (filter : object) : boolean => {
-                        return ChannelReactionBox._multiFilter(filter['chName'],chName) &&
-                               ChannelReactionBox._multiFilter(filter['chId'],chId);};
-                    await this._triggerFilterDataEventBox(map.tryGet(ChannelTarget.CID),sameEventChOrIdFilter,...arg,chId,chName);
-                    break;
-                default:
-                    switch (target) {
-                        case ChannelTarget.ANY:
-                            await this._triggerDataEventBox(map.tryGet(ChannelTarget.ANY),...arg,chFullName);
-                            break;
-                        case ChannelTarget.USER:
-                            await this._triggerDataEventBox(map.tryGet(ChannelTarget.USER),...arg);
-                            break;
-                        case ChannelTarget.AUG:
-                            await this._triggerDataEventBox(map.tryGet(ChannelTarget.AUG),...arg);
-                            break;
-                        case ChannelTarget.DUG:
-                            await this._triggerDataEventBox(map.tryGet(ChannelTarget.DUG),...arg);
-                            break;
-                        case ChannelTarget.ALL:
-                            await this._triggerDataEventBox(map.tryGet(ChannelTarget.ALL),...arg);
-                            break;
-                        case ChannelTarget.PANEL:
-                            await this._triggerDataEventBox(map.tryGet(ChannelTarget.PANEL),...arg);
-                            break;
-                    }
-                    break;
+            if (target === ChannelTarget.C) {
+                const sameEventAndChFilter : ValidChecker = (filter : object) : boolean => {
+                    return ChannelReactionBox._multiFilter(filter['name'],name) &&
+                        ChannelReactionBox._multiFilter(filter['id'],id);
+                };
+                await this._triggerFilterDataEventBox(map.tryGet(ChannelTarget.C),sameEventAndChFilter,...arg,name,id);
+            } else {
+                switch (target) {
+                    case ChannelTarget.ANY:
+                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.ANY),...arg,chFullName);
+                        break;
+                    case ChannelTarget.USER:
+                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.USER),...arg);
+                        break;
+                    case ChannelTarget.AUG:
+                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.AUG),...arg);
+                        break;
+                    case ChannelTarget.DUG:
+                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.DUG),...arg);
+                        break;
+                    case ChannelTarget.ALL:
+                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.ALL),...arg);
+                        break;
+                    case ChannelTarget.PANEL:
+                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.PANEL),...arg);
+                        break;
+                }
             }
             await this._triggerDidProcess();
         }
@@ -2781,4 +2433,3 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
         return this._mapUnsub;
     }
 }
-

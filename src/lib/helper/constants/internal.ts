@@ -83,9 +83,8 @@ export enum ZationChannel {
     PANEL_IN = 'Z_PI',
     PANEL_OUT = 'Z_PO',
     //Custom Channels
-    CUSTOM_ID_CHANNEL_PREFIX = 'Z_CID_C.',
-    CUSTOM_CHANNEL_ID = '.',
-    CUSTOM_CHANNEL_PREFIX = 'Z_C_C.',
+    CUSTOM_CHANNEL_PREFIX = 'Z_C.',
+    CUSTOM_CHANNEL_ID_SEPARATOR = '.',
 }
 
 

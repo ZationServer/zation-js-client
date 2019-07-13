@@ -5,6 +5,6 @@ GitHub: LucaCode
  */
 
 export enum ChannelTarget {
-    ANY,USER,AUG,DUG,ALL,C,CID,PANEL
+    ANY,USER,AUG,DUG,ALL,C,PANEL
 }
 

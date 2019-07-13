@@ -203,46 +203,18 @@ export class ChannelEngine
     }
 
     //Part Custom Channel
-
     // noinspection JSUnusedGlobalSymbols
-    async subCustomCh(channel : string,retrySubForever  : boolean) : Promise<void>
+    async subCustomCh(name : string, id ?: string,retrySubForever  : boolean = true) : Promise<void>
     {
-        const infoObj = {chName : channel};
-        const chFullName = ZationChannel.CUSTOM_CHANNEL_PREFIX + channel;
-        await this.subChannel(chFullName,ChannelTarget.C, infoObj,
-            async (input : any) => {
-            if(typeof input === 'object') {
+        let chFullName = ZationChannel.CUSTOM_CHANNEL_PREFIX + name;
+        if(id !== undefined){
+            chFullName +=  ZationChannel.CUSTOM_CHANNEL_ID_SEPARATOR + id
+        }
 
-                const event : string = input['e'];
-                const data : any = input['d'];
-                const ssid : string | undefined = input['ssi'];
-
-                await this.zation._getChannelReactionMainBox().forEachAll(async (channelReactionBox : ChannelReactionBox) => {
-                    await channelReactionBox._triggerPub
-                    (
-                        ChannelTarget.C,
-                        event,
-                        data,
-                        infoObj,
-                        ssid
-                    );
-                });
-
-                await this.zation._getChannelReactionMainBox().forEachAll(async (channelReactionBox : ChannelReactionBox) => {
-                    await channelReactionBox._triggerPub(ChannelTarget.ANY,event,data,{chFullName : chFullName},ssid);
-                });
-            }
-        },retrySubForever);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    async subCustomIdCh(channel : string, id : string,retrySubForever  : boolean) : Promise<void>
-    {
-        const chFullName = ZationChannel.CUSTOM_ID_CHANNEL_PREFIX + channel + ZationChannel.CUSTOM_CHANNEL_ID + id;
-        const infoObj = {chName : channel,chId : id};
+        const infoObj = {name,id};
         await this.subChannel
         (
-            chFullName, ChannelTarget.CID, infoObj,
+            chFullName, ChannelTarget.C, infoObj,
             async (input : any) => {
                 if(typeof input === 'object') {
 
@@ -253,7 +225,7 @@ export class ChannelEngine
                     await this.zation._getChannelReactionMainBox().forEachAll(async (channelReactionBox : ChannelReactionBox) => {
                         await channelReactionBox._triggerPub
                         (
-                            ChannelTarget.CID,
+                            ChannelTarget.C,
                             event,
                             data,
                             infoObj,
@@ -269,57 +241,33 @@ export class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    static getCustomIdChName(channel : string | undefined, id : string = '') : string
-    {
+    static getCustomChName(name ?: string, id ?: string) : string {
         if(name !== undefined) {
-            return ZationChannel.CUSTOM_ID_CHANNEL_PREFIX + name
-                + ZationChannel.CUSTOM_CHANNEL_ID + id;
+            if(id !== undefined){
+                return ZationChannel.CUSTOM_CHANNEL_PREFIX + name +
+                    ZationChannel.CUSTOM_CHANNEL_ID_SEPARATOR + id;
+            }
+            else {
+                return ZationChannel.CUSTOM_CHANNEL_PREFIX + name;
+            }
         }
         else {
-            return ZationChannel.CUSTOM_ID_CHANNEL_PREFIX;
+            return ZationChannel.CUSTOM_CHANNEL_PREFIX;
         }
     }
 
     // noinspection JSUnusedGlobalSymbols
-    static getCustomChName(channel ?: string) : string
-    {
-        let res : string = ZationChannel.CUSTOM_CHANNEL_PREFIX;
-        if(channel !== undefined) {
-            res += channel;
-        }
-        return res;
+    unsubscribeCustomCh(name ?: string,id ?: string,andDestroy : boolean = true) : string[] {
+        return this.unsubscribeWithIndex(ChannelEngine.getCustomChName(name,id),andDestroy);
+    }
+
+    getSubCustomCh(name ?: string,id ?: string) : string[] {
+        return this.getSubsWithIndex(ChannelEngine.getCustomChName(name,id));
     }
 
     // noinspection JSUnusedGlobalSymbols
-    unsubscribeCustomIdCh(channel ?: string,id ?: string,andDestroy : boolean = true) : string[]
-    {
-        return this.unsubscribeWithIndex(ChannelEngine.getCustomIdChName(channel,id),andDestroy);
-    }
-
-    getSubCustomIdCh(channel ?: string,id ?: string) : string[]
-    {
-        return this.getSubsWithIndex(ChannelEngine.getCustomIdChName(channel,id));
-    }
-
-    hasSubCustomIdCh(channel ?: string,id ?: string) : boolean
-    {
-        return this.getSubCustomIdCh(channel,id).length > 0;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    unsubscribeCustomCh(channel ?: string,andDestroy : boolean = true) : string[]
-    {
-        return this.unsubscribeWithIndex(ChannelEngine.getCustomChName(channel),andDestroy);
-    }
-
-    getSubCustomCh(channel ?: string) : string[]
-    {
-        return this.getSubsWithIndex(ChannelEngine.getCustomChName(channel));
-    }
-
-    hasSubCustomCh(channel ?: string) : boolean
-    {
-        return this.getSubCustomCh(channel).length > 0;
+    hasSubCustomCh(name ?: string,id ?: string) : boolean {
+        return this.getSubCustomCh(name,id).length > 0;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -403,18 +351,7 @@ export class ChannelEngine
         await this.publish(ZationChannel.PANEL_IN,event,data);
     }
 
-    async pubCustomCh(chName : string,event : string, data : any) : Promise<void> {
-        await this.publish(ZationChannel.CUSTOM_CHANNEL_PREFIX + chName,event,data);
-    }
-
-    async pubCustomIdCh(chName : string, id : string, event : string, data : any) : Promise<void> {
-        await this.publish
-        (
-            ZationChannel.CUSTOM_ID_CHANNEL_PREFIX + chName + ZationChannel.CUSTOM_CHANNEL_ID + id,
-            event,
-            data
-        );
+    async pubCustomCh({name,id} : {name : string,id ?: string},event : string, data : any) : Promise<void> {
+        await this.publish(ChannelEngine.getCustomChName(name,id),event,data);
     }
 }
-
-

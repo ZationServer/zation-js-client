@@ -17,38 +17,32 @@ export type ResponseReactionCatchError   = (catchedErrors : BackError[], respons
 //Pub
 export type ChannelReactionOnPubAnyCh          = (data : any, socketSrcSid : undefined | string, eventName : string, fullChName : string) => void | Promise<void>;
 export type ChannelReactionOnPubZationCh       = (data : any, socketSrcSid : undefined | string, eventName : string) => void | Promise<void>;
-export type ChannelReactionOnPubCustomCh       = (data : any, socketSrcSid : undefined | string, eventName : string, chName : string) => void | Promise<void>;
-export type ChannelReactionOnPubCustomIdCh     = (data : any, socketSrcSid : undefined | string, eventName : string, chId : string, chName : string) => void | Promise<void>;
+export type ChannelReactionOnPubCustomCh       = (data : any, socketSrcSid : undefined | string, eventName : string, name : string, id ?: string) => void | Promise<void>;
 
 //KickOut
 export type ChannelReactionOnKickOutAnyCh      = (message : string | undefined,fullChName : string) => void | Promise<void>;
 export type ChannelReactionOnKickOutZationCh   = (message : string | undefined) => void | Promise<void>;
-export type ChannelReactionOnKickOutCustomCh   = (message : string | undefined,chName : string) => void | Promise<void>;
-export type ChannelReactionOnKickOutCustomIdCh = (message : string | undefined,chId : string,chName : string) => void | Promise<void>;
+export type ChannelReactionOnKickOutCustomCh   = (message : string | undefined,name : string,id ?: string) => void | Promise<void>;
 
 //SubFail
 export type ChannelReactionOnSubFailAnyCh      = (err : object,fullChName : string) => void | Promise<void>;
 export type ChannelReactionOnSubFailZationCh   = (err : object) => void | Promise<void>;
-export type ChannelReactionOnSubFailCustomCh   = (err : object,chName : string) => void | Promise<void>;
-export type ChannelReactionOnSubFailCustomIdCh = (err : object,chId : string,chName : string) => void | Promise<void>;
+export type ChannelReactionOnSubFailCustomCh   = (err : object,name : string,id ?: string) => void | Promise<void>;
 
 //Sub
 export type ChannelReactionOnSubAnyCh          = (fullChName : string) => void | Promise<void>;
 export type ChannelReactionOnSubZationCh       = () => void | Promise<void>;
-export type ChannelReactionOnSubCustomCh       = (chName : string) => void | Promise<void>;
-export type ChannelReactionOnSubCustomIdCh     = (chId : string,chName : string) => void | Promise<void>;
+export type ChannelReactionOnSubCustomCh       = (name : string,id ?: string) => void | Promise<void>;
 
 //ClientUnsub
 export type ChannelReactionOnClientUnsubAnyCh        = (fullChName : string) => void | Promise<void>;
 export type ChannelReactionOnClientUnsubZationCh     = () => void | Promise<void>;
-export type ChannelReactionOnClientUnsubCustomCh     = (chName : string) => void | Promise<void>;
-export type ChannelReactionOnClientUnsubCustomIdCh   = (chId : string,chName : string) => void | Promise<void>;
+export type ChannelReactionOnClientUnsubCustomCh     = (name : string,id ?: string) => void | Promise<void>;
 
 //Unsub
 export type ChannelReactionOnUnsubAnyCh        = (fromClient : boolean,fullChName : string) => void | Promise<void>;
 export type ChannelReactionOnUnsubZationCh     = (fromClient : boolean) => void | Promise<void>;
-export type ChannelReactionOnUnsubCustomCh     = (fromClient : boolean,chName : string) => void | Promise<void>;
-export type ChannelReactionOnUnsubCustomIdCh   = (fromClient : boolean,chId : string,chName : string) => void | Promise<void>;
+export type ChannelReactionOnUnsubCustomCh     = (fromClient : boolean,name : string,id ?: string) => void | Promise<void>;
 
 //Event
 export type EventReactionOnConnect                  = (isFirstConnection) => void | Promise<void>;

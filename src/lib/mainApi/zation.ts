@@ -909,123 +909,72 @@ export class Zation
      * Subscribe a custom channel.
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
      * @throws SubscribeFailedError, SocketNotCreatedError
-     * @param chName
+     * @param name
+     * @param id
      * @param retrySubForever
      * This option indicates if the client should retry to sub the channel forever.
      * So if the client is kicked from this channel or the subscription fail.
      * It will automatically retry to subscribe it if the authentication token change or the client is reconnected.
      * The default value is true.
      */
-    async subCustomCh(chName : string,retrySubForever : boolean = true) : Promise<void> {
-        await this.channelEngine.subCustomCh(chName,retrySubForever);
+    async subCustomCh(name : string, id ?: string,retrySubForever : boolean = true) : Promise<void> {
+        await this.channelEngine.subCustomCh(name,id,retrySubForever);
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
      * Returns if the socket has subscribed the custom channel.
-     * @param chName if not provided it checks
+     * @param name if not provided it checks
      * if the socket has subscribed any custom channel.
+     * @param id if not provided it checks
+     * if the socket has subscribed any custom channel with channel name.
      */
-    hasSubCustomCh(chName ?: string) : boolean {
-        return this.channelEngine.hasSubCustomCh(chName);
+    hasSubCustomCh(name ?: string, id ?: string) : boolean {
+        return this.channelEngine.hasSubCustomCh(name,id);
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
      * Unsubscribes custom channel.
-     * @param chName if not provided it will unsubscribe all custom channels.
+     * @param name if not provided it will unsubscribe all custom channels.
+     * @param id if not provided it will unsubscribe all custom channels with name.
      * @param andDestroy
      * @return
      * An string array with all custom channels there are unsubscribed.
      */
-    unsubCustomCh(chName ?: string,andDestroy : boolean = true) : string[] {
-        return this.channelEngine.unsubscribeCustomCh(chName,andDestroy);
+    unsubCustomCh(name ?: string, id ?: string,andDestroy : boolean = true) : string[] {
+        return this.channelEngine.unsubscribeCustomCh(name,id,andDestroy);
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
      * Returns all subscribed custom channels in an string array.
-     * @param chName if not provided it will return all custom channels which subscribed.
-     */
-    getSubscribedCustomCh(chName ?: string) : string[] {
-        return this.channelEngine.getSubCustomCh(chName);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Subscribe a custom id channel.
-     * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws SubscribeFailedError, SocketNotCreatedError
-     * @param chName
-     * @param chId
-     * @param retrySubForever
-     * This option indicates if the client should retry to sub the channel forever.
-     * So if the client is kicked from this channel or the subscription fail.
-     * It will automatically retry to subscribe it if the authentication token change or the client is reconnected.
-     * The default value is true.
-     */
-    async subCustomIdCh(chName : string, chId : string,retrySubForever : boolean = true) : Promise<void> {
-        await this.channelEngine.subCustomIdCh(chName,chId,retrySubForever);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns if the socket has subscribed the custom id channel.
-     * @param chName if not provided it checks
-     * if the socket has subscribed any custom channel.
-     * @param chId if not provided it checks
-     * if the socket has subscribed any custom channel with channel name.
-     */
-    hasSubCustomIdCh(chName ?: string, chId ?: string) : boolean {
-        return this.channelEngine.hasSubCustomIdCh(chName,chId);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Unsubscribes custom id channel.
-     * @param chName if not provided it will unsubscribe all custom id channels.
-     * @param chId if not provided it will unsubscribe all custom id channels with name.
-     * @param andDestroy
-     * @return
-     * An string array with all custom id channels there are unsubscribed.
-     */
-    unsubCustomIdCh(chName ?: string, chId ?: string,andDestroy : boolean = true) : string[] {
-        return this.channelEngine.unsubscribeCustomIdCh(chName,chId,andDestroy);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns all subscribed custom id channels in an string array.
-     * @param chName if not provided it will return all custom id channels which subscribed.
-     * @param chId if not provided it will return all custom id channels which subscribed and have the
+     * @param name if not provided it will return all custom channels which are subscribed.
+     * @param id if not provided it will return all custom channels which are subscribed and have the
      * same channel name.
      */
-    getSubscribedCustomIdCh(chName ?: string, chId ?: string) : string[] {
-        return this.channelEngine.getSubCustomIdCh(chName,chId);
+    getSubscribedCustomCh(name ?: string, id ?: string) : string[] {
+        return this.channelEngine.getSubCustomCh(name,id);
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Switch the custom id channel subscribtion to another id.
-     * By unsubscribe the all custom id channels with ch name and
+     * Switch the custom channel subscribtion to another member id.
+     * By unsubscribe all custom channels with the name and
      * subscribe the new one.
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
      * @throws SubscribeFailedError
-     * @param channel
+     * @param name
      * @param id
      */
-    async switchCustomIdCh(channel : string,id : string) : Promise<void>
+    async switchCustomCh(name : string,id : string) : Promise<void>
     {
-        this.unsubCustomIdCh(channel);
-        await this.subCustomIdCh(channel,id);
+        this.unsubCustomCh(name);
+        await this.subCustomCh(name,id);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1143,29 +1092,12 @@ export class Zation
      * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
      * This gives you better control over validation.
      * @throws ConnectionRequiredError, PublishFailError
-     * @param chName
+     * @param target
      * @param event
      * @param data
      */
-    async pubCustomCh(chName : string,event : string, data : any = {}) : Promise<void> {
-        await this.channelEngine.pubCustomCh(chName,event,data);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Publish in a custom id channel with this client.
-     * Notice that the socket needs to have access for clientPublish.
-     * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
-     * This gives you better control over validation.
-     * @throws ConnectionRequiredError, PublishFailError
-     * @param chName
-     * @param id
-     * @param event
-     * @param data
-     */
-    async pubCustomIdCh(chName : string,id : string,event : string, data : any = {}) : Promise<void> {
-        await this.channelEngine.pubCustomIdCh(chName,id,event,data);
+    async pubCustomCh(target : {name : string,id ?: string},event : string, data : any = {}) : Promise<void> {
+        await this.channelEngine.pubCustomCh(target,event,data);
     }
 
     //Part TokenVar
