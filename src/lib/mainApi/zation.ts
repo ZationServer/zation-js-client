@@ -10,12 +10,12 @@ import {SendAble}                    from "../request/helper/sendAble";
 import {ProtocolType}                from "../helper/constants/protocolType";
 import {ZationOptions}               from "./zationOptions";
 import {ProgressHandler}             from "../request/helper/progressHandler";
-import {OnHandlerFunction, ResponseFunction, Socket} from "../helper/sc/socket";
+import {OnHandlerFunction, Socket}   from "../helper/sc/socket";
 import {Events}                      from "../helper/constants/events";
 import {ValidationCheck}             from "../request/main/validationRequest";
 import {ChannelTarget}               from "../helper/channel/channelTarget";
 import {SystemController}            from "../helper/constants/systemController";
-import {ZationHttpInfo, ZationToken} from "../helper/constants/internal";
+import {ZationCustomEmitNamespace, ZationHttpInfo, ZationToken} from "../helper/constants/internal";
 import {ChannelEngine}               from "../helper/channel/channelEngine";
 import {ZationConfig}                from "../config/zationConfig";
 import {Box}                         from "../helper/box/box";
@@ -1225,38 +1225,54 @@ export class Zation
         return this.authEngine.getUserId()
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
-     * @description
-     * Set on event when server is emit an event.
-     * @throws ConnectionRequiredError
+     * Respond on emit events of the server.
+     * It uses the custom zation emit namespace
+     * (so you cannot have name conflicts with internal emit names).
+     * @param event
+     * @param handler
+     * The function that gets called when the event occurs,
+     * parameters are the data and a response function that you can call to respond on the event back.
      */
-    on(event : string,handler : OnHandlerFunction) : void
-    {
-        if(this.isConnected()) {
-            this.socket.on(event,handler);
-        }
-        else {
-            throw new ConnectionRequiredError('To set on event.');
-
-        }
+    on(event : string,handler : OnHandlerFunction) : void {
+        this.socket.on(event,handler);
     }
 
     // noinspection JSUnusedGlobalSymbols
+    async emit(eventName : string,data : any,onlyTransmit : true) : Promise<void>
+    // noinspection JSUnusedGlobalSymbols
+    async emit(eventName : string,data : any,onlyTransmit : false) : Promise<any>
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Emit to server. You can react on the server side
-     * by setting an on handler on the server socket. (use socket event).
-     * @throws ConnectionRequiredError
+     * Emit to the server.
+     * If you not only transmit than the return value is a promise with the result,
+     * and if an error occurs while emitting to the server, this error is thrown.
+     * It uses the custom zation emit namespace (so you cannot have name conflicts with internal emit names).
+     * @param event
+     * @param data
+     * @param onlyTransmit
+     * Indicates if you only want to transmit data.
+     * If not than the promise will be resolved with the result when the server responded on the emit.
      */
-    emit(event : string,data : any,callback ?: ResponseFunction) : void
+    async emit(event : string,data : any,onlyTransmit : boolean = true) : Promise<object | void>
     {
         if(this.isConnected()) {
-            this.socket.emit(event,data,callback)
+            return new Promise<object>((resolve, reject) => {
+                // noinspection DuplicatedCode
+                if(onlyTransmit){
+                    this.socket.emit(ZationCustomEmitNamespace+event,data);
+                    resolve();
+                }
+                else {
+                    this.socket.emit(ZationCustomEmitNamespace+event,data,(err,data) => {
+                        err ? reject(err) : resolve(data);
+                    });
+                }
+            });
         }
         else {
             throw new ConnectionRequiredError('To emit an event.');
-
         }
     }
 
