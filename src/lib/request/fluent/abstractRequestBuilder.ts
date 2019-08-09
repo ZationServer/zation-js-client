@@ -4,22 +4,23 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import {ProgressHandler} from "../helper/progressHandler";
+import {ProgressHandler}       from "../helper/progressHandler";
 import {
     ResponseReactionOnError,
     ResponseReactionOnResponse,
     ResponseReactionOnSuccessful
 } from "../../react/reaction/reactionHandler";
-import {OnErrorBuilder} from "../../react/error/onErrorBuilder";
-import {CatchErrorBuilder} from "../../react/error/catchErrorBuilder";
-import {ErrorFilter} from "../../react/error/errorFilter";
-import {ProtocolType} from "../../helper/constants/protocolType";
-import {Zation} from "../../mainApi/zation";
-import {ResponseReactionBox} from "../../react/reactionBoxes/responseReactionBox";
-import {ZationRequest} from "../main/zationRequest";
-import {Response} from "../../response/response";
+import {OnErrorBuilder}        from "../../react/error/onErrorBuilder";
+import {CatchErrorBuilder}     from "../../react/error/catchErrorBuilder";
+import {ErrorFilter}           from "../../react/error/errorFilter";
+import {ProtocolType}          from "../../helper/constants/protocolType";
+import {Zation}                from "../../mainApi/zation";
+import {ResponseReactionBox}   from "../../react/reactionBoxes/responseReactionBox";
+import {ZationRequest}         from "../main/zationRequest";
+import {Response}              from "../../response/response";
+import {ResponseReactAble}     from "../../react/response/responseReactAble";
 
-export abstract class AbstractRequestBuilder<T>
+export abstract class AbstractRequestBuilder<T> implements ResponseReactAble
 {
     protected readonly zation : Zation;
 
