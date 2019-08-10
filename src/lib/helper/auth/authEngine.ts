@@ -15,6 +15,7 @@ import {UserIdRequiredError}           from "../error/userIdRequiredError";
 import {AuthUserGroupRequiredError}    from "../error/authUserGroupRequiredError";
 import {DeauthenticationRequiredError} from "../error/deauthenticationRequiredError";
 import {AuthenticationRequiredError}   from "../error/authenticationRequiredError";
+import {Socket} from "../sc/socket";
 
 export class AuthEngine
 {
@@ -36,17 +37,15 @@ export class AuthEngine
         this.currentUserAuthGroup = undefined;
     }
 
-    initAuthEngine()
+    connectToSocket(socket : Socket)
     {
-        //we have an socket!
-
         //reset on disconnection
-        this.zation.getSocket().on('close',()=> {
+        socket.on('close',()=> {
             this.currentUserId = undefined;
             this.currentUserAuthGroup = undefined;
         });
 
-        this.zation.getSocket().on('authenticate',async ()=> {
+        socket.on('authenticate',async ()=> {
             const authToken = this.zation.getSocket().getAuthToken();
             const signToken = this.zation.getSocket().getSignedAuthToken();
 
@@ -57,7 +56,7 @@ export class AuthEngine
             catch (e) {}
         });
 
-        this.zation.getSocket().on('connect',async (state) =>{
+        socket.on('connect',async (state) =>{
             if(!state.isAuthenticated && this.zation.getSocket().getSignedAuthToken() !== this.signToken &&
             this.signToken !== null) {
                 try{await this.zation.signAuthenticate(this.signToken);}
@@ -66,7 +65,7 @@ export class AuthEngine
         });
 
         //update token on change
-        this.zation.getSocket().on('deauthenticate',async ()=> {
+        socket.on('deauthenticate',async ()=> {
             await this.refreshToken(null,null);
         });
     }

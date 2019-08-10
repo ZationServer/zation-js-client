@@ -58,7 +58,10 @@ export class Zation
     //webSockets
     private socket : Socket;
 
-    private firstConnection : boolean = true;
+    /**
+     * Complete means the client will not automatically connect again.
+     */
+    private completeDisconnected : boolean = true;
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -94,6 +97,8 @@ export class Zation
         this.addReactionBox(...reactionBox);
 
         this._buildWsSocket();
+        this._registerSocketEvents();
+        this.authEngine.connectToSocket(this.socket);
     }
 
     //Part Responds
@@ -561,58 +566,52 @@ export class Zation
      * Connect to the server.
      * Promises will be resolve on connection
      * or throw an ConnectionAbortError by connectAbort.
-     * The client will also automatically try to establish a new connection when gets disconnected.
+     * If the option autoReconnect is activated,
+     * the client will automatically try to establish a new connection when gets disconnected.
      * @throws ConnectionAbortError
      */
-    connect() : Promise<void>
+    async connect() : Promise<void>
     {
-        return new Promise<void>((resolve,reject)=>
-        {
-            if(this.isConnected()) {
+        if(this.isConnected()) {
+            return;
+        }
+
+        return  new Promise<void>((resolve, reject) => {
+            let connectListener;
+            let connectAbortListener;
+
+            connectListener = () => {
+                this.socket.off('connect',connectListener);
+                this.socket.off('connectAbort',connectAbortListener);
                 resolve();
-            }
-            else {
-                this._registerSocketEvents();
+            };
+            connectAbortListener = (err) => {
+                this.socket.off('connect',connectListener);
+                this.socket.off('connectAbort',connectAbortListener);
+                reject(new ConnectionAbortError(err));
+            };
 
-                this.authEngine.initAuthEngine();
+            this.socket.on('connect',connectListener);
+            this.socket.on('connectAbort',connectAbortListener);
 
-                //if it is used the same socket
-                if(this.isConnected()) {
-                    resolve();
-                }
-
-                //register
-                this.socket.on('connect',async () => {
-                    resolve();
-                });
-
-                this.socket.on('connectAbort',(err) => {
-                   reject(new ConnectionAbortError(err));
-                });
-
-                //start connection
-                this.socket.connect();
-            }
-        })
+            this.socket.connect();
+        });
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Disconnectes the socket if it is connected.
+     * Disconnectes the socket.
      * The current auth token will not be removed.
      * This means that when the client is reconnected the token is used again.
      * To prevent this, use the function deauthenticate or deauthDis.
      * @param code error code (disconnection)
      * @param data reason code for disconnection
      */
-    disconnect(code ?: number, data : object = {}) : void
-    {
-        if(this.isConnected()) {
-            data['#internal-fromZationClient'] = true;
-            this.socket.disconnect(code,data);
-            this.firstConnection = true;
-        }
+    disconnect(code ?: number, data : object = {}) : void {
+        data['#internal-fromZationClient'] = true;
+        this.socket.disconnect(code,data);
+        this.completeDisconnected = true;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -622,8 +621,7 @@ export class Zation
      * @param code error code (disconnection)
      * @param data reason code for disconnection
      */
-    async reconnect(code ?: number, data : object = {}) : Promise<void>
-    {
+    async reconnect(code ?: number, data : object = {}) : Promise<void> {
        this.disconnect(code,data);
        await this.connect();
     }
@@ -631,7 +629,7 @@ export class Zation
     private _registerSocketEvents()
     {
         this.socket.on('connect',async () => {
-            if(this.firstConnection) {
+            if(this.completeDisconnected) {
                 if(this.zc.isDebug()) {
                     Logger.printInfo('Client is first connected.');
                 }
@@ -643,9 +641,9 @@ export class Zation
                 }
                 await this._triggerEventReactions(Events.Reconnect);
             }
-            this.firstConnection = false;
+            this.completeDisconnected = false;
 
-            await this._triggerEventReactions(Events.Connect,this.firstConnection);
+            await this._triggerEventReactions(Events.Connect,this.completeDisconnected);
         });
 
         this.socket.on('error', async (err) => {
