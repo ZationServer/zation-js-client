@@ -8,7 +8,7 @@ GitHub: LucaCode
 import {RequestAble}         from "../helper/requestAble";
 // noinspection TypeScriptPreferShortImport
 import {ProtocolType}        from "../../helper/constants/protocolType";
-import {SendAble}            from "../helper/sendAble";
+import {SendAble, WaitForConnectionOption} from "../helper/sendAble";
 import {ProgressHandler}     from "../helper/progressHandler";
 
 export abstract class ZationRequest extends SendAble
@@ -20,6 +20,7 @@ export abstract class ZationRequest extends SendAble
 
     private compiledData : object | any[];
     private progressHandler: ProgressHandler | undefined = undefined;
+    private waitForConnection : WaitForConnectionOption = undefined;
 
     protected constructor(data : any, type : ProtocolType)
     {
@@ -49,7 +50,7 @@ export abstract class ZationRequest extends SendAble
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the timeout of the request.
+     * Returns the timeout for the response of the request.
      * Value can be null which means the timeout is disabled or
      * undefined then it will use the default timeout of the zation config,
      * or it can be a number that indicates the milliseconds.
@@ -71,7 +72,7 @@ export abstract class ZationRequest extends SendAble
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Set the timeout of the request.
+     * Set the timeout for the response of the request.
      * Value can be null which means the timeout is disabled or
      * undefined then it will use the default timeout of the zation config,
      * or it can be a number that indicates the milliseconds.
@@ -109,8 +110,35 @@ export abstract class ZationRequest extends SendAble
         return this.progressHandler;
     }
 
-    async preCompile()
-    {
+    /**
+     * Returns the WaitForConnection option.
+     */
+    getWaitForConnection(): WaitForConnectionOption {
+        return this.waitForConnection;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * With the WaitForConnection option, you can activate that the socket is
+     * trying to connect when it is not connected. You have four possible choices:
+     * Undefined: It will use the value from the default options.
+     * False: The action will fail and throw a ConnectionRequiredError,
+     * when the socket is not connected.
+     * For the other options, it is also recommended to have activated the auto-reconnect.
+     * Null: The socket will try to connect (if it is not connected) and
+     * waits until the connection is made, then it continues the action.
+     * Number: Same as null, but now you can specify a timeout (in ms) of
+     * maximum waiting time for the connection. If the timeout is reached,
+     * it will throw a timeout error.
+     * This options is only used in the WebSocket protocol.
+     * @param value
+     * @default false
+     */
+    setWaitForConnection(value : WaitForConnectionOption) {
+        this.waitForConnection = value;
+    }
+
+    async preCompile() {
         this.compiledData = this.compileValueData(this.data);
     }
 

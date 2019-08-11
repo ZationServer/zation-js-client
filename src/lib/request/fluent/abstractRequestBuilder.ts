@@ -10,15 +10,16 @@ import {
     ResponseReactionOnResponse,
     ResponseReactionOnSuccessful
 } from "../../react/reaction/reactionHandler";
-import {OnErrorBuilder}        from "../../react/error/onErrorBuilder";
-import {CatchErrorBuilder}     from "../../react/error/catchErrorBuilder";
-import {ErrorFilter}           from "../../react/error/errorFilter";
-import {ProtocolType}          from "../../helper/constants/protocolType";
-import {Zation}                from "../../mainApi/zation";
-import {ResponseReactionBox}   from "../../react/reactionBoxes/responseReactionBox";
-import {ZationRequest}         from "../main/zationRequest";
-import {Response}              from "../../response/response";
-import {ResponseReactAble}     from "../../react/response/responseReactAble";
+import {OnErrorBuilder}          from "../../react/error/onErrorBuilder";
+import {CatchErrorBuilder}       from "../../react/error/catchErrorBuilder";
+import {ErrorFilter}             from "../../react/error/errorFilter";
+import {ProtocolType}            from "../../helper/constants/protocolType";
+import {Zation}                  from "../../mainApi/zation";
+import {ResponseReactionBox}     from "../../react/reactionBoxes/responseReactionBox";
+import {ZationRequest}           from "../main/zationRequest";
+import {Response}                from "../../response/response";
+import {ResponseReactAble}       from "../../react/response/responseReactAble";
+import {WaitForConnectionOption} from "../helper/sendAble";
 
 export abstract class AbstractRequestBuilder<T> implements ResponseReactAble
 {
@@ -27,6 +28,7 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble
     protected _protocol : ProtocolType = ProtocolType.WebSocket;
     protected _apiLevel : number | undefined = undefined;
     protected _timeout : null | number | undefined = undefined;
+    protected _waitForConnection : WaitForConnectionOption = undefined;
     private _progressHandler : ProgressHandler[] = [];
     private _responseReactionBox : ResponseReactionBox;
     private _reactionAdded : boolean = false;
@@ -98,7 +100,7 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Set the timeout of the request.
+     * Set the timeout for the response of the request.
      * Value can be null which means the timeout is disabled or
      * undefined then it will use the default timeout of the zation config,
      * or it can be a number that indicates the milliseconds.
@@ -106,6 +108,28 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble
      */
     timeout(timeout : null | undefined | number) : T {
         this._timeout = timeout;
+        return this.self();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * With the WaitForConnection option, you can activate that the socket is
+     * trying to connect when it is not connected. You have four possible choices:
+     * Undefined: It will use the value from the default options.
+     * False: The action will fail and throw a ConnectionRequiredError,
+     * when the socket is not connected.
+     * For the other options, it is also recommended to have activated the auto-reconnect.
+     * Null: The socket will try to connect (if it is not connected) and
+     * waits until the connection is made, then it continues the action.
+     * Number: Same as null, but now you can specify a timeout (in ms) of
+     * maximum waiting time for the connection. If the timeout is reached,
+     * it will throw a timeout error.
+     * This options is only used in the WebSocket protocol.
+     * @param waitForConnection
+     * @default false
+     */
+    waitForConnection(waitForConnection : WaitForConnectionOption) : T {
+        this._waitForConnection = waitForConnection;
         return this.self();
     }
 

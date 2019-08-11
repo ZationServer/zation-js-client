@@ -100,6 +100,7 @@ export class RequestBuilder extends AbstractRequestBuilder<RequestBuilder>
         //buildRequest
         if(this._protocol === ProtocolType.WebSocket) {
             request = new WsRequest(this._controller,this._data,this._systemController);
+            request.setWaitForConnection(this._waitForConnection);
         }
         else {
             request = new HttpRequest(this._controller,this._data,this._useAuth,this._systemController);

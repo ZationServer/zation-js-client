@@ -78,6 +78,7 @@ export class ValidationRequestBuilder extends AbstractRequestBuilder<ValidationR
         const req = new ValidationRequest(this._controller,this._checks,this._systemController,this._protocol);
         req.setApiLevel(this._apiLevel);
         req.setTimeout(this._timeout);
+        req.setWaitForConnection(this._waitForConnection);
         return req;
     }
 

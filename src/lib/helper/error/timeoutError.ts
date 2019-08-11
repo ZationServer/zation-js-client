@@ -5,8 +5,20 @@ GitHub: LucaCode
  */
 
 export class TimeoutError extends Error {
-    constructor(msg : string) {
+
+    private readonly waitForConnectionTimeout : boolean;
+
+    constructor(msg : string,waitForConnectionTimeout : boolean = false) {
         super(msg);
+        this.waitForConnectionTimeout = waitForConnectionTimeout;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Returns if this is a wait for connection timeout.
+     */
+    isWaitForConnecitonTimeout() : boolean {
+        return this.waitForConnectionTimeout;
     }
 }
 

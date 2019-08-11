@@ -10,49 +10,52 @@ import {ProgressHandler}        from "../../request/helper/progressHandler";
 import {Zation}                 from "../../mainApi/zation";
 import {Response}               from "../../response/response";
 import {TimeoutError}           from "../error/timeoutError";
-import {ConnectionRequiredError}  from "../error/connectionRequiredError";
 import axios, {AxiosRequestConfig} from 'axios';
-const FormData                = require('form-data');
-import stringify                from "fast-stringify";
+const FormData                   = require('form-data');
+import stringify                   from "fast-stringify";
+import ConnectionUtils             from "../utils/connectionUtils";
+import {WaitForConnectionOption}   from "../../request/helper/sendAble";
 
 export class SendEngine
 {
-    static wsSend(zation : Zation,data : object,timeout : null | number | undefined,progressHandler ?: ProgressHandler) : Promise<Response>
+    static wsSend(
+        zation : Zation,data : object,
+        timeout : null | number | undefined,
+        progressHandler ?: ProgressHandler,
+        waitForConnection : WaitForConnectionOption = undefined
+    ) : Promise<Response>
     {
         return new Promise(async (resolve, reject)=>
         {
-            if(zation.isConnected()) {
+            await ConnectionUtils.checkConnection
+            (zation,waitForConnection,'For sending an webSocket request.');
 
+            if (progressHandler) {
+                progressHandler(0);
+            }
+
+            if(timeout !== null){
+                timeout = timeout === undefined ? zation.getZc().config.requestTimeout : timeout;
+            }
+
+            zation.getSocket().emit('>',data,async (err,res) =>
+            {
                 if (progressHandler) {
-                    progressHandler(0);
+                    progressHandler(100);
                 }
 
-                if(timeout !== null){
-                    timeout = timeout === undefined ? zation.getZc().config.requestTimeout : timeout;
-                }
-
-                zation.getSocket().emit('>',data,async (err,res) =>
-                {
-                    if (progressHandler) {
-                        progressHandler(100);
-                    }
-
-                    if(err) {
-                        if(err.name === 'TimeoutError'){
-                            reject(new TimeoutError(err.message));
-                        }
-                        else {
-                            reject(err);
-                        }
+                if(err) {
+                    if(err.name === 'TimeoutError'){
+                        reject(new TimeoutError(err.message));
                     }
                     else {
-                        resolve((new Response(res,zation,ProtocolType.WebSocket)));
+                        reject(err);
                     }
-                },timeout);
-            }
-            else {
-                reject(new ConnectionRequiredError('By sending an webSocket request!'));
-            }
+                }
+                else {
+                    resolve((new Response(res,zation,ProtocolType.WebSocket)));
+                }
+            },timeout);
         });
     }
 

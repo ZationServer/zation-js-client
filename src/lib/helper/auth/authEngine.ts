@@ -8,14 +8,16 @@ import {ZationToken}                   from "../constants/internal";
 import {Zation}                        from "../../mainApi/zation";
 import {ChannelEngine}                 from "../channel/channelEngine";
 import {SignAuthenticationFailedError} from "../error/signAuthenticationFailedError";
-import {ConnectionRequiredError}       from "../error/connectionRequiredError";
 import {DeauthenticationFailedError}   from "../error/deauthenticationFailedError";
 import {Logger}                        from "../logger/logger";
 import {UserIdRequiredError}           from "../error/userIdRequiredError";
 import {AuthUserGroupRequiredError}    from "../error/authUserGroupRequiredError";
 import {DeauthenticationRequiredError} from "../error/deauthenticationRequiredError";
 import {AuthenticationRequiredError}   from "../error/authenticationRequiredError";
-import {Socket} from "../sc/socket";
+import {Socket}                        from "../sc/socket";
+import {TimeoutError}                  from "../../..";
+import ConnectionUtils                 from "../utils/connectionUtils";
+import {WaitForConnectionOption} from "../../request/helper/sendAble";
 
 export class AuthEngine
 {
@@ -78,26 +80,30 @@ export class AuthEngine
         await this.updateToken(plainToken);
     }
 
-    signAuthenticate(signToken : string) : Promise<void>
+    signAuthenticate(signToken : string,waitForConnection : WaitForConnectionOption) : Promise<void>
     {
-        return new Promise<void>((resolve, reject) => {
-            if(this.zation.isConnected()) {
-                this.zation.getSocket().authenticate(signToken,(err,authState)=>
-                {
-                    if(err){
-                        reject(new SignAuthenticationFailedError(err));
-                    }
-                    else if(authState.authError){
-                        reject(new SignAuthenticationFailedError(authState.authError));
+        return new Promise<void>(async (resolve, reject) => {
+
+            await ConnectionUtils.checkConnection
+            (this.zation,waitForConnection,'To authenticate with sign token.');
+
+            this.zation.getSocket().authenticate(signToken,(err,authState)=>
+            {
+                if(err){
+                    if(err.name === 'TimeoutError'){
+                        reject(new TimeoutError(err.message));
                     }
                     else {
-                        resolve();
+                        reject(new SignAuthenticationFailedError(err));
                     }
-                });
-            }
-            else {
-                reject(new ConnectionRequiredError('To authenticate with sign token!'));
-            }
+                }
+                else if(authState.authError){
+                    reject(new SignAuthenticationFailedError(authState.authError));
+                }
+                else {
+                    resolve();
+                }
+            });
         });
     }
 

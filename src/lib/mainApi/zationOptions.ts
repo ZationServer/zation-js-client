@@ -150,10 +150,28 @@ export interface ZationOptions {
     }
 
     /**
-     * Specifies the default request timeout.
+     * Specifies the default timeout for the response of a request.
      * @default 10000
      */
     requestTimeout ?: number;
+
+    /**
+     * Specifies the default value for the WaitForConnection option.
+     * That option can activate that the socket is
+     * trying to connect (if it's not connected) whenever you want to send
+     * something to the server.
+     * You have three possible choices:
+     * False: The action will fail and throw a ConnectionRequiredError,
+     * when the socket is not connected.
+     * For the other options, it is also recommended to have activated the auto-reconnect.
+     * Null: The socket will try to connect (if it is not connected) and
+     * waits until the connection is made, then it continues the action.
+     * Number: Same as null, but now you can specify a timeout (in ms) of
+     * maximum waiting time for the connection. If the timeout is reached,
+     * it will throw a timeout error.
+     * @default false
+     */
+    waitForConnection ?: false | null | number;
 }
 
 export interface ZationOptionsInternal extends ZationOptions{
@@ -182,4 +200,5 @@ export interface ZationOptionsInternal extends ZationOptions{
         maxDelay ?: number
     }
     requestTimeout : number;
+    waitForConnection : false | null | number;
 }

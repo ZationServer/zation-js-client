@@ -10,7 +10,9 @@ import {Zation}                from "../../mainApi/zation";
 import {SubscribeFailedError}  from "../error/subscribeFailedError";
 import {ChannelReactionBox}    from "../../react/reactionBoxes/channelReactionBox";
 import {PublishFailedError}    from "../error/publishFailedError";
-import {ConnectionRequiredError} from "../error/connectionRequiredError";
+import {TimeoutError}          from "../../..";
+import ConnectionUtils         from "../utils/connectionUtils";
+import {WaitForConnectionOption} from "../../request/helper/sendAble";
 
 export class ChannelEngine
 {
@@ -310,48 +312,53 @@ export class ChannelEngine
         };
     }
 
-    publish(channelName : string,eventName : string,data : any) : Promise<void>
+    publish(channelName : string,eventName : string,data : any,waitForConnection : WaitForConnectionOption) : Promise<void>
     {
-        return new Promise<void>((resolve, reject) => {
-            if(this.zation.isConnected())
+        return new Promise<void>(async (resolve, reject) => {
+
+            await ConnectionUtils.checkConnection
+            (this.zation,waitForConnection,'To publish data.');
+
+            this.zation.getSocket().publish(channelName,ChannelEngine.buildPubData(eventName,data),(err) =>
             {
-                this.zation.getSocket().publish(channelName,ChannelEngine.buildPubData(eventName,data),(err) =>
-                {
-                    if(err){
+                if(err){
+                    if(err.name === 'TimeoutError'){
+                        reject(new TimeoutError(err.message));
+                    }
+                    else {
                         reject(new PublishFailedError(err));
                     }
-                    else{
-                        resolve();
-                    }
-                });
-            }
-            else {
-                reject(new ConnectionRequiredError('To publish data!'));
-            }
+                }
+                else{
+                    resolve();
+                }
+            });
         });
     }
 
-    async pubUserCh(userId : string | number,event : string, data : any) : Promise<void> {
-        await this.publish(ZationChannel.USER_CHANNEL_PREFIX + userId,event,data);
+    async pubUserCh(userId : string | number,event : string, data : any,waitForConnection : WaitForConnectionOption) : Promise<void> {
+        await this.publish(ZationChannel.USER_CHANNEL_PREFIX + userId,event,data,waitForConnection);
     }
 
-    async pubAuthUserGroupCh(authUserGroup : string,event : string, data : any) : Promise<void> {
-        await this.publish(ZationChannel.AUTH_USER_GROUP_PREFIX + authUserGroup,event,data);
+    async pubAuthUserGroupCh(authUserGroup : string,event : string, data : any,waitForConnection : WaitForConnectionOption) : Promise<void> {
+        await this.publish(ZationChannel.AUTH_USER_GROUP_PREFIX + authUserGroup,event,data,waitForConnection);
     }
 
-    async pubDefaultUserGroupCh(event : string, data : any) : Promise<void> {
-        await this.publish(ZationChannel.DEFAULT_USER_GROUP,event,data);
+    async pubDefaultUserGroupCh(event : string, data : any,waitForConnection : WaitForConnectionOption) : Promise<void> {
+        await this.publish(ZationChannel.DEFAULT_USER_GROUP,event,data,waitForConnection);
     }
 
-    async pubAllCh(event : string, data : any) : Promise<void> {
-        await this.publish(ZationChannel.ALL,event,data);
+    async pubAllCh(event : string, data : any,waitForConnection : WaitForConnectionOption) : Promise<void> {
+        await this.publish(ZationChannel.ALL,event,data,waitForConnection);
     }
 
-    async pubPanelInCh(event : string, data : any) : Promise<void> {
-        await this.publish(ZationChannel.PANEL_IN,event,data);
+    async pubPanelInCh(event : string, data : any,waitForConnection : WaitForConnectionOption) : Promise<void> {
+        await this.publish(ZationChannel.PANEL_IN,event,data,waitForConnection);
     }
 
-    async pubCustomCh({name,id} : {name : string,id ?: string},event : string, data : any) : Promise<void> {
-        await this.publish(ChannelEngine.getCustomChName(name,id),event,data);
+    async pubCustomCh({name,id} : {name : string,id ?: string},event : string, data : any,
+                      waitForConnection : WaitForConnectionOption) : Promise<void>
+    {
+        await this.publish(ChannelEngine.getCustomChName(name,id),event,data,waitForConnection);
     }
 }

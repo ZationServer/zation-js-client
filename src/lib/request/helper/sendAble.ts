@@ -13,4 +13,8 @@ export abstract class SendAble
     // noinspection JSMethodCanBeStatic
     abstract getProtocol() : ProtocolType;
     abstract getTimeout() : null | number | undefined;
+
+    abstract getWaitForConnection() : WaitForConnectionOption
 }
+
+export type WaitForConnectionOption  = undefined | null | number | false;
