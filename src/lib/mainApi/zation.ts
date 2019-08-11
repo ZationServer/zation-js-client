@@ -59,9 +59,9 @@ export class Zation
     private socket : Socket;
 
     /**
-     * Complete means the client will not automatically connect again.
+     * Indicates if the current connection is the first connection of the socket.
      */
-    private completeDisconnected : boolean = true;
+    private firstConnection : boolean = true;
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -611,7 +611,7 @@ export class Zation
     disconnect(code ?: number, data : object = {}) : void {
         data['#internal-fromZationClient'] = true;
         this.socket.disconnect(code,data);
-        this.completeDisconnected = true;
+        this.firstConnection = true;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -629,7 +629,7 @@ export class Zation
     private _registerSocketEvents()
     {
         this.socket.on('connect',async () => {
-            if(this.completeDisconnected) {
+            if(this.firstConnection) {
                 if(this.zc.isDebug()) {
                     Logger.printInfo('Client is first connected.');
                 }
@@ -641,9 +641,8 @@ export class Zation
                 }
                 await this._triggerEventReactions(Events.Reconnect);
             }
-            this.completeDisconnected = false;
-
-            await this._triggerEventReactions(Events.Connect,this.completeDisconnected);
+            await this._triggerEventReactions(Events.Connect,this.firstConnection);
+            this.firstConnection = false;
         });
 
         this.socket.on('error', async (err) => {
@@ -1435,5 +1434,4 @@ export class Zation
     getZc() : ZationConfig {
         return this.zc;
     }
-
 }
