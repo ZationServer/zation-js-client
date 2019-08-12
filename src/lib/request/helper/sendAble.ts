@@ -6,6 +6,7 @@ GitHub: LucaCode
 
 import {ProtocolType} from "../../helper/constants/protocolType";
 import {Zation}       from "../../mainApi/zation";
+import {WaitForConnectionOption} from "../../helper/utils/connectionUtils";
 
 export abstract class SendAble
 {
@@ -16,5 +17,3 @@ export abstract class SendAble
 
     abstract getWaitForConnection() : WaitForConnectionOption
 }
-
-export type WaitForConnectionOption  = undefined | null | number | false;

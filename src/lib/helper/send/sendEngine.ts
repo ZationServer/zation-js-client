@@ -10,11 +10,10 @@ import {ProgressHandler}        from "../../request/helper/progressHandler";
 import {Zation}                 from "../../mainApi/zation";
 import {Response}               from "../../response/response";
 import {TimeoutError}           from "../error/timeoutError";
-import axios, {AxiosRequestConfig} from 'axios';
-const FormData                   = require('form-data');
-import stringify                   from "fast-stringify";
-import ConnectionUtils             from "../utils/connectionUtils";
-import {WaitForConnectionOption}   from "../../request/helper/sendAble";
+import axios, {AxiosRequestConfig}                from 'axios';
+const FormData                                  = require('form-data');
+import stringify                                  from "fast-stringify";
+import ConnectionUtils, {WaitForConnectionOption} from "../utils/connectionUtils";
 
 export class SendEngine
 {

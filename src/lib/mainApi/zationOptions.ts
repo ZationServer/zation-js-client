@@ -4,6 +4,8 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
+import {WaitForConnectionDefaultOption} from "../helper/utils/connectionUtils";
+
 export interface ZationOptions {
 
     /**
@@ -171,7 +173,7 @@ export interface ZationOptions {
      * it will throw a timeout error.
      * @default false
      */
-    waitForConnection ?: false | null | number;
+    waitForConnection ?: WaitForConnectionDefaultOption;
 }
 
 export interface ZationOptionsInternal extends ZationOptions{
@@ -200,5 +202,5 @@ export interface ZationOptionsInternal extends ZationOptions{
         maxDelay ?: number
     }
     requestTimeout : number;
-    waitForConnection : false | null | number;
+    waitForConnection : WaitForConnectionDefaultOption;
 }

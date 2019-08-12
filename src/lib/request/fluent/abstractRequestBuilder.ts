@@ -19,7 +19,7 @@ import {ResponseReactionBox}     from "../../react/reactionBoxes/responseReactio
 import {ZationRequest}           from "../main/zationRequest";
 import {Response}                from "../../response/response";
 import {ResponseReactAble}       from "../../react/response/responseReactAble";
-import {WaitForConnectionOption} from "../helper/sendAble";
+import {WaitForConnectionOption} from "../../helper/utils/connectionUtils";
 
 export abstract class AbstractRequestBuilder<T> implements ResponseReactAble
 {

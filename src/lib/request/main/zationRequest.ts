@@ -5,11 +5,12 @@ GitHub: LucaCode
  */
 
 // noinspection TypeScriptPreferShortImport
-import {RequestAble}         from "../helper/requestAble";
+import {RequestAble}             from "../helper/requestAble";
 // noinspection TypeScriptPreferShortImport
-import {ProtocolType}        from "../../helper/constants/protocolType";
-import {SendAble, WaitForConnectionOption} from "../helper/sendAble";
-import {ProgressHandler}     from "../helper/progressHandler";
+import {ProtocolType}            from "../../helper/constants/protocolType";
+import {SendAble}                from "../helper/sendAble";
+import {ProgressHandler}         from "../helper/progressHandler";
+import {WaitForConnectionOption} from "../../helper/utils/connectionUtils";
 
 export abstract class ZationRequest extends SendAble
 {

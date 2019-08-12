@@ -10,9 +10,8 @@ import {Zation}                from "../../mainApi/zation";
 import {SubscribeFailedError}  from "../error/subscribeFailedError";
 import {ChannelReactionBox}    from "../../react/reactionBoxes/channelReactionBox";
 import {PublishFailedError}    from "../error/publishFailedError";
-import {TimeoutError}          from "../../..";
-import ConnectionUtils         from "../utils/connectionUtils";
-import {WaitForConnectionOption} from "../../request/helper/sendAble";
+import {TimeoutError}          from "../error/timeoutError.js";
+import ConnectionUtils, {WaitForConnectionOption} from "../utils/connectionUtils";
 
 export class ChannelEngine
 {

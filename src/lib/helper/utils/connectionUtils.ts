@@ -4,9 +4,13 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import {ConnectionRequiredError, TimeoutError, Zation} from "../../..";
-import {WaitForConnectionOption}                       from "../../request/helper/sendAble";
 import {Socket}                                        from "../sc/socket";
+import {Zation}                                        from "../../mainApi/zation";
+import {ConnectionRequiredError}                       from "../error/connectionRequiredError";
+import {TimeoutError}                                  from "../error/timeoutError";
+
+export type WaitForConnectionDefaultOption = false | null | null;
+export type WaitForConnectionOption  = undefined | null | number | false;
 
 export default class ConnectionUtils {
 
@@ -52,5 +56,4 @@ export default class ConnectionUtils {
             socket.connect();
         });
     }
-
 }

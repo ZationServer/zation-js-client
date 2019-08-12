@@ -4,9 +4,8 @@ GitHub: LucaCode
 ©Copyright by Luca Scaringella
  */
 
-import {HttpRequest} from "../request/main/httpRequest";
-
-import {SendAble, WaitForConnectionOption} from "../request/helper/sendAble";
+import {HttpRequest}                 from "../request/main/httpRequest";
+import {SendAble}                    from "../request/helper/sendAble";
 import {ProtocolType}                from "../helper/constants/protocolType";
 import {ZationOptions}               from "./zationOptions";
 import {ProgressHandler}             from "../request/helper/progressHandler";
@@ -16,6 +15,7 @@ import {ValidationCheck}             from "../request/main/validationRequest";
 import {ChannelTarget}               from "../helper/channel/channelTarget";
 import {SystemController}            from "../helper/constants/systemController";
 import {ZationCustomEmitNamespace, ZationHttpInfo, ZationToken} from "../helper/constants/internal";
+import ConnectionUtils, {WaitForConnectionOption}               from "../helper/utils/connectionUtils";
 import {ChannelEngine}               from "../helper/channel/channelEngine";
 import {ZationConfig}                from "../config/zationConfig";
 import {Box}                         from "../helper/box/box";
@@ -38,8 +38,7 @@ import {Response}                    from "../response/response";
 import {AuthEngine}                  from "../helper/auth/authEngine";
 import {ModifiedScClient}            from "../helper/sc/modifiedScClient";
 import stringify                     from "fast-stringify";
-import {TimeoutError} from "../..";
-import ConnectionUtils from "../helper/utils/connectionUtils";
+import {TimeoutError}                from "../helper/error/timeoutError";
 
 export class Zation
 {

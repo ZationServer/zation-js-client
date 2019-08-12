@@ -15,9 +15,8 @@ import {AuthUserGroupRequiredError}    from "../error/authUserGroupRequiredError
 import {DeauthenticationRequiredError} from "../error/deauthenticationRequiredError";
 import {AuthenticationRequiredError}   from "../error/authenticationRequiredError";
 import {Socket}                        from "../sc/socket";
-import {TimeoutError}                  from "../../..";
-import ConnectionUtils                 from "../utils/connectionUtils";
-import {WaitForConnectionOption} from "../../request/helper/sendAble";
+import {TimeoutError}                             from "../error/timeoutError.js";
+import ConnectionUtils, {WaitForConnectionOption} from "../utils/connectionUtils";
 
 export class AuthEngine
 {
