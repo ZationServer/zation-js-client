@@ -1,7 +1,7 @@
 /*
 Author: Luca Scaringella
 GitHub: LucaCode
-©Copyright by Luca Scaringella
+Copyright(c) Luca Scaringella
  */
 
 type ForEeachFunction<T> = (item : T) => Promise<void>;
