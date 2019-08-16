@@ -174,6 +174,24 @@ export interface ZationOptions {
      * @default false
      */
     waitForConnection ?: WaitForConnectionDefaultOption;
+
+    /**
+     * Specifies the default value for the WaitForDbConnection option.
+     * That option can activate that the DataBox is
+     * trying to connect (if it's not connected) whenever you want
+     * to fetchData.
+     * You have three possible choices:
+     * False: The action will fail and throw a ConnectionRequiredError,
+     * when the DataBox is not connected.
+     * For the other options, it is also recommended to have activated the auto-reconnect.
+     * Null: The DataBox will try to connect (if it is not connected) and
+     * waits until the connection is made, then it continues the action.
+     * Number: Same as null, but now you can specify a timeout (in ms) of
+     * maximum waiting time for the connection. If the timeout is reached,
+     * it will throw a timeout error.
+     * @default false
+     */
+    waitForDbConnection ?: WaitForConnectionDefaultOption;
 }
 
 export interface ZationOptionsInternal extends ZationOptions{
@@ -203,4 +221,5 @@ export interface ZationOptionsInternal extends ZationOptions{
     }
     requestTimeout : number;
     waitForConnection : WaitForConnectionDefaultOption;
+    waitForDbConnection : WaitForConnectionDefaultOption;
 }

@@ -75,7 +75,8 @@ export class ZationConfig
             autoReconnect : true,
             autoReconnectOptions : {},
             requestTimeout : 10000,
-            waitForConnection : false
+            waitForConnection : false,
+            waitForDbConnection : false
         };
     }
 
