@@ -44,6 +44,12 @@ import {BackError}                     from "./lib/main/response/backError";
 import {AbstractErrorFilterBuilder}    from "./lib/main/react/error/abstractErrorFilterBuilder";
 import {ErrorName}                     from "./lib/main/constants/errorName";
 import {RawError}                      from "./lib/main/error/rawError";
+import {buildKeyArray}                 from "./lib/main/dataBox/storage/keyArrayUtils";
+import DbsHead                         from "./lib/main/dataBox/storage/components/dbsHead";
+import DbStorage                       from "./lib/main/dataBox/storage/dbStorage";
+import DataBox                         from "./lib/main/dataBox/dataBox";
+import {DbsComparator}                 from "./lib/main/dataBox/storage/dbsComparator";
+import {DbsValueMerger}                from "./lib/main/dataBox/storage/dbsMergerUtils";
 
 // noinspection JSUnusedGlobalSymbols
 /**
@@ -107,9 +113,14 @@ export {
     ValidationCheck,
     AbstractErrorFilterBuilder,
     ErrorName,
-    RawError
+    RawError,
+    buildKeyArray,
+    DbsHead,
+    DbStorage,
+    DataBox,
+    DbsComparator,
+    DbsValueMerger
 };
-
 
 
 
