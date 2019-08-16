@@ -1,0 +1,32 @@
+/*
+Author: Luca Scaringella
+GitHub: LucaCode
+©Copyright by Luca Scaringella
+ */
+
+export default class CloneUtils
+{
+    /**
+     * Clone a instance deep
+     * @param v
+     */
+    static deepCloneInstance<T extends any = any>(v : T) : T {
+        // if not array or object or is null return self
+        if (typeof v !== 'object'||v === null) return v;
+        let newO, i;
+        // handle case: array
+        if (v instanceof Array) {
+            let l;
+            newO = [];
+            for (i = 0, l = v.length; i < l; i++) newO[i] = CloneUtils.deepCloneInstance(v[i]);
+            return newO;
+        }
+        // handle case: object
+        newO = {};
+        for (i in v) if (v.hasOwnProperty(i)){
+            Object.setPrototypeOf(newO[i],v.prototype);
+            newO[i] = CloneUtils.deepCloneInstance(v[i]);
+        }
+        return newO;
+    }
+}
