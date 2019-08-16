@@ -67,21 +67,21 @@ export enum DbsComponentType {
 }
 
 export function isDbsComponent(value : any) : value is DbsComponent  {
-    return value['dbsComponent'];
+    return value && value['dbsComponent'];
 }
 
 export function isDbsObject(value : any) : value is DbsObject {
-    return value['dbsComponentType'] === DbsComponentType.dbsObject;
+    return value && value['dbsComponentType'] === DbsComponentType.dbsObject;
 }
 
 export function isDbsKeyArray(value : any) : value is DbsKeyArray {
-    return value['dbsComponentType'] === DbsComponentType.dbsKeyArray;
+    return value && value['dbsComponentType'] === DbsComponentType.dbsKeyArray;
 }
 
 export function isDbsArray(value : any) : value is DbsArray {
-    return value['dbsComponentType'] === DbsComponentType.dbsArray;
+    return value && value['dbsComponentType'] === DbsComponentType.dbsArray;
 }
 
 export function isDbsHead(value : any) : value is DbsHead {
-    return value['dbsComponentType'] === DbsComponentType.dbsHead;
+    return value && value['dbsComponentType'] === DbsComponentType.dbsHead;
 }
