@@ -1373,8 +1373,8 @@ export class Zation
 
     /**
      * Respond on emit events of the server.
-     * It uses the custom zation emit namespace
-     * (so you cannot have name conflicts with internal emit names).
+     * It uses the custom zation event namespace
+     * (so you cannot have name conflicts with internal event names).
      * @param event
      * @param handler
      * The function that gets called when the event occurs,
@@ -1386,8 +1386,8 @@ export class Zation
 
     /**
      * Respond on emit event of the server but only once.
-     * It uses the custom zation emit namespace
-     * (so you cannot have name conflicts with internal emit names).
+     * It uses the custom zation event namespace
+     * (so you cannot have name conflicts with internal event names).
      * @param event
      * @param handler
      * The function that gets called when the event occurs,
@@ -1411,7 +1411,8 @@ export class Zation
      * Emit to the server.
      * If you not only transmit than the return value is a promise with the result,
      * and if an error occurs while emitting to the server, this error is thrown.
-     * It uses the custom zation emit namespace (so you cannot have name conflicts with internal emit names).
+     * It uses the custom zation event namespace
+     * (so you cannot have name conflicts with internal event names).
      * @throws TimeoutError, Error
      * @param event
      * @param data
