@@ -39,6 +39,7 @@ import {AuthEngine}                  from "../main/auth/authEngine";
 import {ModifiedScClient}            from "../main/sc/modifiedScClient";
 import stringify                     from "fast-stringify";
 import {TimeoutError}                from "../main/error/timeoutError";
+import DataBoxBuilder from "../main/dataBox/dataBoxBuilder";
 
 export class Zation
 {
@@ -503,6 +504,26 @@ export class Zation
         helper.controller(controller);
         helper.checks(...checks);
         return helper;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Returns a DataBox builder, which helps you to build the
+     * settings for connecting to the DataBox on the server.
+     * The builder returns a new DataBox object, with this object
+     * you easily can connect to a DataBox on the server-side.
+     * The DataBox handes mostly everything: disconnections,
+     * cud updates missing, restores.
+     * It will do everything that it always has the newest data.
+     * @param name
+     * The name of the DataBox that is also used to register a
+     * DataBox in the configuration of the server.
+     * @param id
+     * The id is only needed if you want to connect to a DataBoxFamiliy.
+     * The id represents the member id of the family.
+     */
+    dataBox(name : string,id ?: string) : DataBoxBuilder {
+        return new DataBoxBuilder(this,name,id);
     }
 
     //Part Send
