@@ -133,7 +133,7 @@ export abstract class ZationRequest extends SendAble
      * it will throw a timeout error.
      * This options is only used in the WebSocket protocol.
      * @param value
-     * @default false
+     * @default undefined
      */
     setWaitForConnection(value : WaitForConnectionOption) {
         this.waitForConnection = value;

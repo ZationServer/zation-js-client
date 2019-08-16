@@ -126,7 +126,7 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble
      * it will throw a timeout error.
      * This options is only used in the WebSocket protocol.
      * @param waitForConnection
-     * @default false
+     * @default undefined
      */
     waitForConnection(waitForConnection : WaitForConnectionOption) : T {
         this._waitForConnection = waitForConnection;
