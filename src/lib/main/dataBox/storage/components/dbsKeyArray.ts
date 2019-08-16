@@ -18,8 +18,8 @@ import {RawKeyArray}                                   from "../keyArrayUtils";
 
 export default class DbsKeyArray extends DbsSimplePathCoordinator implements DbsComponent {
 
-    private data : any[];
-    private componentStructure : any[];
+    private readonly data : any[];
+    private readonly componentStructure : any[];
     private readonly keyMap : Map<string,number>;
     private readonly timestampMap : Map<string,number> = new Map<string, number>();
     private valueMerger : DbsValueMerger = defaultValueMerger;
@@ -77,10 +77,10 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
 
             let wrapper : {i : number,k : string,v : any};
             let targetIndex;
-            const tmpData = this.data;
-            this.data = [];
-            const tmpComponentStructure = this.componentStructure;
-            this.componentStructure = [];
+            const tmpData = this.data.slice();
+            this.data.length = 0;
+            const tmpComponentStructure = this.componentStructure.slice();
+            this.componentStructure.length = 0;
             for(let i = 0; i < tmpArray.length; i++){
                 wrapper = tmpArray[i];
                 targetIndex = wrapper.i;
