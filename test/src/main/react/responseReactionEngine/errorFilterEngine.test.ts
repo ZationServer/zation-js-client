@@ -7,7 +7,7 @@ Copyright(c) Luca Scaringella
 import {ErrorFilterEngine, BackError} from "../../../../../src";
 const assert            = require("chai").assert;
 
-describe('HELPER.ErrorFilterEngine',() => {
+describe('MAIN.ErrorFilterEngine',() => {
 
     const demoErrors = [
         new BackError({n : 'toOld',g : 'ageError', t : 'input', d : 'The age is to old', zs : true, i : {age : 50,maxAge : 45}}),

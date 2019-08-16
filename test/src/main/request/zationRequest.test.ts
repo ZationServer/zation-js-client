@@ -9,7 +9,7 @@ import {ProtocolType, RequestAble} from "../../../../src";
 
 const assert            = require("chai").assert;
 
-describe('HELPER.ZationRequest',() => {
+describe('MAIN.ZationRequest',() => {
 
     describe('Constructor', () => {
 
