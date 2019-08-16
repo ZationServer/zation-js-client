@@ -1384,6 +1384,23 @@ export class Zation
         this.socket.on(event,handler);
     }
 
+    /**
+     * Respond on emit event of the server but only once.
+     * It uses the custom zation emit namespace
+     * (so you cannot have name conflicts with internal emit names).
+     * @param event
+     * @param handler
+     * The function that gets called when the event occurs,
+     * parameters are the data and a response function that you can call to respond on the event back.
+     */
+    once(event : string,handler : OnHandlerFunction) : void {
+        const tmpHandler : OnHandlerFunction = (data, response) => {
+            tmpHandler(data,response);
+            this.socket.off(event,tmpHandler);
+        };
+        this.socket.on(event,tmpHandler);
+    }
+
     // noinspection JSUnusedGlobalSymbols
     async emit(eventName : string,data : any,onlyTransmit : true,options : {waitForConnection ?: WaitForConnectionOption,timeout ?: number | null}) : Promise<void>
     // noinspection JSUnusedGlobalSymbols
