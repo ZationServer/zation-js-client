@@ -11,7 +11,7 @@ export interface RawKeyArray {
 }
 
 export function isRawKeyArray(value : any) : value is RawKeyArray {
-    return Array.isArray(value['___a___']) && typeof value['K'] === 'string';
+    return Array.isArray(value['___a___']) && typeof value['k'] === 'string';
 }
 
 /**
