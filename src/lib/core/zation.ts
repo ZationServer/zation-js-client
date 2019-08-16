@@ -14,7 +14,7 @@ import {Events}                      from "../main/constants/events";
 import {ValidationCheck}             from "../main/request/main/validationRequest";
 import {ChannelTarget}               from "../main/channel/channelTarget";
 import {SystemController}            from "../main/constants/systemController";
-import {ZationCustomEmitNamespace, ZationHttpInfo, ZationToken} from "../main/constants/internal";
+import {ZationCustomEventNamespace, ZationHttpInfo, ZationToken} from "../main/constants/internal";
 import ConnectionUtils, {WaitForConnectionOption}               from "../main/utils/connectionUtils";
 import {ChannelEngine}               from "../main/channel/channelEngine";
 import {ZationConfig}                from "../main/config/zationConfig";
@@ -1372,7 +1372,7 @@ export class Zation
     }
 
     /**
-     * Respond on emit events of the server.
+     * Respond on emit-events of the server.
      * It uses the custom zation event namespace
      * (so you cannot have name conflicts with internal event names).
      * @param event
@@ -1385,7 +1385,7 @@ export class Zation
     }
 
     /**
-     * Respond on emit event of the server but only once.
+     * Respond on emit-event of the server but only once.
      * It uses the custom zation event namespace
      * (so you cannot have name conflicts with internal event names).
      * @param event
@@ -1445,11 +1445,11 @@ export class Zation
         return new Promise<object>((resolve, reject) => {
             // noinspection DuplicatedCode
             if(onlyTransmit){
-                this.socket.emit(ZationCustomEmitNamespace+event,data,undefined,timeout);
+                this.socket.emit(ZationCustomEventNamespace+event,data,undefined,timeout);
                 resolve();
             }
             else {
-                this.socket.emit(ZationCustomEmitNamespace+event,data,(err,data) => {
+                this.socket.emit(ZationCustomEventNamespace+event,data,(err, data) => {
                     if(err){
                         if(err.name === 'TimeoutError'){
                             reject(new TimeoutError(err.message));

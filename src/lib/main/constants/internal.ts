@@ -87,4 +87,4 @@ export enum ZationChannel {
     CUSTOM_CHANNEL_ID_SEPARATOR = '.',
 }
 
-export const ZationCustomEmitNamespace = '>CE.';
+export const ZationCustomEventNamespace = '>CE.';
