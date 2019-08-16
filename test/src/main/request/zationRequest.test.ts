@@ -4,7 +4,7 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {ZationRequest} from "../../../../src/lib/main/request/main/zationRequest";
+import {ZationRequest}             from "../../../../src/lib/main/request/main/zationRequest";
 import {ProtocolType, RequestAble} from "../../../../src";
 
 const assert            = require("chai").assert;
