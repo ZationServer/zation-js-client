@@ -5,7 +5,7 @@ Copyright(c) Luca Scaringella
  */
 
 import DbsComponent, {DbsComponentType, isDbsComponent, isDbsObject} from "./dbsComponent";
-import DbStorageParser                                 from "../dbStorageParser";
+import DbDataParser                                    from "../dbDataParser";
 import DbUtils                                         from "../../dbUtils";
 import DbsSimplePathCoordinator                        from "./dbsSimplePathCoordinator";
 import {dbsMerger, DbsValueMerger, defaultValueMerger} from "../dbsMergerUtils";
@@ -28,7 +28,7 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
 
         let parsed;
         for (let key of this.keys.values()) {
-            parsed = DbStorageParser.parse(rawData[key]);
+            parsed = DbDataParser.parse(rawData[key]);
             this.componentStructure[key] = parsed;
             this.data[key] = isDbsComponent(parsed) ? parsed.getData() : parsed;
         }
@@ -157,7 +157,7 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
         }
 
         if (!this.hasKey(key) && DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
-            const parsed = DbStorageParser.parse(value);
+            const parsed = DbDataParser.parse(value);
             this.componentStructure[key] = parsed;
             this.data[key] = isDbsComponent(parsed) ? parsed.getData() : parsed;
 
@@ -177,7 +177,7 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
     _update(key: string, value: any, timestamp : number): void {
         if (this.hasKey(key) && DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
 
-            const parsed = DbStorageParser.parse(value);
+            const parsed = DbDataParser.parse(value);
             this.componentStructure[key] = parsed;
             this.data[key] = isDbsComponent(parsed) ? parsed.getData() : parsed;
 

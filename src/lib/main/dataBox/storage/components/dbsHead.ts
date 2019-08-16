@@ -4,7 +4,7 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import DbStorageParser                                 from "../dbStorageParser";
+import DbDataParser                                    from "../dbDataParser";
 import DbsComponent, {DbsComponentType, isDbsComponent, isDbsHead} from "./dbsComponent";
 import DbUtils                                         from "../../dbUtils";
 import {dbsMerger, DbsValueMerger, defaultValueMerger} from "../dbsMergerUtils";
@@ -18,7 +18,7 @@ export default class DbsHead implements DbsComponent {
     private valueMerger: DbsValueMerger = defaultValueMerger;
 
     constructor(rawData: any = undefined) {
-        this.componentValue = DbStorageParser.parse(rawData);
+        this.componentValue = DbDataParser.parse(rawData);
 
         this.data = isDbsComponent(this.componentValue) ?
             this.componentValue.getData() : this.componentValue;
@@ -137,7 +137,7 @@ export default class DbsHead implements DbsComponent {
     update(keyPath: string[], value: any, timestamp: number): void {
         if (keyPath.length === 0) {
             if (this.componentValue !== undefined && DbUtils.checkTimestamp(this.timestamp, timestamp)) {
-                this.componentValue = DbStorageParser.parse(value);
+                this.componentValue = DbDataParser.parse(value);
                 this.data = isDbsComponent(this.componentValue) ?
                     this.componentValue.getData() : this.componentValue;
                 this.timestamp = timestamp;

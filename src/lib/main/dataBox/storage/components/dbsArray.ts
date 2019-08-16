@@ -5,7 +5,7 @@ Copyright(c) Luca Scaringella
  */
 
 import DbsComponent, {DbsComponentType, isDbsArray, isDbsComponent} from "./dbsComponent";
-import DbStorageParser                                 from "../dbStorageParser";
+import DbDataParser                                    from "../dbDataParser";
 import DbUtils                                         from "../../dbUtils";
 import DbsSimplePathCoordinator                        from "./dbsSimplePathCoordinator";
 import {dbsMerger, DbsValueMerger, defaultValueMerger} from "../dbsMergerUtils";
@@ -26,7 +26,7 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
 
         let parsed;
         for (let i = 0; i < rawData.length; i++) {
-            parsed = DbStorageParser.parse(rawData[i]);
+            parsed = DbDataParser.parse(rawData[i]);
             this.componentStructure[i] = parsed;
             this.data[i] = isDbsComponent(parsed) ? parsed.getData() : parsed;
         }
@@ -159,7 +159,7 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
         }
 
         if (!this.hasIndex(index) && DbUtils.checkTimestamp(this.getTimestamp(index),timestamp)) {
-            const parsed = DbStorageParser.parse(value);
+            const parsed = DbDataParser.parse(value);
             this.componentStructure[index] = parsed;
             this.data[index] = isDbsComponent(parsed) ? parsed.getData() : parsed;
             this.timestamps[index] = timestamp;
@@ -177,7 +177,7 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
         const index = parseInt(key);
 
         if (this.hasIndex(index) && DbUtils.checkTimestamp(this.getTimestamp(index),timestamp)) {
-            const parsed = DbStorageParser.parse(value);
+            const parsed = DbDataParser.parse(value);
             this.componentStructure[index] = parsed;
             this.data[index] = isDbsComponent(parsed) ? parsed.getData() : parsed;
             this.timestamps[index] = timestamp;

@@ -9,7 +9,7 @@ import DbsComponent, {
     isDbsComponent,
     isDbsKeyArray
 } from "./dbsComponent";
-import DbStorageParser                                 from "../dbStorageParser";
+import DbDataParser                                    from "../dbDataParser";
 import DbUtils                                         from "../../dbUtils";
 import DbsSimplePathCoordinator                        from "./dbsSimplePathCoordinator";
 import {dbsMerger, DbsValueMerger, defaultValueMerger} from "../dbsMergerUtils";
@@ -52,7 +52,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
         for(let j = 0; j < array.length; j++){
             item = array[j];
             if(typeof item === 'object'){
-                parsed = DbStorageParser.parse(withValue ? item[rawValueKey as string] : item);
+                parsed = DbDataParser.parse(withValue ? item[rawValueKey as string] : item);
                 this.componentStructure[i] = parsed;
                 this.data[i] = isDbsComponent(parsed) ? parsed.getData() : parsed;
                 this.keyMap.set(item[rawKeyKey].toString(),i);
@@ -227,7 +227,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
      * @param value
      */
     private push(key : string,value : any) {
-        const componentValue = DbStorageParser.parse(value);
+        const componentValue = DbDataParser.parse(value);
         this.pushWithComponentValue
         (key,isDbsComponent(componentValue) ? componentValue.getData() : componentValue,componentValue);
     }
@@ -276,7 +276,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
      * @param value
      */
     private pushBeforeIndex(index : number,key : string,value : any) {
-        const parsed = DbStorageParser.parse(value);
+        const parsed = DbDataParser.parse(value);
         this.pushBeforeWithComponentValue(index,key,isDbsComponent(parsed) ? parsed.getData() : parsed,parsed);
     }
 
@@ -351,7 +351,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
     _update(key: string, value: any, timestamp : number): void {
         const index = this.keyMap.get(key);
         if (index !== undefined && DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
-            const parsed = DbStorageParser.parse(value);
+            const parsed = DbDataParser.parse(value);
             if(this.hasCompartor){
                 //sort in the correct position
                 this.deleteValue(key);
