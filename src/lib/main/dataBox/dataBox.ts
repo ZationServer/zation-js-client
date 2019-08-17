@@ -205,6 +205,7 @@ export default class DataBox {
         this.dbStorages.add(this.mainDbStorage);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * This method will disconnect the connection to the DataBox.
      * It will clean the used memory, remove all listeners,
@@ -333,35 +334,42 @@ export default class DataBox {
      * @private
      */
     private async _connect() {
+
         const currentToken = this.token;
 
-        this.socket.emit(DATA_BOX_START_INDICATOR, {
-            al: this.apiLevel,
-            d: this.name,
-            ...(this.id !== undefined ? {i: this.id} : {}),
-            ...(currentToken !== undefined ? {t: currentToken} : {}),
-            ...(this.initData !== undefined ? {ii: this.initData} : {})
-        } as DataBoxConnectReq, async (err, res: DataBoxConnectRes) => {
-            if (err) {
-                throw err;
-            }
-            this.connected = true;
+        return new Promise<void>((resolve, reject) => {
+            this.socket.emit(DATA_BOX_START_INDICATOR, {
+                al: this.apiLevel,
+                d: this.name,
+                ...(this.id !== undefined ? {i: this.id} : {}),
+                ...(currentToken !== undefined ? {t: currentToken} : {}),
+                ...(this.initData !== undefined ? {ii: this.initData} : {})
+            } as DataBoxConnectReq, async (err, res: DataBoxConnectRes) => {
 
-            this.serverSideCudId = res.ci;
-            if (this.cudId === undefined) {
-                //first register
-                this.cudId = res.ci;
-            }
+                if (err) {return reject(err);}
 
-            this.inputChannel = res.i;
-            this.parallelFetch = res.pf;
-            this.outputChannel = res.o;
+                this.connected = true;
 
-            this.connectEvent.emit();
+                this.serverSideCudId = res.ci;
+                if (this.cudId === undefined) {
+                    //first register
+                    this.cudId = res.ci;
+                }
 
-            if (!res.ut && currentToken !== undefined) {
-                await this._tryReload();
-            }
+                this.inputChannel = res.i;
+                this.parallelFetch = res.pf;
+                this.outputChannel = res.o;
+
+                this.connectEvent.emit();
+
+                if (!res.ut && currentToken !== undefined) {
+                    (async () => {
+                        await this._tryReload();
+                    })();
+                }
+
+                resolve();
+            });
         });
     }
 
