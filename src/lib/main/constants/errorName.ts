@@ -25,5 +25,5 @@ export enum ErrorName {
     INVALID_INPUT                = 'INVALID_INPUT',
     MAX_INPUT_CHANNELS_REACHED   =  'MAX_INPUT_CHANNELS_REACHED',
 
-    UNKNOWN_SERVER_ERROR         = 'UNKNOWN_SERVER_ERROR'
+    UNKNOWN_SERVER_ERROR         = 'Error'
 }
