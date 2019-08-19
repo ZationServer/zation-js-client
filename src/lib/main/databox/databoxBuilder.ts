@@ -13,10 +13,10 @@ export default class DataboxBuilder {
 
     private readonly zation : Zation;
     private readonly name : string;
-    private readonly id ?: string;
+    private readonly id ?: string | number;
     private readonly dbOptions : DataboxOptions;
 
-    constructor(zation : Zation,name : string,id ?: string){
+    constructor(zation : Zation,name : string,id ?: string | number){
         this.zation = zation;
         this.name = name;
         this.id = id;

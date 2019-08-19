@@ -522,7 +522,7 @@ export class Zation
      * The id is only needed if you want to connect to a DataboxFamiliy.
      * The id represents the member id of the family.
      */
-    databox(name : string,id ?: string) : DataboxBuilder {
+    databox(name : string,id ?: string | number) : DataboxBuilder {
         return new DataboxBuilder(this,name,id);
     }
 

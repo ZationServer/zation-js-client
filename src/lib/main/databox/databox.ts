@@ -182,14 +182,14 @@ export default class Databox {
         initData: undefined
     };
 
-    constructor(zation: Zation, options: DataboxOptions, name: string, id ?: string) {
+    constructor(zation: Zation, options: DataboxOptions, name: string, id ?: string | number) {
         ObjectUtils.addObToOb(this.dbOptions, options, false);
 
         this.socket = zation.getSocket();
         this.zation = zation;
         this.apiLevel = this.dbOptions.apiLevel;
         this.name = name;
-        this.id = id;
+        this.id = id !== undefined ? id.toString() : id;
         this.initData = this.dbOptions.initData;
 
         const tmpRestoreStorageOptions: DbStorageOptions = {
