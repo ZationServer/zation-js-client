@@ -9,8 +9,8 @@ import {
     CudPackage,
     CudType,
     DATA_BOX_START_INDICATOR,
-    DataBoxConnectReq,
-    DataBoxConnectRes,
+    DataboxConnectReq,
+    DataboxConnectRes,
     DbClientInputAction,
     DbClientInputFetchPackage,
     DbClientInputFetchResponse,
@@ -37,9 +37,9 @@ import {ErrorName}                                from "../constants/errorName";
 import DbsHead                                    from "./storage/components/dbsHead";
 import DbUtils                                    from "./dbUtils";
 
-export interface DataBoxOptions {
+export interface DataboxOptions {
     /**
-     * Activates that the DataBox automatically fetch data after the first connection.
+     * Activates that the Databox automatically fetch data after the first connection.
      * @default true
      */
     autoFetch ?: boolean;
@@ -49,17 +49,17 @@ export interface DataBoxOptions {
      */
     autoFetchData ?: any,
     /**
-     * The API level of this client for the DataBox connection request.
+     * The API level of this client for the Databox connection request.
      * If you don't provide one, the server will use the connection API
      * level or the default API level.
      * @default undefined
      */
     apiLevel ?: number | undefined;
     /**
-     * The main DataBox storage options.
+     * The main Databox storage options.
      * Change this option only if you know what you are doing.
      * If you want to have a Storage that only does updates,
-     * it is recommended to connect a new DbStorage to the DataBox and
+     * it is recommended to connect a new DbStorage to the Databox and
      * copy the data from the main storage.
      * @default {}
      */
@@ -67,7 +67,7 @@ export interface DataBoxOptions {
     /**
      * With the WaitForConnection option, you can activate that the socket is
      * trying to connect when it is not connected.
-     * This option will be used when you try to connect to the DataBox.
+     * This option will be used when you try to connect to the Databox.
      * Because then the socket needs to be connected.
      * You have four possible choices:
      * Undefined: It will use the value from the default options (ZationOptions).
@@ -83,15 +83,15 @@ export interface DataBoxOptions {
      */
     waitForConnection ?: WaitForConnectionOption;
     /**
-     * With the WaitForDbConnection option, you can activate that the DataBox is
+     * With the WaitForDbConnection option, you can activate that the Databox is
      * trying to connect (if it's not connected) whenever you want
      * to fetchData.
      * You have four possible choices:
      * Undefined: It will use the value from the default options (ZationOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
-     * when the DataBox is not connected.
+     * when the Databox is not connected.
      * For the other options, it is also recommended to have activated the auto-reconnect.
-     * Null: The DataBox will try to connect (if it is not connected) and
+     * Null: The Databox will try to connect (if it is not connected) and
      * waits until the connection is made, then it continues the action.
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
@@ -100,14 +100,14 @@ export interface DataBoxOptions {
      */
     waitForDbConnection ?: WaitForConnectionOption;
     /**
-     * The init data that the DataBox is sent to the server
+     * The init data that the Databox is sent to the server
      * when it's creating a connection.
      * @default undefined
      */
     initData ?: any;
 }
 
-interface RequiredDbOptions extends DataBoxOptions {
+interface RequiredDbOptions extends DataboxOptions {
     autoFetch : boolean;
     autoFetchData : any;
     apiLevel : number | undefined;
@@ -123,9 +123,9 @@ type OnKickOut     = (code : number | string | undefined,data : any) => void | P
 type OnClose       = (code : number | string | undefined,data : any) => void | Promise<void>
 type OnReload      = (code : number | string | undefined,data : any) => void | Promise<void>
 type OnCud         = (cudPackage : CudPackage) => void | Promise<void>
-type OnNewData     = (db : DataBox) => void | Promise<void>
+type OnNewData     = (db : Databox) => void | Promise<void>
 
-export default class DataBox {
+export default class Databox {
 
     private readonly name: string;
     private readonly id: string | undefined;
@@ -145,7 +145,7 @@ export default class DataBox {
     private token: string | undefined = undefined;
 
     /**
-     * The current cud id of this DataBox.
+     * The current cud id of this Databox.
      */
     private cudId: string | undefined = undefined;
     /**
@@ -182,7 +182,7 @@ export default class DataBox {
         initData: undefined
     };
 
-    constructor(zation: Zation, options: DataBoxOptions, name: string, id ?: string) {
+    constructor(zation: Zation, options: DataboxOptions, name: string, id ?: string) {
         ObjectUtils.addObToOb(this.dbOptions, options, false);
 
         this.socket = zation.getSocket();
@@ -207,10 +207,10 @@ export default class DataBox {
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * This method will disconnect the connection to the DataBox.
+     * This method will disconnect the connection to the Databox.
      * It will clean the used memory, remove all listeners,
-     * and tell the server to close this DataBox connection.
-     * You should call this method whenever you no longer need this DataBox.
+     * and tell the server to close this Databox connection.
+     * You should call this method whenever you no longer need this Databox.
      * But you able to connect later again by calling the connect method.
      * @param clearStorages
      */
@@ -241,7 +241,7 @@ export default class DataBox {
     }
 
     /**
-     * Resets the state data of this DataBox.
+     * Resets the state data of this Databox.
      * @private
      */
     private _resetStateData() {
@@ -255,17 +255,17 @@ export default class DataBox {
     }
 
     /**
-     * This method is used to connect to the DataBox on the server-side.
+     * This method is used to connect to the Databox on the server-side.
      * Zation will automatically call that method for the first time.
-     * You can use the method if you had disconnected the DataBox and want to use it again.
+     * You can use the method if you had disconnected the Databox and want to use it again.
      * Whenever the connection is lost, you don't need to call that method.
-     * The DataBox will reconnect automatically as fast as possible.
+     * The Databox will reconnect automatically as fast as possible.
      * @throws RawError,TimeoutError,ConnectionRequiredError
      * @param waitForConnection
      * With the WaitForConnection option, you can activate that the socket is
      * trying to connect when it is not connected. You have four possible choices:
      * Undefined: It will use the value from the default options
-     * (DataBoxOptions and last fall back is ZationOptions).
+     * (DataboxOptions and last fall back is ZationOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
      * For the other options, it is also recommended to have activated the auto-reconnect.
@@ -280,7 +280,7 @@ export default class DataBox {
             this.dbOptions.waitForConnection : waitForConnection;
 
         await ConnectionUtils.checkConnection
-        (this.zation, waitForConnection, 'To create a DataBox.');
+        (this.zation, waitForConnection, 'To create a Databox.');
 
         if (!this.created) {
             try {
@@ -291,7 +291,7 @@ export default class DataBox {
                 this.created = true;
             } catch (e) {
                 this._clearListenersAndReset();
-                throw new RawError('Failed to connect to the DataBox', e);
+                throw new RawError('Failed to connect to the Databox', e);
             }
 
             if (this.dbOptions.autoFetch) {
@@ -308,7 +308,7 @@ export default class DataBox {
     }
 
     /**
-     * Tries to reconnect the DataBox.
+     * Tries to reconnect the Databox.
      * @private
      * @throws
      */
@@ -330,7 +330,7 @@ export default class DataBox {
     }
 
     /**
-     * Sends a connect request to the DataBox on the server-side.
+     * Sends a connect request to the Databox on the server-side.
      * @private
      */
     private async _connect() {
@@ -344,7 +344,7 @@ export default class DataBox {
                 ...(this.id !== undefined ? {i: this.id} : {}),
                 ...(currentToken !== undefined ? {t: currentToken} : {}),
                 ...(this.initData !== undefined ? {ii: this.initData} : {})
-            } as DataBoxConnectReq, async (err, res: DataBoxConnectRes) => {
+            } as DataboxConnectReq, async (err, res: DataboxConnectRes) => {
 
                 if (err) {return reject(err);}
 
@@ -374,12 +374,12 @@ export default class DataBox {
     }
 
     /**
-     * Checks if the DataBox is on the latest cud state.
+     * Checks if the Databox is on the latest cud state.
      * @private
      */
     private async _checkCudUpToDate() {
         if (this.cudId !== this.serverSideCudId) {
-            //Can not be undefined because the DataBox was already registered.
+            //Can not be undefined because the Databox was already registered.
             await this._tryReload();
         }
     }
@@ -432,15 +432,15 @@ export default class DataBox {
      * false if no more data is available.
      * @param data
      * @param waitForDbConnection
-     * With the WaitForDbConnection option, you can activate that the DataBox is
+     * With the WaitForDbConnection option, you can activate that the Databox is
      * trying to connect (if it's not connected).
      * You have four possible choices:
      * Undefined: It will use the value from the default options
-     * (DataBoxOptions and last fall back is ZationOptions).
+     * (DataboxOptions and last fall back is ZationOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
-     * when the DataBox is not connected.
+     * when the Databox is not connected.
      * For the other options, it is also recommended to have activated the auto-reconnect.
-     * Null: The DataBox will try to connect (if it is not connected) and
+     * Null: The Databox will try to connect (if it is not connected) and
      * waits until the connection is made, then it continues the action.
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
@@ -561,7 +561,7 @@ export default class DataBox {
     }
 
     /**
-     * Resets the dataBox by disconnect and connect again.
+     * Resets the databox by disconnect and connect again.
      * @throws RawError,TimeoutError,ConnectionRequiredError
      */
     async reset() {
@@ -576,7 +576,7 @@ export default class DataBox {
      */
     async reload(waitForConnection: WaitForConnectionOption = false) {
         const tmpCudId = this.cudId;
-        await ConnectionUtils.checkDbConnection(this, this.zation, waitForConnection, 'To reload DataBox');
+        await ConnectionUtils.checkDbConnection(this, this.zation, waitForConnection, 'To reload Databox');
         this.reloadProcessPromise = this.reloadProcessPromise.then(async () => {
             const history = this.fetchHistoryManager.getHistory();
             if (history.length > 0) {
@@ -629,11 +629,11 @@ export default class DataBox {
     }
 
     /**
-     * Tries to reload the DataBox data. It can fail if the DataBox is
+     * Tries to reload the Databox data. It can fail if the Databox is
      * not connected or something changed on the backend.
      * So if it fails, it will mostly have a connection lost,
      * but in this case, this method will ignore it.
-     * Because when the DataBox is reconnected,
+     * Because when the Databox is reconnected,
      * it will try to reload again.
      * The history will not be damaged because the
      * history manager provides a rollback mechanism.
@@ -805,7 +805,7 @@ export default class DataBox {
      * This method is used internally.
      * Notice if you do a cud operation locally on the client,
      * that this operation is not done on the server-side.
-     * So if the DataBox reloads the data or resets the changes are lost.
+     * So if the Databox reloads the data or resets the changes are lost.
      * Insert behavior:
      * Without ifContains (ifContains exists):
      * Base (with keyPath [] or '') -> Nothing
@@ -829,7 +829,7 @@ export default class DataBox {
      * @param value
      * @param options
      */
-    insert(keyPath: string[], value: any, options: IfContainsOption & InfoOption & TimestampOption = {}): DataBox {
+    insert(keyPath: string[], value: any, options: IfContainsOption & InfoOption & TimestampOption = {}): Databox {
         for (let dbStorage of this.dbStorages) {
             dbStorage.insert(keyPath, value, options);
         }
@@ -845,7 +845,7 @@ export default class DataBox {
      * This method is used internally.
      * Notice if you do a cud operation locally on the client,
      * that this operation is not done on the server-side.
-     * So if the DataBox reloads the data or resets the changes are lost.
+     * So if the Databox reloads the data or resets the changes are lost.
      * Update behavior:
      * Base (with keyPath [] or '') -> Updates the complete structure.
      * KeyArray -> Updates the specific value (if the key does exist).
@@ -858,7 +858,7 @@ export default class DataBox {
      * @param value
      * @param options
      */
-    update(keyPath: string[], value: any, options: InfoOption & TimestampOption = {}): DataBox {
+    update(keyPath: string[], value: any, options: InfoOption & TimestampOption = {}): Databox {
         for (let dbStorage of this.dbStorages) {
             dbStorage.update(keyPath, value, options);
         }
@@ -874,7 +874,7 @@ export default class DataBox {
      * This method is used internally.
      * Notice if you do a cud operation locally on the client,
      * that this operation is not done on the server-side.
-     * So if the DataBox reloads the data or resets the changes are lost.
+     * So if the Databox reloads the data or resets the changes are lost.
      * Delete behavior:
      * Base (with keyPath [] or '') -> Deletes the complete structure.
      * KeyArray -> Deletes the specific value (if the key does exist).
@@ -886,7 +886,7 @@ export default class DataBox {
      * string where you can separate the keys with a dot.
      * @param options
      */
-    delete(keyPath: string[], options: InfoOption & TimestampOption = {}): DataBox {
+    delete(keyPath: string[], options: InfoOption & TimestampOption = {}): Databox {
         for (let dbStorage of this.dbStorages) {
             dbStorage.delete(keyPath, options);
         }
@@ -900,7 +900,7 @@ export default class DataBox {
     /**
      * This method will clear all connected db storages.
      */
-    clearStorages(): DataBox {
+    clearStorages(): Databox {
         for (let dbStorage of this.dbStorages) {
             dbStorage.clear();
         }
@@ -921,7 +921,7 @@ export default class DataBox {
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Returns the main storage of this DataBox.
+     * Returns the main storage of this Databox.
      */
     get mainStorage(): DbStorage {
         return this.mainDbStorage;
@@ -929,7 +929,7 @@ export default class DataBox {
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Returns all storages of this DataBox in an array.
+     * Returns all storages of this Databox in an array.
      */
     get storages(): DbStorage[] {
         return Array.from(this.dbStorages);
@@ -940,7 +940,7 @@ export default class DataBox {
      * Do something for each storage.
      * @param func
      */
-    forEachStorage(func: (storage: DbStorage) => void): DataBox {
+    forEachStorage(func: (storage: DbStorage) => void): Databox {
         for (let dbStorage of this.dbStorages) {
             func(dbStorage);
         }
@@ -948,7 +948,7 @@ export default class DataBox {
     }
 
     /**
-     * Returns if this DataBox is connected to the server-side.
+     * Returns if this Databox is connected to the server-side.
      */
     isConnected(): boolean {
         return this.connected;
@@ -956,7 +956,7 @@ export default class DataBox {
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Returns if the DataBox is created.
+     * Returns if the Databox is created.
      */
     isCreated(): boolean {
         return this.created;
@@ -972,20 +972,20 @@ export default class DataBox {
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Connect a new Storage to the DataBox.
+     * Connect a new Storage to the Databox.
      * @param dbStorage
      */
-    connectStorage(dbStorage : DbStorage) : DataBox {
+    connectStorage(dbStorage : DbStorage) : Databox {
         this.dbStorages.add(dbStorage);
         return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Disconnect a Storage from the DataBox.
+     * Disconnect a Storage from the Databox.
      * @param dbStorage
      */
-    disconnectStorage(dbStorage : DbStorage) : DataBox {
+    disconnectStorage(dbStorage : DbStorage) : Databox {
         this.dbStorages.delete(dbStorage);
         return this;
     }
@@ -1009,22 +1009,22 @@ export default class DataBox {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Adds a listener that gets triggered
-     * whenever the DataBox is connected to the server.
+     * whenever the Databox is connected to the server.
      * That also includes reconnections.
      * @param listener
      */
-    onConnect(listener : OnConnect) : DataBox {
+    onConnect(listener : OnConnect) : Databox {
         this.connectEvent.on(listener);
         return this;
     }
 
     /**
      * Adds a once listener that gets triggered when
-     * the DataBox is connected to the server.
+     * the Databox is connected to the server.
      * That also includes reconnections.
      * @param listener
      */
-    onceConnect(listener : OnConnect) : DataBox {
+    onceConnect(listener : OnConnect) : Databox {
         this.connectEvent.once(listener);
         return this;
     }
@@ -1042,10 +1042,10 @@ export default class DataBox {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Adds a listener that gets triggered
-     * whenever the DataBox is disconnected from the server.
+     * whenever the Databox is disconnected from the server.
      * @param listener
      */
-    onDisconnect(listener : OnDisconnect) : DataBox {
+    onDisconnect(listener : OnDisconnect) : Databox {
         this.disconnectEvent.on(listener);
         return this;
     }
@@ -1053,10 +1053,10 @@ export default class DataBox {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Adds a once listener that gets triggered when
-     * the DataBox is disconnected from the server.
+     * the Databox is disconnected from the server.
      * @param listener
      */
-    onceDiconnect(listener : OnDisconnect) : DataBox {
+    onceDiconnect(listener : OnDisconnect) : Databox {
         this.disconnectEvent.once(listener);
         return this;
     }
@@ -1075,10 +1075,10 @@ export default class DataBox {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Adds a listener that gets triggered
-     * whenever the socket is kicked out from the DataBox.
+     * whenever the socket is kicked out from the Databox.
      * @param listener
      */
-    onKickOut(listener : OnKickOut) : DataBox {
+    onKickOut(listener : OnKickOut) : Databox {
         this.kickOutEvent.on(listener);
         return this;
     }
@@ -1086,10 +1086,10 @@ export default class DataBox {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Adds a once listener that gets triggered when
-     * the socket is kicked out from the DataBox.
+     * the socket is kicked out from the Databox.
      * @param listener
      */
-    onceKickOut(listener : OnKickOut) : DataBox {
+    onceKickOut(listener : OnKickOut) : Databox {
         this.kickOutEvent.once(listener);
         return this;
     }
@@ -1108,10 +1108,10 @@ export default class DataBox {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Adds a listener that gets triggered
-     * whenever the server closes the DataBox.
+     * whenever the server closes the Databox.
      * @param listener
      */
-    onClose(listener : OnClose) : DataBox {
+    onClose(listener : OnClose) : Databox {
         this.closeEvent.on(listener);
         return this;
     }
@@ -1119,10 +1119,10 @@ export default class DataBox {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Adds a once listener that gets triggered when
-     * the server closes the DataBox.
+     * the server closes the Databox.
      * @param listener
      */
-    onceClose(listener : OnClose) : DataBox {
+    onceClose(listener : OnClose) : Databox {
         this.closeEvent.once(listener);
         return this;
     }
@@ -1141,10 +1141,10 @@ export default class DataBox {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Adds a listener that gets triggered
-     * whenever the server tolds the DataBox to reload the data.
+     * whenever the server tolds the Databox to reload the data.
      * @param listener
      */
-    onReload(listener : OnReload) : DataBox {
+    onReload(listener : OnReload) : Databox {
         this.reloadEvent.on(listener);
         return this;
     }
@@ -1152,10 +1152,10 @@ export default class DataBox {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Adds a once listener that gets triggered when
-     * the server tolds the DataBox to reload the data.
+     * the server tolds the Databox to reload the data.
      * @param listener
      */
-    onceReload(listener : OnReload) : DataBox {
+    onceReload(listener : OnReload) : Databox {
         this.reloadEvent.once(listener);
         return this;
     }
@@ -1174,10 +1174,10 @@ export default class DataBox {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Adds a listener that gets triggered
-     * whenever this DataBox gets a new cud opertion.
+     * whenever this Databox gets a new cud opertion.
      * @param listener
      */
-    onCud(listener : OnCud) : DataBox {
+    onCud(listener : OnCud) : Databox {
         this.cudEvent.on(listener);
         return this;
     }
@@ -1185,10 +1185,10 @@ export default class DataBox {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Adds a once listener that gets triggered when
-     * this DataBox gets a new cud opertion.
+     * this Databox gets a new cud opertion.
      * @param listener
      */
-    onceCud(listener : OnCud) : DataBox {
+    onceCud(listener : OnCud) : Databox {
         this.cudEvent.once(listener);
         return this;
     }
@@ -1207,13 +1207,13 @@ export default class DataBox {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Adds a listener that gets triggered
-     * whenever this DataBox has new data.
+     * whenever this Databox has new data.
      * This includes reloads, new cud Operations (Included locally and remote),
      * or fetched data.
      * @param listener
      */
 
-    onNewData(listener : OnNewData) : DataBox {
+    onNewData(listener : OnNewData) : Databox {
         this.newDataEvent.on(listener);
         return this;
     }
@@ -1221,12 +1221,12 @@ export default class DataBox {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Adds a once listener that gets triggered when
-     * this DataBox has new data.
+     * this Databox has new data.
      * This includes reloads, new cud Operations (Included locally and remote),
      * or fetched data.
      * @param listener
      */
-    onceNewData(listener : OnNewData) : DataBox {
+    onceNewData(listener : OnNewData) : Databox {
         this.newDataEvent.once(listener);
         return this;
     }
@@ -1250,7 +1250,7 @@ export default class DataBox {
      * new sorting, clear, copy from or fetched data.
      * @param listener
      */
-    onDataChange(listener : OnDataChange) : DataBox {
+    onDataChange(listener : OnDataChange) : Databox {
         this.mainDbStorage.onDataChange(listener);
         return this;
     }
@@ -1263,7 +1263,7 @@ export default class DataBox {
      * new sorting, clear, copy from or fetched data.
      * @param listener
      */
-    onceDataChange(listener : OnDataChange) : DataBox {
+    onceDataChange(listener : OnDataChange) : Databox {
         this.mainDbStorage.onceDataChange(listener);
         return this;
     }
@@ -1275,7 +1275,7 @@ export default class DataBox {
      * Can be a once or normal listener.
      * @param listener
      */
-    offDataChange(listener : OnDataChange) : DataBox {
+    offDataChange(listener : OnDataChange) : Databox {
         this.mainDbStorage.offDataChange(listener);
         return this;
     }

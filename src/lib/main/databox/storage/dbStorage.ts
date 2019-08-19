@@ -25,14 +25,14 @@ type AddFetchDataMiddleware = (counter : number,fetchedData : DbsHead) => boolea
 
 export interface DbStorageOptions {
     /**
-     * Indicates if this storage should be cleared when a connected dataBox closes.
+     * Indicates if this storage should be cleared when a connected databox closes.
      * You also can provide a function that decides if the storage should do the clear.
      * @default true
      */
     clearOnClose ?: ClearOnCloseMiddleware | boolean,
     /**
      * Indicates if this storage should be cleared when the socket
-     * is kicked out from a connected dataBox.
+     * is kicked out from a connected databox.
      * You also can provide a function that decides if the storage should do the clear.
      * @default true
      */
@@ -326,7 +326,7 @@ export default class DbStorage {
      * This method is used internally.
      * Notice if you do a cud operation locally on the client,
      * that this operation is not done on the server-side.
-     * So if the DataBox reloads the data or resets the changes are lost.
+     * So if the Databox reloads the data or resets the changes are lost.
      * Insert behavior:
      * Without ifContains (ifContains exists):
      * Base (with keyPath [] or '') -> Nothing
@@ -366,7 +366,7 @@ export default class DbStorage {
      * This method is used internally.
      * Notice if you do a cud operation locally on the client,
      * that this operation is not done on the server-side.
-     * So if the DataBox reloads the data or resets the changes are lost.
+     * So if the Databox reloads the data or resets the changes are lost.
      * Update behavior:
      * Base (with keyPath [] or '') -> Updates the complete structure.
      * KeyArray -> Updates the specific value (if the key does exist).
@@ -395,7 +395,7 @@ export default class DbStorage {
      * This method is used internally.
      * Notice if you do a cud operation locally on the client,
      * that this operation is not done on the server-side.
-     * So if the DataBox reloads the data or resets the changes are lost.
+     * So if the Databox reloads the data or resets the changes are lost.
      * Delete behavior:
      * Base (with keyPath [] or '') -> Deletes the complete structure.
      * KeyArray -> Deletes the specific value (if the key does exist).

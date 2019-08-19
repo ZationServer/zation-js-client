@@ -4,11 +4,11 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import DbsHead          from "../../../../src/lib/main/dataBox/storage/components/dbsHead";
+import DbsHead          from "../../../../src/lib/main/databox/storage/components/dbsHead";
 import {buildKeyArray}  from "../../../../src";
 import {assert}         from 'chai';
 
-describe('MAIN.DataBox.Storage',() => {
+describe('MAIN.Databox.Storage',() => {
 
     describe('Parse tests', () => {
 

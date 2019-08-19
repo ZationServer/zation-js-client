@@ -4,9 +4,9 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-export interface DataBoxConnectReq {
+export interface DataboxConnectReq {
     /**
-     * dataBox (name)
+     * databox (name)
      */
     d : string,
     /**
@@ -27,7 +27,7 @@ export interface DataBoxConnectReq {
     ii ?: any
 }
 
-export interface DataBoxConnectRes {
+export interface DataboxConnectRes {
     /**
      * Last cud id
      */
