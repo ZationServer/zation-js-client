@@ -23,7 +23,7 @@ export class ValidationRequestBuilder extends AbstractRequestBuilder<ValidationR
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Set the controller of the request.
+     * Set the controller name of the request.
      * @param controller
      * @default ''
      */

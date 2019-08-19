@@ -40,7 +40,7 @@ export class RequestBuilder extends AbstractRequestBuilder<RequestBuilder>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Set the controller of the request.
+     * Set the controller name of the request.
      * @param controller
      * @default ''
      */
