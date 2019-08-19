@@ -295,10 +295,7 @@ export default class Databox {
             }
 
             if (this.dbOptions.autoFetch) {
-                try {
-                    await this.fetchData(this.dbOptions.autoFetchData);
-                } catch (e) {
-                }
+                await this.fetchData(this.dbOptions.autoFetchData);
             }
         } else {
             if (!this.connected) {
