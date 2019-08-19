@@ -7,24 +7,29 @@ GitHub: LucaCode
 export default class CloneUtils
 {
     /**
-     * Clone a instance deep
+     * Clone a instance deep.
+     * Optimize to clone db storage components.
      * @param v
      */
-    static deepCloneInstance<T extends any = any>(v : T) : T {
+    static deepCloneInstance(v : any) : any {
         // if not array or object or is null return self
         if (typeof v !== 'object'||v === null) return v;
         let newO, i;
-        // handle case: array
-        if (v instanceof Array) {
+        if (Array.isArray(v)) {
             let l;
             newO = [];
             for (i = 0, l = v.length; i < l; i++) newO[i] = CloneUtils.deepCloneInstance(v[i]);
             return newO;
         }
-        // handle case: object
+        if (v instanceof Map) {
+            return new Map(this.deepCloneInstance(Array.from(v)));
+        }
+        if (v instanceof Set) {
+            return new Set(this.deepCloneInstance(Array.from(v)));
+        }
         newO = {};
+        Object.setPrototypeOf(newO,Object.getPrototypeOf(v));
         for (i in v) if (v.hasOwnProperty(i)){
-            Object.setPrototypeOf(newO[i],v.prototype);
             newO[i] = CloneUtils.deepCloneInstance(v[i]);
         }
         return newO;
