@@ -122,10 +122,11 @@ export default class DbsHead implements DbsComponent {
      * @param timestamp
      * @param ifContains
      */
-    insert(keyPath: string[], value: any, timestamp: number, ifContains ?: string): void {
+    insert(keyPath: string[], value: any, timestamp: number, ifContains ?: string): boolean {
         if (keyPath.length > 0 && isDbsComponent(this.componentValue)) {
-            (this.componentValue as DbsComponent).insert(keyPath, value, timestamp, ifContains)
+            return (this.componentValue as DbsComponent).insert(keyPath, value, timestamp, ifContains)
         }
+        return false;
     }
 
     /**
@@ -134,18 +135,20 @@ export default class DbsHead implements DbsComponent {
      * @param value
      * @param timestamp
      */
-    update(keyPath: string[], value: any, timestamp: number): void {
+    update(keyPath: string[], value: any, timestamp: number): boolean {
         if (keyPath.length === 0) {
             if (this.componentValue !== undefined && DbUtils.checkTimestamp(this.timestamp, timestamp)) {
                 this.componentValue = DbDataParser.parse(value);
                 this.data = isDbsComponent(this.componentValue) ?
                     this.componentValue.getData() : this.componentValue;
                 this.timestamp = timestamp;
+                return true;
             }
 
         } else if (keyPath.length > 0 && isDbsComponent(this.componentValue)) {
-            (this.componentValue as DbsComponent).update(keyPath, value, timestamp);
+            return (this.componentValue as DbsComponent).update(keyPath, value, timestamp);
         }
+        return false;
     }
 
     /**
@@ -153,14 +156,16 @@ export default class DbsHead implements DbsComponent {
      * @param keyPath
      * @param timestamp
      */
-    delete(keyPath: string[], timestamp: number): void {
+    delete(keyPath: string[], timestamp: number): boolean {
         if (keyPath.length === 0) {
             this.componentValue = undefined;
             this.data = undefined;
             this.timestamp = timestamp;
+            return true
         } else if (keyPath.length > 0 && isDbsComponent(this.componentValue)) {
-            (this.componentValue as DbsComponent).delete(keyPath, timestamp);
+            return (this.componentValue as DbsComponent).delete(keyPath, timestamp);
         }
+        return false;
     }
 
     /**

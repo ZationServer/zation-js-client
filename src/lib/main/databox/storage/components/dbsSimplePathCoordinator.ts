@@ -41,7 +41,7 @@ export default abstract class DbsSimplePathCoordinator {
      * @param ifContains
      * @private
      */
-    abstract _insert(key : string, value : any, timestamp : number,ifContains ?: string) : void
+    abstract _insert(key : string, value : any, timestamp : number,ifContains ?: string) : boolean;
 
     /**
      * Insert coordinator.
@@ -50,17 +50,18 @@ export default abstract class DbsSimplePathCoordinator {
      * @param timestamp
      * @param ifContains
      */
-    insert(keyPath : string[], value : any, timestamp : number,ifContains ?: string): void {
+    insert(keyPath : string[], value : any, timestamp : number,ifContains ?: string): boolean {
         if(keyPath.length === 1){
-            this._insert(keyPath[0],value,timestamp,ifContains);
+            return this._insert(keyPath[0],value,timestamp,ifContains);
         }
         else if(keyPath.length > 1){
             const nextComponent = this._getDbsComponent(keyPath[0]);
             if(nextComponent){
                 keyPath.shift();
-                (nextComponent as DbsComponent).insert(keyPath,value,timestamp,ifContains);
+                return (nextComponent as DbsComponent).insert(keyPath,value,timestamp,ifContains);
             }
         }
+        return false;
     }
 
     /**
@@ -70,7 +71,7 @@ export default abstract class DbsSimplePathCoordinator {
      * @param timestamp
      * @private
      */
-    abstract _update(key : string, value : any, timestamp : number) : void;
+    abstract _update(key : string, value : any, timestamp : number) : boolean;
 
     /**
      * Update coordinator.
@@ -78,17 +79,18 @@ export default abstract class DbsSimplePathCoordinator {
      * @param value
      * @param timestamp
      */
-    update(keyPath : string[], value : any, timestamp : number): void {
+    update(keyPath : string[], value : any, timestamp : number): boolean {
         if(keyPath.length === 1){
-            this._update(keyPath[0],value,timestamp);
+            return this._update(keyPath[0],value,timestamp);
         }
         else if(keyPath.length > 1){
             const nextComponent = this._getDbsComponent(keyPath[0]);
             if(nextComponent){
                 keyPath.shift();
-                (nextComponent as DbsComponent).update(keyPath,value,timestamp);
+                return (nextComponent as DbsComponent).update(keyPath,value,timestamp);
             }
         }
+        return false;
     }
 
     /**
@@ -97,24 +99,25 @@ export default abstract class DbsSimplePathCoordinator {
      * @param timestamo
      * @private
      */
-    abstract _delete(key : string, timestamo : number) : void;
+    abstract _delete(key : string, timestamo : number) : boolean;
 
     /**
      * Delete coordinator.
      * @param keyPath
      * @param timestamp
      */
-    delete(keyPath : string[], timestamp : number): void {
+    delete(keyPath : string[], timestamp : number): boolean {
         if(keyPath.length === 1){
-            this._delete(keyPath[0],timestamp);
+            return this._delete(keyPath[0],timestamp);
         }
         else if(keyPath.length > 1){
             const nextComponent = this._getDbsComponent(keyPath[0]);
             if(nextComponent){
                 keyPath.shift();
-                nextComponent.delete(keyPath,timestamp);
+                return nextComponent.delete(keyPath,timestamp);
             }
         }
+        return false;
     }
 
 }

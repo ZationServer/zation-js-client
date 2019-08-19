@@ -151,9 +151,9 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      * @param ifContains
      * @private
      */
-    _insert(key: string, value: any, timestamp : number,ifContains ?: string): void {
+    _insert(key: string, value: any, timestamp : number,ifContains ?: string): boolean {
         if(ifContains !== undefined && !this.hasKey(ifContains)){
-            return;
+            return false;
         }
 
         if (!this.hasKey(key) && DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
@@ -164,7 +164,9 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
             this.keys.add(key);
 
             this.timestampMap.set(key,timestamp);
+            return true;
         }
+        return false;
     }
 
     /**
@@ -174,7 +176,7 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      * @param timestamp
      * @private
      */
-    _update(key: string, value: any, timestamp : number): void {
+    _update(key: string, value: any, timestamp : number): boolean {
         if (this.hasKey(key) && DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
 
             const parsed = DbDataParser.parse(value);
@@ -182,7 +184,9 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
             this.data[key] = isDbsComponent(parsed) ? parsed.getData() : parsed;
 
             this.timestampMap.set(key,timestamp);
+            return true;
         }
+        return false;
     }
 
     /**
@@ -191,13 +195,15 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      * @param timestamp
      * @private
      */
-    _delete(key: string, timestamp : number): void {
+    _delete(key: string, timestamp : number): boolean {
         if (this.hasKey(key) && DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
             delete this.data[key];
             delete this.componentStructure[key];
             this.keys.delete(key);
             this.timestampMap.set(key,timestamp);
+            return true;
         }
+        return false;
     }
 
     /**

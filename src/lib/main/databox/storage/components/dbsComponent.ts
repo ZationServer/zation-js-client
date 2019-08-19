@@ -16,9 +16,27 @@ export default interface DbsComponent {
     dbsComponent : boolean;
     dbsComponentType : DbsComponentType;
 
-    insert(keyPath : string[], value : any,timestamp : number,ifContains ?: string) : void;
-    update(keyPath : string[], value : any,timestamp : number) : void
-    delete(keyPath : string[],timestamp : number) : void
+    /**
+     * @return if the action was fully executed.
+     * @param keyPath
+     * @param value
+     * @param timestamp
+     * @param ifContains
+     */
+    insert(keyPath : string[], value : any,timestamp : number,ifContains ?: string) : boolean;
+    /**
+     * @return if the action was fully executed.
+     * @param keyPath
+     * @param value
+     * @param timestamp
+     */
+    update(keyPath : string[], value : any,timestamp : number) : boolean;
+    /**
+     * @return if the action was fully executed.
+     * @param keyPath
+     * @param timestamp
+     */
+    delete(keyPath : string[],timestamp : number) : boolean;
 
     /**
      * Merge this dbs component with the new component.

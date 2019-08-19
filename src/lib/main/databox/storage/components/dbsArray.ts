@@ -148,14 +148,14 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
      * @param ifContains
      * @private
      */
-    _insert(key: string, value: any, timestamp : number,ifContains ?: string): void {
+    _insert(key: string, value: any, timestamp : number,ifContains ?: string): boolean {
         let index = parseInt(key);
         if(isNaN(index)){
             index = this.componentStructure.length;
         }
 
         if(ifContains !== undefined && !this.hasIndex(parseInt(ifContains))){
-            return;
+            return false;
         }
 
         if (!this.hasIndex(index) && DbUtils.checkTimestamp(this.getTimestamp(index),timestamp)) {
@@ -163,7 +163,9 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
             this.componentStructure[index] = parsed;
             this.data[index] = isDbsComponent(parsed) ? parsed.getData() : parsed;
             this.timestamps[index] = timestamp;
+            return true;
         }
+        return false;
     }
 
     /**
@@ -173,7 +175,7 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
      * @param timestamp
      * @private
      */
-    _update(key: string, value: any, timestamp : number): void {
+    _update(key: string, value: any, timestamp : number): boolean {
         const index = parseInt(key);
 
         if (this.hasIndex(index) && DbUtils.checkTimestamp(this.getTimestamp(index),timestamp)) {
@@ -181,7 +183,9 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
             this.componentStructure[index] = parsed;
             this.data[index] = isDbsComponent(parsed) ? parsed.getData() : parsed;
             this.timestamps[index] = timestamp;
+            return true;
         }
+        return false;
     }
 
     /**
@@ -190,18 +194,20 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
      * @param timestamp
      * @private
      */
-    _delete(key: string, timestamp : number): void {
+    _delete(key: string, timestamp : number): boolean {
         let index = parseInt(key);
         if(isNaN(index)){
             index = this.componentStructure.length-1;
-            if(index < 0){return;}
+            if(index < 0){return false;}
         }
 
         if (this.hasIndex(index) && DbUtils.checkTimestamp(this.getTimestamp(index),timestamp)) {
             this.data.splice(index, 1);
             this.componentStructure.splice(index, 1);
             this.timestamps.splice(index, 1);
+            return true;
         }
+        return false;
     }
 
     /**

@@ -355,8 +355,9 @@ export default class DbStorage {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         const {timestamp,ifContains} = options;
         if(this.insertMiddleware(keyPath,value,options)){
-            this.dbsHead.insert(keyPath,value,timestamp,ifContains);
-            this.onHeadChange();
+            if(this.dbsHead.insert(keyPath,value,timestamp,ifContains)){
+                this.onHeadChange();
+            }
         }
         return this;
     }
@@ -384,8 +385,9 @@ export default class DbStorage {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         const {timestamp} = options;
         if(this.updateMiddleware(keyPath,value,options)){
-            this.dbsHead.update(keyPath,value,timestamp);
-            this.onHeadChange();
+            if(this.dbsHead.update(keyPath,value,timestamp)){
+                this.onHeadChange();
+            }
         }
         return this;
     }
@@ -412,8 +414,9 @@ export default class DbStorage {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         const {timestamp} = options;
         if(this.deleteMiddleware(keyPath,options)){
-            this.dbsHead.delete(keyPath,timestamp);
-            this.onHeadChange();
+            if(this.dbsHead.delete(keyPath,timestamp)){
+                this.onHeadChange();
+            }
         }
         return this;
     }
