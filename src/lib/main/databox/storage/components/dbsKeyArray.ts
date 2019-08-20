@@ -47,16 +47,24 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
         const withValue = typeof rawValueKey === 'string';
 
         let item;
+        let itemKey;
+        let tmpI;
         let parsed;
         let i = 0;
         for(let j = 0; j < array.length; j++){
             item = array[j];
             if(typeof item === 'object'){
+                itemKey = item[rawKeyKey].toString();
+                tmpI = this.keyMap.get(itemKey);
+                if(tmpI === undefined){
+                    tmpI = i;
+                    this.keyMap.set(item[rawKeyKey].toString(),i);
+                    i++;
+                }
+
                 parsed = DbDataParser.parse(withValue ? item[rawValueKey as string] : item);
-                this.componentStructure[i] = parsed;
-                this.data[i] = isDbsComponent(parsed) ? parsed.getData() : parsed;
-                this.keyMap.set(item[rawKeyKey].toString(),i);
-                i++;
+                this.componentStructure[tmpI] = parsed;
+                this.data[tmpI] = isDbsComponent(parsed) ? parsed.getData() : parsed;
             }
         }
     }
