@@ -692,14 +692,14 @@ export default class Databox {
         this.cudId = cudPackage.ci;
         this.serverSideCudId = cudPackage.ci;
         const timestamp = cudPackage.t;
-        const actions = cudPackage.a;
+        const operations = cudPackage.o;
         for (let dbStorage of this.dbStorages) {
             dbStorage.startCudSeq();
         }
-        for (let i = 0; i < actions.length; i++) {
-            const action = actions[i];
-            const {k, v, c, d} = action;
-            switch (action.t) {
+        for (let i = 0; i < operations.length; i++) {
+            const operation = operations[i];
+            const {k, v, c, d} = operation;
+            switch (operation.t) {
                 case CudType.update:
                     this.update(k, v, {
                         timestamp,
@@ -712,7 +712,7 @@ export default class Databox {
                         timestamp,
                         code: c,
                         data: d,
-                        ifContains: action.i
+                        ifContains: operation.i
                     });
                     break;
                 case CudType.delete:

@@ -127,9 +127,9 @@ export const enum CudType {
 }
 
 /**
- * A cud action.
+ * A cud operation.
  */
-export interface CudAction {
+export interface CudOperation {
     /**
      * type
      */
@@ -179,9 +179,9 @@ export interface PreCudPackage {
      */
     t ?: number,
     /**
-     * actions
+     * operations
      */
-    a : CudAction[]
+    o : CudOperation[]
 }
 
 /**
