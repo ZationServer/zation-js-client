@@ -14,6 +14,7 @@ const convertNewline  = require('gulp-convert-newline');
 const ascjsify        = require('ascjsify');
 const OptimizeJs      = require('gulp-optimize-js');
 const clean           = require('gulp-clean');
+const terser          = require('gulp-terser');
 
 const tscConfig       = require('./tsconfig.json');
 const DIST            = './dist/';
@@ -65,6 +66,7 @@ gulp.task('optimize', function () {
     return gulp
         .src('dist/**/*.js')
         .pipe(OptimizeJs())
+        .pipe(terser())
         .pipe(gulp.dest('dist'));
 });
 
