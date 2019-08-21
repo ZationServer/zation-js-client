@@ -29,45 +29,45 @@ export interface DbStorageOptions {
      * You also can provide a function that decides if the storage should do the clear.
      * @default true
      */
-    clearOnClose ?: ClearOnCloseMiddleware | boolean,
+    clearOnClose ?: ClearOnCloseMiddleware | ClearOnCloseMiddleware[] | boolean,
     /**
      * Indicates if this storage should be cleared when the socket
      * is kicked out from a connected databox.
      * You also can provide a function that decides if the storage should do the clear.
      * @default true
      */
-    clearOnKickOut ?: ClearOnKickOutMiddleware | boolean,
+    clearOnKickOut ?: ClearOnKickOutMiddleware | ClearOnKickOutMiddleware[] | boolean,
     /**
      * Indicates if this storage should load complete reloaded data.
      * Can happen in the case that the socket missed some cud operations.
      * You also can provide a function that decides if the storage should do the reload.
      * @default true
      */
-    doReload ?: ReloadMiddleware | boolean,
+    doReload ?: ReloadMiddleware | ReloadMiddleware[] | boolean,
     /**
      * Indicates if this storage should do insert operations.
      * You also can provide a function that decides if the storage should do the insertion.
      * @default true
      */
-    doInsert ?: InsertMiddleware | boolean,
+    doInsert ?: InsertMiddleware | InsertMiddleware[] | boolean,
     /**
      * Indicates if this storage should do update operations.
      * You also can provide a function that decides if the storage should do the update.
      * @default true
      */
-    doUpdate ?: UpdateMiddleware | boolean,
+    doUpdate ?: UpdateMiddleware | UpdateMiddleware[] | boolean,
     /**
      * Indicates if this storage should do delete operations.
      * You also can provide a function that decides if the storage should do the deletion.
      * @default true
      */
-    doDelete ?: DeleteMiddleware | boolean,
+    doDelete ?: DeleteMiddleware | DeleteMiddleware[] | boolean,
     /**
      * Indicates if this storage should add fetch data to the storage.
      * You also can provide a function that decides if the storage should do it.
      * @default true
      */
-    doAddFetchData ?: AddFetchDataMiddleware | boolean
+    doAddFetchData ?: AddFetchDataMiddleware | AddFetchDataMiddleware[] | boolean
 }
 
 export const enum DataEventReason {
@@ -140,11 +140,21 @@ export default class DbStorage {
         this.addFetchDataMiddleware = this.processMiddlewareOption(this.dbStorageOptions.doAddFetchData);
     }
 
-    private processMiddlewareOption<T extends (...args : any[]) => boolean>(value : boolean | T) :
+    private processMiddlewareOption<T extends (...args : any[]) => boolean>(value : boolean | T | T[]) :
         (...args : any[]) => boolean
     {
         if(typeof value === 'boolean'){
             return () => value;
+        }
+        else if(Array.isArray(value)){
+            return (...args : any[]) => {
+                for(let i = 0; i < value.length; i++){
+                    if(!value[i](...args)){
+                        return false;
+                    }
+                }
+                return true;
+            }
         }
         else {
             return value;
