@@ -22,6 +22,16 @@ describe('MAIN.Databox.Storage',() => {
             assert.deepEqual(data,[{id : 1},{id : 2},{id : 3}]);
         });
 
+        it('KeyArray - normal (duplicated keys)', () => {
+            const head = new DbsHead(buildKeyArray([{id : 1,v : 12},{id : 3,v : 14},{id : 3,v : 13}],'id'));
+
+            const data = head.getData();
+            const dataCopy = head.getDataCopy();
+            assert.deepEqual(data,dataCopy,'Copy should be deep equal');
+
+            assert.deepEqual(data,[{id : 1,v : 12},{id : 3,v : 13}]);
+        });
+
         it('KeyArray - with value', () => {
             const head = new DbsHead(buildKeyArray([{id : 1,v : 'a'},{id : 2,v : 'b'},{id : 3,v : 'c'}],'id','v'));
 
@@ -194,6 +204,18 @@ describe('MAIN.Databox.Storage',() => {
                 assert.deepEqual(head.getData(),['a','c','d']);
             });
 
+            it('KeyArray - normal (delete all)', () => {
+                const head = new DbsHead(buildKeyArray([{id : 1},{id : 2},{id : 3}],'id'));
+
+                head.delete(['2'],Date.now());
+                head.delete(['1'],Date.now());
+                head.delete(['3'],Date.now());
+
+                assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
+
+                assert.deepEqual(head.getData(),[]);
+            });
+
             it('Object', () => {
                 const head = new DbsHead({name : 'luca',age : 20,online : true});
 
@@ -304,7 +326,7 @@ describe('MAIN.Databox.Storage',() => {
                 }
             }));
 
-            const merged = head1.meregeWithNew(head2);
+            const merged = head1.meregeWithNew(head2).mergedValue;
 
             assert.deepEqual(merged.getData(),merged.getDataCopy(),'Copy should be deep equal');
             assert.deepEqual(merged.getData(),{name : 'lucaluca',age : 40});
@@ -317,7 +339,7 @@ describe('MAIN.Databox.Storage',() => {
             const head1 = new DbsHead(buildKeyArray([{id : 1},{id : 2},{id : 3}],'id'));
             const head2 = new DbsHead(buildKeyArray([{id : 3},{id : 4},{id : 1}],'id'));
 
-            const merged = head1.meregeWithNew(head2);
+            const merged = head1.meregeWithNew(head2).mergedValue;
 
             assert.deepEqual(merged.getData(),merged.getDataCopy(),'Copy should be deep equal');
             assert.deepEqual(merged.getData(),[{id : 1},{id : 2},{id : 3},{id : 4}]);
@@ -327,7 +349,7 @@ describe('MAIN.Databox.Storage',() => {
             const head1 = new DbsHead({msgs : buildKeyArray([{id : 1},{id : 2},{id : 3}],'id')});
             const head2 = new DbsHead({msgs : buildKeyArray([{id : 3},{id : 4},{id : 1}],'id')});
 
-            const merged = head1.meregeWithNew(head2);
+            const merged = head1.meregeWithNew(head2).mergedValue;
 
             assert.deepEqual(merged.getData(),merged.getDataCopy(),'Copy should be deep equal');
             assert.deepEqual(merged.getData(),{msgs : [{id : 1},{id : 2},{id : 3},{id : 4}]});
