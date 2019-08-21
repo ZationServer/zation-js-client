@@ -81,8 +81,11 @@ export const enum DataEventReason {
     COPIED
 }
 
-export type OnDataChange = (reasons : DataEventReason[],storage : DbStorage) => void | Promise<void>
-export type OnDataTouch = (reasons : DataEventReason[],storage : DbStorage) => void | Promise<void>
+export type OnDataChange = (reasons : DataEventReason[],storage : DbStorage) => void | Promise<void>;
+export type OnDataTouch = (reasons : DataEventReason[],storage : DbStorage) => void | Promise<void>;
+export type OnInsert = (keyPath : string[], value : any,options : IfContainsOption & InfoOption & TimestampOption) => void | Promise<void>;
+export type OnUpdate = (keyPath : string[], value : any,options : InfoOption & TimestampOption) => void | Promise<void>;
+export type OnDelete = (keyPath : string[], options : InfoOption & TimestampOption) => void | Promise<void>;
 
 export default class DbStorage {
 
@@ -119,6 +122,10 @@ export default class DbStorage {
     private readonly dataChangeCombineSeqEvent : EventManager<OnDataChange> = new EventManager<OnDataChange>();
     private readonly dataTouchEvent : EventManager<OnDataTouch> = new EventManager<OnDataTouch>();
 
+    private readonly insertEvent : EventManager<OnInsert> = new EventManager<OnInsert>();
+    private readonly updateEvent : EventManager<OnUpdate> = new EventManager<OnUpdate>();
+    private hasUpdateListener : boolean = false;
+    private readonly deleteEvent : EventManager<OnDelete> = new EventManager<OnDelete>();
 
     constructor(options : DbStorageOptions = {},dbStorage ?: DbStorage) {
         ObjectUtils.addObToOb(this.dbStorageOptions,options,false);
@@ -417,6 +424,7 @@ export default class DbStorage {
         if(this.insertMiddleware(keyPath,value,options) && this.dbsHead.insert(keyPath,value,timestamp,ifContains)){
             this.updateCompOptions();
             this.tmpCudInserted = true;
+            this.insertEvent.emit(keyPath,value,options);
             this.dataTouchEvent.emit([DataEventReason.INSERTED],this);
             this.dataChangeEvent.emit([DataEventReason.INSERTED],this);
             if(!this.cudSeqEditActive){
@@ -449,13 +457,14 @@ export default class DbStorage {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         const {timestamp} = options;
         if(this.updateMiddleware(keyPath,value,options)){
-            const ml = this.dbsHead.update(keyPath,value,timestamp, this.hasDataChangeListener);
+            const ml = this.dbsHead.update(keyPath,value,timestamp, (this.hasDataChangeListener || this.hasUpdateListener));
             if(ml > 0){
                 this.updateCompOptions();
                 this.dataTouchEvent.emit([DataEventReason.UPDATED],this);
             }
             if(ml === ModifyLevel.DATA_CHANGED){
                 this.tmpCudUpdated = true;
+                this.updateEvent.emit(keyPath,value,options);
                 this.dataChangeEvent.emit([DataEventReason.UPDATED],this);
                 if(!this.cudSeqEditActive){
                     this.dataChangeCombineSeqEvent.emit([DataEventReason.UPDATED],this);
@@ -489,6 +498,7 @@ export default class DbStorage {
         if(this.deleteMiddleware(keyPath,options) && this.dbsHead.delete(keyPath,timestamp)){
             this.updateCompOptions();
             this.tmpCudDeleted = true;
+            this.deleteEvent.emit(keyPath,options);
             this.dataTouchEvent.emit([DataEventReason.DELETED],this);
             this.dataChangeEvent.emit([DataEventReason.DELETED],this);
             if(!this.cudSeqEditActive){
@@ -527,9 +537,13 @@ export default class DbStorage {
         this.cudSeqEditActive = false;
     }
 
-    private updateHasDataChangeListner() : void {
+    private updateHasDataChangeListener() : void {
         this.hasDataChangeListener = this.dataChangeEvent.hasListener() ||
             this.dataChangeCombineSeqEvent.hasListener()
+    }
+
+    private updateHasUpdateListener() : void {
+        this.hasUpdateListener = this.updateEvent.hasListener();
     }
 
     //events
@@ -562,7 +576,7 @@ export default class DbStorage {
         else {
             this.dataChangeEvent.on(listener);
         }
-        this.updateHasDataChangeListner();
+        this.updateHasDataChangeListener();
         return this;
     }
 
@@ -594,7 +608,7 @@ export default class DbStorage {
         else {
             this.dataChangeEvent.once(listener);
         }
-        this.updateHasDataChangeListner();
+        this.updateHasDataChangeListener();
         return this;
     }
 
@@ -607,7 +621,7 @@ export default class DbStorage {
     offDataChange(listener : OnDataChange) : DbStorage {
         this.dataChangeCombineSeqEvent.off(listener);
         this.dataChangeEvent.off(listener);
-        this.updateHasDataChangeListner();
+        this.updateHasDataChangeListener();
         return this;
     }
 
@@ -651,6 +665,110 @@ export default class DbStorage {
      */
     offDataTouch(listener : OnDataTouch) : DbStorage {
         this.dataTouchEvent.off(listener);
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Adds a listener that gets triggered whenever new data is inserted (not added).
+     * @param listener
+     */
+    onInsert(listener : OnInsert) : DbStorage {
+        this.insertEvent.on(listener);
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Adds a once listener that gets triggered when new data is inserted (not added).
+     * @param listener
+     */
+    onceInsert(listener : OnInsert) : DbStorage {
+        this.insertEvent.once(listener);
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Removes a listener of the insert event.
+     * Can be a once or normal listener.
+     * @param listener
+     */
+    offInsert(listener : OnInsert) : DbStorage {
+        this.insertEvent.off(listener);
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Adds a listener that gets triggered whenever data is updated.
+     * This event will only trigger if the data content is changed.
+     * For example, if you update the age with the value 20 to 20, this event will not occur.
+     * Notice also that if you add at least one listener in this event,
+     * the deep equal algorithm change detection is activated whenever an update happens.
+     * @param listener
+     */
+    onUpdate(listener : OnUpdate) : DbStorage {
+        this.updateEvent.on(listener);
+        this.updateHasUpdateListener();
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Adds a once listener that gets triggered when data is updated.
+     * This event will only trigger if the data content is changed.
+     * For example, if you update the age with the value 20 to 20, this event will not occur.
+     * Notice also that if you add at least one listener in this event,
+     * the deep equal algorithm change detection is activated whenever an update happens.
+     * @param listener
+     */
+    onceUpdate(listener : OnUpdate) : DbStorage {
+        this.updateEvent.once(listener);
+        this.updateHasUpdateListener();
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Removes a listener of the update event.
+     * Can be a once or normal listener.
+     * @param listener
+     */
+    offUpdate(listener : OnUpdate) : DbStorage {
+        this.updateEvent.off(listener);
+        this.updateHasUpdateListener();
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Adds a listener that gets triggered whenever data is deleted.
+     * @param listener
+     */
+    onDelete(listener : OnDelete) : DbStorage {
+        this.deleteEvent.on(listener);
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Adds a once listener that gets triggered when data is deleted.
+     * @param listener
+     */
+    onceDelete(listener : OnDelete) : DbStorage {
+        this.deleteEvent.once(listener);
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Removes a listener of the delete event.
+     * Can be a once or normal listener.
+     * @param listener
+     */
+    offDelete(listener : OnDelete) : DbStorage {
+        this.deleteEvent.off(listener);
         return this;
     }
 }
