@@ -95,7 +95,7 @@ export interface DbClientInputFetchResponse {
 /**
  * Events that a client can receive from the server.
  */
-export enum DbClientOutputEvent {
+export const enum DbClientOutputEvent {
     cud,
     close,
     reload,
@@ -120,7 +120,7 @@ export interface DbClientOutputPackage {
     c ?: number | string,
 }
 
-export enum CudType {
+export const enum CudType {
     insert,
     update,
     delete
@@ -244,7 +244,7 @@ export interface DbClientOutputKickOutPackage extends DbClientOutputPackage{
 /**
  * The target session that the server should use to process.
  */
-export enum DBClientInputSessionTarget {
+export const enum DBClientInputSessionTarget {
     mainSession,
     reloadSession
 }
@@ -252,7 +252,7 @@ export enum DBClientInputSessionTarget {
 /**
  * Actions that a client can send to the server.
  */
-export enum DbClientInputAction {
+export const enum DbClientInputAction {
     fetchData,
     resetSession,
     copySession,
