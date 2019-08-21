@@ -4,7 +4,7 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import DbsComponent from "./dbsComponent";
+import DbsComponent, {ModifyLevel} from "./dbsComponent";
 
 export default abstract class DbsSimplePathCoordinator {
 
@@ -35,6 +35,7 @@ export default abstract class DbsSimplePathCoordinator {
 
     /**
      * The insert process.
+     * @return if the action was fully executed. (Data changed)
      * @param key
      * @param value
      * @param timestamp
@@ -45,6 +46,7 @@ export default abstract class DbsSimplePathCoordinator {
 
     /**
      * Insert coordinator.
+     * @return if the action was fully executed. (Data changed)
      * @param keyPath
      * @param value
      * @param timestamp
@@ -66,35 +68,40 @@ export default abstract class DbsSimplePathCoordinator {
 
     /**
      * The update process.
+     * @return the modify level.
      * @param key
      * @param value
      * @param timestamp
+     * @param checkDataChange
      * @private
      */
-    abstract _update(key : string, value : any, timestamp : number) : boolean;
+    abstract _update(key : string, value : any, timestamp : number,checkDataChange : boolean) : ModifyLevel;
 
     /**
      * Update coordinator.
+     * @return the modify level.
      * @param keyPath
      * @param value
      * @param timestamp
+     * @param checkDataChange
      */
-    update(keyPath : string[], value : any, timestamp : number): boolean {
+    update(keyPath : string[], value : any, timestamp : number,checkDataChange : boolean): ModifyLevel {
         if(keyPath.length === 1){
-            return this._update(keyPath[0],value,timestamp);
+            return this._update(keyPath[0],value,timestamp,checkDataChange);
         }
         else if(keyPath.length > 1){
             const nextComponent = this._getDbsComponent(keyPath[0]);
             if(nextComponent){
                 keyPath.shift();
-                return (nextComponent as DbsComponent).update(keyPath,value,timestamp);
+                return (nextComponent as DbsComponent).update(keyPath,value,timestamp,checkDataChange);
             }
         }
-        return false;
+        return ModifyLevel.NOTHING;
     }
 
     /**
      * The delete process.
+     * @return if the action was fully executed. (Data changed)
      * @param key
      * @param timestamo
      * @private
@@ -103,6 +110,7 @@ export default abstract class DbsSimplePathCoordinator {
 
     /**
      * Delete coordinator.
+     * @return if the action was fully executed. (Data changed)
      * @param keyPath
      * @param timestamp
      */

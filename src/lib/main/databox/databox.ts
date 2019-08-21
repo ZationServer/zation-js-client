@@ -26,7 +26,7 @@ import {
     InfoOption,
     TimestampOption
 } from "./dbDefinitions";
-import DbStorage, {DbStorageOptions, OnDataChange} from "./storage/dbStorage";
+import DbStorage, {DbStorageOptions, OnDataChange, OnDataTouch} from "./storage/dbStorage";
 import DbFetchHistoryManager, {FetchHistoryItem}  from "./dbFetchHistoryManager";
 import ObjectUtils                                from "../utils/objectUtils";
 import {Zation}                                   from "../../core/zation";
@@ -137,7 +137,7 @@ export default class Databox {
     private readonly mainDbStorage: DbStorage;
     private readonly tmpReloadDataSets: Set<DbsHead> = new Set<DbsHead>();
     private readonly fetchHistoryManager: DbFetchHistoryManager = new DbFetchHistoryManager();
-    private readonly tmpRestoreStroage: DbStorage;
+    private readonly tmpReloadStroage: DbStorage;
 
     private readonly initData: any;
 
@@ -199,7 +199,7 @@ export default class Databox {
             doInsert: true
         };
         ObjectUtils.addObToOb(tmpRestoreStorageOptions, this.dbOptions.mainStorageOptions);
-        this.tmpRestoreStroage = new DbStorage(tmpRestoreStorageOptions);
+        this.tmpReloadStroage = new DbStorage(tmpRestoreStorageOptions);
 
         this.mainDbStorage = new DbStorage(this.dbOptions.mainStorageOptions);
         this.dbStorages.add(this.mainDbStorage);
@@ -586,17 +586,17 @@ export default class Databox {
                         result.push(new DbsHead(missedHistory[i].data));
                     }
 
-                    this.tmpRestoreStroage.clear();
+                    this.tmpReloadStroage.clear();
                     for (let i = 0; i < result.length; i++) {
                         if (result[i] === undefined) {
                             continue;
                         }
-                        this.tmpRestoreStroage.addData(result[i]);
+                        this.tmpReloadStroage.addData(result[i]);
                     }
 
                     await this.sendSessionAction(DbClientInputAction.copySession, DBClientInputSessionTarget.reloadSession);
                     this.tmpReloadDataSets.clear();
-                    this._restoreStorages(this.tmpRestoreStroage);
+                    this._reloadStorages(this.tmpReloadStroage);
 
                     this.fetchHistoryManager.commit();
                     this.newDataEvent.emit(this);
@@ -693,6 +693,9 @@ export default class Databox {
         this.serverSideCudId = cudPackage.ci;
         const timestamp = cudPackage.t;
         const actions = cudPackage.a;
+        for (let dbStorage of this.dbStorages) {
+            dbStorage.startCudSeq();
+        }
         for (let i = 0; i < actions.length; i++) {
             const action = actions[i];
             const {k, v, c, d} = action;
@@ -720,6 +723,9 @@ export default class Databox {
                     });
                     break;
             }
+        }
+        for (let dbStorage of this.dbStorages) {
+            dbStorage.endCudSeq();
         }
     }
 
@@ -786,14 +792,12 @@ export default class Databox {
 
     /**
      *
-     * @param restoreStorage
+     * @param reloadStorage
      * @private
      */
-    private _restoreStorages(restoreStorage: DbStorage) {
+    private _reloadStorages(reloadStorage: DbStorage) {
         for (let dbStorage of this.dbStorages) {
-            if(dbStorage.shouldReload(restoreStorage)){
-                dbStorage.copyFrom(restoreStorage);
-            }
+            dbStorage.reload(reloadStorage);
         }
     }
 
@@ -860,7 +864,7 @@ export default class Databox {
             dbStorage.update(keyPath, value, options);
         }
         for (let dataSet of this.tmpReloadDataSets) {
-            dataSet.update(keyPath, value, DbUtils.processTimestamp(options.timestamp));
+            dataSet.update(keyPath, value, DbUtils.processTimestamp(options.timestamp),false);
         }
         this.newDataEvent.emit(this);
         return this;
@@ -1204,12 +1208,13 @@ export default class Databox {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Adds a listener that gets triggered
-     * whenever this Databox has new data.
-     * This includes reloads, new cud Operations (Included locally and remote),
-     * or fetched data.
+     * whenever this Databox receives new data.
+     * If you want to update the user interface,
+     * you should use the data change event of an databox storage.
+     * This includes reloads, cud operations (Included locally and remote),
+     * or newly fetched data.
      * @param listener
      */
-
     onNewData(listener : OnNewData) : Databox {
         this.newDataEvent.on(listener);
         return this;
@@ -1217,10 +1222,12 @@ export default class Databox {
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Adds a once listener that gets triggered when
-     * this Databox has new data.
-     * This includes reloads, new cud Operations (Included locally and remote),
-     * or fetched data.
+     * Adds a once listener that gets triggered
+     * when this Databox receives new data.
+     * If you want to update the user interface,
+     * you should use the data change event of an databox storage.
+     * This includes reloads, cud operations (Included locally and remote),
+     * or newly fetched data.
      * @param listener
      */
     onceNewData(listener : OnNewData) : Databox {
@@ -1241,39 +1248,109 @@ export default class Databox {
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Adds a listener to the mainDbStorage that gets triggered
-     * whenever the data changes.
-     * This includes reloads, new cud Operations,
-     * new sorting, clear, copy from or fetched data.
+     * Adds a listener to the main storage that gets triggered whenever the data changes.
+     * It includes any change of data (e.g., reloads, cud Operations, sorting,
+     * clear, copies from other storages, or add newly fetched data).
+     * Other than the data touch event, this event will only trigger
+     * if the data content is changed.
+     * In some cases, it uses a deep equal algorithm, but most of the
+     * time (e.g., deletions, insertions, merge), a change can be
+     * detected without a complex algorithm.
+     * The deep equal algorithm change detection will only be used
+     * if you had registered at least one listener in this event.
+     * This event is perfect for updating the user interface.
      * @param listener
+     * @param combineCudSeqOperations
+     * With the parameter: combineCudSeqOperations,
+     * you can activate that in case of a seqEdit the event triggers
+     * after all operations finished.
+     * For example, you do four updates then this event triggers after all four updates.
+     * If you have deactivated, then it will trigger for each updater separately.
      */
-    onDataChange(listener : OnDataChange) : Databox {
-        this.mainDbStorage.onDataChange(listener);
+    onDataChange(listener : OnDataChange,combineCudSeqOperations : boolean = true) : Databox {
+        this.mainDbStorage.onDataChange(listener,combineCudSeqOperations);
         return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Adds a once listener to the mainDbStorage that gets triggered
-     * when the data changes.
-     * This includes reloads, new cud Operations,
-     * new sorting, clear, copy from or fetched data.
+     * Adds a once listener to the main storage that gets triggered when the data changes.
+     * It includes any change of data (e.g., reloads, cud Operations, sorting,
+     * clear, copies from other storages, or add newly fetched data).
+     * Other than the data touch event, this event will only trigger
+     * if the data content is changed.
+     * In some cases, it uses a deep equal algorithm, but most of the
+     * time (e.g., deletions, insertions, merge), a change can be
+     * detected without a complex algorithm.
+     * The deep equal algorithm change detection will only be used
+     * if you had registered at least one listener in this event.
+     * This event is perfect for updating the user interface.
      * @param listener
+     * @param combineCudSeqOperations
+     * With the parameter: combineCudSeqOperations,
+     * you can activate that in case of a seqEdit the event triggers
+     * after all operations finished.
+     * For example, you do four updates then this event triggers after all four updates.
+     * If you have deactivated, then it will trigger for each updater separately.
      */
-    onceDataChange(listener : OnDataChange) : Databox {
-        this.mainDbStorage.onceDataChange(listener);
+    onceDataChange(listener : OnDataChange,combineCudSeqOperations : boolean = true) : Databox {
+        this.mainDbStorage.onceDataChange(listener,combineCudSeqOperations);
         return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Removes a listener from the dataChange
-     * event on the mainDbStorage.
+     * Removes a listener of the dataChange event
+     * from the main storage.
      * Can be a once or normal listener.
      * @param listener
      */
     offDataChange(listener : OnDataChange) : Databox {
         this.mainDbStorage.offDataChange(listener);
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Adds a listener to the main storage that gets triggered whenever the data is touched.
+     * It includes any touch of data (e.g., reloads, cud Operations, sorting,
+     * clear, copies from other storages, or add newly fetched data).
+     * Other than the data change event, this event will also trigger if the
+     * data content is not changed.
+     * For example, if you update the age with the value 20 to 20,
+     * then the data touch event will be triggered but not the data change event.
+     * @param listener
+     */
+    onDataTouch(listener : OnDataTouch) : Databox {
+        this.mainDbStorage.onDataTouch(listener);
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Adds a once listener to the main storage that gets triggered when the data is touched.
+     * It includes any touch of data (e.g., reloads, cud Operations, sorting,
+     * clear, copies from other storages, or add newly fetched data).
+     * Other than the data change event, this event will also trigger if the
+     * data content is not changed.
+     * For example, if you update the age with the value 20 to 20,
+     * then the data touch event will be triggered but not the data change event.
+     * @param listener
+     */
+    onceDataTouch(listener : OnDataTouch) : Databox {
+        this.mainDbStorage.onceDataTouch(listener);
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Removes a listener of the dataTouch event
+     * from the main storage.
+     * Can be a once or normal listener.
+     * @param listener
+     */
+    offDataTouch(listener : OnDataTouch) : Databox {
+        this.mainDbStorage.offDataTouch(listener);
         return this;
     }
 }

@@ -4,12 +4,13 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import DbsComponent, {DbsComponentType, isDbsComponent, isDbsObject} from "./dbsComponent";
-import DbDataParser                                    from "../dbDataParser";
-import DbUtils                                         from "../../dbUtils";
-import DbsSimplePathCoordinator                        from "./dbsSimplePathCoordinator";
-import {dbsMerger, DbsValueMerger, defaultValueMerger} from "../dbsMergerUtils";
-import {DbsComparator}                                 from "../dbsComparator";
+import DbsComponent, {DbsComponentType, isDbsComponent, isDbsObject, MergeResult, ModifyLevel} from "./dbsComponent";
+import DbDataParser                                     from "../dbDataParser";
+import DbUtils                                          from "../../dbUtils";
+import DbsSimplePathCoordinator                         from "./dbsSimplePathCoordinator";
+import {dbsMerger, DbsValueMerger, defaultValueMerger}  from "../dbsMergerUtils";
+import {DbsComparator}                                  from "../dbsComparator";
+import {deepEqual}                                      from "../../../utils/deepEqual";
 
 export default class DbsObject extends DbsSimplePathCoordinator implements DbsComponent {
 
@@ -49,9 +50,12 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
     /**
      * Sets the comparator of this component.
      * Undefined will reset the comparator.
+     * @return if the data has changed.
      * @param comparator
      */
-    setComparator(comparator : DbsComparator | undefined) : void {}
+    setComparator(comparator : DbsComparator | undefined) : boolean {
+        return false;
+    }
 
     /**
      * Creates a loop for each DbsComponent in the complete structure.
@@ -121,30 +125,34 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      * Merge this dbs component with the new component.
      * @param newValue
      */
-    meregeWithNew(newValue: any) {
+    meregeWithNew(newValue: any) : MergeResult {
         if(isDbsObject(newValue)){
+            let mainDc : boolean = false;
             newValue.forEachPair((key, value, componentValue, timestamp) => {
                 if(this.hasKey(key)){
-                    const mergedValue = dbsMerger(this.componentStructure[key],componentValue,this.valueMerger);
+                    const {mergedValue,dataChanged} = dbsMerger(this.componentStructure[key],componentValue,this.valueMerger);
+                    mainDc = mainDc || dataChanged;
                     this.componentStructure[key] = mergedValue;
                     this.data[key] = isDbsComponent(mergedValue) ? mergedValue.getData() : mergedValue;
                 }
                 else {
                     this.data[key] = value;
                     this.componentStructure[key] = componentValue;
+                    mainDc = true;
                 }
                 this.keys.add(key);
                 if(timestamp !== undefined && DbUtils.isNewerTimestamp(this.timestampMap.get(key),timestamp)){
                     this.timestampMap.set(key,timestamp);
                 }
             });
-            return this;
+            return {mergedValue : this,dataChanged : mainDc};
         }
-        return newValue;
+        return {mergedValue : newValue,dataChanged : true};
     }
 
     /**
      * Insert process.
+     * @return if the action was fully executed. (Data changed)
      * @param key
      * @param value
      * @param timestamp
@@ -171,26 +179,33 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
 
     /**
      * Update process.
+     * @return the modify level.
      * @param key
      * @param value
      * @param timestamp
+     * @param checkDataChange
      * @private
      */
-    _update(key: string, value: any, timestamp : number): boolean {
+    _update(key: string, value: any, timestamp : number,checkDataChange : boolean): ModifyLevel {
         if (this.hasKey(key) && DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
-
+            let ml = ModifyLevel.DATA_TOUCHED;
             const parsed = DbDataParser.parse(value);
+            const newData = isDbsComponent(parsed) ? parsed.getData() : parsed;
+            if(checkDataChange && !deepEqual(newData,this.data[key])){
+                ml = ModifyLevel.DATA_CHANGED;
+            }
             this.componentStructure[key] = parsed;
-            this.data[key] = isDbsComponent(parsed) ? parsed.getData() : parsed;
+            this.data[key] = newData;
 
             this.timestampMap.set(key,timestamp);
-            return true;
+            return ml;
         }
-        return false;
+        return ModifyLevel.NOTHING;
     }
 
     /**
      * Delete process.
+     * @return if the action was fully executed. (Data changed)
      * @param key
      * @param timestamp
      * @private

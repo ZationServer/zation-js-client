@@ -46,7 +46,7 @@ import {ErrorName}                     from "./lib/main/constants/errorName";
 import {RawError}                      from "./lib/main/error/rawError";
 import {buildKeyArray}                 from "./lib/main/databox/storage/keyArrayUtils";
 import DbsHead                         from "./lib/main/databox/storage/components/dbsHead";
-import DbStorage                       from "./lib/main/databox/storage/dbStorage";
+import DbStorage, {DataEventReason}    from "./lib/main/databox/storage/dbStorage";
 import Databox                         from "./lib/main/databox/databox";
 import {DbsComparator}                 from "./lib/main/databox/storage/dbsComparator";
 import {DbsValueMerger}                from "./lib/main/databox/storage/dbsMergerUtils";
@@ -119,7 +119,8 @@ export {
     DbStorage,
     Databox,
     DbsComparator,
-    DbsValueMerger
+    DbsValueMerger,
+    DataEventReason
 };
 
 

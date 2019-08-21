@@ -17,7 +17,7 @@ export default interface DbsComponent {
     dbsComponentType : DbsComponentType;
 
     /**
-     * @return if the action was fully executed.
+     * @return if the action was fully executed. (Data changed)
      * @param keyPath
      * @param value
      * @param timestamp
@@ -25,14 +25,15 @@ export default interface DbsComponent {
      */
     insert(keyPath : string[], value : any,timestamp : number,ifContains ?: string) : boolean;
     /**
-     * @return if the action was fully executed.
+     * @return the modify level.
      * @param keyPath
      * @param value
      * @param timestamp
+     * @param checkDataChange
      */
-    update(keyPath : string[], value : any,timestamp : number) : boolean;
+    update(keyPath : string[], value : any,timestamp : number,checkDataChange : boolean) : ModifyLevel;
     /**
-     * @return if the action was fully executed.
+     * @return if the action was fully executed. (Data changed)
      * @param keyPath
      * @param timestamp
      */
@@ -42,7 +43,7 @@ export default interface DbsComponent {
      * Merge this dbs component with the new component.
      * @param newValue
      */
-    meregeWithNew(newValue : any) : any;
+    meregeWithNew(newValue : any) : MergeResult;
 
     /**
      * Sets the value merger of this component.
@@ -54,9 +55,10 @@ export default interface DbsComponent {
     /**
      * Sets the comparator of this component.
      * Undefined will reset the comparator.
+     * @return if the data has changed.
      * @param comparator
      */
-    setComparator(comparator : DbsComparator | undefined) : void;
+    setComparator(comparator : DbsComparator | undefined) : boolean;
 
     /**
      * Creates a loop for each DbsComponent in the complete structure.
@@ -102,4 +104,21 @@ export function isDbsArray(value : any) : value is DbsArray {
 
 export function isDbsHead(value : any) : value is DbsHead {
     return value && value['dbsComponentType'] === DbsComponentType.dbsHead;
+}
+
+export const enum ModifyLevel {
+    NOTHING = 0,
+    DATA_TOUCHED = 1,
+    DATA_CHANGED= 2
+}
+
+export interface MergeResult {
+    /**
+     * merged value
+     */
+    mergedValue : any,
+    /**
+     * Indicates if the data has changed.
+     */
+    dataChanged : boolean
 }

@@ -4,11 +4,12 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import DbDataParser                                    from "../dbDataParser";
-import DbsComponent, {DbsComponentType, isDbsComponent, isDbsHead} from "./dbsComponent";
-import DbUtils                                         from "../../dbUtils";
-import {dbsMerger, DbsValueMerger, defaultValueMerger} from "../dbsMergerUtils";
-import {DbsComparator}                                 from "../dbsComparator";
+import DbsComponent, {DbsComponentType, isDbsComponent, isDbsHead, MergeResult, ModifyLevel} from "./dbsComponent";
+import DbDataParser                                        from "../dbDataParser";
+import DbUtils                                             from "../../dbUtils";
+import {dbsMerger, DbsValueMerger, defaultValueMerger}     from "../dbsMergerUtils";
+import {DbsComparator}                                     from "../dbsComparator";
+import {deepEqual}                                         from "../../../utils/deepEqual";
 
 export default class DbsHead implements DbsComponent {
 
@@ -90,33 +91,36 @@ export default class DbsHead implements DbsComponent {
     /**
      * Sets the comparator of this component.
      * Undefined will reset the comparator.
+     * @return if the data has changed.
      * @param comparator
      */
-    setComparator(comparator : DbsComparator | undefined) : void {}
+    setComparator(comparator : DbsComparator | undefined) : boolean {
+        return false;
+    }
 
     /**
      * Merge this dbs component with the new component.
      * @param newValue
      */
-    meregeWithNew(newValue: any) {
+    meregeWithNew(newValue: any) : MergeResult {
         if (isDbsHead(newValue)) {
             const newTimestamp = newValue.getTimestamp();
             const newComponentValue = newValue.getComponentValue();
-
-            const mergedValue = dbsMerger(this.componentValue,newComponentValue,this.valueMerger);
+            const {mergedValue : mergedValue,dataChanged} = dbsMerger(this.componentValue,newComponentValue,this.valueMerger);
             this.componentValue = mergedValue;
             this.data = isDbsComponent(mergedValue) ? mergedValue.getData() : mergedValue;
 
             if (DbUtils.isNewerTimestamp(this.timestamp,newTimestamp)) {
                 this.timestamp = newTimestamp;
             }
-            return this;
+            return {mergedValue : this,dataChanged: dataChanged};
         }
-        return newValue;
+        return {mergedValue : newValue,dataChanged : true};
     }
 
     /**
      * Insert.
+     * @return if the action was fully executed. (Data changed)
      * @param keyPath
      * @param value
      * @param timestamp
@@ -131,28 +135,36 @@ export default class DbsHead implements DbsComponent {
 
     /**
      * Update.
+     * @return the modify level.
      * @param keyPath
      * @param value
      * @param timestamp
+     * @param checkDataChange
      */
-    update(keyPath: string[], value: any, timestamp: number): boolean {
+    update(keyPath: string[], value: any, timestamp: number,checkDataChange : boolean = false) : ModifyLevel {
         if (keyPath.length === 0) {
             if (this.componentValue !== undefined && DbUtils.checkTimestamp(this.timestamp, timestamp)) {
+                let ml = ModifyLevel.DATA_TOUCHED;
                 this.componentValue = DbDataParser.parse(value);
-                this.data = isDbsComponent(this.componentValue) ?
+                const newData = isDbsComponent(this.componentValue) ?
                     this.componentValue.getData() : this.componentValue;
+                if(checkDataChange && !deepEqual(newData,this.data)){
+                    ml = ModifyLevel.DATA_CHANGED;
+                }
+                this.data = newData;
                 this.timestamp = timestamp;
-                return true;
+                return ml;
             }
 
         } else if (keyPath.length > 0 && isDbsComponent(this.componentValue)) {
-            return (this.componentValue as DbsComponent).update(keyPath, value, timestamp);
+            return (this.componentValue as DbsComponent).update(keyPath,value,timestamp,checkDataChange);
         }
-        return false;
+        return ModifyLevel.NOTHING;
     }
 
     /**
      * Delete coordinator.
+     * @return if the action was fully executed. (Data changed)
      * @param keyPath
      * @param timestamp
      */

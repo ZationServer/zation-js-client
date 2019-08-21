@@ -65,4 +65,11 @@ export default class EventManager<T extends (...any : any[]) => any> {
         this._emit(this.onceListeners,...params);
         this.onceListeners = [];
     }
+
+    /**
+     * Returns if the event manager has a listener.
+     */
+    hasListener() :  boolean {
+        return this.listeners.length > 0 || this.onceListeners.length > 0;
+    }
 }

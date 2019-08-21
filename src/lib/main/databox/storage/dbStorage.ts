@@ -4,16 +4,16 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {IfContainsOption, InfoOption, TimestampOption} from "../dbDefinitions";
-import ObjectUtils                                     from "../../utils/objectUtils";
-import DbsHead                                         from "./components/dbsHead";
-import CloneUtils                                      from "../../utils/cloneUtils";
-import DbUtils                                         from "../dbUtils";
-import {DbsComparator}                                 from "./dbsComparator";
-import {DbsValueMerger}                                from "./dbsMergerUtils";
-import {DbsComponentOptions}                           from "./components/dbsComponent";
-import DbsComponent                                    from "./components/dbsComponent";
-import EventManager                                    from "../../utils/eventManager";
+import {IfContainsOption, InfoOption, TimestampOption}  from "../dbDefinitions";
+import ObjectUtils                                      from "../../utils/objectUtils";
+import DbsHead                                          from "./components/dbsHead";
+import CloneUtils                                       from "../../utils/cloneUtils";
+import DbUtils                                          from "../dbUtils";
+import {DbsComparator}                                  from "./dbsComparator";
+import {DbsValueMerger}                                 from "./dbsMergerUtils";
+import DbsComponent, {DbsComponentOptions, ModifyLevel} from "./components/dbsComponent";
+import EventManager                                     from "../../utils/eventManager";
+import {deepEqual}                                      from "../../utils/deepEqual";
 
 type ClearOnCloseMiddleware = (code : number | string | undefined,data : any) => boolean;
 type ClearOnKickOutMiddleware = (code : number | string | undefined,data : any) => boolean;
@@ -70,7 +70,19 @@ export interface DbStorageOptions {
     doAddFetchData ?: AddFetchDataMiddleware | boolean
 }
 
-export type OnDataChange = (storage : DbStorage) => void | Promise<void>
+export const enum DataEventReason {
+    INSERTED,
+    UPDATED,
+    DELETED,
+    SORTED,
+    RELOADED,
+    ADDED,
+    CLEARED,
+    COPIED
+}
+
+export type OnDataChange = (reasons : DataEventReason[],storage : DbStorage) => void | Promise<void>
+export type OnDataTouch = (reasons : DataEventReason[],storage : DbStorage) => void | Promise<void>
 
 export default class DbStorage {
 
@@ -88,6 +100,13 @@ export default class DbStorage {
     private mainCompOptions: DbsComponentOptions = {};
     private compOptionsConstraint : Map<string,{k : string[],o : DbsComponentOptions}> = new Map();
 
+    private cudSeqEditActive : boolean = false;
+    private tmpCudInserted : boolean = false;
+    private tmpCudUpdated : boolean = false;
+    private tmpCudDeleted : boolean = false;
+
+    private hasDataChangeListener : boolean = false;
+
     private clearOnCloseMiddleware : ClearOnCloseMiddleware;
     private clearOnKickOutMiddleware : ClearOnKickOutMiddleware;
     private reloadMiddleware : ReloadMiddleware;
@@ -97,6 +116,9 @@ export default class DbStorage {
     private addFetchDataMiddleware : AddFetchDataMiddleware;
 
     private readonly dataChangeEvent : EventManager<OnDataChange> = new EventManager<OnDataChange>();
+    private readonly dataChangeCombineSeqEvent : EventManager<OnDataChange> = new EventManager<OnDataChange>();
+    private readonly dataTouchEvent : EventManager<OnDataTouch> = new EventManager<OnDataTouch>();
+
 
     constructor(options : DbStorageOptions = {},dbStorage ?: DbStorage) {
         ObjectUtils.addObToOb(this.dbStorageOptions,options,false);
@@ -129,15 +151,8 @@ export default class DbStorage {
         }
     }
 
-    /**
-     * Gets called when the head changes.
-     */
-    private onHeadChange() {
-        this.updateCompOptions();
-        this.dataChangeEvent.emit(this);
-    }
-
-    private updateCompOptions() {
+    private updateCompOptions(triggerDataEvents : boolean = false) {
+        let dataChanged = false;
         const setMergerComp : DbsComponent[] = [];
         const setComparatorComp : DbsComponent[] = [];
         for (let {k,o} of this.compOptionsConstraint.values()){
@@ -148,7 +163,7 @@ export default class DbStorage {
                     setMergerComp.push(comp);
                 }
                 if(o.comparator){
-                    comp.setComparator(o.comparator);
+                    dataChanged = dataChanged || comp.setComparator(o.comparator);
                     setComparatorComp.push(comp);
                 }
             }
@@ -159,12 +174,18 @@ export default class DbStorage {
         if(mainComparator || mainValueMerger){
             this.dbsHead.forEachComp((c) => {
                 if(mainComparator && !setComparatorComp.includes(c)){
-                    c.setComparator(mainComparator);
+                    dataChanged = dataChanged || c.setComparator(mainComparator);
                 }
                 if(mainValueMerger && !setMergerComp.includes(c)){
                     c.setValueMerger(mainValueMerger);
                 }
             });
+        }
+
+        if(triggerDataEvents && dataChanged){
+            this.dataTouchEvent.emit([DataEventReason.SORTED],this);
+            this.dataChangeEvent.emit([DataEventReason.SORTED],this);
+            this.dataChangeCombineSeqEvent.emit([DataEventReason.SORTED],this);
         }
     }
 
@@ -213,7 +234,7 @@ export default class DbStorage {
      */
     setComparator(comparator : DbsComparator, keyPath ?: string | string[]) : DbStorage {
         this.setCompOption((option) => option.comparator = comparator,keyPath);
-        this.updateCompOptions();
+        this.updateCompOptions(true);
         return this;
     }
 
@@ -265,18 +286,27 @@ export default class DbStorage {
     }
 
     /**
-     * Returns if this storage should load complete reloaded data.
+     * Reloads the data.
      */
-    shouldReload(relodedData : DbStorage) : boolean {
-        return this.reloadMiddleware(relodedData);
+    reload(relodedData : DbStorage) : DbStorage {
+        if(this.reloadMiddleware(relodedData)){
+            this._copyFrom(relodedData,true);
+        }
+        return this;
     }
 
     /**
      * Clears the storage.
      */
     clear() : DbStorage {
+        const tmpOldHead = this.dbsHead;
         this.dbsHead = new DbsHead();
-        this.onHeadChange();
+        this.updateCompOptions();
+        this.dataTouchEvent.emit([DataEventReason.CLEARED],this);
+        if(this.hasDataChangeListener && !deepEqual(tmpOldHead.getData(),this.dbsHead.getData())){
+            this.dataChangeEvent.emit([DataEventReason.CLEARED],this);
+            this.dataChangeCombineSeqEvent.emit([DataEventReason.CLEARED],this);
+        }
         return this;
     }
 
@@ -286,8 +316,14 @@ export default class DbStorage {
      * @param dbsHead
      */
     addData(dbsHead : DbsHead) : DbStorage {
-        this.dbsHead = this.dbsHead.meregeWithNew(dbsHead);
-        this.onHeadChange();
+        const {mergedValue,dataChanged} = this.dbsHead.meregeWithNew(dbsHead);
+        this.dbsHead = mergedValue;
+        if(dataChanged){
+            this.updateCompOptions();
+            this.dataTouchEvent.emit([DataEventReason.ADDED],this);
+            this.dataChangeEvent.emit([DataEventReason.ADDED],this);
+            this.dataChangeCombineSeqEvent.emit([DataEventReason.ADDED],this);
+        }
         return this;
     }
 
@@ -296,9 +332,23 @@ export default class DbStorage {
      * @param dbStorage
      */
     copyFrom(dbStorage : DbStorage) : DbStorage {
-        this.dbsHead = CloneUtils.deepCloneInstance(dbStorage.getDbsHead());
-        this.onHeadChange();
+        this._copyFrom(dbStorage,false);
         return this;
+    }
+
+    private _copyFrom(dbStorage : DbStorage,isReload : boolean) : void {
+        const tmpOldHead = this.dbsHead;
+        this.dbsHead = CloneUtils.deepCloneInstance(dbStorage.getDbsHead());
+        this.updateCompOptions();
+
+        const reason : DataEventReason = isReload ?
+            DataEventReason.RELOADED : DataEventReason.COPIED;
+
+        this.dataTouchEvent.emit([reason],this);
+        if(this.hasDataChangeListener && !deepEqual(tmpOldHead.getData(),this.dbsHead.getData())){
+            this.dataChangeEvent.emit([reason],this);
+            this.dataChangeCombineSeqEvent.emit([reason],this);
+        }
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -354,9 +404,13 @@ export default class DbStorage {
         keyPath = DbUtils.handleKeyPath(keyPath);
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         const {timestamp,ifContains} = options;
-        if(this.insertMiddleware(keyPath,value,options)){
-            if(this.dbsHead.insert(keyPath,value,timestamp,ifContains)){
-                this.onHeadChange();
+        if(this.insertMiddleware(keyPath,value,options) && this.dbsHead.insert(keyPath,value,timestamp,ifContains)){
+            this.updateCompOptions();
+            this.tmpCudInserted = true;
+            this.dataTouchEvent.emit([DataEventReason.INSERTED],this);
+            this.dataChangeEvent.emit([DataEventReason.INSERTED],this);
+            if(!this.cudSeqEditActive){
+                this.dataChangeCombineSeqEvent.emit([DataEventReason.INSERTED],this);
             }
         }
         return this;
@@ -385,8 +439,17 @@ export default class DbStorage {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         const {timestamp} = options;
         if(this.updateMiddleware(keyPath,value,options)){
-            if(this.dbsHead.update(keyPath,value,timestamp)){
-                this.onHeadChange();
+            const ml = this.dbsHead.update(keyPath,value,timestamp, this.hasDataChangeListener);
+            if(ml > 0){
+                this.updateCompOptions();
+                this.dataTouchEvent.emit([DataEventReason.UPDATED],this);
+            }
+            if(ml === ModifyLevel.DATA_CHANGED){
+                this.tmpCudUpdated = true;
+                this.dataChangeEvent.emit([DataEventReason.UPDATED],this);
+                if(!this.cudSeqEditActive){
+                    this.dataChangeCombineSeqEvent.emit([DataEventReason.UPDATED],this);
+                }
             }
         }
         return this;
@@ -413,39 +476,115 @@ export default class DbStorage {
         keyPath = DbUtils.handleKeyPath(keyPath);
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         const {timestamp} = options;
-        if(this.deleteMiddleware(keyPath,options)){
-            if(this.dbsHead.delete(keyPath,timestamp)){
-                this.onHeadChange();
+        if(this.deleteMiddleware(keyPath,options) && this.dbsHead.delete(keyPath,timestamp)){
+            this.updateCompOptions();
+            this.tmpCudDeleted = true;
+            this.dataTouchEvent.emit([DataEventReason.DELETED],this);
+            this.dataChangeEvent.emit([DataEventReason.DELETED],this);
+            if(!this.cudSeqEditActive){
+                this.dataChangeCombineSeqEvent.emit([DataEventReason.DELETED],this);
             }
         }
         return this;
+    }
+
+    /**
+     * This method is used internally.
+     * Starts a cud seq edit.
+     * The method is essential for the data change event with combine seq edit.
+     */
+    startCudSeq() {
+        this.tmpCudInserted = false;
+        this.tmpCudUpdated = false;
+        this.tmpCudDeleted = false;
+        this.cudSeqEditActive = true;
+    }
+
+    /**
+     * This method is used internally.
+     * Starts a cud seq edit.
+     * The method is essential for the data change event with combine seq edit.
+     */
+    endCudSeq() {
+        const reasons : DataEventReason[] = [];
+        if(this.tmpCudInserted){reasons.push(DataEventReason.INSERTED);}
+        if(this.tmpCudUpdated){reasons.push(DataEventReason.UPDATED);}
+        if(this.tmpCudDeleted){reasons.push(DataEventReason.DELETED);}
+
+        if(reasons.length > 0){
+            this.dataChangeCombineSeqEvent.emit(reasons,this);
+        }
+        this.cudSeqEditActive = false;
+    }
+
+    private updateHasDataChangeListner() : void {
+        this.hasDataChangeListener = this.dataChangeEvent.hasListener() ||
+            this.dataChangeCombineSeqEvent.hasListener()
     }
 
     //events
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Adds a listener that gets triggered
-     * whenever the data changes.
-     * This includes reloads, new cud Operations,
-     * new sorting, clear, copy from or fetched data.
+     * Adds a listener that gets triggered whenever the data changes.
+     * It includes any change of data (e.g., reloads, cud Operations, sorting,
+     * clear, copies from other storages, or add newly fetched data).
+     * Other than the data touch event, this event will only trigger
+     * if the data content is changed.
+     * In some cases, it uses a deep equal algorithm, but most of the
+     * time (e.g., deletions, insertions, merge), a change can be
+     * detected without a complex algorithm.
+     * The deep equal algorithm change detection will only be used
+     * if you had registered at least one listener in this event.
+     * This event is perfect for updating the user interface.
      * @param listener
+     * @param combineCudSeqOperations
+     * With the parameter: combineCudSeqOperations,
+     * you can activate that in case of a seqEdit the event triggers
+     * after all operations finished.
+     * For example, you do four updates then this event triggers after all four updates.
+     * If you have deactivated, then it will trigger for each updater separately.
      */
-    onDataChange(listener : OnDataChange) : DbStorage {
-        this.dataChangeEvent.on(listener);
+    onDataChange(listener : OnDataChange,combineCudSeqOperations : boolean = true) : DbStorage {
+        if(combineCudSeqOperations){
+            this.dataChangeCombineSeqEvent.on(listener);
+        }
+        else {
+            this.dataChangeEvent.on(listener);
+        }
+        this.updateHasDataChangeListner();
         return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Adds a once listener that gets triggered
-     * when the data changes.
-     * This includes reloads, new cud Operations,
-     * new sorting, clear, copy from or fetched data.
+     * Adds a once listener that gets triggered when the data changes.
+     * It includes any change of data (e.g., reloads, cud Operations, sorting,
+     * clear, copies from other storages, or add newly fetched data).
+     * Other than the data touch event, this event will only trigger
+     * if the data content is changed.
+     * In some cases, it uses a deep equal algorithm, but most of the
+     * time (e.g., deletions, insertions, merge), a change can be
+     * detected without a complex algorithm.
+     * The deep equal algorithm change detection will only be used
+     * if you had registered at least one listener in this event.
+     * This event is perfect for updating the user interface.
      * @param listener
+     * @param combineCudSeqOperations
+     * With the parameter: combineCudSeqOperations,
+     * you can activate that in case of a seqEdit the event triggers
+     * after all operations finished.
+     * For example, you do four updates then this event triggers after all four updates.
+     * If you have deactivated, then it will trigger for each updater separately.
      */
-    onceDataChange(listener : OnDataChange) : DbStorage {
-        this.dataChangeEvent.once(listener);
+    onceDataChange(listener : OnDataChange,combineCudSeqOperations : boolean = true) : DbStorage {
+        if(combineCudSeqOperations){
+            this.dataChangeCombineSeqEvent.once(listener);
+        }
+        else {
+            this.dataChangeEvent.once(listener);
+        }
+        this.updateHasDataChangeListner();
         return this;
     }
 
@@ -456,8 +595,52 @@ export default class DbStorage {
      * @param listener
      */
     offDataChange(listener : OnDataChange) : DbStorage {
+        this.dataChangeCombineSeqEvent.off(listener);
         this.dataChangeEvent.off(listener);
+        this.updateHasDataChangeListner();
         return this;
     }
 
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Adds a listener that gets triggered whenever the data is touched.
+     * It includes any touch of data (e.g., reloads, cud Operations, sorting,
+     * clear, copies from other storages, or add newly fetched data).
+     * Other than the data change event, this event will also trigger if the
+     * data content is not changed.
+     * For example, if you update the age with the value 20 to 20,
+     * then the data touch event will be triggered but not the data change event.
+     * @param listener
+     */
+    onDataTouch(listener : OnDataTouch) : DbStorage {
+        this.dataTouchEvent.on(listener);
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Adds a once listener that gets triggered when the data is touched.
+     * It includes any touch of data (e.g., reloads, cud Operations, sorting,
+     * clear, copies from other storages, or add newly fetched data).
+     * Other than the data change event, this event will also trigger if the
+     * data content is not changed.
+     * For example, if you update the age with the value 20 to 20,
+     * then the data touch event will be triggered but not the data change event.
+     * @param listener
+     */
+    onceDataTouch(listener : OnDataTouch) : DbStorage {
+        this.dataTouchEvent.once(listener);
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Removes a listener of the dataTouch event.
+     * Can be a once or normal listener.
+     * @param listener
+     */
+    offDataTouch(listener : OnDataTouch) : DbStorage {
+        this.dataTouchEvent.off(listener);
+        return this;
+    }
 }
