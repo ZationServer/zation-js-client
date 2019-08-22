@@ -128,7 +128,7 @@ export default class DbStorage {
     private readonly deleteEvent : EventManager<OnDelete> = new EventManager<OnDelete>();
 
     constructor(options : DbStorageOptions = {},dbStorage ?: DbStorage) {
-        ObjectUtils.addObToOb(this.dbStorageOptions,options,false);
+        ObjectUtils.addObToOb(this.dbStorageOptions,options,true);
 
         this.loadMiddleware();
 

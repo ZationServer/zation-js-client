@@ -184,8 +184,7 @@ export default class Databox {
     };
 
     constructor(zation: Zation, options: DataboxOptions, name: string, id ?: string | number) {
-        ObjectUtils.addObToOb(this.dbOptions, options, false);
-
+        ObjectUtils.addObToOb(this.dbOptions, options, true);
         this.socket = zation.getSocket();
         this.zation = zation;
         this.apiLevel = this.dbOptions.apiLevel;
