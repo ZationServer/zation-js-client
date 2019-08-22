@@ -50,6 +50,7 @@ import DbStorage, {DataEventReason}    from "./lib/main/databox/storage/dbStorag
 import Databox                         from "./lib/main/databox/databox";
 import {DbsComparator}                 from "./lib/main/databox/storage/dbsComparator";
 import {DbsValueMerger}                from "./lib/main/databox/storage/dbsMergerUtils";
+import {InvalidInputError}             from "./lib/main/error/invalidInputError";
 
 // noinspection JSUnusedGlobalSymbols
 /**
@@ -114,6 +115,7 @@ export {
     AbstractErrorFilterBuilder,
     ErrorName,
     RawError,
+    InvalidInputError,
     buildKeyArray,
     DbsHead,
     DbStorage,
@@ -122,6 +124,3 @@ export {
     DbsValueMerger,
     DataEventReason
 };
-
-
-

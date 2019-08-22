@@ -36,6 +36,7 @@ import {RawError}                                 from "../error/rawError";
 import {ErrorName}                                from "../constants/errorName";
 import DbsHead                                    from "./storage/components/dbsHead";
 import DbUtils                                    from "./dbUtils";
+import {InvalidInputError}                        from "../../main/error/invalidInputError";
 
 export interface DataboxOptions {
     /**
@@ -260,7 +261,7 @@ export default class Databox {
      * You can use the method if you had disconnected the Databox and want to use it again.
      * Whenever the connection is lost, you don't need to call that method.
      * The Databox will reconnect automatically as fast as possible.
-     * @throws RawError,TimeoutError,ConnectionRequiredError
+     * @throws RawError,TimeoutError,ConnectionRequiredError,InvalidInputError
      * @param waitForConnection
      * With the WaitForConnection option, you can activate that the socket is
      * trying to connect when it is not connected. You have four possible choices:
@@ -291,7 +292,12 @@ export default class Databox {
                 this.created = true;
             } catch (e) {
                 this._clearListenersAndReset();
-                throw new RawError('Failed to connect to the Databox', e);
+                if(e.name === ErrorName.INVALID_INPUT){
+                    throw new InvalidInputError('Invalid init input failed to connect to the Databox.',e);
+                }
+                else {
+                    throw new RawError('Failed to connect to the Databox.', e);
+                }
             }
 
             if (this.dbOptions.autoFetch) {
@@ -448,7 +454,7 @@ export default class Databox {
      * if you don't want to reload this fetch later (In case of cud missed).
      * But this only will work fine if your fetches
      * do not depend on each other.
-     * @throws ConnectionRequiredError,TimeoutError,RawError
+     * @throws ConnectionRequiredError,TimeoutError,RawError,InvalidInputError
      */
     async fetchData(data ?: any, waitForDbConnection: WaitForConnectionOption = undefined, addToHistory : boolean = true): Promise<boolean> {
 
@@ -476,11 +482,13 @@ export default class Databox {
             this.newDataEvent.emit(this);
             return true;
         } catch (e) {
-            const rawError = new RawError('Fetch new data failed.', e);
-
-            if (rawError.isErrorName(ErrorName.NO_MORE_DATA_AVAILABLE)) {
+            if (e.name === ErrorName.NO_MORE_DATA_AVAILABLE) {
                 return false;
-            } else {
+            }
+            else if(name === ErrorName.INVALID_INPUT) {
+                throw new InvalidInputError('Invalid fetch input.',e);
+            }
+            else {
                 throw new RawError('Fetch new data failed.', e);
             }
         }
@@ -549,7 +557,8 @@ export default class Databox {
             } catch (err) {
                 if ((err.name as ErrorName) === ErrorName.NO_MORE_DATA_AVAILABLE) {
                     break;
-                } else {
+                }
+                else {
                     throw err;
                 }
             }
@@ -569,7 +578,7 @@ export default class Databox {
     /**
      * Reload the fetched data.
      * A rollback mechanism will get sure that the history will not be damaged in fail case.
-     * @throws ConnectionRequiredError,TimeoutError,RawError
+     * @throws ConnectionRequiredError,TimeoutError,RawError,InvalidInputError
      */
     async reload(waitForConnection: WaitForConnectionOption = false) {
         const tmpCudId = this.cudId;
@@ -608,6 +617,12 @@ export default class Databox {
                 } catch (e) {
                     this.fetchHistoryManager.rollBack();
                     this.tmpReloadDataSets.clear();
+                    if(e.name === ErrorName.INVALID_INPUT){
+                        throw new InvalidInputError('Invalid fetch input in the reload process.',e);
+                    }
+                    else {
+                        throw new RawError('Fetch data to reload failed.', e);
+                    }
                 }
             }
         });
