@@ -484,7 +484,7 @@ export default class Databox {
             if (e.name === ErrorName.NO_MORE_DATA_AVAILABLE) {
                 return false;
             }
-            else if(name === ErrorName.INVALID_INPUT) {
+            else if(e.name === ErrorName.INVALID_INPUT) {
                 throw new InvalidInputError('Invalid fetch input.',e);
             }
             else {
