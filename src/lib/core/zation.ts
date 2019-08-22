@@ -1260,7 +1260,7 @@ export class Zation
      * @throws AuthenticationRequiredError
      */
     hasTokenVariable(path ?: string | string[]) : boolean {
-        return ObjectPath.has(this.authEngine.getCustomTokenVariable(),path);
+        return ObjectPath.has(this.authEngine.getTokenVariables(),path);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1276,7 +1276,7 @@ export class Zation
      * @throws AuthenticationRequiredError
      */
     getTokenVariable(path ?: string | string[]) : any {
-        return ObjectPath.get(this.authEngine.getCustomTokenVariable(),path);
+        return ObjectPath.get(this.authEngine.getTokenVariables(),path);
     }
 
     //Part Token
@@ -1290,7 +1290,7 @@ export class Zation
     getTokenId() : string
     {
        // @ts-ignore
-        return this.authEngine.getSecurePlainToken().zationTokenId;
+        return this.authEngine.getSecurePlainToken().tid;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1314,7 +1314,7 @@ export class Zation
     getTokenPanelAccess() : boolean
     {
         // @ts-ignore
-        return this.authEngine.getSecurePlainToken().zationPanelAccess;
+        return this.authEngine.getSecurePlainToken().panelAccess;
     }
 
     // noinspection JSUnusedGlobalSymbols

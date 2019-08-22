@@ -240,8 +240,8 @@ export class AuthEngine
     async updateToken(token : ZationToken | null) {
         if(token === null) {token = {};}
         let promises : Promise<void>[] = [];
-        promises.push(this.updateAuthGroup(token.zationAuthUserGroup));
-        promises.push(this.updateUserId(token.zationUserId));
+        promises.push(this.updateAuthGroup(token.authUserGroup));
+        promises.push(this.updateUserId(token.userId));
 
         //id and group is allready set
         if(this.zation.isDebug() && this.isAuthenticated()) {
@@ -291,11 +291,11 @@ export class AuthEngine
         return this.currentUserAuthGroup !== undefined;
     }
 
-    getCustomTokenVariable() : object
+    getTokenVariables() : object
     {
         if(this.plainToken !== null) {
-            return typeof this.plainToken.zationCustomVariables === 'object' ?
-                this.plainToken.zationCustomVariables : {};
+            return typeof this.plainToken.variables === 'object' ?
+                this.plainToken.variables : {};
         }
         else {
             throw new AuthenticationRequiredError('To get access to token variables');

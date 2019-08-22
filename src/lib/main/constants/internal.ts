@@ -66,12 +66,15 @@ export interface ZationResponse {
 }
 
 export interface ZationToken {
-    zationAuthUserGroup ?: string,
-    zationUserId ?: string | number,
-    zationTokenId ?: string,
-    zationPanelAccess ?: boolean,
+    authUserGroup ?: string,
+    userId ?: string | number,
+    /**
+     * Token id
+     */
+    tid ?: string,
+    panelAccess ?: boolean,
     exp ?: number,
-    zationCustomVariables ?: object
+    variables ?: object
 }
 
 export enum ZationChannel {
