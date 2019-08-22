@@ -293,7 +293,7 @@ export default class Databox {
             } catch (e) {
                 this._clearListenersAndReset();
                 if(e.name === ErrorName.INVALID_INPUT){
-                    throw new InvalidInputError('Invalid init input failed to connect to the Databox.',e);
+                    throw new InvalidInputError('Invalid init input. Failed to connect to the Databox.',e);
                 }
                 else {
                     throw new RawError('Failed to connect to the Databox.', e);
