@@ -155,10 +155,13 @@ export abstract class ZationRequest extends SendAble
     {
         let promises : Promise<void>[] = [];
         if(data instanceof RequestAble) {
-            promises.push(new Promise<void>(async (resolve) =>
+            promises.push(new Promise<void>(async (resolve,reject) =>
             {
-                data = await data.toRequestData(this.type);
-                resolve();
+                try {
+                    data = await data.toRequestData(this.type);
+                    resolve();
+                }
+                catch (e) {reject(e);}
             }));
         }
         else if(Array.isArray(data))
