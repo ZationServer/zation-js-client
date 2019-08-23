@@ -37,7 +37,7 @@ import {ErrorName}                                from "../constants/errorName";
 import DbsHead                                    from "./storage/components/dbsHead";
 import DbUtils                                    from "./dbUtils";
 import {InvalidInputError}                        from "../../main/error/invalidInputError";
-import {afterPromises}                            from "../utils/promiseUtils";
+import afterPromise                               from "../utils/promiseUtils";
 
 export interface DataboxOptions {
     /**
@@ -164,8 +164,8 @@ export default class Databox {
     private outputListener: ((data: any) => void) | undefined = undefined;
     private unregisterSocketStateListener: (() => void) | undefined = undefined;
     private parallelFetch: boolean;
-    private lastFetchPromise : Promise<any> = Promise.resolve();
     private connected: boolean = false;
+    private tokenReloadActive : boolean = false;
 
     private connectEvent: EventManager<OnConnect> = new EventManager();
     private disconnectEvent: EventManager<OnDisconnect> = new EventManager();
@@ -368,7 +368,9 @@ export default class Databox {
 
                 if (!res.ut && currentToken !== undefined) {
                     (async () => {
+                        this.tokenReloadActive = true;
                         await this._tryReload();
+                        this.tokenReloadActive = false;
                     })();
                 }
 
@@ -382,7 +384,7 @@ export default class Databox {
      * @private
      */
     private async _checkCudUpToDate() {
-        if (this.cudId !== this.serverSideCudId) {
+        if (this.cudId !== this.serverSideCudId && !this.tokenReloadActive) {
             //Can not be undefined because the Databox was already registered.
             await this._tryReload();
         }
@@ -469,7 +471,7 @@ export default class Databox {
             const resp = await this._fetchData(data, DBClientInputSessionTarget.mainSession);
 
             if(addToHistory){
-                this.fetchHistoryManager.pushHistory(resp.c, data, resp.d);
+                this.fetchHistoryManager.pushHistorySuccess(resp.c, data, resp.d);
             }
 
             const dbsHead = new DbsHead(resp.d);
@@ -483,6 +485,10 @@ export default class Databox {
             this.newDataEvent.emit(this);
             return true;
         } catch (e) {
+            if(typeof e['counter'] === 'number'){
+                this.fetchHistoryManager.pushHistoryFail(e['counter'],data);
+            }
+
             if (e.name === ErrorName.NO_MORE_DATA_AVAILABLE) {
                 return false;
             }
@@ -517,7 +523,6 @@ export default class Databox {
                 }
             });
         });
-        this.lastFetchPromise = fetchPromise;
         return fetchPromise;
     }
 
@@ -536,7 +541,7 @@ export default class Databox {
                     results[fetchResult.c] = dbsHead;
                     this.tmpReloadDataSets.add(dbsHead);
                 } catch (err) {
-                    if ((err.name as ErrorName) !== ErrorName.NO_MORE_DATA_AVAILABLE) {
+                    if ((err.name as ErrorName) !== ErrorName.NO_MORE_DATA_AVAILABLE && !history[i].failed) {
                         throw err;
                     }
                 }
@@ -562,7 +567,7 @@ export default class Databox {
                 if ((err.name as ErrorName) === ErrorName.NO_MORE_DATA_AVAILABLE) {
                     break;
                 }
-                else {
+                else if(!history[i].failed) {
                     throw err;
                 }
             }
@@ -581,15 +586,13 @@ export default class Databox {
 
     /**
      * Reload the fetched data.
-     * A rollback mechanism will get sure that the history will not be damaged in fail case.
      * @throws ConnectionRequiredError,TimeoutError,RawError,InvalidInputError
      */
     async reload(waitForConnection: WaitForConnectionOption = false) {
         const tmpCudId = this.cudId;
         await ConnectionUtils.checkDbConnection(this, this.zation, waitForConnection, 'To reload Databox');
         const reloadPromise : Promise<void> =
-            afterPromises(this.parallelFetch ? [this.reloadProcessPromise] : [this.reloadProcessPromise,this.lastFetchPromise],
-                async () => {
+            afterPromise(this.reloadProcessPromise, async () => {
             const history = this.fetchHistoryManager.getHistory();
             if (history.length > 0) {
                 await this.sendSessionAction(DbClientInputAction.resetSession, DBClientInputSessionTarget.reloadSession);
@@ -598,7 +601,7 @@ export default class Databox {
 
                     const missedHistory = this.fetchHistoryManager.getHistory();
                     for (let i = 0; i < missedHistory.length; i++) {
-                        result.push(new DbsHead(missedHistory[i].data));
+                        if(!missedHistory[i].failed) result.push(new DbsHead(missedHistory[i].data));
                     }
 
                     this.tmpReloadStroage.clear();
@@ -613,7 +616,7 @@ export default class Databox {
                     this.tmpReloadDataSets.clear();
                     this._reloadStorages(this.tmpReloadStroage);
 
-                    this.fetchHistoryManager.commit();
+                    this.fetchHistoryManager.done();
                     this.newDataEvent.emit(this);
 
                     //Check is not updated from cud event.
@@ -621,7 +624,7 @@ export default class Databox {
                         await this._updateCudId();
                     }
                 } catch (e) {
-                    this.fetchHistoryManager.rollBack();
+                    this.fetchHistoryManager.done();
                     this.tmpReloadDataSets.clear();
                     if(e.name === ErrorName.INVALID_INPUT){
                         throw new InvalidInputError('Invalid fetch input in the reload process.',e);
@@ -655,8 +658,6 @@ export default class Databox {
      * but in this case, this method will ignore it.
      * Because when the Databox is reconnected,
      * it will try to reload again.
-     * The history will not be damaged because the
-     * history manager provides a rollback mechanism.
      * @private
      */
     private async _tryReload() {

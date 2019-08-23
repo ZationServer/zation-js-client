@@ -7,7 +7,8 @@ Copyright(c) Luca Scaringella
 export interface FetchHistoryItem {
     counter : number;
     input : any;
-    data : any;
+    data ?: any;
+    failed ?: boolean;
 }
 
 export default class DbFetchHistoryManager {
@@ -26,13 +27,22 @@ export default class DbFetchHistoryManager {
     }
 
     /**
-     * Push information to history.
+     * Push successful information to history.
      * @param counter
      * @param input
      * @param data
      */
-    pushHistory(counter : number,input : any,data : any) {
+    pushHistorySuccess(counter : number, input : any, data : any) {
         this.history.push({counter,input,data});
+    }
+
+    /**
+     * Push failed information to history.
+     * @param counter
+     * @param input
+     */
+    pushHistoryFail(counter : number,input : any) {
+        this.history.push({counter,input,failed : true});
     }
 
     /**
@@ -47,22 +57,31 @@ export default class DbFetchHistoryManager {
         historyTmp.sort((a,b) => a.counter - b.counter);
         this.returnedHistory = this.returnedHistory.concat(historyTmp);
 
-        return historyTmp;
+        return this.optimizeHistory(historyTmp);
+    }
+
+    // noinspection JSMethodCanBeStatic
+    /**
+     * Optimize the history by removing the failed history items at the end.
+     * @param history
+     */
+    private optimizeHistory(history : FetchHistoryItem[]) : FetchHistoryItem[] {
+        let iteratedOverSucceededItem = false;
+        const optimizeHistory : FetchHistoryItem[] = [];
+        for(let i = history.length - 1; i > -1; --i) {
+            if(history[i].failed){
+                if(!iteratedOverSucceededItem) continue;
+            }
+            else iteratedOverSucceededItem = true;
+            optimizeHistory.unshift(history[i]);
+        }
+        return optimizeHistory;
     }
 
     /**
-     * Tells the history manager that the latest returned history
-     * don't need to use for a rollback in the future.
+     * Tells the history manager that the reload is done.
      */
-    commit() : void {
-        this.returnedHistory = [];
-    }
-
-    /**
-     * Rollback the current history by adding
-     * the returned history at the beginning.
-     */
-    rollBack() : void {
+    done() : void {
         this.history = this.returnedHistory.concat(this.history);
     }
 }
