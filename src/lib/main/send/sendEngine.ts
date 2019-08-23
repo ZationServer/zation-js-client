@@ -26,8 +26,11 @@ export class SendEngine
     {
         return new Promise(async (resolve, reject)=>
         {
-            await ConnectionUtils.checkConnection
-            (zation,waitForConnection,'For sending an webSocket request.');
+            try {
+                await ConnectionUtils.checkConnection
+                (zation,waitForConnection,'For sending an webSocket request.');
+            }
+            catch (err) {reject(err);}
 
             if (progressHandler) {
                 progressHandler(0);
