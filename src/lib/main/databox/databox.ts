@@ -582,7 +582,7 @@ export default class Databox {
     async reload(waitForConnection: WaitForConnectionOption = false) {
         const tmpCudId = this.cudId;
         await ConnectionUtils.checkDbConnection(this, this.zation, waitForConnection, 'To reload Databox');
-        this.reloadProcessPromise = this.reloadProcessPromise.then(async () => {
+        const reloadPromise : Promise<void> = this.reloadProcessPromise.then(async () => {
             const history = this.fetchHistoryManager.getHistory();
             if (history.length > 0) {
                 await this.sendSessionAction(DbClientInputAction.resetSession, DBClientInputSessionTarget.reloadSession);
@@ -625,6 +625,8 @@ export default class Databox {
                 }
             }
         });
+        this.reloadProcessPromise = reloadPromise;
+        await reloadPromise;
     }
 
     /**
