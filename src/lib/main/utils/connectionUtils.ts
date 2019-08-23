@@ -46,7 +46,7 @@ export default class ConnectionUtils {
      */
     private static async waitForConnection(socket : Socket,timeout : null | number)
     {
-        return  new Promise<void>((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             let connectListener;
             let timeoutHandler;
 
