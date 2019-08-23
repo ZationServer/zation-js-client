@@ -1311,7 +1311,7 @@ export class Zation
      * Returns the panel access of the token from the sc.
      * @throws AuthenticationRequiredError
      */
-    getTokenPanelAccess() : boolean
+    hasTokenPanelAccess() : boolean
     {
         // @ts-ignore
         return this.authEngine.getSecurePlainToken().panelAccess;
