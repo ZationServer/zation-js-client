@@ -508,8 +508,7 @@ export default class Databox {
      * @private
      */
     private async _fetchData(input: any, sessionTarget: DBClientInputSessionTarget): Promise<DbClientInputFetchResponse> {
-        const fetchPromise : Promise<DbClientInputFetchResponse> =
-            new Promise<DbClientInputFetchResponse>((resolve, reject) => {
+        return new Promise<DbClientInputFetchResponse>((resolve, reject) => {
             this.socket.emit(this.inputChannel, {
                 i: input,
                 a: DbClientInputAction.fetchData,
@@ -523,7 +522,6 @@ export default class Databox {
                 }
             });
         });
-        return fetchPromise;
     }
 
     /**
