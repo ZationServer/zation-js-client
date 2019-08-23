@@ -672,6 +672,7 @@ export default class Databox {
                     reject(err);
                 } else {
                     this.serverSideCudId = cudId;
+                    resolve();
                 }
             });
         });
