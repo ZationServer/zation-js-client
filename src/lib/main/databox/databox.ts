@@ -37,6 +37,7 @@ import {ErrorName}                                from "../constants/errorName";
 import DbsHead                                    from "./storage/components/dbsHead";
 import DbUtils                                    from "./dbUtils";
 import {InvalidInputError}                        from "../../main/error/invalidInputError";
+import afterPromise                               from "../utils/promiseUtils";
 
 export interface DataboxOptions {
     /**
@@ -582,7 +583,7 @@ export default class Databox {
     async reload(waitForConnection: WaitForConnectionOption = false) {
         const tmpCudId = this.cudId;
         await ConnectionUtils.checkDbConnection(this, this.zation, waitForConnection, 'To reload Databox');
-        const reloadPromise : Promise<void> = this.reloadProcessPromise.finally(async () => {
+        const reloadPromise : Promise<void> = afterPromise(this.reloadProcessPromise,async () => {
             const history = this.fetchHistoryManager.getHistory();
             if (history.length > 0) {
                 await this.sendSessionAction(DbClientInputAction.resetSession, DBClientInputSessionTarget.reloadSession);
