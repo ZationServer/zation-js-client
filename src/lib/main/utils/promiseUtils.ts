@@ -5,12 +5,24 @@ Copyright(c) Luca Scaringella
  */
 
 /**
- * Promise until function that works like finally.
- * It will process the next promise after the previous one is finished,
- * independent if it was fulfilled or rejected.
- * @param promise
+ * Promise util function.
+ * It will call the function after all promises are fulfilled or rejected
+ * and return a new promise.
+ * @param promises
  * @param func
  */
-export default function afterPromise(promise : Promise<any>,func : () => Promise<void> | void) : Promise<void> {
-    return promise.then(func,func);
+export function afterPromises(promises : Promise<any>[],func : () => Promise<void> | void) : Promise<void> {
+    return new Promise<void>((resolve) => {
+        let end = 0;
+        const check = async () => {
+          end++;
+          if(end === promises.length){
+              await func();
+              resolve();
+          }
+        };
+        for(let i = 0; i < promises.length; i++){
+            promises[i].then(check,check);
+        }
+    });
 }

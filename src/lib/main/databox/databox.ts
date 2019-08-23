@@ -37,7 +37,7 @@ import {ErrorName}                                from "../constants/errorName";
 import DbsHead                                    from "./storage/components/dbsHead";
 import DbUtils                                    from "./dbUtils";
 import {InvalidInputError}                        from "../../main/error/invalidInputError";
-import afterPromise                               from "../utils/promiseUtils";
+import {afterPromises}                            from "../utils/promiseUtils";
 
 export interface DataboxOptions {
     /**
@@ -164,6 +164,7 @@ export default class Databox {
     private outputListener: ((data: any) => void) | undefined = undefined;
     private unregisterSocketStateListener: (() => void) | undefined = undefined;
     private parallelFetch: boolean;
+    private lastFetchPromise : Promise<any> = Promise.resolve();
     private connected: boolean = false;
 
     private connectEvent: EventManager<OnConnect> = new EventManager();
@@ -501,7 +502,8 @@ export default class Databox {
      * @private
      */
     private async _fetchData(input: any, sessionTarget: DBClientInputSessionTarget): Promise<DbClientInputFetchResponse> {
-        return new Promise<DbClientInputFetchResponse>((resolve, reject) => {
+        const fetchPromise : Promise<DbClientInputFetchResponse> =
+            new Promise<DbClientInputFetchResponse>((resolve, reject) => {
             this.socket.emit(this.inputChannel, {
                 i: input,
                 a: DbClientInputAction.fetchData,
@@ -515,6 +517,8 @@ export default class Databox {
                 }
             });
         });
+        this.lastFetchPromise = fetchPromise;
+        return fetchPromise;
     }
 
     /**
@@ -583,7 +587,9 @@ export default class Databox {
     async reload(waitForConnection: WaitForConnectionOption = false) {
         const tmpCudId = this.cudId;
         await ConnectionUtils.checkDbConnection(this, this.zation, waitForConnection, 'To reload Databox');
-        const reloadPromise : Promise<void> = afterPromise(this.reloadProcessPromise,async () => {
+        const reloadPromise : Promise<void> =
+            afterPromises(this.parallelFetch ? [this.reloadProcessPromise] : [this.reloadProcessPromise,this.lastFetchPromise],
+                async () => {
             const history = this.fetchHistoryManager.getHistory();
             if (history.length > 0) {
                 await this.sendSessionAction(DbClientInputAction.resetSession, DBClientInputSessionTarget.reloadSession);
