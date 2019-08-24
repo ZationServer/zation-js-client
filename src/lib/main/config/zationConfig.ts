@@ -59,7 +59,7 @@ export class ZationConfig
             debug : false,
             system : 'Default',
             version : 1.0,
-            hostname : windowDefined && window.location.hostname || 'localhost',
+            hostname : windowDefined && window.location && window.location.hostname || 'localhost',
             path : '/zation',
             port : defaultPort,
             secure : defaultSecure,
