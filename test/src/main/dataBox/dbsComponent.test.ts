@@ -52,6 +52,17 @@ describe('MAIN.Databox.Storage',() => {
             assert.deepEqual(data,{name : 'luca',age : 20});
         });
 
+
+        it('Object with null and undefined properties', () => {
+            const head = new DbsHead({name : 'luca',age : 20,car : null,foo : undefined});
+
+            const data = head.getData();
+            const dataCopy = head.getDataCopy();
+            assert.deepEqual(data,dataCopy,'Copy should be deep equal');
+
+            assert.deepEqual(data,{name : 'luca',age : 20,car : null,foo : undefined});
+        });
+
         it('Array', () => {
             const head = new DbsHead(['a','b','c']);
 
