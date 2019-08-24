@@ -51,6 +51,7 @@ import Databox                         from "./lib/main/databox/databox";
 import {DbsComparator}                 from "./lib/main/databox/storage/dbsComparator";
 import {DbsValueMerger}                from "./lib/main/databox/storage/dbsMergerUtils";
 import {InvalidInputError}             from "./lib/main/error/invalidInputError";
+import DbError                         from "./lib/main/databox/dbError";
 
 // noinspection JSUnusedGlobalSymbols
 /**
@@ -122,5 +123,6 @@ export {
     Databox,
     DbsComparator,
     DbsValueMerger,
-    DataEventReason
+    DataEventReason,
+    DbError
 };
