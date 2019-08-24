@@ -17,7 +17,7 @@ export default class DbDataParser {
      * @param rawData
      */
     static parse(rawData : any) : any | DbsComponent {
-        if(typeof rawData === 'object'){
+        if(typeof rawData === 'object' && rawData){
             if(Array.isArray(rawData)) {
                 return new DbsArray(rawData);
             }
