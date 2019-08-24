@@ -4,7 +4,8 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {ErrorName} from "../../main/constants/errorName";
+import {ErrorName}         from "../../main/constants/errorName";
+import {InvalidInputError} from "../error/invalidInputError";
 
 export default class DbError {
 
@@ -20,7 +21,7 @@ export default class DbError {
      * Returns if not data is available.
      * @param err
      */
-    static isNoDataAvailable(err : any) : boolean {
+    static isNoDataAvailable(err : any) : err is {info : {code ?: number | string,data ?: any}} {
         return err.name === ErrorName.NO_DATA_AVAILABLE;
     }
 
@@ -92,7 +93,7 @@ export default class DbError {
      * Returns if the input is invalid.
      * @param err
      */
-    static isInputInvalid(err : any) : boolean {
+    static isInputInvalid(err : any) : err is InvalidInputError {
         return err.name === ErrorName.INVALID_INPUT;
     }
 }
