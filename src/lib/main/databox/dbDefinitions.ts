@@ -50,7 +50,7 @@ export interface DataboxConnectRes {
     pf : boolean
 }
 
-export const DATA_BOX_START_INDICATOR = '>D';
+export const DATABOX_START_INDICATOR = '>D';
 
 /**
  * The package that the client can send to the server to invoke an action.

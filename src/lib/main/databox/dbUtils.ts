@@ -6,7 +6,6 @@ Copyright(c) Luca Scaringella
 
 export default class DbUtils {
 
-
     /**
      * Utils function to check the time stamp for cud operations.
      * @param currentTimeStamp

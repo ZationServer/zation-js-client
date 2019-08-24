@@ -8,7 +8,7 @@ import {Socket} from "../sc/socket";
 import {
     CudPackage,
     CudType,
-    DATA_BOX_START_INDICATOR,
+    DATABOX_START_INDICATOR,
     DataboxConnectReq,
     DataboxConnectRes,
     DbClientInputAction,
@@ -342,7 +342,7 @@ export default class Databox {
         const currentToken = this.token;
 
         return new Promise<void>((resolve, reject) => {
-            this.socket.emit(DATA_BOX_START_INDICATOR, {
+            this.socket.emit(DATABOX_START_INDICATOR, {
                 al: this.apiLevel,
                 d: this.name,
                 ...(this.id !== undefined ? {i: this.id} : {}),
@@ -434,8 +434,6 @@ export default class Databox {
     /**
      * Fetch new data from the server.
      * You can pass in the fetch input as a parameter.
-     * The method returns true if the data was added to the storage or
-     * false if no more data is available.
      * @param data
      * @param waitForDbConnection
      * With the WaitForDbConnection option, you can activate that the Databox is
@@ -458,8 +456,9 @@ export default class Databox {
      * But this only will work fine if your fetches
      * do not depend on each other.
      * @throws ConnectionRequiredError,TimeoutError,RawError,InvalidInputError
+     * To react to the error, you can use the DbError class.
      */
-    async fetchData(data ?: any, waitForDbConnection: WaitForConnectionOption = undefined, addToHistory : boolean = true): Promise<boolean> {
+    async fetchData(data ?: any, waitForDbConnection: WaitForConnectionOption = undefined, addToHistory : boolean = true): Promise<void> {
 
         waitForDbConnection = waitForDbConnection === undefined ?
             this.dbOptions.waitForDbConnection : waitForDbConnection;
@@ -483,16 +482,11 @@ export default class Databox {
                 }
             }
             this.newDataEvent.emit(this);
-            return true;
         } catch (e) {
             if(typeof e['counter'] === 'number'){
                 this.fetchHistoryManager.pushHistoryFail(e['counter'],data);
             }
-
-            if (e.name === ErrorName.NO_MORE_DATA_AVAILABLE) {
-                return false;
-            }
-            else if(e.name === ErrorName.INVALID_INPUT) {
+            if(e.name === ErrorName.INVALID_INPUT) {
                 throw new InvalidInputError('Invalid fetch input.',e);
             }
             else {
@@ -533,13 +527,15 @@ export default class Databox {
         const results: DbsHead[] = [];
         for (let i = 0; i < history.length; i++) {
             promises.push((async () => {
+                // noinspection DuplicatedCode
                 try {
                     const fetchResult = await this._fetchData(history[i].input, DBClientInputSessionTarget.reloadSession);
                     const dbsHead = new DbsHead(fetchResult.d);
                     results[fetchResult.c] = dbsHead;
                     this.tmpReloadDataSets.add(dbsHead);
                 } catch (err) {
-                    if ((err.name as ErrorName) !== ErrorName.NO_MORE_DATA_AVAILABLE && !history[i].failed) {
+                    if ((err.name as ErrorName) !== ErrorName.NO_MORE_DATA_AVAILABLE &&
+                        (err.name as ErrorName) !== ErrorName.NO_DATA_AVAILABLE && !history[i].failed) {
                         throw err;
                     }
                 }
@@ -556,16 +552,15 @@ export default class Databox {
     private async _normalHistoryFetch(history: FetchHistoryItem[]): Promise<DbsHead[]> {
         const results: DbsHead[] = [];
         for (let i = 0; i < history.length; i++) {
+            // noinspection DuplicatedCode
             try {
                 const fetchResult = await this._fetchData(history[i].input, DBClientInputSessionTarget.reloadSession);
                 const dbsHead = new DbsHead(fetchResult.d);
                 results[fetchResult.c] = dbsHead;
                 this.tmpReloadDataSets.add(dbsHead);
             } catch (err) {
-                if ((err.name as ErrorName) === ErrorName.NO_MORE_DATA_AVAILABLE) {
-                    break;
-                }
-                else if(!history[i].failed) {
+                if ((err.name as ErrorName) !== ErrorName.NO_MORE_DATA_AVAILABLE &&
+                    (err.name as ErrorName) !== ErrorName.NO_DATA_AVAILABLE && !history[i].failed) {
                     throw err;
                 }
             }

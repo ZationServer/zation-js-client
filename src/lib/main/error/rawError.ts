@@ -23,15 +23,6 @@ export class RawError extends Error
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Returns the error name of the raw error,
-     * can be used to check more details.
-     */
-    getErrorName() : ErrorName {
-        return (this.rawError.name as ErrorName);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
      * Returns if the raw error name is equal to the argument error name.
      * @param errorName
      */
@@ -41,18 +32,25 @@ export class RawError extends Error
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Returns additional info of the raw error.
+     * Returns the raw error code.
      */
-    getErrorInfo() : Record<string,any> {
-        return this.rawError['info'] || {};
+    get code() : any {
+        return this.rawError['code'];
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Returns the raw error code.
+     * Returns the error name.
      */
-    getErrorCode() : any {
-        return this.rawError['code'];
+    get name() : string {
+        return this.rawError.name;
+    }
+
+    /**
+     * Returns additional info of the raw error.
+     */
+    get info() : Record<string,any> {
+        return this.rawError['info'] || {};
     }
 }
 

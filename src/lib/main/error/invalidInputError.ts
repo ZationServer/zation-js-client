@@ -34,6 +34,22 @@ export class InvalidInputError extends Error
 
     // noinspection JSUnusedGlobalSymbols
     /**
+     * Returns the raw error code.
+     */
+    get code() : any {
+        return this.rawError['code'];
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Returns the error name.
+     */
+    get name() : string {
+        return this.rawError.name;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
      * @description
      * Filter the BackErrors.
      * @example
