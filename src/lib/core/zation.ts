@@ -1308,10 +1308,10 @@ export class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the panel access of the token from the sc.
+     * Returns if the socket has panel access with the token.
      * @throws AuthenticationRequiredError
      */
-    hasTokenPanelAccess() : boolean
+    hasPanelAccess() : boolean
     {
         // @ts-ignore
         return this.authEngine.getSecurePlainToken().panelAccess;
