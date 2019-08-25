@@ -1627,4 +1627,14 @@ export class Zation
     getZc() : ZationConfig {
         return this.zc;
     }
+
+    /**
+     * Cast a value to an instance of this class.
+     * That can be useful if you are programming in javascript,
+     * but the IDE can interpret the typescript information of this library.
+     * @param value
+     */
+    static cast(value : any) : Zation {
+        return value as Zation;
+    }
 }
