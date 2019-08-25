@@ -38,6 +38,8 @@ import DbsHead                                    from "./storage/components/dbs
 import DbUtils                                    from "./dbUtils";
 import {InvalidInputError}                        from "../../main/error/invalidInputError";
 import afterPromise                               from "../utils/promiseUtils";
+import DbCudOperationSequence                     from "./dbCudOperationSequence";
+import {DbEditAble}                               from "./dbEditAble";
 
 export interface DataboxOptions {
     /**
@@ -127,7 +129,7 @@ type OnReload      = (code : number | string | undefined,data : any) => void | P
 type OnCud         = (cudPackage : CudPackage) => void | Promise<void>
 type OnNewData     = (db : Databox) => void | Promise<void>
 
-export default class Databox {
+export default class Databox implements DbEditAble {
 
     private readonly name: string;
     private readonly id: string | undefined;
@@ -848,10 +850,11 @@ export default class Databox {
      * @param value
      * @param options
      */
-    insert(keyPath: string[], value: any, options: IfContainsOption & InfoOption & TimestampOption = {}): Databox {
+    insert(keyPath: string[] | string, value: any, options: IfContainsOption & InfoOption & TimestampOption = {}): Databox {
         for (let dbStorage of this.dbStorages) {
             dbStorage.insert(keyPath, value, options);
         }
+        keyPath = DbUtils.handleKeyPath(keyPath);
         for (let dataSet of this.tmpReloadDataSets) {
             dataSet.insert(keyPath, value, DbUtils.processTimestamp(options.timestamp), options.ifContains);
         }
@@ -877,10 +880,11 @@ export default class Databox {
      * @param value
      * @param options
      */
-    update(keyPath: string[], value: any, options: InfoOption & TimestampOption = {}): Databox {
+    update(keyPath: string[] | string, value: any, options: InfoOption & TimestampOption = {}): Databox {
         for (let dbStorage of this.dbStorages) {
             dbStorage.update(keyPath, value, options);
         }
+        keyPath = DbUtils.handleKeyPath(keyPath);
         for (let dataSet of this.tmpReloadDataSets) {
             dataSet.update(keyPath, value, DbUtils.processTimestamp(options.timestamp),false);
         }
@@ -905,15 +909,39 @@ export default class Databox {
      * string where you can separate the keys with a dot.
      * @param options
      */
-    delete(keyPath: string[], options: InfoOption & TimestampOption = {}): Databox {
+    delete(keyPath: string[] | string, options: InfoOption & TimestampOption = {}): Databox {
         for (let dbStorage of this.dbStorages) {
             dbStorage.delete(keyPath, options);
         }
+        keyPath = DbUtils.handleKeyPath(keyPath);
         for (let dataSet of this.tmpReloadDataSets) {
             dataSet.delete(keyPath, DbUtils.processTimestamp(options.timestamp));
         }
         this.newDataEvent.emit(this);
         return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Sequence edit on all connected storages.
+     * Notice if you do a cud operation locally on the client,
+     * that this operation is not done on the server-side.
+     * So if the Databox reloads the data or resets the changes are lost.
+     * @param timestamp
+     * With the timestamp option, you can change the sequence of data.
+     * The storage, for example, will only update data that is older as incoming data.
+     * Use this option only if you know what you are doing.
+     */
+    seqEdit(timestamp ?: number) : DbCudOperationSequence {
+        return new DbCudOperationSequence( (operations) => {
+            for (let dbStorage of this.dbStorages) {
+                dbStorage.startCudSeq();
+            }
+            DbUtils.processOpertions(this,operations,timestamp);
+            for (let dbStorage of this.dbStorages) {
+                dbStorage.endCudSeq();
+            }
+        });
     }
 
     /**

@@ -14,6 +14,8 @@ import {DbsValueMerger}                                 from "./dbsMergerUtils";
 import DbsComponent, {DbsComponentOptions, ModifyLevel} from "./components/dbsComponent";
 import EventManager                                     from "../../utils/eventManager";
 import {deepEqual}                                      from "../../utils/deepEqual";
+import DbCudOperationSequence                           from "../dbCudOperationSequence";
+import {DbEditAble}                                     from "../dbEditAble";
 
 type ClearOnCloseMiddleware = (code : number | string | undefined,data : any) => boolean;
 type ClearOnKickOutMiddleware = (code : number | string | undefined,data : any) => boolean;
@@ -87,7 +89,7 @@ export type OnInsert = (keyPath : string[], value : any,options : IfContainsOpti
 export type OnUpdate = (keyPath : string[], value : any,options : InfoOption & TimestampOption) => void | Promise<void>;
 export type OnDelete = (keyPath : string[], options : InfoOption & TimestampOption) => void | Promise<void>;
 
-export default class DbStorage {
+export default class DbStorage implements DbEditAble {
 
     private dbStorageOptions : Required<DbStorageOptions> = {
         clearOnClose : true,
@@ -506,6 +508,25 @@ export default class DbStorage {
             }
         }
         return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Sequence edit.
+     * Notice if you do a cud operation locally on the client,
+     * that this operation is not done on the server-side.
+     * So if the Databox reloads the data or resets the changes are lost.
+     * @param timestamp
+     * With the timestamp option, you can change the sequence of data.
+     * The storage, for example, will only update data that is older as incoming data.
+     * Use this option only if you know what you are doing.
+     */
+    seqEdit(timestamp ?: number) : DbCudOperationSequence {
+        return new DbCudOperationSequence( (operations) => {
+            this.startCudSeq();
+            DbUtils.processOpertions(this,operations,timestamp);
+            this.endCudSeq();
+        });
     }
 
     /**

@@ -4,6 +4,9 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
+import {DbEditAble}            from "./dbEditAble";
+import {CudOperation, CudType} from "./dbDefinitions";
+
 export default class DbUtils {
 
     /**
@@ -37,6 +40,34 @@ export default class DbUtils {
     static handleKeyPath(keyPath : string | string[]) : string[] {
         return typeof keyPath === 'string' ?
             (keyPath === '' ? [] : keyPath.split('.')) : keyPath;
+    }
+
+    /**
+     * Processes the operations with a dbEditAble target.
+     * It is used internally for seqEdit.
+     * @param target
+     * @param operations
+     * @param timestamp
+     */
+    static processOpertions(target : DbEditAble,operations : CudOperation[],timestamp ?: number) : void {
+        let operation : CudOperation;
+        for(let i = 0; i < operations.length; i++){
+            operation = operations[i];
+            switch (operation.t) {
+                case CudType.insert:
+                    target.insert(operation.k,operation.v,
+                        {code : operation.c,data : operation.d,timestamp,ifContains : operation.i});
+                    break;
+                case CudType.update:
+                    target.update(operation.k,operation.v,
+                        {code : operation.c,data : operation.d,timestamp});
+                    break;
+                case CudType.delete:
+                    target.delete(operation.k,
+                        {code : operation.c,data : operation.d,timestamp});
+                    break;
+            }
+        }
     }
 
 }
