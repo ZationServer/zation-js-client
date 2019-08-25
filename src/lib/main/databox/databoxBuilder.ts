@@ -130,11 +130,39 @@ export default class DataboxBuilder {
     }
 
     /**
-     * Builds the Databox connect it and returns it.
+     * Get the built databox.
+     * @param autoConnect
+     * Indicates if the databox should be directly connected,
+     * then the method will return a promise with the connected databox.
      */
-    async get() : Promise<Databox> {
+    get(autoConnect ?: boolean) : Promise<Databox>
+    /**
+     * Get the built databox.
+     * @param autoConnect
+     * Indicates if the databox should be directly connected,
+     * then the method will return a promise with the connected databox.
+     */
+    get(autoConnect : true) : Promise<Databox>
+    /**
+     * Get the built databox.
+     * @param autoConnect
+     * Indicates if the databox should be directly connected,
+     * then the method will return a promise with the connected databox.
+     */
+    get(autoConnect : false) : Databox
+    get(autoConnect : boolean = true) : Databox | Promise<Databox> {
         const databox = new Databox(this.zation,this.dbOptions,this.name,this.id);
-        await databox.connect();
-        return databox;
+        if(autoConnect){
+            return new Promise<Databox>(async (resolve, reject) => {
+                try{
+                    await databox.connect();
+                    resolve(databox);
+                }
+                catch (e) {reject(e);}
+            });
+        }
+        else {
+            return databox;
+        }
     }
 }
