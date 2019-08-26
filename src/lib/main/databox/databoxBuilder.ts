@@ -134,6 +134,7 @@ export default class DataboxBuilder {
      * @param autoConnect
      * Indicates if the databox should be directly connected,
      * then the method will return a promise with the connected databox.
+     * Otherwise, it returns the unconnected databox, but synchronous.
      */
     get(autoConnect ?: boolean) : Promise<Databox>
     /**
@@ -141,6 +142,7 @@ export default class DataboxBuilder {
      * @param autoConnect
      * Indicates if the databox should be directly connected,
      * then the method will return a promise with the connected databox.
+     * Otherwise, it returns the unconnected databox, but synchronous.
      */
     get(autoConnect : true) : Promise<Databox>
     /**
@@ -148,6 +150,7 @@ export default class DataboxBuilder {
      * @param autoConnect
      * Indicates if the databox should be directly connected,
      * then the method will return a promise with the connected databox.
+     * Otherwise, it returns the unconnected databox, but synchronous.
      */
     get(autoConnect : false) : Databox
     get(autoConnect : boolean = true) : Databox | Promise<Databox> {
