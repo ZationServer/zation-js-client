@@ -121,7 +121,7 @@ export abstract class ZationRequest extends SendAble
     // noinspection JSUnusedGlobalSymbols
     /**
      * With the WaitForConnection option, you can activate that the socket is
-     * trying to connect when it is not connected. You have four possible choices:
+     * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options.
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
@@ -131,6 +131,7 @@ export abstract class ZationRequest extends SendAble
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
+     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      * This options is only used in the WebSocket protocol.
      * @param value
      * @default undefined

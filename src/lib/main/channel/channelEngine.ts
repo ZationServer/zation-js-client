@@ -311,13 +311,12 @@ export class ChannelEngine
         };
     }
 
-    publish(channelName : string,eventName : string,data : any,waitForConnection : WaitForConnectionOption) : Promise<void>
+    async publish(channelName : string,eventName : string,data : any,waitForConnection : WaitForConnectionOption) : Promise<void>
     {
+        await ConnectionUtils.checkConnection
+        (this.zation,waitForConnection,'To publish data.');
+
         return new Promise<void>(async (resolve, reject) => {
-
-            await ConnectionUtils.checkConnection
-            (this.zation,waitForConnection,'To publish data.');
-
             this.zation.getSocket().publish(channelName,ChannelEngine.buildPubData(eventName,data),(err) =>
             {
                 if(err){
@@ -335,29 +334,29 @@ export class ChannelEngine
         });
     }
 
-    async pubUserCh(userId : string | number,event : string, data : any,waitForConnection : WaitForConnectionOption) : Promise<void> {
-        await this.publish(ZationChannel.USER_CHANNEL_PREFIX + userId,event,data,waitForConnection);
+    pubUserCh(userId : string | number,event : string, data : any,waitForConnection : WaitForConnectionOption) : Promise<void> {
+        return this.publish(ZationChannel.USER_CHANNEL_PREFIX + userId,event,data,waitForConnection);
     }
 
-    async pubAuthUserGroupCh(authUserGroup : string,event : string, data : any,waitForConnection : WaitForConnectionOption) : Promise<void> {
-        await this.publish(ZationChannel.AUTH_USER_GROUP_PREFIX + authUserGroup,event,data,waitForConnection);
+    pubAuthUserGroupCh(authUserGroup : string,event : string, data : any,waitForConnection : WaitForConnectionOption) : Promise<void> {
+        return this.publish(ZationChannel.AUTH_USER_GROUP_PREFIX + authUserGroup,event,data,waitForConnection);
     }
 
-    async pubDefaultUserGroupCh(event : string, data : any,waitForConnection : WaitForConnectionOption) : Promise<void> {
-        await this.publish(ZationChannel.DEFAULT_USER_GROUP,event,data,waitForConnection);
+    pubDefaultUserGroupCh(event : string, data : any,waitForConnection : WaitForConnectionOption) : Promise<void> {
+        return this.publish(ZationChannel.DEFAULT_USER_GROUP,event,data,waitForConnection);
     }
 
-    async pubAllCh(event : string, data : any,waitForConnection : WaitForConnectionOption) : Promise<void> {
-        await this.publish(ZationChannel.ALL,event,data,waitForConnection);
+    pubAllCh(event : string, data : any,waitForConnection : WaitForConnectionOption) : Promise<void> {
+        return this.publish(ZationChannel.ALL,event,data,waitForConnection);
     }
 
-    async pubPanelInCh(event : string, data : any,waitForConnection : WaitForConnectionOption) : Promise<void> {
-        await this.publish(ZationChannel.PANEL_IN,event,data,waitForConnection);
+    pubPanelInCh(event : string, data : any,waitForConnection : WaitForConnectionOption) : Promise<void> {
+        return this.publish(ZationChannel.PANEL_IN,event,data,waitForConnection);
     }
 
-    async pubCustomCh({name,id} : {name : string,id ?: string},event : string, data : any,
+    pubCustomCh({name,id} : {name : string,id ?: string},event : string, data : any,
                       waitForConnection : WaitForConnectionOption) : Promise<void>
     {
-        await this.publish(ChannelEngine.getCustomChName(name,id),event,data,waitForConnection);
+        return this.publish(ChannelEngine.getCustomChName(name,id),event,data,waitForConnection);
     }
 }

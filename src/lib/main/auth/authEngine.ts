@@ -79,13 +79,12 @@ export class AuthEngine
         await this.updateToken(plainToken);
     }
 
-    signAuthenticate(signToken : string,waitForConnection : WaitForConnectionOption) : Promise<void>
+    async signAuthenticate(signToken : string,waitForConnection : WaitForConnectionOption) : Promise<void>
     {
+        await ConnectionUtils.checkConnection
+        (this.zation,waitForConnection,'To authenticate with sign token.');
+
         return new Promise<void>(async (resolve, reject) => {
-
-            await ConnectionUtils.checkConnection
-            (this.zation,waitForConnection,'To authenticate with sign token.');
-
             this.zation.getSocket().authenticate(signToken,(err,authState)=>
             {
                 if(err){

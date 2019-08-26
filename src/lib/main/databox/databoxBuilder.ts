@@ -77,7 +77,7 @@ export default class DataboxBuilder {
      * trying to connect when it is not connected.
      * This option will be used when you try to connect to the Databox.
      * Because then the socket needs to be connected.
-     * You have four possible choices:
+     * You have five possible choices:
      * Undefined: It will use the value from the default options.
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
@@ -87,6 +87,7 @@ export default class DataboxBuilder {
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
+     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      * @default undefined
      * @param option
      */
@@ -100,7 +101,7 @@ export default class DataboxBuilder {
      * With the WaitForDbConnection option, you can activate that the Databox is
      * trying to connect (if it's not connected) whenever you want
      * to fetchData.
-     * You have four possible choices:
+     * You have five possible choices:
      * Undefined: It will use the value from the default options (ZationOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the Databox is not connected.
@@ -110,6 +111,7 @@ export default class DataboxBuilder {
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
+     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      * @default undefined
      */
     waitForDbConnection(option : WaitForConnectionOption) : DataboxBuilder {

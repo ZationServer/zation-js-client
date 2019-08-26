@@ -52,6 +52,7 @@ import {DbsComparator}                 from "./lib/main/databox/storage/dbsCompa
 import {DbsValueMerger}                from "./lib/main/databox/storage/dbsMergerUtils";
 import {InvalidInputError}             from "./lib/main/error/invalidInputError";
 import DbError                         from "./lib/main/databox/dbError";
+import {AbortSignal, AbortTrigger}     from "./lib/main/utils/connectionUtils";
 
 // noinspection JSUnusedGlobalSymbols
 /**
@@ -124,5 +125,7 @@ export {
     DbsComparator,
     DbsValueMerger,
     DataEventReason,
-    DbError
+    DbError,
+    AbortTrigger,
+    AbortSignal
 };

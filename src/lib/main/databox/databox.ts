@@ -73,8 +73,8 @@ export interface DataboxOptions {
      * trying to connect when it is not connected.
      * This option will be used when you try to connect to the Databox.
      * Because then the socket needs to be connected.
-     * You have four possible choices:
-     * Undefined: It will use the value from the default options (ZationOptions).
+     * You have five possible choices:
+     * Undefined: It will use the value from the default options.
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
      * For the other options, it is also recommended to have activated the auto-reconnect.
@@ -83,6 +83,7 @@ export interface DataboxOptions {
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
+     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      * @default undefined
      */
     waitForConnection ?: WaitForConnectionOption;
@@ -90,7 +91,7 @@ export interface DataboxOptions {
      * With the WaitForDbConnection option, you can activate that the Databox is
      * trying to connect (if it's not connected) whenever you want
      * to fetchData.
-     * You have four possible choices:
+     * You have five possible choices:
      * Undefined: It will use the value from the default options (ZationOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the Databox is not connected.
@@ -100,6 +101,7 @@ export interface DataboxOptions {
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
+     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      * @default undefined
      */
     waitForDbConnection ?: WaitForConnectionOption;
@@ -264,10 +266,10 @@ export default class Databox implements DbEditAble {
      * You can use the method if you had disconnected the Databox and want to use it again.
      * Whenever the connection is lost, you don't need to call that method.
      * The Databox will reconnect automatically as fast as possible.
-     * @throws RawError,TimeoutError,ConnectionRequiredError,InvalidInputError
+     * @throws RawError,TimeoutError,ConnectionRequiredError,InvalidInputError,AbortSignal
      * @param waitForConnection
      * With the WaitForConnection option, you can activate that the socket is
-     * trying to connect when it is not connected. You have four possible choices:
+     * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options
      * (DataboxOptions and last fall back is ZationOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
@@ -278,6 +280,7 @@ export default class Databox implements DbEditAble {
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
+     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
     async connect(waitForConnection: WaitForConnectionOption = undefined): Promise<void> {
         waitForConnection = waitForConnection === undefined ?
@@ -440,7 +443,7 @@ export default class Databox implements DbEditAble {
      * @param waitForDbConnection
      * With the WaitForDbConnection option, you can activate that the Databox is
      * trying to connect (if it's not connected).
-     * You have four possible choices:
+     * You have five possible choices:
      * Undefined: It will use the value from the default options
      * (DataboxOptions and last fall back is ZationOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
@@ -451,13 +454,14 @@ export default class Databox implements DbEditAble {
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
+     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      * @param addToHistory
      * Indicates if this fetch should be added to the history.
      * You can deactivate this in some cases
      * if you don't want to reload this fetch later (In case of cud missed).
      * But this only will work fine if your fetches
      * do not depend on each other.
-     * @throws ConnectionRequiredError,TimeoutError,RawError,InvalidInputError
+     * @throws ConnectionRequiredError,TimeoutError,RawError,InvalidInputError,AbortSignal
      * To react to the error, you can use the DbError class.
      */
     async fetchData(data ?: any, waitForDbConnection: WaitForConnectionOption = undefined, addToHistory : boolean = true): Promise<void> {
@@ -581,7 +585,22 @@ export default class Databox implements DbEditAble {
 
     /**
      * Reload the fetched data.
-     * @throws ConnectionRequiredError,TimeoutError,RawError,InvalidInputError
+     * @param waitForConnection
+     * With the WaitForDbConnection option, you can activate that the Databox is
+     * trying to connect (if it's not connected).
+     * You have five possible choices:
+     * Undefined: It will use the value from the default options
+     * (DataboxOptions and last fall back is ZationOptions).
+     * False: The action will fail and throw a ConnectionRequiredError,
+     * when the Databox is not connected.
+     * For the other options, it is also recommended to have activated the auto-reconnect.
+     * Null: The Databox will try to connect (if it is not connected) and
+     * waits until the connection is made, then it continues the action.
+     * Number: Same as null, but now you can specify a timeout (in ms) of
+     * maximum waiting time for the connection. If the timeout is reached,
+     * it will throw a timeout error.
+     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
+     * @throws ConnectionRequiredError,TimeoutError,RawError,InvalidInputError,AbortSignal
      */
     async reload(waitForConnection: WaitForConnectionOption = false) {
         const tmpCudId = this.cudId;

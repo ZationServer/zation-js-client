@@ -15,7 +15,7 @@ import {ValidationCheck}             from "../main/request/main/validationReques
 import {ChannelTarget}               from "../main/channel/channelTarget";
 import {SystemController}            from "../main/constants/systemController";
 import {ZationCustomEventNamespace, ZationHttpInfo, ZationToken} from "../main/constants/internal";
-import ConnectionUtils, {WaitForConnectionOption}               from "../main/utils/connectionUtils";
+import ConnectionUtils, {WaitForConnectionOption}                from "../main/utils/connectionUtils";
 import {ChannelEngine}               from "../main/channel/channelEngine";
 import {ZationConfig}                from "../main/config/zationConfig";
 import {Box}                         from "../main/box/box";
@@ -257,7 +257,7 @@ export class Zation
      * @throws ConnectionRequiredError,TimeoutError
      * @param waitForConnection
      * With the WaitForConnection option, you can activate that the socket is
-     * trying to connect when it is not connected. You have four possible choices:
+     * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options.
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
@@ -267,6 +267,8 @@ export class Zation
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
+     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
+     * This options is only used in the WebSocket protocol.
      */
     async ping(waitForConnection : WaitForConnectionOption = undefined) : Promise<number>
     {
@@ -315,7 +317,7 @@ export class Zation
      * @param protocolType
      * @param waitForConnection
      * With the WaitForConnection option, you can activate that the socket is
-     * trying to connect when it is not connected. You have four possible choices:
+     * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options.
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
@@ -325,6 +327,8 @@ export class Zation
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
+     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
+     * This options is only used in the WebSocket protocol.
      */
     async authenticate(authData : object = {}, protocolType : ProtocolType = ProtocolType.WebSocket,waitForConnection : WaitForConnectionOption = undefined) : Promise<Response>
     {
@@ -349,11 +353,11 @@ export class Zation
     /**
      * @description
      * Authenticate this connection by using an signed token.
-     * @throws ConnectionRequiredError, SignAuthenticationFailedError, TimeoutError
+     * @throws ConnectionRequiredError, SignAuthenticationFailedError, TimeoutError,AbortSignal
      * @param signToken
      * @param waitForConnection
      * With the WaitForConnection option, you can activate that the socket is
-     * trying to connect when it is not connected. You have four possible choices:
+     * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options.
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
@@ -363,6 +367,7 @@ export class Zation
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
+     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
     async signAuthenticate(signToken : string,waitForConnection : WaitForConnectionOption = undefined) : Promise<void> {
         await this.authEngine.signAuthenticate(signToken,waitForConnection);
@@ -535,7 +540,7 @@ export class Zation
      * Optional you can add a progressHandler and responseReactionBox/es.
      * Notice that the response boxes that are passed in are triggerd before the zation boxes.
      * But the zationBoxes are only triggerd if the triggerZationBoxes param is true.
-     * @throws ConnectionRequiredError,TimeoutError
+     * @throws ConnectionRequiredError,TimeoutError,AbortSignal
      * @return Response
      * @param sendAble
      * @param progressHandler
@@ -1090,13 +1095,13 @@ export class Zation
      * Notice that the channel needs to allow client publish.
      * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
      * This gives you better control over validation.
-     * @throws ConnectionRequiredError, PublishFailError, TimeoutError
+     * @throws ConnectionRequiredError, PublishFailError, TimeoutError,AbortSignal
      * @param userId
      * @param event
      * @param data
      * @param waitForConnection
      * With the WaitForConnection option, you can activate that the socket is
-     * trying to connect when it is not connected. You have four possible choices:
+     * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options.
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
@@ -1106,9 +1111,10 @@ export class Zation
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
+     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
     async pubUserCh(userId : string | number,event : string, data : any = {},waitForConnection : WaitForConnectionOption = undefined) : Promise<void> {
-        await this.channelEngine.pubUserCh(userId,event,data,waitForConnection);
+        return this.channelEngine.pubUserCh(userId,event,data,waitForConnection);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1118,13 +1124,13 @@ export class Zation
      * Notice that the channel needs to allow client publish.
      * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
      * This gives you better control over validation.
-     * @throws ConnectionRequiredError, PublishFailError, TimeoutError
+     * @throws ConnectionRequiredError, PublishFailError, TimeoutError,AbortSignal
      * @param authUserGroup
      * @param event
      * @param data
      * @param waitForConnection
      * With the WaitForConnection option, you can activate that the socket is
-     * trying to connect when it is not connected. You have four possible choices:
+     * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options.
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
@@ -1134,9 +1140,10 @@ export class Zation
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
+     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
     async pubAuthUserGroupCh(authUserGroup : string,event : string, data : any = {},waitForConnection : WaitForConnectionOption = undefined) : Promise<void> {
-        await this.channelEngine.pubAuthUserGroupCh(authUserGroup,event,data,waitForConnection);
+        return this.channelEngine.pubAuthUserGroupCh(authUserGroup,event,data,waitForConnection);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1146,12 +1153,12 @@ export class Zation
      * Notice that the channel needs to allow client publish.
      * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
      * This gives you better control over validation.
-     * @throws ConnectionRequiredError, PublishFailError, TimeoutError
+     * @throws ConnectionRequiredError, PublishFailError, TimeoutError,AbortSignal
      * @param event
      * @param data
      * @param waitForConnection
      * With the WaitForConnection option, you can activate that the socket is
-     * trying to connect when it is not connected. You have four possible choices:
+     * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options.
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
@@ -1161,9 +1168,10 @@ export class Zation
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
+     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
     async pubDefaultUserGroupCh(event : string, data : any = {},waitForConnection : WaitForConnectionOption = undefined) : Promise<void> {
-        await this.channelEngine.pubDefaultUserGroupCh(event,data,waitForConnection);
+        return this.channelEngine.pubDefaultUserGroupCh(event,data,waitForConnection);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1173,12 +1181,12 @@ export class Zation
      * Notice that the channel needs to allow client publish.
      * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
      * This gives you better control over validation.
-     * @throws ConnectionRequiredError, PublishFailError, TimeoutError
+     * @throws ConnectionRequiredError, PublishFailError, TimeoutError,AbortSignal
      * @param event
      * @param data
      * @param waitForConnection
      * With the WaitForConnection option, you can activate that the socket is
-     * trying to connect when it is not connected. You have four possible choices:
+     * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options.
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
@@ -1188,9 +1196,10 @@ export class Zation
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
+     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
     async pubAllCh(event : string, data : any = {},waitForConnection : WaitForConnectionOption = undefined) : Promise<void> {
-        await this.channelEngine.pubAllCh(event,data,waitForConnection);
+        return this.channelEngine.pubAllCh(event,data,waitForConnection);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1198,12 +1207,12 @@ export class Zation
      * @description
      * Publish in the panel in channel with this client.
      * Notice the publish in middleware is used on server side.
-     * @throws ConnectionRequiredError, PublishFailError, TimeoutError
+     * @throws ConnectionRequiredError, PublishFailError, TimeoutError,AbortSignal
      * @param event
      * @param data
      * @param waitForConnection
      * With the WaitForConnection option, you can activate that the socket is
-     * trying to connect when it is not connected. You have four possible choices:
+     * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options.
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
@@ -1213,9 +1222,10 @@ export class Zation
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
+     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
     async pubPanelInCh(event : string, data : any = {},waitForConnection : WaitForConnectionOption = undefined) : Promise<void> {
-        await this.channelEngine.pubPanelInCh(event,data,waitForConnection);
+        return this.channelEngine.pubPanelInCh(event,data,waitForConnection);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1225,13 +1235,13 @@ export class Zation
      * Notice that the socket needs to have access for clientPublish.
      * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
      * This gives you better control over validation.
-     * @throws ConnectionRequiredError, PublishFailError, TimeoutError
+     * @throws ConnectionRequiredError, PublishFailError, TimeoutError,AbortSignal
      * @param target
      * @param event
      * @param data
      * @param waitForConnection
      * With the WaitForConnection option, you can activate that the socket is
-     * trying to connect when it is not connected. You have four possible choices:
+     * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options.
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
@@ -1241,9 +1251,10 @@ export class Zation
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
+     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
     async pubCustomCh(target : {name : string,id ?: string},event : string, data : any = {},waitForConnection : WaitForConnectionOption = undefined) : Promise<void> {
-        await this.channelEngine.pubCustomCh(target,event,data,waitForConnection);
+        return this.channelEngine.pubCustomCh(target,event,data,waitForConnection);
     }
 
     //Part TokenVar
@@ -1413,7 +1424,7 @@ export class Zation
      * and if an error occurs while emitting to the server, this error is thrown.
      * It uses the custom zation event namespace
      * (so you cannot have name conflicts with internal event names).
-     * @throws TimeoutError, Error
+     * @throws ConnectionRequiredError, TimeoutError, Error,AbortSignal
      * @param event
      * @param data
      * @param onlyTransmit
@@ -1421,7 +1432,7 @@ export class Zation
      * If not than the promise will be resolved with the result when the server responded on the emit.
      * @param waitForConnection
      * With the WaitForConnection option, you can activate that the socket is
-     * trying to connect when it is not connected. You have four possible choices:
+     * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options.
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
@@ -1431,6 +1442,7 @@ export class Zation
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
+     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      * @param timeout
      * Set the timeout of the emit.
      * Value can be null which means the timeout is disabled or

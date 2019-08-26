@@ -10,8 +10,8 @@ import {ConnectionRequiredError}                       from "../error/connection
 import {TimeoutError}                                  from "../error/timeoutError";
 import Databox                                         from "../databox/databox";
 
-export type WaitForConnectionDefaultOption = false | null | null;
-export type WaitForConnectionOption        = undefined | null | number | false;
+export type WaitForConnectionDefaultOption = false | null | number;
+export type WaitForConnectionOption        = undefined | null | number | false | AbortTrigger;
 
 export default class ConnectionUtils {
 
@@ -23,7 +23,7 @@ export default class ConnectionUtils {
      * @param waitForConnection
      * @param errorMsg
      */
-    static async checkConnection(zation : Zation,waitForConnection : WaitForConnectionOption,errorMsg : string){
+    static async checkConnection(zation : Zation,waitForConnection : WaitForConnectionOption,errorMsg : string) : Promise<void> {
 
         if(!zation.isConnected()){
 
@@ -42,24 +42,36 @@ export default class ConnectionUtils {
     /**
      * Wait for the socket connection.
      * @param socket
-     * @param timeout
+     * @param option
      */
-    private static async waitForConnection(socket : Socket,timeout : null | number)
+    private static waitForConnection(socket : Socket,option : null | number | AbortTrigger) : Promise<void>
     {
         return new Promise<void>((resolve, reject) => {
             let connectListener;
             let timeoutHandler;
+            let connected = false;
 
-            if(timeout !== null){
+            if(typeof option === 'number'){
                 timeoutHandler = setTimeout(() => {
                     socket.off('connect',connectListener);
                     reject(new TimeoutError('To connect to the server.',true));
-                },timeout);
+                },option);
+            }
+            else if(option){
+                option._setAbortProcess(() => {
+                    if(!connected){
+                        socket.off('connect',connectListener);
+                        reject(new AbortSignal());
+                        return true;
+                    }
+                   return false;
+                });
             }
 
             connectListener = () => {
                 socket.off('connect',connectListener);
                 clearInterval(timeoutHandler);
+                connected = true;
                 resolve();
             };
 
@@ -95,23 +107,35 @@ export default class ConnectionUtils {
      * Wait for the Databox connection.
      * @param databox
      * @param zaiton
-     * @param timeout
+     * @param option
      */
-    private static async waitForDbConnection(databox : Databox,zaiton : Zation,timeout : null | number)
+    private static async waitForDbConnection(databox : Databox,zaiton : Zation,option : null | number | AbortTrigger)
     {
         return  new Promise<void>(async (resolve, reject) => {
             let dbConnectListener;
             let socketConnectListener;
             let timeoutHandler;
+            let connected = false;
 
             const socket = zaiton.getSocket();
 
-            if(timeout !== null){
+            if(typeof option === 'number'){
                 timeoutHandler = setTimeout(() => {
                     databox.offConnect(dbConnectListener);
                     socket.off('connect',socketConnectListener);
                     reject(new TimeoutError('To connect to the Databox.',true));
-                },timeout);
+                },option);
+            }
+            else if(option){
+                option._setAbortProcess(() => {
+                    if(!connected){
+                        databox.offConnect(dbConnectListener);
+                        socket.off('connect',socketConnectListener);
+                        reject(new AbortSignal());
+                        return true;
+                    }
+                    return false;
+                });
             }
 
             dbConnectListener = () => {
@@ -143,5 +167,66 @@ export default class ConnectionUtils {
                 catch (e) {}
             }
         });
+    }
+}
+
+const abortedName = 'ABORTED';
+
+/**
+ * Creates an abort trigger that can be used to cancel wait for connections.
+ */
+export class AbortTrigger {
+
+    private _aborted : boolean = false;
+    private _abortProcess : () => boolean;
+
+    constructor(){
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Abort the waitForConnect.
+     * Returns a boolean if it was successful.
+     * Notice that the target promise will reject an AbortSignal.
+     */
+    abort() : boolean {
+        if(!this._aborted && this._abortProcess){
+           return this._abortProcess();
+        }
+        return false;
+    }
+
+    /**
+     * This method is used internally.
+     * @param func
+     * @private
+     */
+    _setAbortProcess(func : () => boolean){
+        this._abortProcess = func;
+    }
+
+    /**
+     * Checks if the error is an abort signal.
+     * @param err
+     */
+    static isAbortSignal(err : any) : boolean {
+        return err && err.name === abortedName;
+    }
+
+    /**
+     * Cast a value to an instance of this class.
+     * That can be useful if you are programming in javascript,
+     * but the IDE can interpret the typescript information of this library.
+     * @param value
+     */
+    static cast(value : any) : AbortTrigger {
+        return value as AbortTrigger;
+    }
+}
+
+export class AbortSignal extends Error {
+    constructor(){
+        super('Aborted');
+        this.name = abortedName;
     }
 }

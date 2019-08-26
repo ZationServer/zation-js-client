@@ -114,7 +114,7 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble
     // noinspection JSUnusedGlobalSymbols
     /**
      * With the WaitForConnection option, you can activate that the socket is
-     * trying to connect when it is not connected. You have four possible choices:
+     * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options.
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
@@ -124,6 +124,7 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
+     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      * This options is only used in the WebSocket protocol.
      * @param waitForConnection
      * @default undefined
@@ -335,7 +336,7 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble
     /**
      * @description
      * Send the request and returns the response after trigger the reactions from the build.
-     * @throws ConnectionRequiredError,TimeoutError
+     * @throws ConnectionRequiredError,TimeoutError,AbortSignal
      * @param triggerZationBoxes
      * Specifies if the zation response boxes are triggerd.
      * The default value is true if at least one reaction is added in the requestBuilder.
