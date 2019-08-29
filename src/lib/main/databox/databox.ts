@@ -307,7 +307,7 @@ export default class Databox implements DbEditAble {
             }
 
             if (this.dbOptions.autoFetch) {
-                await this.fetchData(this.dbOptions.autoFetchData);
+                await this.fetch(this.dbOptions.autoFetchData);
             }
         } else {
             if (!this.connected) {
@@ -464,7 +464,7 @@ export default class Databox implements DbEditAble {
      * @throws ConnectionRequiredError,TimeoutError,RawError,InvalidInputError,AbortSignal
      * To react to the error, you can use the DbError class.
      */
-    async fetchData(data ?: any, waitForDbConnection: WaitForConnectionOption = undefined, addToHistory : boolean = true): Promise<void> {
+    async fetch(data ?: any, waitForDbConnection: WaitForConnectionOption = undefined, addToHistory : boolean = true): Promise<void> {
 
         waitForDbConnection = waitForDbConnection === undefined ?
             this.dbOptions.waitForDbConnection : waitForDbConnection;
@@ -473,7 +473,7 @@ export default class Databox implements DbEditAble {
         (this, this.zation, waitForDbConnection, 'To fetch new data.');
 
         try {
-            const resp = await this._fetchData(data, DBClientInputSessionTarget.mainSession);
+            const resp = await this._fetch(data, DBClientInputSessionTarget.mainSession);
 
             if(addToHistory){
                 this.fetchHistoryManager.pushHistorySuccess(resp.c, data, resp.d);
@@ -507,11 +507,11 @@ export default class Databox implements DbEditAble {
      * @param sessionTarget
      * @private
      */
-    private async _fetchData(input: any, sessionTarget: DBClientInputSessionTarget): Promise<DbClientInputFetchResponse> {
+    private async _fetch(input: any, sessionTarget: DBClientInputSessionTarget): Promise<DbClientInputFetchResponse> {
         return new Promise<DbClientInputFetchResponse>((resolve, reject) => {
             this.socket.emit(this.inputChannel, {
                 i: input,
-                a: DbClientInputAction.fetchData,
+                a: DbClientInputAction.fetch,
                 t: sessionTarget
             } as DbClientInputFetchPackage, (err, res: DbClientInputFetchResponse) => {
                 if (err) {
@@ -535,7 +535,7 @@ export default class Databox implements DbEditAble {
             promises.push((async () => {
                 // noinspection DuplicatedCode
                 try {
-                    const fetchResult = await this._fetchData(history[i].input, DBClientInputSessionTarget.reloadSession);
+                    const fetchResult = await this._fetch(history[i].input, DBClientInputSessionTarget.reloadSession);
                     const dbsHead = new DbsHead(fetchResult.d);
                     results[fetchResult.c] = dbsHead;
                     this.tmpReloadDataSets.add(dbsHead);
@@ -560,7 +560,7 @@ export default class Databox implements DbEditAble {
         for (let i = 0; i < history.length; i++) {
             // noinspection DuplicatedCode
             try {
-                const fetchResult = await this._fetchData(history[i].input, DBClientInputSessionTarget.reloadSession);
+                const fetchResult = await this._fetch(history[i].input, DBClientInputSessionTarget.reloadSession);
                 const dbsHead = new DbsHead(fetchResult.d);
                 results[fetchResult.c] = dbsHead;
                 this.tmpReloadDataSets.add(dbsHead);
