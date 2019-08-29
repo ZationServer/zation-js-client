@@ -138,7 +138,7 @@ export default class DataboxBuilder {
      * then the method will return a promise with the connected databox.
      * Otherwise, it returns the unconnected databox, but synchronous.
      */
-    get(autoConnect ?: boolean) : Promise<Databox>
+    get(autoConnect ?: boolean) : Databox
     /**
      * Get the built databox.
      * @param autoConnect
@@ -155,7 +155,7 @@ export default class DataboxBuilder {
      * Otherwise, it returns the unconnected databox, but synchronous.
      */
     get(autoConnect : false) : Databox
-    get(autoConnect : boolean = true) : Databox | Promise<Databox> {
+    get(autoConnect : boolean = false) : Databox | Promise<Databox> {
         const databox = new Databox(this.zation,this.dbOptions,this.name,this.id);
         if(autoConnect){
             return new Promise<Databox>(async (resolve, reject) => {
