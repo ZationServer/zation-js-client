@@ -22,6 +22,7 @@ import {
     DbClientOutputKickOutPackage,
     DbClientOutputPackage,
     DbClientOutputReloadPackage,
+    DbClientOutputSignalPackage,
     IfContainsOption,
     InfoOption,
     TimestampOption
@@ -40,6 +41,7 @@ import {InvalidInputError}                        from "../../main/error/invalid
 import afterPromise                               from "../utils/promiseUtils";
 import DbCudOperationSequence                     from "./dbCudOperationSequence";
 import {DbEditAble}                               from "./dbEditAble";
+import {TinyEmitter}                              from "tiny-emitter";
 
 export interface DataboxOptions {
     /**
@@ -130,6 +132,7 @@ type OnClose       = (code : number | string | undefined,data : any) => void | P
 type OnReload      = (code : number | string | undefined,data : any) => void | Promise<void>
 type OnCud         = (cudPackage : CudPackage) => void | Promise<void>
 type OnNewData     = (db : Databox) => void | Promise<void>
+type OnSignal      = (data : any) => void | Promise<void>
 
 export default class Databox implements DbEditAble {
 
@@ -144,6 +147,7 @@ export default class Databox implements DbEditAble {
     private readonly tmpReloadDataSets: Set<DbsHead> = new Set<DbsHead>();
     private readonly fetchHistoryManager: DbFetchHistoryManager = new DbFetchHistoryManager();
     private readonly tmpReloadStroage: DbStorage;
+    private readonly signalEmitter : TinyEmitter = new TinyEmitter();
 
     private readonly initData: any;
 
@@ -799,6 +803,10 @@ export default class Databox implements DbEditAble {
                     this._processCudPackage(cudPackage);
                     this.cudEvent.emit(cudPackage);
                     break;
+                case DbClientOutputEvent.signal:
+                    const signalPackage = (outputPackage as DbClientOutputSignalPackage);
+                    this.signalEmitter.emit(signalPackage.s, signalPackage.d);
+                    break;
                 case DbClientOutputEvent.close:
                     const closePackage = (outputPackage as DbClientOutputClosePackage);
                     await this._close(closePackage.c, closePackage.d);
@@ -1416,6 +1424,42 @@ export default class Databox implements DbEditAble {
      */
     offDataTouch(listener : OnDataTouch) : Databox {
         this.mainDbStorage.offDataTouch(listener);
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Adds a listener that gets triggered
+     * whenever this Databox receives a specific signal.
+     * @param signal
+     * @param listener
+     */
+    onSignal(signal : string,listener : OnSignal) : Databox {
+        this.signalEmitter.on(signal,listener);
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Adds a once listener that gets triggered
+     * when this Databox receives a specific signal.
+     * @param signal
+     * @param listener
+     */
+    onceSignal(signal : string,listener : OnSignal) : Databox {
+        this.signalEmitter.once(signal,listener);
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Removes a listener or all listeners of specific signal event.
+     * Can be a once or normal listener.
+     * @param signal
+     * @param listener
+     */
+    offSignal(signal : string,listener ?: OnSignal) : Databox {
+        this.signalEmitter.off(signal,listener);
         return this;
     }
 

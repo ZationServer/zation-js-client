@@ -99,7 +99,8 @@ export const enum DbClientOutputEvent {
     cud,
     close,
     reload,
-    kickOut
+    kickOut,
+    signal
 }
 
 /**
@@ -235,6 +236,24 @@ export interface DbClientOutputKickOutPackage extends DbClientOutputPackage{
      * action
      */
     a : DbClientOutputEvent.kickOut,
+    /**
+     * data
+     */
+    d ?: any
+}
+
+/**
+ * Signal package that the server can send to the clients.
+ */
+export interface DbClientOutputSignalPackage extends DbClientOutputPackage{
+    /**
+     * action
+     */
+    a : DbClientOutputEvent.signal,
+    /**
+     * signal
+     */
+    s : string
     /**
      * data
      */
