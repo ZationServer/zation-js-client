@@ -140,14 +140,14 @@ export abstract class ZationRequest extends SendAble
         this.waitForConnection = value;
     }
 
-    async preCompile() {
+    async precompile() {
         this.compiledData = this.compileValueData(this.data);
     }
 
     async getCompiledData(): Promise<any>
     {
         if(this.compiledData === undefined) {
-            await this.preCompile();
+            await this.precompile();
         }
         return this.compiledData;
     }
