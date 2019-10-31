@@ -23,9 +23,11 @@ import {
     DbClientOutputPackage,
     DbClientOutputReloadPackage,
     DbClientOutputSignalPackage,
+    DbCudProcessedSelector,
+    DbCudSelector, DeleteArgs,
     IfContainsOption,
-    InfoOption,
-    TimestampOption
+    InfoOption, InsertArgs, PotentialInsertOption, PotentialUpdateOption,
+    TimestampOption, UpdateArgs
 } from "./dbDefinitions";
 import DbStorage, {DbStorageOptions, OnDataChange, OnDataTouch} from "./storage/dbStorage";
 import DbFetchHistoryManager, {FetchHistoryItem}  from "./dbFetchHistoryManager";
@@ -42,6 +44,7 @@ import afterPromise                               from "../utils/promiseUtils";
 import DbCudOperationSequence                     from "./dbCudOperationSequence";
 import {DbEditAble}                               from "./dbEditAble";
 import {TinyEmitter}                              from "tiny-emitter";
+import {createSimpleModifyToken} from "./storage/components/modifyToken";
 
 export interface DataboxOptions {
     /**
@@ -741,28 +744,32 @@ export default class Databox implements DbEditAble {
         }
         for (let i = 0; i < operations.length; i++) {
             const operation = operations[i];
-            const {k, v, c, d} = operation;
+            const {s, v, c, d} = operation;
             switch (operation.t) {
                 case CudType.update:
-                    this.update(k, v, {
-                        timestamp,
-                        code: c,
-                        data: d
-                    });
-                    break;
-                case CudType.insert:
-                    this.insert(k, v, {
+                    this._update(s, v, {
                         timestamp,
                         code: c,
                         data: d,
-                        ifContains: operation.i
+                        ifContains: operation.i,
+                        potentialInsert: !!operation.p
+                    });
+                    break;
+                case CudType.insert:
+                    this._insert(s, v, {
+                        timestamp,
+                        code: c,
+                        data: d,
+                        ifContains: operation.i,
+                        potentialUpdate: !!operation.p
                     });
                     break;
                 case CudType.delete:
-                    this.delete(k, {
+                    this._delete(s, {
                         timestamp,
                         code: c,
-                        data: d
+                        data: d,
+                        ifContains: operation.i,
                     });
                     break;
             }
@@ -856,7 +863,7 @@ export default class Databox implements DbEditAble {
      * So if the Databox reloads the data or resets the changes are lost.
      * Insert behavior:
      * Without ifContains (ifContains exists):
-     * Base (with keyPath [] or '') -> Nothing
+     * Base (with selector [] or '') -> Nothing
      * KeyArray -> Inserts the value at the end with the key
      * (if the key does not exist). But if you are using a compare function,
      * it will insert the value in the correct position.
@@ -864,29 +871,46 @@ export default class Databox implements DbEditAble {
      * Array -> Key will be parsed to int if it is a number then it will be inserted at the index.
      * Otherwise, it will be added at the end.
      * With ifContains (ifContains exists):
-     * Base (with keyPath [] or '') -> Nothing
+     * Base (with selector [] or '') -> Nothing
      * KeyArray -> Inserts the value before the ifContains element with the key
      * (if the key does not exist). But if you are using a compare function,
      * it will insert the value in the correct position.
      * Object -> Inserts the value with the key (if the key does not exist).
      * Array -> Key will be parsed to int if it is a number then it will be inserted at the index.
      * Otherwise, it will be added at the end.
-     * @param keyPath
-     * The keyPath can be a string array or a
-     * string where you can separate the keys with a dot.
+     * @param selector
+     * The selector can be a direct key-path,
+     * can contain filter queries (by using the forint library)
+     * or it can select all items with '*'.
+     * If you use a string as a param type,
+     * you need to notice that it will be split into a path by dots.
+     * All numeric values will be converted to a string because the key can only be a string.
      * @param value
      * @param options
      */
-    insert(keyPath: string[] | string, value: any, options: IfContainsOption & InfoOption & TimestampOption = {}): Databox {
+    insert(selector: DbCudSelector, value: any, options: IfContainsOption & PotentialUpdateOption & InfoOption & TimestampOption = {}): Databox {
+        options.timestamp = DbUtils.processTimestamp(options.timestamp);
+        this._insert(DbUtils.processSelector(selector),value,options as (InsertArgs & InfoOption));
+        return this;
+    }
+
+    /**
+     * Internal used insert method.
+     * Please use the normal method without a pre underscore.
+     * @param selector
+     * @param value
+     * @param options
+     * @private
+     */
+    _insert(selector: DbCudProcessedSelector, value: any, options: InsertArgs & InfoOption): void {
         for (let dbStorage of this.dbStorages) {
-            dbStorage.insert(keyPath, value, options);
+            // @ts-ignore
+            dbStorage._insert(selector, value, options);
         }
-        keyPath = DbUtils.handleKeyPath(keyPath);
         for (let dataSet of this.tmpReloadDataSets) {
-            dataSet.insert(keyPath, value, DbUtils.processTimestamp(options.timestamp), options.ifContains);
+            dataSet.insert(selector, value, options, createSimpleModifyToken());
         }
         this.newDataEvent.emit(this);
-        return this;
     }
 
     /**
@@ -896,27 +920,44 @@ export default class Databox implements DbEditAble {
      * that this operation is not done on the server-side.
      * So if the Databox reloads the data or resets the changes are lost.
      * Update behavior:
-     * Base (with keyPath [] or '') -> Updates the complete structure.
+     * Base (with selector [] or '') -> Updates the complete structure.
      * KeyArray -> Updates the specific value (if the key does exist).
      * Object -> Updates the specific value (if the key does exist).
      * Array -> Key will be parsed to int if it is a number it will
      * update the specific value (if the index exist).
-     * @param keyPath
-     * The keyPath can be a string array or a
-     * string where you can separate the keys with a dot.
+     * @param selector
+     * The selector can be a direct key-path,
+     * can contain filter queries (by using the forint library)
+     * or it can select all items with '*'.
+     * If you use a string as a param type,
+     * you need to notice that it will be split into a path by dots.
+     * All numeric values will be converted to a string because the key can only be a string.
      * @param value
      * @param options
      */
-    update(keyPath: string[] | string, value: any, options: InfoOption & TimestampOption = {}): Databox {
+    update(selector: DbCudSelector, value: any, options: IfContainsOption & PotentialInsertOption & InfoOption & TimestampOption = {}): Databox {
+        options.timestamp = DbUtils.processTimestamp(options.timestamp);
+        this._update(DbUtils.processSelector(selector),value,options as (UpdateArgs & InfoOption));
+        return this;
+    }
+
+    /**
+     * Internal used update method.
+     * Please use the normal method without a pre underscore.
+     * @param selector
+     * @param value
+     * @param options
+     * @private
+     */
+    _update(selector: DbCudProcessedSelector, value: any, options: UpdateArgs & InfoOption): void {
         for (let dbStorage of this.dbStorages) {
-            dbStorage.update(keyPath, value, options);
+            // @ts-ignore
+            dbStorage._update(selector, value, options);
         }
-        keyPath = DbUtils.handleKeyPath(keyPath);
         for (let dataSet of this.tmpReloadDataSets) {
-            dataSet.update(keyPath, value, DbUtils.processTimestamp(options.timestamp),false);
+            dataSet.update(selector, value, options, createSimpleModifyToken());
         }
         this.newDataEvent.emit(this);
-        return this;
     }
 
     /**
@@ -926,26 +967,42 @@ export default class Databox implements DbEditAble {
      * that this operation is not done on the server-side.
      * So if the Databox reloads the data or resets the changes are lost.
      * Delete behavior:
-     * Base (with keyPath [] or '') -> Deletes the complete structure.
+     * Base (with selector [] or '') -> Deletes the complete structure.
      * KeyArray -> Deletes the specific value (if the key does exist).
      * Object -> Deletes the specific value (if the key does exist).
      * Array -> Key will be parsed to int if it is a number it will delete the
      * specific value (if the index does exist). Otherwise, it will delete the last item.
-     * @param keyPath
-     * The keyPath can be a string array or a
-     * string where you can separate the keys with a dot.
+     * @param selector
+     *The selector can be a direct key-path,
+     * can contain filter queries (by using the forint library)
+     * or it can select all items with '*'.
+     * If you use a string as a param type,
+     * you need to notice that it will be split into a path by dots.
+     * All numeric values will be converted to a string because the key can only be a string.
      * @param options
      */
-    delete(keyPath: string[] | string, options: InfoOption & TimestampOption = {}): Databox {
+    delete(selector: DbCudSelector, options: IfContainsOption & InfoOption & TimestampOption = {}): Databox {
+        options.timestamp = DbUtils.processTimestamp(options.timestamp);
+        this._delete(DbUtils.processSelector(selector),options as (DeleteArgs & InfoOption));
+        return this;
+    }
+
+    /**
+     * Internal used delete method.
+     * Please use the normal method without a pre underscore.
+     * @param selector
+     * @param options
+     * @private
+     */
+    _delete(selector: DbCudProcessedSelector, options: DeleteArgs & InfoOption): void {
         for (let dbStorage of this.dbStorages) {
-            dbStorage.delete(keyPath, options);
+            // @ts-ignore
+            dbStorage._delete(selector, options);
         }
-        keyPath = DbUtils.handleKeyPath(keyPath);
         for (let dataSet of this.tmpReloadDataSets) {
-            dataSet.delete(keyPath, DbUtils.processTimestamp(options.timestamp));
+            dataSet.delete(selector, options, createSimpleModifyToken());
         }
         this.newDataEvent.emit(this);
-        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -960,6 +1017,7 @@ export default class Databox implements DbEditAble {
      * Use this option only if you know what you are doing.
      */
     seqEdit(timestamp ?: number) : DbCudOperationSequence {
+        timestamp = DbUtils.processTimestamp(timestamp);
         return new DbCudOperationSequence( (operations) => {
             for (let dbStorage of this.dbStorages) {
                 dbStorage.startCudSeq();

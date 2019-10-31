@@ -5,7 +5,7 @@ Copyright(c) Luca Scaringella
  */
 
 import {DbEditAble}            from "./dbEditAble";
-import {CudOperation, CudType} from "./dbDefinitions";
+import {CudOperation, CudType, DbCudProcessedSelector, DbCudSelector} from "./dbDefinitions";
 
 export default class DbUtils {
 
@@ -37,9 +37,10 @@ export default class DbUtils {
         return timestamp === undefined ? Date.now() : timestamp;
     }
 
-    static handleKeyPath(keyPath : string | string[]) : string[] {
-        return typeof keyPath === 'string' ?
-            (keyPath === '' ? [] : keyPath.split('.')) : keyPath;
+    static processSelector(selector : DbCudSelector) : DbCudProcessedSelector {
+        if(Array.isArray(selector)) return selector.map((v) => typeof v === 'number' ? v.toString() : v);
+        else if (typeof selector === 'string') return (selector === '' ? [] : selector.split('.'));
+        return [typeof selector === 'number' ? selector.toString() : selector];
     }
 
     /**
@@ -55,16 +56,19 @@ export default class DbUtils {
             operation = operations[i];
             switch (operation.t) {
                 case CudType.insert:
-                    target.insert(operation.k,operation.v,
-                        {code : operation.c,data : operation.d,timestamp,ifContains : operation.i});
+                    target._insert(operation.s,operation.v,
+                        {code : operation.c,data : operation.d,timestamp,
+                            ifContains : operation.i,potentialUpdate : !!operation.p});
                     break;
                 case CudType.update:
-                    target.update(operation.k,operation.v,
-                        {code : operation.c,data : operation.d,timestamp});
+                    target._update(operation.s,operation.v,
+                        {code : operation.c,data : operation.d,timestamp,
+                            ifContains : operation.i,potentialInsert : !!operation.p});
                     break;
                 case CudType.delete:
-                    target.delete(operation.k,
-                        {code : operation.c,data : operation.d,timestamp});
+                    target._delete(operation.s,
+                        {code : operation.c,data : operation.d,timestamp,
+                            ifContains : operation.i});
                     break;
             }
         }

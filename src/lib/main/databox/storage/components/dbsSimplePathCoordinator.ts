@@ -4,9 +4,30 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import DbsComponent, {ModifyLevel} from "./dbsComponent";
+import DbsComponent  from "./dbsComponent";
+import forint        from "forint";
+import {ModifyToken} from "./modifyToken";
+import {
+    DbCudProcessedSelector,
+    DbCudProcessedSelectorItem,
+    DbForintQuery, DeleteArgs,
+    InsertArgs, UpdateArgs
+} from "../../dbDefinitions";
 
 export default abstract class DbsSimplePathCoordinator {
+
+    /**
+     * Returns all keys.
+     * @private
+     */
+    abstract _getAllKeys() : string[];
+
+    /**
+     * Returns the data value of the key.
+     * @param key
+     * @private
+     */
+    abstract _getValue(key : string) : any;
 
     /**
      * Returns the dbs component on this
@@ -15,22 +36,86 @@ export default abstract class DbsSimplePathCoordinator {
      */
     abstract _getDbsComponent(key : string) : DbsComponent | undefined;
 
-    /**
-     * Returns the dbs component on that path.
-     * @param keyPath
-     */
-    getDbsComponent(keyPath : string[]) : DbsComponent | undefined {
-        if(keyPath.length === 1){
-            return this._getDbsComponent(keyPath[0]);
-        }
-        else if(keyPath.length > 1){
-            const nextComponent = this._getDbsComponent(keyPath[0]);
-            if(nextComponent){
-                keyPath.shift();
-                return (nextComponent as DbsComponent).getDbsComponent(keyPath);
+    queryForEachKey(forintQuery : DbForintQuery, func : (key : string) => void) : void {
+        const keysTmp = this._getAllKeys();
+        const keysLegth = keysTmp.length;
+        const keyQuery = forintQuery.key;
+        const valueQuery = forintQuery.value;
+        if(keyQuery || valueQuery){
+            const keyQueryFunc = keyQuery ? forint(keyQuery) : undefined;
+            const valueQueryFunc = valueQuery ? forint(valueQuery) : undefined;
+            let tmpKey;
+            for(let i = 0; i < keysLegth; i++){
+                tmpKey = keysTmp[i];
+                if((!keyQueryFunc || keyQueryFunc(tmpKey)) && (!valueQueryFunc || valueQueryFunc(this._getValue(tmpKey)))) {
+                    func(tmpKey);
+                }
             }
         }
-        return undefined;
+        for(let i = 0; i < keysLegth; i++){func(keysTmp[i]);}
+    }
+
+    findItem(forintQuery : DbForintQuery) : string | undefined {
+        const keysTmp = this._getAllKeys();
+        const keysLegth = keysTmp.length;
+        const keyQuery = forintQuery.key;
+        const valueQuery = forintQuery.value;
+        if(keyQuery || valueQuery){
+            const keyQueryFunc = keyQuery ? forint(keyQuery) : undefined;
+            const valueQueryFunc = valueQuery ? forint(valueQuery) : undefined;
+            let tmpKey;
+            for(let i = 0; i < keysLegth; i++){
+                tmpKey = keysTmp[i];
+                if((!keyQueryFunc || keyQueryFunc(tmpKey)) && (!valueQueryFunc || valueQueryFunc(this._getValue(tmpKey))))
+                    return tmpKey;
+            }
+            return undefined;
+        }
+        return keysLegth > 0 ? keysTmp[0] : undefined;
+    }
+
+    /**
+     * Returns all dbsComponents with a single selector item.
+     * @param selectorItem
+     */
+    _getDbsComponents(selectorItem : DbCudProcessedSelectorItem) : DbsComponent[] {
+        if(typeof selectorItem === 'string'){
+            const component = this._getDbsComponent(selectorItem);
+            if(component) return [component];
+        }
+        else {
+            const components : DbsComponent[] = [];
+            let tmpComponent;
+            let i = 0;
+            this.queryForEachKey(selectorItem,(k) => {
+                tmpComponent = this._getDbsComponent(k);
+                if(tmpComponent) {
+                    components[i] = tmpComponent;
+                    i++;
+                }
+            });
+            return components;
+        }
+        return [];
+    }
+
+    /**
+     * Returns all dbsComponents with selector.
+     * @param selector
+     */
+    getDbsComponents(selector : DbCudProcessedSelector) : DbsComponent[] {
+        if(selector.length === 1){
+            return this._getDbsComponents(selector[0]);
+        }
+        else if(selector.length > 1){
+            const nextComponents = this._getDbsComponents(selector[0]);
+            selector.shift();
+            const res : DbsComponent[] = [];
+            const len = nextComponents.length;
+            for(let i = 0; i < len; i++) res.push(...(nextComponents[i] as DbsComponent).getDbsComponents(selector));
+            return res;
+        }
+        return [];
     }
 
     /**
@@ -38,32 +123,40 @@ export default abstract class DbsSimplePathCoordinator {
      * @return if the action was fully executed. (Data changed)
      * @param key
      * @param value
-     * @param timestamp
-     * @param ifContains
+     * @param args
+     * @param mt
      * @private
      */
-    abstract _insert(key : string, value : any, timestamp : number,ifContains ?: string) : boolean;
+    abstract _insert(key : string, value : any, args : InsertArgs, mt : ModifyToken): void;
 
     /**
      * Insert coordinator.
      * @return if the action was fully executed. (Data changed)
-     * @param keyPath
+     * @param selector
      * @param value
-     * @param timestamp
-     * @param ifContains
+     * @param args
+     * @param mt
      */
-    insert(keyPath : string[], value : any, timestamp : number,ifContains ?: string): boolean {
-        if(keyPath.length === 1){
-            return this._insert(keyPath[0],value,timestamp,ifContains);
-        }
-        else if(keyPath.length > 1){
-            const nextComponent = this._getDbsComponent(keyPath[0]);
-            if(nextComponent){
-                keyPath.shift();
-                return (nextComponent as DbsComponent).insert(keyPath,value,timestamp,ifContains);
+    insert(selector : DbCudProcessedSelector, value : any, args : InsertArgs, mt : ModifyToken): void
+    {
+        if(selector.length === 1){
+            if(typeof selector[0] === 'string'){
+                this._insert(selector[0] as string,value,args,mt);
+            }
+            else {
+                //can be used as a update with PotentialUpdate
+                this.queryForEachKey(selector[0] as DbForintQuery,(k) =>
+                    this._insert(k,value,args,mt));
             }
         }
-        return false;
+        else if(selector.length > 1){
+            const nextComponents = this._getDbsComponents(selector[0]);
+            selector.shift();
+            const len = nextComponents.length;
+            for(let i = 0; i < len; i++) {
+                (nextComponents[i] as DbsComponent).insert(selector,value,args,mt);
+            }
+        }
     }
 
     /**
@@ -71,61 +164,76 @@ export default abstract class DbsSimplePathCoordinator {
      * @return the modify level.
      * @param key
      * @param value
-     * @param timestamp
-     * @param checkDataChange
+     * @param args
+     * @param mt
      * @private
      */
-    abstract _update(key : string, value : any, timestamp : number,checkDataChange : boolean) : ModifyLevel;
+    abstract _update(key : string, value : any, args : UpdateArgs, mt : ModifyToken): void;
 
     /**
      * Update coordinator.
      * @return the modify level.
-     * @param keyPath
+     * @param selector
      * @param value
-     * @param timestamp
-     * @param checkDataChange
+     * @param args
+     * @param mt
      */
-    update(keyPath : string[], value : any, timestamp : number,checkDataChange : boolean): ModifyLevel {
-        if(keyPath.length === 1){
-            return this._update(keyPath[0],value,timestamp,checkDataChange);
-        }
-        else if(keyPath.length > 1){
-            const nextComponent = this._getDbsComponent(keyPath[0]);
-            if(nextComponent){
-                keyPath.shift();
-                return (nextComponent as DbsComponent).update(keyPath,value,timestamp,checkDataChange);
+    update(selector : DbCudProcessedSelector, value : any, args : UpdateArgs, mt : ModifyToken): void
+    {
+        if(selector.length === 1){
+            if(typeof selector[0] === 'string'){
+                this._update(selector[0] as string,value,args,mt);
+            }
+            else {
+                this.queryForEachKey(selector[0] as DbForintQuery,(k) =>
+                    this._update(k,value,args,mt));
             }
         }
-        return ModifyLevel.NOTHING;
+        else if(selector.length > 1){
+            const nextComponents = this._getDbsComponents(selector[0]);
+            selector.shift();
+            const len = nextComponents.length;
+            for(let i = 0; i < len; i++) {
+                (nextComponents[i] as DbsComponent).update(selector,value,args,mt);
+            }
+        }
     }
 
     /**
      * The delete process.
      * @return if the action was fully executed. (Data changed)
      * @param key
-     * @param timestamo
+     * @param args
+     * @param mt
      * @private
      */
-    abstract _delete(key : string, timestamo : number) : boolean;
+    abstract _delete(key : string, args : DeleteArgs, mt : ModifyToken): void;
 
     /**
      * Delete coordinator.
      * @return if the action was fully executed. (Data changed)
-     * @param keyPath
-     * @param timestamp
+     * @param selector
+     * @param args
+     * @param mt
      */
-    delete(keyPath : string[], timestamp : number): boolean {
-        if(keyPath.length === 1){
-            return this._delete(keyPath[0],timestamp);
-        }
-        else if(keyPath.length > 1){
-            const nextComponent = this._getDbsComponent(keyPath[0]);
-            if(nextComponent){
-                keyPath.shift();
-                return nextComponent.delete(keyPath,timestamp);
+    delete(selector : DbCudProcessedSelector, args : DeleteArgs, mt : ModifyToken): void {
+        if(selector.length === 1){
+            if(typeof selector[0] === 'string'){
+                this._delete(selector[0] as string,args,mt);
+            }
+            else {
+                this.queryForEachKey(selector[0] as DbForintQuery,(k) =>
+                    this._delete(k,args,mt));
             }
         }
-        return false;
+        else if(selector.length > 1){
+            const nextComponents = this._getDbsComponents(selector[0]);
+            selector.shift();
+            const len = nextComponents.length;
+            for(let i = 0; i < len; i++){
+                (nextComponents[i] as DbsComponent).delete(selector,args,mt);
+            }
+        }
     }
 
 }

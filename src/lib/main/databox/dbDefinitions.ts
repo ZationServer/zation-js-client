@@ -4,6 +4,8 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
+import {ForintQuery} from "forint";
+
 export interface DataboxConnectReq {
     /**
      * databox (name)
@@ -136,9 +138,9 @@ export interface CudOperation {
      */
     t : CudType,
     /**
-     * keyPath
+     * selector
      */
-    k : string[],
+    s : DbCudProcessedSelector,
     /**
      * value
      */
@@ -154,7 +156,11 @@ export interface CudOperation {
     /**
      * ifContains
      */
-    i ?: string;
+    i ?: DbForintQuery;
+    /**
+     * potential Insert/Update
+     */
+    p ?: 0 | 1;
 }
 
 /**
@@ -304,10 +310,47 @@ export interface TimestampOption {
 export interface IfContainsOption {
     /**
      * The ifContains option gives you the possibility to define a condition
-     * that the client only inserts the value when it has data with that specific key.
-     * That can be useful if you want to reinsert old data,
+     * that the client only does the action when it has data that matches with a specific query.
+     * For example, it can be useful if you want to reinsert old data,
      * but only to the clients that are already loaded this old data section.
      * Notice also that in some cases the insertion sequence is changed.
      */
-    ifContains ?: string
+    ifContains ?: DbForintQuery
 }
+
+export interface PotentialUpdateOption {
+    /**
+     * With the potentialUpdate option, you indicate that the insert is potential an update.
+     * For example, when the key already exists,
+     * the client will update the value instead of insert.
+     */
+    potentialUpdate ?: boolean
+}
+
+export interface PotentialInsertOption {
+    /**
+     * With the potentialInsert option, you indicate that the update is potential an insert.
+     * For example, when the key does not exist,
+     * the client will insert the value instead of update.
+     * Notice that the potentialInsert only works when the path selector ends on a specific key.
+     */
+    potentialInsert ?: boolean
+}
+
+export type InsertArgs = Required<TimestampOption> & IfContainsOption & PotentialUpdateOption;
+export type UpdateArgs = Required<TimestampOption> & IfContainsOption & PotentialInsertOption;
+export type DeleteArgs = Required<TimestampOption> & IfContainsOption;
+
+/**
+ * Forint queries with the databox.
+ */
+export type DbForintQuery = {key ?: ForintQuery,value ?: ForintQuery};
+
+/**
+ * Selector types for cud operations.
+ */
+export type DbCudProcessedSelectorItem = string | DbForintQuery;
+export type DbCudProcessedSelector = DbCudProcessedSelectorItem[];
+
+type DbCudSelectorItem = string | number | DbForintQuery;
+export type DbCudSelector = DbCudSelectorItem | DbCudSelectorItem[];

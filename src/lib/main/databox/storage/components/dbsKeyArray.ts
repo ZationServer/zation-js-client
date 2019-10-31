@@ -4,14 +4,21 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import DbsComponent, {DbsComponentType, isDbsComponent, isDbsKeyArray, MergeResult, ModifyLevel} from "./dbsComponent";
-import DbDataParser                                         from "../dbDataParser";
-import DbUtils                                              from "../../dbUtils";
-import DbsSimplePathCoordinator                             from "./dbsSimplePathCoordinator";
-import {dbsMerger, DbsValueMerger, defaultValueMerger}      from "../dbsMergerUtils";
-import {DbsComparator}                                      from "../dbsComparator";
-import {RawKeyArray}                                        from "../keyArrayUtils";
-import {deepEqual}                                          from "../../../utils/deepEqual";
+import DbsComponent, {
+    DbsComponentType,
+    isDbsComponent,
+    isDbsKeyArray,
+    MergeResult,
+    ModifyLevel} from "./dbsComponent";
+import DbDataParser                                    from "../dbDataParser";
+import DbUtils                                         from "../../dbUtils";
+import DbsSimplePathCoordinator                        from "./dbsSimplePathCoordinator";
+import {dbsMerger, DbsValueMerger, defaultValueMerger} from "../dbsMergerUtils";
+import {DbsComparator}                                 from "../dbsComparator";
+import {RawKeyArray}                                   from "../keyArrayUtils";
+import {deepEqual}                                     from "../../../utils/deepEqual";
+import {DeleteArgs, InsertArgs, UpdateArgs}            from "../../dbDefinitions";
+import {ModifyToken}                                   from "./modifyToken";
 
 export default class DbsKeyArray extends DbsSimplePathCoordinator implements DbsComponent {
 
@@ -45,23 +52,23 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
 
         let item;
         let itemKey;
-        let tmpI;
+        let tmpIndex;
         let parsed;
         let i = 0;
         for(let j = 0; j < array.length; j++){
             item = array[j];
             if(typeof item === 'object'){
                 itemKey = item[rawKeyKey].toString();
-                tmpI = this.keyMap.get(itemKey);
-                if(tmpI === undefined){
-                    tmpI = i;
+                tmpIndex = this.keyMap.get(itemKey);
+                if(tmpIndex === undefined){
+                    tmpIndex = i;
                     this.keyMap.set(item[rawKeyKey].toString(),i);
                     i++;
                 }
 
                 parsed = DbDataParser.parse(withValue ? item[rawValueKey as string] : item);
-                this.componentStructure[tmpI] = parsed;
-                this.data[tmpI] = isDbsComponent(parsed) ? parsed.getData() : parsed;
+                this.componentStructure[tmpIndex] = parsed;
+                this.data[tmpIndex] = isDbsComponent(parsed) ? parsed.getData() : parsed;
             }
         }
     }
@@ -80,7 +87,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
             for (let [k, i] of this.keyMap.entries()){
                 tmpArray[i] = {i,k,v : this.data[i]};
             }
-            tmpArray.sort(((a, b) => (this.comparator as DbsComparator)(a.v,b.v)));
+            tmpArray.sort(((a, b) => (this.comparator as DbsComparator)(a.v,b.v,a.k,b.k)));
 
             let wrapper : {i : number,k : string,v : any};
             let targetIndex;
@@ -88,9 +95,10 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
             this.data.length = 0;
             const tmpComponentStructure = this.componentStructure.slice();
             this.componentStructure.length = 0;
-            for(let i = 0; i < tmpArray.length; i++){
+            const tmpArrayLength = tmpArray.length;
+            for(let i = 0; i < tmpArrayLength; i++){
                 wrapper = tmpArray[i];
-                dataChanged = dataChanged || wrapper.i !== i;
+                dataChanged = (wrapper.i !== i) || dataChanged;
                 targetIndex = wrapper.i;
                 this.keyMap.set(wrapper.k,i);
                 this.data[i] = tmpData[targetIndex];
@@ -99,6 +107,22 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
             return dataChanged;
         }
         return false;
+    }
+
+    /**
+     * Returns the index where the element should be sortd in.
+     * Only works if comparator is not undefined.
+     * @param key
+     * @param value
+     */
+    private getSortInIndex(key : string,value : any) {
+        let sortInIndex = -1;
+        for (let [mapK, mapI] of this.keyMap.entries()){
+            if((this.comparator as DbsComparator)(value,this.data[mapI],key,mapK) <= 0){
+                sortInIndex = mapI; break;
+            }
+        }
+        return sortInIndex;
     }
 
     /**
@@ -177,6 +201,24 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
     }
 
     /**
+     * Returns all keys.
+     * @private
+     */
+    _getAllKeys(): string[] {
+        return Array.from(this.keyMap.keys());
+    }
+
+    /**
+     * Returns the data value of the key.
+     * @param key
+     * @private
+     */
+    _getValue(key: string): any {
+        const index = this.keyMap.get(key);
+        return index !== undefined ? this.data[index] : undefined;
+    }
+
+    /**
      * Returns the dbs component on this
      * key or undefined if it not exists.
      * @param key
@@ -213,13 +255,20 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
     meregeWithNew(newValue: any) : MergeResult {
         if(isDbsKeyArray(newValue)){
             let mainDc : boolean = false;
+            let needResort : boolean = false;
+            let mergedDataValueTmp;
             newValue.forEachPair((key, value, componentValue, timestamp) => {
                 const index = this.keyMap.get(key);
                 if(index !== undefined){
                     const {mergedValue,dataChanged} = dbsMerger(this.componentStructure[index],componentValue,this.valueMerger);
                     mainDc = mainDc || dataChanged;
                     this.componentStructure[index] = mergedValue;
-                    this.data[index] = isDbsComponent(mergedValue) ? mergedValue.getData() : mergedValue;
+                    mergedDataValueTmp = isDbsComponent(mergedValue) ? mergedValue.getData() : mergedValue;
+                    this.data[index] = mergedDataValueTmp;
+
+                    if(dataChanged && this.hasCompartor && !needResort) { //resort?
+                        needResort = this.getSortInIndex(key,mergedDataValueTmp) !== index;
+                    }
                 }
                 else {
                     this.pushWithComponentValue(key,value,componentValue);
@@ -229,6 +278,8 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
                     this.timestampMap.set(key,timestamp);
                 }
             });
+            //value is changed when we resort.
+            if(needResort) this.sort();
             return {mergedValue : this,dataChanged : mainDc};
         }
         return {mergedValue : newValue,dataChanged : true};
@@ -257,8 +308,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
      */
     private pushWithComponentValue(key : string,value : any,componentValue : any) {
         if(this.hasCompartor){
-            const sortInIndex = this.data.findIndex((item) =>
-                (this.comparator as DbsComparator)(value,item) <= 0);
+            const sortInIndex = this.getSortInIndex(key,value);
 
             if(sortInIndex > -1){
                 this.pushBeforeWithComponentValue(sortInIndex,key,value,componentValue);
@@ -342,21 +392,33 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
      * @param value
      * @param timestamp
      * @param ifContains
+     * @param potentialUpdate
+     * @param mt
      * @private
      */
-    _insert(key: string, value: any, timestamp : number,ifContains ?: string): boolean {
-        if (!this.hasKey(key) && DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
+    _insert(key: string, value: any, {timestamp,ifContains,potentialUpdate} : InsertArgs, mt : ModifyToken): void
+    {
+        if(this.hasKey(key)) {
+            if(potentialUpdate){
+                mt.potential = true;
+                this._update(key,value,{timestamp,ifContains,potentialInsert : false},mt);
+                mt.potential = false;
+            }
+            return;
+        }
+
+        if (DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
             if(ifContains !== undefined){
-                if(!this.hasKey(ifContains)){return false;}
-                this.comparator === undefined ? this.pushBefore(ifContains,key,value) : this.push(key,value)
+                const ifContainsKey = this.findItem(ifContains);
+                if(ifContainsKey === undefined){return;}
+                this.comparator === undefined ? this.pushBefore(ifContainsKey,key,value) : this.push(key,value);
             }
             else {
                 this.push(key,value);
             }
             this.timestampMap.set(key,timestamp);
-            return true;
+            mt.level = ModifyLevel.DATA_CHANGED;
         }
-        return false;
     }
 
     /**
@@ -365,17 +427,32 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
      * @param key
      * @param value
      * @param timestamp
-     * @param checkDataChange
+     * @param ifContains
+     * @param potentialInsert
+     * @param mt
      * @private
      */
-    _update(key: string, value: any, timestamp : number,checkDataChange : boolean): ModifyLevel {
+    _update(key: string, value: any, {timestamp,ifContains,potentialInsert} : UpdateArgs, mt : ModifyToken): void
+    {
         const index = this.keyMap.get(key);
-        if (index !== undefined && DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
-            let ml = ModifyLevel.DATA_TOUCHED;
+
+        if(index === undefined){
+            if(potentialInsert){
+                mt.potential = true;
+                this._insert(key,value,{timestamp,ifContains,potentialUpdate : false},mt);
+                mt.potential = true;
+            }
+            return;
+        }
+
+        if(ifContains !== undefined && (this.findItem(ifContains) === undefined)){return;}
+
+        if (DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
+            mt.level = ModifyLevel.DATA_TOUCHED;
             const parsed = DbDataParser.parse(value);
             const newData = isDbsComponent(parsed) ? parsed.getData() : parsed;
-            if(checkDataChange && !deepEqual(newData,this.data[index])){
-                ml = ModifyLevel.DATA_CHANGED;
+            if(mt.checkDataChange && !deepEqual(newData,this.data[index as number])){
+                mt.level = ModifyLevel.DATA_CHANGED;
             }
             if(this.hasCompartor){
                 //sort in the correct position
@@ -383,13 +460,11 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
                 this.pushWithComponentValue(key,newData,parsed);
             }
             else {
-                this.componentStructure[index] = parsed;
-                this.data[index] = newData;
+                this.componentStructure[index as number] = parsed;
+                this.data[index as number] = newData;
             }
             this.timestampMap.set(key,timestamp);
-            return ml;
         }
-        return ModifyLevel.NOTHING;
     }
 
     /**
@@ -397,15 +472,20 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
      * @return if the action was fully executed. (Data changed)
      * @param key
      * @param timestamp
+     * @param ifContains
+     * @param mt
      * @private
      */
-    _delete(key: string, timestamp : number): boolean {
-        if (this.hasKey(key) && DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
+    _delete(key: string, {timestamp,ifContains} : DeleteArgs, mt : ModifyToken): void {
+        if(!this.hasKey(key)) return;
+
+        if(ifContains !== undefined && (this.findItem(ifContains) === undefined)){return;}
+
+        if (DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
             this.deleteValue(key);
             this.timestampMap.set(key,timestamp);
-            return true;
+            mt.level = ModifyLevel.DATA_CHANGED;
         }
-        return false;
     }
 
     /**

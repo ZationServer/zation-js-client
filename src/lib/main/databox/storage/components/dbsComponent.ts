@@ -8,8 +8,10 @@ import {DbsValueMerger}  from "../dbsMergerUtils";
 import DbsObject         from "./dbsObject";
 import DbsArray          from "./dbsArray";
 import DbsKeyArray       from "./dbsKeyArray";
-import {DbsComparator}       from "../dbsComparator";
+import {DbsComparator}   from "../dbsComparator";
 import DbsHead           from "./dbsHead";
+import {ModifyToken}     from "./modifyToken";
+import {DbCudProcessedSelector, DeleteArgs, InsertArgs, UpdateArgs} from "../../dbDefinitions";
 
 export default interface DbsComponent {
 
@@ -17,27 +19,28 @@ export default interface DbsComponent {
     dbsComponentType : DbsComponentType;
 
     /**
-     * @return if the action was fully executed. (Data changed)
-     * @param keyPath
+     * @return the modify level.
+     * @param selector
      * @param value
-     * @param timestamp
-     * @param ifContains
+     * @param args
+     * @param mt
      */
-    insert(keyPath : string[], value : any,timestamp : number,ifContains ?: string) : boolean;
+    insert(selector : DbCudProcessedSelector, value : any,  args : InsertArgs, mt : ModifyToken): void;
     /**
      * @return the modify level.
-     * @param keyPath
+     * @param selector
      * @param value
-     * @param timestamp
-     * @param checkDataChange
+     * @param args
+     * @param mt
      */
-    update(keyPath : string[], value : any,timestamp : number,checkDataChange : boolean) : ModifyLevel;
+    update(selector : DbCudProcessedSelector, value : any, args : UpdateArgs, mt : ModifyToken): void;
     /**
-     * @return if the action was fully executed. (Data changed)
-     * @param keyPath
-     * @param timestamp
+     * @return the modify level.
+     * @param selector
+     * @param args
+     * @param mt
      */
-    delete(keyPath : string[],timestamp : number) : boolean;
+    delete(selector : DbCudProcessedSelector, args : DeleteArgs, mt : ModifyToken): void;
 
     /**
      * Merge this dbs component with the new component.
@@ -67,7 +70,7 @@ export default interface DbsComponent {
      */
     forEachComp(func : (comp : DbsComponent) => void) : void;
 
-    getDbsComponent(keyPath : string[]) : DbsComponent | undefined;
+    getDbsComponents(selector : DbCudProcessedSelector) : DbsComponent[];
 
     getDataCopy() : any
     getData() : any

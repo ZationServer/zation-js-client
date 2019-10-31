@@ -4,13 +4,21 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import DbsComponent, {DbsComponentType, isDbsArray, isDbsComponent, MergeResult, ModifyLevel} from "./dbsComponent";
-import DbDataParser                                     from "../dbDataParser";
-import DbUtils                                          from "../../dbUtils";
-import DbsSimplePathCoordinator                         from "./dbsSimplePathCoordinator";
-import {dbsMerger, DbsValueMerger, defaultValueMerger}  from "../dbsMergerUtils";
-import {DbsComparator}                                  from "../dbsComparator";
-import {deepEqual}                                      from "../../../utils/deepEqual";
+import DbsComponent, {
+    DbsComponentType,
+    isDbsArray,
+    isDbsComponent,
+    MergeResult,
+    ModifyLevel
+} from "./dbsComponent";
+import DbDataParser                                    from "../dbDataParser";
+import DbUtils                                         from "../../dbUtils";
+import DbsSimplePathCoordinator                        from "./dbsSimplePathCoordinator";
+import {dbsMerger, DbsValueMerger, defaultValueMerger} from "../dbsMergerUtils";
+import {DbsComparator}                                 from "../dbsComparator";
+import {deepEqual}                                     from "../../../utils/deepEqual";
+import {DeleteArgs, InsertArgs, UpdateArgs}            from "../../dbDefinitions";
+import {ModifyToken}                                   from "./modifyToken";
 
 export default class DbsArray extends DbsSimplePathCoordinator implements DbsComponent {
 
@@ -90,6 +98,28 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
     }
 
     /**
+     * Returns all keys.
+     * @private
+     */
+    _getAllKeys(): string[] {
+        const keys : string[] = [];
+        const componentsLength = this.componentStructure.length;
+        for(let i = 0; i < componentsLength; i++){
+            keys[i] = i.toString();
+        }
+        return keys;
+    }
+
+    /**
+     * Returns the data value of the key.
+     * @param key
+     * @private
+     */
+    _getValue(key: string): any {
+        return this.data[parseInt(key)];
+    }
+
+    /**
      * Returns the dbs component on this
      * key or undefined if it not exists.
      * @param key
@@ -154,26 +184,35 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
      * @param value
      * @param timestamp
      * @param ifContains
+     * @param potentialUpdate
+     * @param mt
      * @private
      */
-    _insert(key: string, value: any, timestamp : number,ifContains ?: string): boolean {
+    _insert(key: string, value: any, {timestamp,ifContains,potentialUpdate} : InsertArgs,mt : ModifyToken): void
+    {
         let index = parseInt(key);
         if(isNaN(index)){
             index = this.componentStructure.length;
         }
 
-        if(ifContains !== undefined && !this.hasIndex(parseInt(ifContains))){
-            return false;
+        if(this.hasIndex(index)) {
+            if(potentialUpdate){
+                mt.potential = true;
+                this._update(key,value,{timestamp,ifContains,potentialInsert : false},mt);
+                mt.potential = false;
+            }
+            return;
         }
 
-        if (!this.hasIndex(index) && DbUtils.checkTimestamp(this.getTimestamp(index),timestamp)) {
+        if(ifContains !== undefined && (this.findItem(ifContains) === undefined)){return;}
+
+        if (DbUtils.checkTimestamp(this.getTimestamp(index),timestamp)) {
             const parsed = DbDataParser.parse(value);
             this.componentStructure[index] = parsed;
             this.data[index] = isDbsComponent(parsed) ? parsed.getData() : parsed;
             this.timestamps[index] = timestamp;
-            return true;
+            mt.level = ModifyLevel.DATA_CHANGED;
         }
-        return false;
     }
 
     /**
@@ -182,25 +221,37 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
      * @param key
      * @param value
      * @param timestamp
-     * @param checkDataChange
+     * @param ifContains
+     * @param potentialInsert
+     * @param mt
      * @private
      */
-    _update(key: string, value: any, timestamp : number,checkDataChange : boolean): ModifyLevel {
+    _update(key: string, value: any, {timestamp,ifContains,potentialInsert} : UpdateArgs,mt : ModifyToken): void
+    {
         const index = parseInt(key);
 
-        if (this.hasIndex(index) && DbUtils.checkTimestamp(this.getTimestamp(index),timestamp)) {
-            let ml = ModifyLevel.DATA_TOUCHED;
+        if(!this.hasIndex(index)) {
+            if(potentialInsert){
+                mt.potential = true;
+                this._insert(key,value,{timestamp,ifContains,potentialUpdate : false},mt);
+                mt.potential = false;
+            }
+            return;
+        }
+
+        if(ifContains !== undefined && (this.findItem(ifContains) === undefined)){return;}
+
+        if (DbUtils.checkTimestamp(this.getTimestamp(index),timestamp)) {
+            mt.level = ModifyLevel.DATA_TOUCHED;
             const parsed = DbDataParser.parse(value);
             this.componentStructure[index] = parsed;
             const newData = isDbsComponent(parsed) ? parsed.getData() : parsed;
-            if(checkDataChange && !deepEqual(newData,this.data[index])){
-                ml = ModifyLevel.DATA_CHANGED;
+            if(mt.checkDataChange && !deepEqual(newData,this.data[index])){
+                mt.level = ModifyLevel.DATA_CHANGED;
             }
             this.data[index] = newData;
             this.timestamps[index] = timestamp;
-            return ml;
         }
-        return ModifyLevel.NOTHING;
     }
 
     /**
@@ -208,22 +259,27 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
      * @return if the action was fully executed. (Data changed)
      * @param key
      * @param timestamp
+     * @param ifContains
+     * @param mt
      * @private
      */
-    _delete(key: string, timestamp : number): boolean {
+    _delete(key: string, {timestamp,ifContains} : DeleteArgs,mt : ModifyToken): void {
         let index = parseInt(key);
         if(isNaN(index)){
             index = this.componentStructure.length-1;
-            if(index < 0){return false;}
+            if(index < 0){return;}
         }
 
-        if (this.hasIndex(index) && DbUtils.checkTimestamp(this.getTimestamp(index),timestamp)) {
+        if(!this.hasIndex(index)) return;
+
+        if(ifContains !== undefined && (this.findItem(ifContains) === undefined)){return;}
+
+        if (DbUtils.checkTimestamp(this.getTimestamp(index),timestamp)) {
             this.data.splice(index, 1);
             this.componentStructure.splice(index, 1);
             this.timestamps.splice(index, 1);
-            return true;
+            mt.level = ModifyLevel.DATA_CHANGED;
         }
-        return false;
     }
 
     /**

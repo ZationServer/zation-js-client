@@ -4,7 +4,14 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {IfContainsOption, InfoOption, TimestampOption}  from "../dbDefinitions";
+import {
+    DbCudProcessedSelector,
+    DbCudSelector, DeleteArgs,
+    IfContainsOption,
+    InfoOption, InsertArgs, PotentialInsertOption,
+    PotentialUpdateOption,
+    TimestampOption, UpdateArgs
+} from "../dbDefinitions";
 import ObjectUtils                                      from "../../utils/objectUtils";
 import DbsHead                                          from "./components/dbsHead";
 import CloneUtils                                       from "../../utils/cloneUtils";
@@ -16,13 +23,16 @@ import EventManager                                     from "../../utils/eventM
 import {deepEqual}                                      from "../../utils/deepEqual";
 import DbCudOperationSequence                           from "../dbCudOperationSequence";
 import {DbEditAble}                                     from "../dbEditAble";
+import {createDeleteModifyToken,
+    createUpdateInsertModifyToken,
+    getModifyTokenReaons} from "./components/modifyToken";
 
 type ClearOnCloseMiddleware = (code : number | string | undefined,data : any) => boolean;
 type ClearOnKickOutMiddleware = (code : number | string | undefined,data : any) => boolean;
 type ReloadMiddleware = (reloadData : DbStorage) => boolean;
-type InsertMiddleware = (keyPath : string[], value : any,options : IfContainsOption & InfoOption & TimestampOption) => boolean;
-type UpdateMiddleware = (keyPath : string[], value : any,options : InfoOption & TimestampOption) => boolean;
-type DeleteMiddleware = (keyPath : string[], options : InfoOption & TimestampOption) => boolean;
+type InsertMiddleware = (selector : DbCudProcessedSelector, value : any,options : IfContainsOption & InfoOption & TimestampOption) => boolean;
+type UpdateMiddleware = (selector : DbCudProcessedSelector, value : any,options : InfoOption & TimestampOption) => boolean;
+type DeleteMiddleware = (selector : DbCudProcessedSelector, options : InfoOption & TimestampOption) => boolean;
 type AddFetchDataMiddleware = (counter : number,fetchedData : DbsHead) => boolean;
 
 export interface DbStorageOptions {
@@ -85,9 +95,9 @@ export const enum DataEventReason {
 
 export type OnDataChange = (reasons : DataEventReason[],storage : DbStorage) => void | Promise<void>;
 export type OnDataTouch = (reasons : DataEventReason[],storage : DbStorage) => void | Promise<void>;
-export type OnInsert = (keyPath : string[], value : any,options : IfContainsOption & InfoOption & TimestampOption) => void | Promise<void>;
-export type OnUpdate = (keyPath : string[], value : any,options : InfoOption & TimestampOption) => void | Promise<void>;
-export type OnDelete = (keyPath : string[], options : InfoOption & TimestampOption) => void | Promise<void>;
+export type OnInsert = (selector : DbCudProcessedSelector, value : any,options : IfContainsOption & InfoOption & TimestampOption) => void | Promise<void>;
+export type OnUpdate = (selector : DbCudProcessedSelector, value : any,options : InfoOption & TimestampOption) => void | Promise<void>;
+export type OnDelete = (selector : DbCudProcessedSelector, options : InfoOption & TimestampOption) => void | Promise<void>;
 
 export default class DbStorage implements DbEditAble {
 
@@ -103,7 +113,7 @@ export default class DbStorage implements DbEditAble {
 
     private dbsHead : DbsHead = new DbsHead();
     private mainCompOptions: DbsComponentOptions = {};
-    private compOptionsConstraint : Map<string,{k : string[],o : DbsComponentOptions}> = new Map();
+    private compOptionsConstraint : Map<string,{s : DbCudProcessedSelector,o : DbsComponentOptions}> = new Map();
 
     private cudSeqEditActive : boolean = false;
     private tmpCudInserted : boolean = false;
@@ -174,16 +184,19 @@ export default class DbStorage implements DbEditAble {
         let dataChanged = false;
         const setMergerComp : DbsComponent[] = [];
         const setComparatorComp : DbsComponent[] = [];
-        for (let {k,o} of this.compOptionsConstraint.values()){
-            const comp = this.dbsHead.getDbsComponent(k);
-            if(comp){
+        for (let {s,o} of this.compOptionsConstraint.values()){
+            const comps = this.dbsHead.getDbsComponents(s);
+            const compsLength = comps.length;
+            let compTmp;
+            for(let i = 0; i < compsLength; i++){
+                compTmp = comps[i];
                 if(o.valueMerger){
-                    comp.setValueMerger(o.valueMerger);
-                    setMergerComp.push(comp);
+                    compTmp.setValueMerger(o.valueMerger);
+                    setMergerComp.push(compTmp);
                 }
                 if(o.comparator){
-                    dataChanged = dataChanged || comp.setComparator(o.comparator);
-                    setComparatorComp.push(comp);
+                    dataChanged = compTmp.setComparator(o.comparator) || dataChanged;
+                    setComparatorComp.push(compTmp);
                 }
             }
         }
@@ -257,10 +270,10 @@ export default class DbStorage implements DbEditAble {
         return this;
     }
 
-    private setCompOption(func : (option : DbsComponentOptions) => void, keyPath ?: string | string[]){
-        if(keyPath !== undefined){
-            keyPath = DbUtils.handleKeyPath(keyPath);
-            const key = keyPath.join();
+    private setCompOption(func : (option : DbsComponentOptions) => void, selector ?: DbCudSelector){
+        if(selector !== undefined){
+            selector = DbUtils.processSelector(selector);
+            const key = selector.join();
             const constraint = this.compOptionsConstraint.get(key);
             if(constraint){
                 func(constraint.o);
@@ -268,7 +281,7 @@ export default class DbStorage implements DbEditAble {
             else {
                 const options = {};
                 func(options);
-                this.compOptionsConstraint.set(key,{k : keyPath,o : options})
+                this.compOptionsConstraint.set(key,{s : DbUtils.processSelector(selector),o : options})
             }
         }
         else {
@@ -397,43 +410,73 @@ export default class DbStorage implements DbEditAble {
      * that this operation is not done on the server-side.
      * So if the Databox reloads the data or resets the changes are lost.
      * Insert behavior:
-     * Without ifContains (ifContains exists):
-     * Base (with keyPath [] or '') -> Nothing
-     * KeyArray -> Inserts the value at the end with the key
-     * (if the key does not exist). But if you are using a compare function,
-     * it will insert the value in the correct position.
-     * Object -> Inserts the value with the key (if the key does not exist).
-     * Array -> Key will be parsed to int if it is a number then it will be inserted at the index.
+     * Notice that in every case, the insert only happens when the key
+     * does not exist on the client.
+     * Otherwise, the client will ignore or convert it to an
+     * update when potentialUpdate is active.
+     * Another condition is that the timeout is newer than the existing timeout.
+     * Without ifContains:
+     * Head (with selector [] or '') -> Inserts the value.
+     * KeyArray -> Inserts the value at the end with the key.
+     * But if you are using a compare function, it will insert the value in the correct position.
+     * Object -> Insert the value with the key.
+     * Array -> Key will be parsed to int if it is a number, then it will be inserted at the index.
+     * Otherwise, it will be inserted at the end.
+     * With ifContains (At least one matching element otherwise the client will ignore):
+     * Head (with selector [] or '') -> Inserts the value.
+     * KeyArray -> Inserts the value before the first matching ifContains element with the key.
+     * But if you are using a compare function, it will insert the value in the correct position.
+     * Object -> Insert the value with the key.
+     * Array -> Key will be parsed to int if it is a number, then it will be inserted at the index.
      * Otherwise, it will be added at the end.
-     * With ifContains (ifContains exists):
-     * Base (with keyPath [] or '') -> Nothing
-     * KeyArray -> Inserts the value before the ifContains element with the key
-     * (if the key does not exist). But if you are using a compare function,
-     * it will insert the value in the correct position.
-     * Object -> Inserts the value with the key (if the key does not exist).
-     * Array -> Key will be parsed to int if it is a number then it will be inserted at the index.
-     * Otherwise, it will be added at the end.
-     * @param keyPath
-     * The keyPath can be a string array or a
-     * string where you can separate the keys with a dot.
+     * @param selector
+     * The selector describes which key-value pairs should be
+     * deleted updated or where a value should be inserted.
+     * It can be a string array key path, but it also can contain
+     * filter queries (they work with the forint library).
+     * You can filter by value ($value or property value) by key ($key or property key) or
+     * select all keys with {} (For better readability use the constant $all).
+     * In the case of insertions, most times, the selector should end with
+     * a new key instead of a query.
+     * Notice that all numeric values in the selector will be converted to a
+     * string because all keys need to be from type string.
+     * If you provide a string instead of an array, the string will be
+     * split by dots to create a string array.
      * @param value
      * @param options
      */
-    insert(keyPath : string[] | string, value : any,options : IfContainsOption & InfoOption & TimestampOption = {}) : DbStorage {
-        keyPath = DbUtils.handleKeyPath(keyPath);
+    insert(selector : DbCudSelector, value : any,options : IfContainsOption & PotentialUpdateOption & InfoOption & TimestampOption = {}) : DbStorage {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
-        const {timestamp,ifContains} = options;
-        if(this.insertMiddleware(keyPath,value,options) && this.dbsHead.insert(keyPath,value,timestamp,ifContains)){
-            this.updateCompOptions();
-            this.tmpCudInserted = true;
-            this.insertEvent.emit(keyPath,value,options);
-            this.dataTouchEvent.emit([DataEventReason.INSERTED],this);
-            this.dataChangeEvent.emit([DataEventReason.INSERTED],this);
-            if(!this.cudSeqEditActive){
-                this.dataChangeCombineSeqEvent.emit([DataEventReason.INSERTED],this);
+        this._insert(DbUtils.processSelector(selector),value,options as (InsertArgs & InfoOption));
+        return this;
+    }
+
+    /**
+     * Internal used insert method.
+     * Please use the normal method without a pre underscore.
+     * @param selector
+     * @param value
+     * @param options
+     * @private
+     */
+    _insert(selector : DbCudProcessedSelector, value : any,options : InsertArgs & InfoOption) : void {
+        if(this.insertMiddleware(selector,value,options)) {
+            const mt = createUpdateInsertModifyToken(this.hasDataChangeListener || this.hasUpdateListener);
+
+            this.dbsHead.insert(selector,value,options,mt);
+
+            let reasons;
+            if(mt.level > 0){
+                this.updateCompOptions();
+                reasons = getModifyTokenReaons(mt,DataEventReason.INSERTED,DataEventReason.UPDATED);
+                this.dataTouchEvent.emit([...reasons],this);
+            }
+            if(mt.level === ModifyLevel.DATA_CHANGED){
+                this.tmpCudInserted = true;
+                this.insertEvent.emit(selector,value,options);
+                this._triggerChangeEvents(reasons);
             }
         }
-        return this;
     }
 
     /**
@@ -443,37 +486,54 @@ export default class DbStorage implements DbEditAble {
      * that this operation is not done on the server-side.
      * So if the Databox reloads the data or resets the changes are lost.
      * Update behavior:
-     * Base (with keyPath [] or '') -> Updates the complete structure.
+     * Base (with selector [] or '') -> Updates the complete structure.
      * KeyArray -> Updates the specific value (if the key does exist).
      * Object -> Updates the specific value (if the key does exist).
      * Array -> Key will be parsed to int if it is a number it will
      * update the specific value (if the index exist).
-     * @param keyPath
-     * The keyPath can be a string array or a
-     * string where you can separate the keys with a dot.
+     * @param selector
+     * The selector can be a direct key-path,
+     * can contain filter queries (by using the forint library)
+     * or it can select all items with '*'.
+     * If you use a string as a param type,
+     * you need to notice that it will be split into a path by dots.
+     * All numeric values will be converted to a string because the key can only be a string.
      * @param value
      * @param options
      */
-    update(keyPath : string[] | string, value : any,options : InfoOption & TimestampOption = {}) : DbStorage {
-        keyPath = DbUtils.handleKeyPath(keyPath);
+    update(selector : DbCudSelector, value : any,options : IfContainsOption & PotentialInsertOption & InfoOption & TimestampOption = {}) : DbStorage {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
-        const {timestamp} = options;
-        if(this.updateMiddleware(keyPath,value,options)){
-            const ml = this.dbsHead.update(keyPath,value,timestamp, (this.hasDataChangeListener || this.hasUpdateListener));
-            if(ml > 0){
+        this._update(DbUtils.processSelector(selector),value,options as (UpdateArgs & InfoOption));
+        return this;
+    }
+
+    /**
+     * Internal used update method.
+     * Please use the normal method without a pre underscore.
+     * @param selector
+     * @param value
+     * @param options
+     * @private
+     */
+    _update(selector : DbCudProcessedSelector, value : any,options : UpdateArgs & InfoOption) : void {
+        if(this.updateMiddleware(selector,value,options)){
+            const mt = createUpdateInsertModifyToken(this.hasDataChangeListener || this.hasUpdateListener);
+
+            this.dbsHead.update(selector,value,options,mt);
+
+            let reasons;
+            if(mt.level > 0){
                 this.updateCompOptions();
-                this.dataTouchEvent.emit([DataEventReason.UPDATED],this);
+                reasons = getModifyTokenReaons(mt,DataEventReason.UPDATED,DataEventReason.INSERTED);
+                this.dataTouchEvent.emit([...reasons],this);
             }
-            if(ml === ModifyLevel.DATA_CHANGED){
+            // noinspection DuplicatedCode
+            if(mt.level === ModifyLevel.DATA_CHANGED){
                 this.tmpCudUpdated = true;
-                this.updateEvent.emit(keyPath,value,options);
-                this.dataChangeEvent.emit([DataEventReason.UPDATED],this);
-                if(!this.cudSeqEditActive){
-                    this.dataChangeCombineSeqEvent.emit([DataEventReason.UPDATED],this);
-                }
+                this.updateEvent.emit(selector,value,options);
+                this._triggerChangeEvents(reasons);
             }
         }
-        return this;
     }
 
     /**
@@ -483,31 +543,46 @@ export default class DbStorage implements DbEditAble {
      * that this operation is not done on the server-side.
      * So if the Databox reloads the data or resets the changes are lost.
      * Delete behavior:
-     * Base (with keyPath [] or '') -> Deletes the complete structure.
+     * Base (with selector [] or '') -> Deletes the complete structure.
      * KeyArray -> Deletes the specific value (if the key does exist).
      * Object -> Deletes the specific value (if the key does exist).
      * Array -> Key will be parsed to int if it is a number it will delete the
      * specific value (if the index does exist). Otherwise, it will delete the last item.
-     * @param keyPath
-     * The keyPath can be a string array or a
-     * string where you can separate the keys with a dot.
+     * @param selector
+     * The selector can be a direct key-path,
+     * can contain filter queries (by using the forint library)
+     * or it can select all items with '*'.
+     * If you use a string as a param type,
+     * you need to notice that it will be split into a path by dots.
+     * All numeric values will be converted to a string because the key can only be a string.
      * @param options
      */
-    delete(keyPath : string[] | string,options : InfoOption & TimestampOption = {}) : DbStorage {
-        keyPath = DbUtils.handleKeyPath(keyPath);
+    delete(selector : DbCudSelector,options : IfContainsOption & InfoOption & TimestampOption = {}) : DbStorage {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
-        const {timestamp} = options;
-        if(this.deleteMiddleware(keyPath,options) && this.dbsHead.delete(keyPath,timestamp)){
-            this.updateCompOptions();
-            this.tmpCudDeleted = true;
-            this.deleteEvent.emit(keyPath,options);
-            this.dataTouchEvent.emit([DataEventReason.DELETED],this);
-            this.dataChangeEvent.emit([DataEventReason.DELETED],this);
-            if(!this.cudSeqEditActive){
-                this.dataChangeCombineSeqEvent.emit([DataEventReason.DELETED],this);
+        this._delete(DbUtils.processSelector(selector),options as (DeleteArgs & InfoOption));
+        return this;
+    }
+
+    /**
+     * Internal used delete method.
+     * Please use the normal method without a pre underscore.
+     * @param selector
+     * @param options
+     * @private
+     */
+    _delete(selector : DbCudProcessedSelector,options : DeleteArgs & InfoOption) : void {
+        if(this.deleteMiddleware(selector,options)){
+            const mt = createDeleteModifyToken();
+            this.dbsHead.delete(selector,options,mt);
+
+            if(mt.level > 0) {
+                this.updateCompOptions();
+                this.tmpCudDeleted = true;
+                this.deleteEvent.emit(selector,options);
+                this.dataTouchEvent.emit([DataEventReason.DELETED],this);
+                this._triggerChangeEvents([DataEventReason.DELETED]);
             }
         }
-        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -522,6 +597,7 @@ export default class DbStorage implements DbEditAble {
      * Use this option only if you know what you are doing.
      */
     seqEdit(timestamp ?: number) : DbCudOperationSequence {
+        timestamp = DbUtils.processTimestamp(timestamp);
         return new DbCudOperationSequence( (operations) => {
             this.startCudSeq();
             DbUtils.processOpertions(this,operations,timestamp);
@@ -567,6 +643,12 @@ export default class DbStorage implements DbEditAble {
         this.hasUpdateListener = this.updateEvent.hasListener();
     }
 
+    private _triggerChangeEvents(reasons : DataEventReason[]) {
+        this.dataChangeEvent.emit([...reasons],this);
+        if(!this.cudSeqEditActive){
+            this.dataChangeCombineSeqEvent.emit([...reasons],this);
+        }
+    }
     //events
 
     // noinspection JSUnusedGlobalSymbols

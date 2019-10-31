@@ -7,6 +7,7 @@ Copyright(c) Luca Scaringella
 import DbsHead          from "../../../../src/lib/main/databox/storage/components/dbsHead";
 import {buildKeyArray}  from "../../../../src";
 import {assert}         from 'chai';
+import {createSimpleModifyToken} from "../../../../src/lib/main/databox/storage/components/modifyToken";
 
 describe('MAIN.Databox.Storage',() => {
 
@@ -82,7 +83,7 @@ describe('MAIN.Databox.Storage',() => {
             it('KeyArray - normal', () => {
                 const head = new DbsHead(buildKeyArray([{id : 1},{id : 2},{id : 3}],'id'));
 
-                head.insert(['4'],{id : 4},Date.now());
+                head.insert(['4'],{id : 4},{timestamp : Date.now()},createSimpleModifyToken());
 
                 assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
 
@@ -92,7 +93,7 @@ describe('MAIN.Databox.Storage',() => {
             it('KeyArray - normal (With ifContains)', () => {
                 const head = new DbsHead(buildKeyArray([{id : 1},{id : 2},{id : 4},{id : 5}],'id'));
 
-                head.insert(['3'],{id : 3},Date.now(),'4');
+                head.insert(['3'],{id : 3},{timestamp : Date.now(),ifContains : {key : '4'}},createSimpleModifyToken());
 
                 assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
 
@@ -102,7 +103,7 @@ describe('MAIN.Databox.Storage',() => {
             it('KeyArray - with value', () => {
                 const head = new DbsHead(buildKeyArray([{id : 1,v : 'a'},{id : 2,v : 'b'},{id : 3,v : 'c'}],'id','v'));
 
-                head.insert(['4'],'d',Date.now());
+                head.insert(['4'],'d',{timestamp : Date.now()},createSimpleModifyToken());
 
                 assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
 
@@ -112,7 +113,7 @@ describe('MAIN.Databox.Storage',() => {
             it('Object', () => {
                 const head = new DbsHead({name : 'luca',age : 20});
 
-                head.insert(['online'],true,Date.now());
+                head.insert(['online'],true,{timestamp : Date.now()},createSimpleModifyToken());
 
                 assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
 
@@ -122,7 +123,7 @@ describe('MAIN.Databox.Storage',() => {
             it('Array (Push)', () => {
                 const head = new DbsHead(['a','b','c']);
 
-                head.insert([''],'d',Date.now());
+                head.insert([''],'d',{timestamp : Date.now()},createSimpleModifyToken());
 
                 assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
 
@@ -132,7 +133,7 @@ describe('MAIN.Databox.Storage',() => {
             it('Array (Index)', () => {
                 const head = new DbsHead(['a','b','c']);
 
-                head.insert(['4'],'d',Date.now());
+                head.insert(['4'],'d',{timestamp : Date.now()},createSimpleModifyToken());
 
                 assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
 
@@ -145,7 +146,7 @@ describe('MAIN.Databox.Storage',() => {
             it('KeyArray - normal', () => {
                 const head = new DbsHead(buildKeyArray([{id : 1},{id : 3},{id : 4}],'id'));
 
-                head.update(['1'],{id : 1,v : 'hello'},Date.now());
+                head.update(['1'],{id : 1,v : 'hello'},{timestamp : Date.now()},createSimpleModifyToken());
 
                 assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
 
@@ -155,7 +156,7 @@ describe('MAIN.Databox.Storage',() => {
             it('KeyArray - with value', () => {
                 const head = new DbsHead(buildKeyArray([{id : 1,v : 'a'},{id : 3,v : 'c'},{id : 4,v : 'd'}],'id','v'));
 
-                head.update(['1'],'z',Date.now());
+                head.update(['1'],'z',{timestamp : Date.now()},createSimpleModifyToken());
 
                 assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
 
@@ -165,7 +166,7 @@ describe('MAIN.Databox.Storage',() => {
             it('Object', () => {
                 const head = new DbsHead({name : 'luca',age : 20});
 
-                head.update(['name'],'tom',Date.now());
+                head.update(['name'],'tom',{timestamp : Date.now()},createSimpleModifyToken());
 
                 assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
 
@@ -175,7 +176,7 @@ describe('MAIN.Databox.Storage',() => {
             it('Object (Missing key)', () => {
                 const head = new DbsHead({name : 'luca',age : 20});
 
-                head.update(['firstName'],'tom',Date.now());
+                head.update(['firstName'],'tom',{timestamp : Date.now()},createSimpleModifyToken());
 
                 assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
 
@@ -185,7 +186,7 @@ describe('MAIN.Databox.Storage',() => {
             it('Array', () => {
                 const head = new DbsHead(['a','b','c']);
 
-                head.update(['1'],'c',Date.now());
+                head.update(['1'],'c',{timestamp : Date.now()},createSimpleModifyToken());
 
                 assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
 
@@ -198,7 +199,7 @@ describe('MAIN.Databox.Storage',() => {
             it('KeyArray - normal', () => {
                 const head = new DbsHead(buildKeyArray([{id : 1},{id : 2},{id : 3},{id : 4}],'id'));
 
-                head.delete(['2'],Date.now());
+                head.delete(['2'],{timestamp : Date.now()},createSimpleModifyToken());
 
                 assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
 
@@ -208,7 +209,7 @@ describe('MAIN.Databox.Storage',() => {
             it('KeyArray - with value', () => {
                 const head = new DbsHead(buildKeyArray([{id : 1,v : 'a'},{id : 2,v : 'b'},{id : 3,v : 'c'},{id : 4,v : 'd'}],'id','v'));
 
-                head.delete(['2'],Date.now());
+                head.delete(['2'],{timestamp : Date.now()},createSimpleModifyToken());
 
                 assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
 
@@ -218,9 +219,9 @@ describe('MAIN.Databox.Storage',() => {
             it('KeyArray - normal (delete all)', () => {
                 const head = new DbsHead(buildKeyArray([{id : 1},{id : 2},{id : 3}],'id'));
 
-                head.delete(['2'],Date.now());
-                head.delete(['1'],Date.now());
-                head.delete(['3'],Date.now());
+                head.delete(['2'],{timestamp : Date.now()},createSimpleModifyToken());
+                head.delete(['1'],{timestamp : Date.now()},createSimpleModifyToken());
+                head.delete(['3'],{timestamp : Date.now()},createSimpleModifyToken());
 
                 assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
 
@@ -230,7 +231,7 @@ describe('MAIN.Databox.Storage',() => {
             it('Object', () => {
                 const head = new DbsHead({name : 'luca',age : 20,online : true});
 
-                head.delete(['online'],Date.now());
+                head.delete(['online'],{timestamp : Date.now()},createSimpleModifyToken());
 
                 assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
 
@@ -240,7 +241,7 @@ describe('MAIN.Databox.Storage',() => {
             it('Array (LastItem)', () => {
                 const head = new DbsHead(['a','b','c']);
 
-                head.delete([''],Date.now());
+                head.delete([''],{timestamp : Date.now()},createSimpleModifyToken());
 
                 assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
 
@@ -250,7 +251,7 @@ describe('MAIN.Databox.Storage',() => {
             it('Array (Index)', () => {
                 const head = new DbsHead(['a','b','c']);
 
-                head.delete(['1'],Date.now());
+                head.delete(['1'],{timestamp : Date.now()},createSimpleModifyToken());
 
                 assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
 
@@ -291,8 +292,8 @@ describe('MAIN.Databox.Storage',() => {
                 c.setComparator((a,b) => a.id-b.id);
             });
 
-            head.insert(['4'],{id : 4},Date.now());
-            head.insert(['5'],{id : 2},Date.now());
+            head.insert(['4'],{id : 4},{timestamp : Date.now()},createSimpleModifyToken());
+            head.insert(['5'],{id : 2},{timestamp : Date.now()},createSimpleModifyToken());
 
             assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
             assert.deepEqual(head.getData(),[{id : 1},{id : 2},{id : 2},{id : 3},{id : 4}]);
@@ -306,9 +307,9 @@ describe('MAIN.Databox.Storage',() => {
 
             const timestamp = Date.now();
 
-            head.update(['name'],'tom',timestamp + 1);
+            head.update(['name'],'tom',{timestamp : timestamp +1},createSimpleModifyToken());
 
-            head.update(['name'],'fabio',timestamp - 1);
+            head.update(['name'],'fabio',{timestamp : timestamp -1},createSimpleModifyToken());
 
             assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
 
@@ -382,7 +383,7 @@ describe('MAIN.Databox.Storage',() => {
                 }],'id')
             });
 
-            head.update(['cars','10','motor','horsepower'],1200,Date.now());
+            head.update(['cars','10','motor','horsepower'],1200,{timestamp : Date.now()},createSimpleModifyToken());
 
             assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
             assert.deepEqual(head.getData(),{

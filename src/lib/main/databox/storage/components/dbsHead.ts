@@ -4,12 +4,24 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import DbsComponent, {DbsComponentType, isDbsComponent, isDbsHead, MergeResult, ModifyLevel} from "./dbsComponent";
-import DbDataParser                                        from "../dbDataParser";
-import DbUtils                                             from "../../dbUtils";
-import {dbsMerger, DbsValueMerger, defaultValueMerger}     from "../dbsMergerUtils";
-import {DbsComparator}                                     from "../dbsComparator";
-import {deepEqual}                                         from "../../../utils/deepEqual";
+import DbsComponent, {
+    DbsComponentType,
+    isDbsComponent,
+    isDbsHead,
+    MergeResult,
+    ModifyLevel} from "./dbsComponent";
+import DbDataParser                                    from "../dbDataParser";
+import DbUtils                                         from "../../dbUtils";
+import {dbsMerger, DbsValueMerger, defaultValueMerger} from "../dbsMergerUtils";
+import {DbsComparator}                                 from "../dbsComparator";
+import forint                                          from "forint";
+import {ModifyToken}                                   from "./modifyToken";
+import {deepEqual}                                     from "../../../utils/deepEqual";
+import {DbCudProcessedSelector,
+    DbForintQuery,
+    DeleteArgs,
+    InsertArgs,
+    UpdateArgs} from "../../dbDefinitions";
 
 export default class DbsHead implements DbsComponent {
 
@@ -64,19 +76,18 @@ export default class DbsHead implements DbsComponent {
     }
 
     /**
-     * Returns the dbs component on that path.
-     * @param keyPath
+     * Returns the dbs component with that selector.
+     * @param selector
      */
-    getDbsComponent(keyPath: string[]): DbsComponent | undefined {
-        if (keyPath.length === 0) {
-            return isDbsComponent(this.componentValue) ?
-                this.componentValue : undefined;
-        } else if (keyPath.length > 0) {
+    getDbsComponents(selector : DbCudProcessedSelector): DbsComponent[] {
+        if (selector.length === 0) {
+            return isDbsComponent(this.componentValue) ? [this.componentValue] : [];
+        } else if (selector.length > 0) {
             if (isDbsComponent(this.componentValue)) {
-                return this.componentValue.getDbsComponent(keyPath);
+                return this.componentValue.getDbsComponents(selector);
             }
         }
-        return undefined;
+        return [];
     }
 
     /**
@@ -118,66 +129,129 @@ export default class DbsHead implements DbsComponent {
         return {mergedValue : newValue,dataChanged : true};
     }
 
-    /**
-     * Insert.
-     * @return if the action was fully executed. (Data changed)
-     * @param keyPath
-     * @param value
-     * @param timestamp
-     * @param ifContains
-     */
-    insert(keyPath: string[], value: any, timestamp: number, ifContains ?: string): boolean {
-        if (keyPath.length > 0 && isDbsComponent(this.componentValue)) {
-            return (this.componentValue as DbsComponent).insert(keyPath, value, timestamp, ifContains)
+    private containsMatch(forintQuery : DbForintQuery) : boolean {
+        const data = this.data;
+        if(data === undefined) return false;
+        const keyQuery = forintQuery.key;
+        const valueQuery = forintQuery.value;
+        if(keyQuery || valueQuery){
+            const keyQueryFunc = keyQuery ? forint(keyQuery) : undefined;
+            const valueQueryFunc = valueQuery ? forint(valueQuery) : undefined;
+            return (!keyQueryFunc || keyQueryFunc('')) && (!valueQueryFunc || valueQueryFunc(data));
         }
-        return false;
+        return true;
     }
 
     /**
-     * Update.
+     * Insert coordinator.
      * @return the modify level.
-     * @param keyPath
+     * @param selector
      * @param value
-     * @param timestamp
-     * @param checkDataChange
+     * @param args
+     * @param mt
      */
-    update(keyPath: string[], value: any, timestamp: number,checkDataChange : boolean = false) : ModifyLevel {
-        if (keyPath.length === 0) {
-            if (this.componentValue !== undefined && DbUtils.checkTimestamp(this.timestamp, timestamp)) {
-                let ml = ModifyLevel.DATA_TOUCHED;
-                this.componentValue = DbDataParser.parse(value);
-                const newData = isDbsComponent(this.componentValue) ?
-                    this.componentValue.getData() : this.componentValue;
-                if(checkDataChange && !deepEqual(newData,this.data)){
-                    ml = ModifyLevel.DATA_CHANGED;
-                }
-                this.data = newData;
-                this.timestamp = timestamp;
-                return ml;
-            }
-
-        } else if (keyPath.length > 0 && isDbsComponent(this.componentValue)) {
-            return (this.componentValue as DbsComponent).update(keyPath,value,timestamp,checkDataChange);
+    insert(selector : DbCudProcessedSelector, value: any,args : InsertArgs,mt : ModifyToken): void {
+        if (selector.length === 0) {
+            this._insert(value,args,mt);
+        } else if (selector.length > 0 && isDbsComponent(this.componentValue)) {
+            (this.componentValue as DbsComponent).insert(selector,value,args,mt);
         }
-        return ModifyLevel.NOTHING;
+    }
+
+    _insert(value: any,args : InsertArgs,mt : ModifyToken): void {
+        const {timestamp,ifContains,potentialUpdate} = args;
+
+        if(this.componentValue !== undefined){
+            if(potentialUpdate){
+                mt.potential = true;
+                this._update(value,{...args,potentialInsert : false},mt);
+                mt.potential = false;
+            }
+            return;
+        }
+
+        if(ifContains !== undefined && (!this.containsMatch(ifContains))){return;}
+
+        if (DbUtils.checkTimestamp(this.timestamp,timestamp)) {
+            const parsed = DbDataParser.parse(value);
+            this.componentValue = parsed;
+            this.data = isDbsComponent(parsed) ? parsed.getData() : parsed;
+            this.timestamp = timestamp;
+            mt.level = ModifyLevel.DATA_CHANGED;
+        }
+    }
+
+    /**
+     * Update coordinator.
+     * @return the modify level.
+     * @param selector
+     * @param value
+     * @param args
+     * @param mt
+     */
+    update(selector : DbCudProcessedSelector, value : any, args : UpdateArgs, mt : ModifyToken): void {
+        if (selector.length === 0) {
+            this._update(value,args,mt);
+        } else if (selector.length > 0 && isDbsComponent(this.componentValue)) {
+            (this.componentValue as DbsComponent).update(selector,value,args,mt);
+        }
+    }
+
+    _update(value : any, args : UpdateArgs, mt : ModifyToken): void {
+        const {timestamp,ifContains,potentialInsert} = args;
+
+        if(this.componentValue === undefined){
+            if(potentialInsert){
+                mt.potential = true;
+                this._insert(value,{...args,potentialUpdate : false},mt);
+                mt.potential = false;
+            }
+            return;
+        }
+
+        if(ifContains !== undefined && (!this.containsMatch(ifContains))){return;}
+
+        if (DbUtils.checkTimestamp(this.timestamp, timestamp)) {
+            mt.level = ModifyLevel.DATA_TOUCHED;
+            const parsed = DbDataParser.parse(value);
+            this.componentValue = parsed;
+            const newData = isDbsComponent(parsed) ? parsed.getData() : parsed;
+            if(mt.checkDataChange && !deepEqual(newData,this.data)){
+                mt.level = ModifyLevel.DATA_CHANGED;
+            }
+            this.data = newData;
+            this.timestamp = timestamp;
+        }
     }
 
     /**
      * Delete coordinator.
-     * @return if the action was fully executed. (Data changed)
-     * @param keyPath
-     * @param timestamp
+     * @return the modify level.
+     * @param selector
+     * @param args
+     * @param mt
      */
-    delete(keyPath: string[], timestamp: number): boolean {
-        if (keyPath.length === 0) {
+    delete(selector : DbCudProcessedSelector, args : DeleteArgs, mt : ModifyToken): void {
+        if (selector.length === 0) {
+            this._delete(args,mt);
+        } else if (selector.length > 0 && isDbsComponent(this.componentValue)) {
+            (this.componentValue as DbsComponent).delete(selector,args,mt);
+        }
+    }
+
+    _delete(args : DeleteArgs, mt : ModifyToken): void {
+        if(this.componentValue === undefined) return;
+
+        const {timestamp,ifContains} = args;
+
+        if(ifContains !== undefined && (!this.containsMatch(ifContains))){return;}
+
+        if (DbUtils.checkTimestamp(this.timestamp, timestamp)) {
             this.componentValue = undefined;
             this.data = undefined;
             this.timestamp = timestamp;
-            return true
-        } else if (keyPath.length > 0 && isDbsComponent(this.componentValue)) {
-            return (this.componentValue as DbsComponent).delete(keyPath, timestamp);
+            mt.level = ModifyLevel.DATA_CHANGED;
         }
-        return false;
     }
 
     /**

@@ -4,13 +4,20 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import DbsComponent, {DbsComponentType, isDbsComponent, isDbsObject, MergeResult, ModifyLevel} from "./dbsComponent";
-import DbDataParser                                     from "../dbDataParser";
-import DbUtils                                          from "../../dbUtils";
-import DbsSimplePathCoordinator                         from "./dbsSimplePathCoordinator";
-import {dbsMerger, DbsValueMerger, defaultValueMerger}  from "../dbsMergerUtils";
-import {DbsComparator}                                  from "../dbsComparator";
-import {deepEqual}                                      from "../../../utils/deepEqual";
+import DbsComponent, {
+    DbsComponentType,
+    isDbsComponent,
+    isDbsObject,
+    MergeResult,
+    ModifyLevel} from "./dbsComponent";
+import DbDataParser                                    from "../dbDataParser";
+import DbUtils                                         from "../../dbUtils";
+import DbsSimplePathCoordinator                        from "./dbsSimplePathCoordinator";
+import {dbsMerger, DbsValueMerger, defaultValueMerger} from "../dbsMergerUtils";
+import {DbsComparator}                                 from "../dbsComparator";
+import {deepEqual}                                     from "../../../utils/deepEqual";
+import {DeleteArgs, InsertArgs, UpdateArgs}            from "../../dbDefinitions";
+import {ModifyToken}                                   from "./modifyToken";
 
 export default class DbsObject extends DbsSimplePathCoordinator implements DbsComponent {
 
@@ -92,6 +99,23 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
     }
 
     /**
+     * Returns all keys.
+     * @private
+     */
+    _getAllKeys(): string[] {
+        return Array.from(this.keys);
+    }
+
+    /**
+     * Returns the data value of the key.
+     * @param key
+     * @private
+     */
+    _getValue(key: string): any {
+        return this.data[key];
+    }
+
+    /**
      * Returns the dbs component on this
      * key or undefined if it not exists.
      * @param key
@@ -157,24 +181,33 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      * @param value
      * @param timestamp
      * @param ifContains
+     * @param potentialUpdate
+     * @param mt
      * @private
      */
-    _insert(key: string, value: any, timestamp : number,ifContains ?: string): boolean {
-        if(ifContains !== undefined && !this.hasKey(ifContains)){
-            return false;
+    _insert(key: string, value: any, {timestamp,ifContains,potentialUpdate} : InsertArgs, mt : ModifyToken): void
+    {
+        if(this.hasKey(key)){
+            if(potentialUpdate){
+                mt.potential = true;
+                this._update(key,value,{timestamp,ifContains,potentialInsert : false},mt);
+                mt.potential = false;
+            }
+            return;
         }
 
-        if (!this.hasKey(key) && DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
+        if(ifContains !== undefined && (this.findItem(ifContains) === undefined)){return;}
+
+        if (DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
             const parsed = DbDataParser.parse(value);
             this.componentStructure[key] = parsed;
             this.data[key] = isDbsComponent(parsed) ? parsed.getData() : parsed;
 
             this.keys.add(key);
-
             this.timestampMap.set(key,timestamp);
-            return true;
+
+            mt.level = ModifyLevel.DATA_CHANGED;
         }
-        return false;
     }
 
     /**
@@ -183,24 +216,36 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      * @param key
      * @param value
      * @param timestamp
-     * @param checkDataChange
+     * @param ifContains
+     * @param potentialInsert
+     * @param mt
      * @private
      */
-    _update(key: string, value: any, timestamp : number,checkDataChange : boolean): ModifyLevel {
-        if (this.hasKey(key) && DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
-            let ml = ModifyLevel.DATA_TOUCHED;
+    _update(key: string, value: any, {timestamp,ifContains,potentialInsert} : UpdateArgs, mt : ModifyToken): void
+    {
+        if(!this.hasKey(key)) {
+            if(potentialInsert){
+                mt.potential = true;
+                this._insert(key,value,{timestamp,ifContains,potentialUpdate : false},mt);
+                mt.potential = false;
+            }
+            return;
+        }
+
+        if(ifContains !== undefined && (this.findItem(ifContains) === undefined)){return;}
+
+        if (DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
+            mt.level = ModifyLevel.DATA_TOUCHED;
             const parsed = DbDataParser.parse(value);
             const newData = isDbsComponent(parsed) ? parsed.getData() : parsed;
-            if(checkDataChange && !deepEqual(newData,this.data[key])){
-                ml = ModifyLevel.DATA_CHANGED;
+            if(mt.checkDataChange && !deepEqual(newData,this.data[key])){
+                mt.level = ModifyLevel.DATA_CHANGED;
             }
             this.componentStructure[key] = parsed;
             this.data[key] = newData;
 
             this.timestampMap.set(key,timestamp);
-            return ml;
         }
-        return ModifyLevel.NOTHING;
     }
 
     /**
@@ -208,17 +253,22 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      * @return if the action was fully executed. (Data changed)
      * @param key
      * @param timestamp
+     * @param ifContains
+     * @param mt
      * @private
      */
-    _delete(key: string, timestamp : number): boolean {
-        if (this.hasKey(key) && DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
+    _delete(key: string, {timestamp,ifContains} : DeleteArgs, mt : ModifyToken): void {
+        if(!this.hasKey(key)) return;
+
+        if(ifContains !== undefined && (this.findItem(ifContains) === undefined)){return;}
+
+        if (DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
             delete this.data[key];
             delete this.componentStructure[key];
             this.keys.delete(key);
             this.timestampMap.set(key,timestamp);
-            return true;
+            mt.level = ModifyLevel.DATA_CHANGED;
         }
-        return false;
     }
 
     /**
