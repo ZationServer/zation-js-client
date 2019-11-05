@@ -58,17 +58,17 @@ export default class DbUtils {
                 case CudType.insert:
                     target._insert(operation.s,operation.v,
                         {code : operation.c,data : operation.d,timestamp,
-                            ifContains : operation.i,potentialUpdate : !!operation.p});
+                            if : operation.i,potentialUpdate : !!operation.p});
                     break;
                 case CudType.update:
                     target._update(operation.s,operation.v,
                         {code : operation.c,data : operation.d,timestamp,
-                            ifContains : operation.i,potentialInsert : !!operation.p});
+                            if : operation.i,potentialInsert : !!operation.p});
                     break;
                 case CudType.delete:
                     target._delete(operation.s,
                         {code : operation.c,data : operation.d,timestamp,
-                            ifContains : operation.i});
+                            if : operation.i});
                     break;
             }
         }

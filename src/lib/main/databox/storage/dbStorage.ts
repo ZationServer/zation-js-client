@@ -7,7 +7,7 @@ Copyright(c) Luca Scaringella
 import {
     DbCudProcessedSelector,
     DbCudSelector, DeleteArgs,
-    IfContainsOption,
+    IfOption,
     InfoOption, InsertArgs, PotentialInsertOption,
     PotentialUpdateOption,
     TimestampOption, UpdateArgs
@@ -30,7 +30,7 @@ import {createDeleteModifyToken,
 type ClearOnCloseMiddleware = (code : number | string | undefined,data : any) => boolean;
 type ClearOnKickOutMiddleware = (code : number | string | undefined,data : any) => boolean;
 type ReloadMiddleware = (reloadData : DbStorage) => boolean;
-type InsertMiddleware = (selector : DbCudProcessedSelector, value : any,options : IfContainsOption & InfoOption & TimestampOption) => boolean;
+type InsertMiddleware = (selector : DbCudProcessedSelector, value : any,options : IfOption & InfoOption & TimestampOption) => boolean;
 type UpdateMiddleware = (selector : DbCudProcessedSelector, value : any,options : InfoOption & TimestampOption) => boolean;
 type DeleteMiddleware = (selector : DbCudProcessedSelector, options : InfoOption & TimestampOption) => boolean;
 type AddFetchDataMiddleware = (counter : number,fetchedData : DbsHead) => boolean;
@@ -95,7 +95,7 @@ export const enum DataEventReason {
 
 export type OnDataChange = (reasons : DataEventReason[],storage : DbStorage) => void | Promise<void>;
 export type OnDataTouch = (reasons : DataEventReason[],storage : DbStorage) => void | Promise<void>;
-export type OnInsert = (selector : DbCudProcessedSelector, value : any,options : IfContainsOption & InfoOption & TimestampOption) => void | Promise<void>;
+export type OnInsert = (selector : DbCudProcessedSelector, value : any,options : IfOption & InfoOption & TimestampOption) => void | Promise<void>;
 export type OnUpdate = (selector : DbCudProcessedSelector, value : any,options : InfoOption & TimestampOption) => void | Promise<void>;
 export type OnDelete = (selector : DbCudProcessedSelector, options : InfoOption & TimestampOption) => void | Promise<void>;
 
@@ -445,7 +445,7 @@ export default class DbStorage implements DbEditAble {
      * @param value
      * @param options
      */
-    insert(selector : DbCudSelector, value : any,options : IfContainsOption & PotentialUpdateOption & InfoOption & TimestampOption = {}) : DbStorage {
+    insert(selector : DbCudSelector, value : any,options : IfOption & PotentialUpdateOption & InfoOption & TimestampOption = {}) : DbStorage {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         this._insert(DbUtils.processSelector(selector),value,options as (InsertArgs & InfoOption));
         return this;
@@ -501,7 +501,7 @@ export default class DbStorage implements DbEditAble {
      * @param value
      * @param options
      */
-    update(selector : DbCudSelector, value : any,options : IfContainsOption & PotentialInsertOption & InfoOption & TimestampOption = {}) : DbStorage {
+    update(selector : DbCudSelector, value : any,options : IfOption & PotentialInsertOption & InfoOption & TimestampOption = {}) : DbStorage {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         this._update(DbUtils.processSelector(selector),value,options as (UpdateArgs & InfoOption));
         return this;
@@ -557,7 +557,7 @@ export default class DbStorage implements DbEditAble {
      * All numeric values will be converted to a string because the key can only be a string.
      * @param options
      */
-    delete(selector : DbCudSelector,options : IfContainsOption & InfoOption & TimestampOption = {}) : DbStorage {
+    delete(selector : DbCudSelector,options : IfOption & InfoOption & TimestampOption = {}) : DbStorage {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         this._delete(DbUtils.processSelector(selector),options as (DeleteArgs & InfoOption));
         return this;

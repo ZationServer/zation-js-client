@@ -322,30 +322,6 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
     }
 
     /**
-     * Pushes a new key-value pair before a key.
-     * @param pushKey
-     * @param key
-     * @param value
-     */
-    private pushBefore(pushKey : string,key : string,value : any) {
-        const index = this.keyMap.get(pushKey);
-        if(index !== undefined){
-            this.pushBeforeIndex(index,key,value);
-        }
-    }
-
-    /**
-     * Pushes a new key-value pair before a index.
-     * @param index
-     * @param key
-     * @param value
-     */
-    private pushBeforeIndex(index : number,key : string,value : any) {
-        const parsed = DbDataParser.parse(value);
-        this.pushBeforeWithComponentValue(index,key,isDbsComponent(parsed) ? parsed.getData() : parsed,parsed);
-    }
-
-    /**
      * Pushes a new key-value pair before a index.
      * @param index
      * @param key
@@ -390,32 +366,27 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
      * @return if the action was fully executed. (Data changed)
      * @param key
      * @param value
-     * @param timestamp
-     * @param ifContains
-     * @param potentialUpdate
+     * @param args
      * @param mt
      * @private
      */
-    _insert(key: string, value: any, {timestamp,ifContains,potentialUpdate} : InsertArgs, mt : ModifyToken): void
+    _insert(key: string, value: any, args : InsertArgs, mt : ModifyToken): void
     {
+        const {timestamp,if : ifOption,potentialUpdate} = args;
+
         if(this.hasKey(key)) {
             if(potentialUpdate){
                 mt.potential = true;
-                this._update(key,value,{timestamp,ifContains,potentialInsert : false},mt);
+                this._update(key,value,args,mt);
                 mt.potential = false;
             }
             return;
         }
 
+        if(ifOption !== undefined && !(args.if = this.checkIfConditions(ifOption))) return;
+
         if (DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
-            if(ifContains !== undefined){
-                const ifContainsKey = this.findItem(ifContains);
-                if(ifContainsKey === undefined){return;}
-                this.comparator === undefined ? this.pushBefore(ifContainsKey,key,value) : this.push(key,value);
-            }
-            else {
-                this.push(key,value);
-            }
+            this.push(key,value);
             this.timestampMap.set(key,timestamp);
             mt.level = ModifyLevel.DATA_CHANGED;
         }
@@ -426,26 +397,26 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
      * @return the modify level.
      * @param key
      * @param value
-     * @param timestamp
-     * @param ifContains
-     * @param potentialInsert
+     * @param args
      * @param mt
      * @private
      */
-    _update(key: string, value: any, {timestamp,ifContains,potentialInsert} : UpdateArgs, mt : ModifyToken): void
+    _update(key: string, value: any, args : UpdateArgs, mt : ModifyToken): void
     {
+        const {timestamp,if : ifOption,potentialInsert} = args;
+
         const index = this.keyMap.get(key);
 
         if(index === undefined){
             if(potentialInsert){
                 mt.potential = true;
-                this._insert(key,value,{timestamp,ifContains,potentialUpdate : false},mt);
+                this._insert(key,value,args,mt);
                 mt.potential = true;
             }
             return;
         }
 
-        if(ifContains !== undefined && (this.findItem(ifContains) === undefined)){return;}
+        if(ifOption !== undefined && !(args.if = this.checkIfConditions(ifOption))) return;
 
         if (DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
             mt.level = ModifyLevel.DATA_TOUCHED;
@@ -471,15 +442,16 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
      * Delete process.
      * @return if the action was fully executed. (Data changed)
      * @param key
-     * @param timestamp
-     * @param ifContains
+     * @param args
      * @param mt
      * @private
      */
-    _delete(key: string, {timestamp,ifContains} : DeleteArgs, mt : ModifyToken): void {
+    _delete(key: string, args : DeleteArgs, mt : ModifyToken): void {
         if(!this.hasKey(key)) return;
 
-        if(ifContains !== undefined && (this.findItem(ifContains) === undefined)){return;}
+        const {timestamp,if : ifOption} = args;
+
+        if(ifOption !== undefined && !(args.if = this.checkIfConditions(ifOption))) return;
 
         if (DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
             this.deleteValue(key);

@@ -17,11 +17,12 @@ import {DbsComparator}                                 from "../dbsComparator";
 import forint                                          from "forint";
 import {ModifyToken}                                   from "./modifyToken";
 import {deepEqual}                                     from "../../../utils/deepEqual";
-import {DbCudProcessedSelector,
-    DbForintQuery,
-    DeleteArgs,
+import {
+    DbCudProcessedSelector,
+    DeleteArgs, IfOptionArgsValue, IfQuery,
     InsertArgs,
-    UpdateArgs} from "../../dbDefinitions";
+    UpdateArgs
+} from "../../dbDefinitions";
 
 export default class DbsHead implements DbsComponent {
 
@@ -129,15 +130,40 @@ export default class DbsHead implements DbsComponent {
         return {mergedValue : newValue,dataChanged : true};
     }
 
-    private containsMatch(forintQuery : DbForintQuery) : boolean {
+    private checkIfConditions(ifOption : IfOptionArgsValue) : boolean {
+        if(typeof ifOption === 'boolean') return ifOption;
+
         const data = this.data;
-        if(data === undefined) return false;
-        const keyQuery = forintQuery.key;
-        const valueQuery = forintQuery.value;
-        if(keyQuery || valueQuery){
-            const keyQueryFunc = keyQuery ? forint(keyQuery) : undefined;
-            const valueQueryFunc = valueQuery ? forint(valueQuery) : undefined;
-            return (!keyQueryFunc || keyQueryFunc('')) && (!valueQueryFunc || valueQueryFunc(data));
+        const dataExists = data !== undefined;
+        const queriesLength = ifOption.length;
+        let tmpRes;
+        let tmpQuery : IfQuery;
+        let tmpKeyQuery;
+        let tmpKeyQueryFunc;
+        let tmpValueQuery;
+        let tmpValueQueryFunc;
+        for(let i = 0; i < queriesLength; i++) {
+            //query
+            tmpQuery = ifOption[i];
+            tmpKeyQuery = tmpQuery.key;
+            tmpValueQuery = tmpQuery.value;
+            if(tmpKeyQuery || tmpValueQuery) {
+                tmpKeyQueryFunc = tmpKeyQuery ? forint(tmpKeyQuery) : undefined;
+                tmpValueQueryFunc = tmpValueQuery ? forint(tmpValueQuery) : undefined;
+                if ((!tmpKeyQuery || tmpKeyQueryFunc('')) && (!tmpValueQuery || tmpValueQueryFunc(data))) {
+                    //query match
+                    tmpRes = !tmpQuery.not;
+                }
+                else {
+                    //not match
+                    tmpRes = !!tmpQuery.not;
+                }
+            }
+            else {
+                //any constant
+                tmpRes = tmpQuery.not ? !dataExists : dataExists;
+            }
+            if (!tmpRes) return false;
         }
         return true;
     }
@@ -153,24 +179,24 @@ export default class DbsHead implements DbsComponent {
     insert(selector : DbCudProcessedSelector, value: any,args : InsertArgs,mt : ModifyToken): void {
         if (selector.length === 0) {
             this._insert(value,args,mt);
-        } else if (selector.length > 0 && isDbsComponent(this.componentValue)) {
+        } else if (isDbsComponent(this.componentValue)) {
             (this.componentValue as DbsComponent).insert(selector,value,args,mt);
         }
     }
 
     _insert(value: any,args : InsertArgs,mt : ModifyToken): void {
-        const {timestamp,ifContains,potentialUpdate} = args;
+        const {timestamp,if : ifOption,potentialUpdate} = args;
 
         if(this.componentValue !== undefined){
             if(potentialUpdate){
                 mt.potential = true;
-                this._update(value,{...args,potentialInsert : false},mt);
+                this._update(value,args,mt);
                 mt.potential = false;
             }
             return;
         }
 
-        if(ifContains !== undefined && (!this.containsMatch(ifContains))){return;}
+        if(ifOption !== undefined && !(args.if = this.checkIfConditions(ifOption))) return;
 
         if (DbUtils.checkTimestamp(this.timestamp,timestamp)) {
             const parsed = DbDataParser.parse(value);
@@ -192,24 +218,24 @@ export default class DbsHead implements DbsComponent {
     update(selector : DbCudProcessedSelector, value : any, args : UpdateArgs, mt : ModifyToken): void {
         if (selector.length === 0) {
             this._update(value,args,mt);
-        } else if (selector.length > 0 && isDbsComponent(this.componentValue)) {
+        } else if (isDbsComponent(this.componentValue)) {
             (this.componentValue as DbsComponent).update(selector,value,args,mt);
         }
     }
 
     _update(value : any, args : UpdateArgs, mt : ModifyToken): void {
-        const {timestamp,ifContains,potentialInsert} = args;
+        const {timestamp,if : ifOption,potentialInsert} = args;
 
         if(this.componentValue === undefined){
             if(potentialInsert){
                 mt.potential = true;
-                this._insert(value,{...args,potentialUpdate : false},mt);
+                this._insert(value,args,mt);
                 mt.potential = false;
             }
             return;
         }
 
-        if(ifContains !== undefined && (!this.containsMatch(ifContains))){return;}
+        if(ifOption !== undefined && !(args.if = this.checkIfConditions(ifOption))) return;
 
         if (DbUtils.checkTimestamp(this.timestamp, timestamp)) {
             mt.level = ModifyLevel.DATA_TOUCHED;
@@ -234,7 +260,7 @@ export default class DbsHead implements DbsComponent {
     delete(selector : DbCudProcessedSelector, args : DeleteArgs, mt : ModifyToken): void {
         if (selector.length === 0) {
             this._delete(args,mt);
-        } else if (selector.length > 0 && isDbsComponent(this.componentValue)) {
+        } else if (isDbsComponent(this.componentValue)) {
             (this.componentValue as DbsComponent).delete(selector,args,mt);
         }
     }
@@ -242,9 +268,9 @@ export default class DbsHead implements DbsComponent {
     _delete(args : DeleteArgs, mt : ModifyToken): void {
         if(this.componentValue === undefined) return;
 
-        const {timestamp,ifContains} = args;
+        const {timestamp,if : ifOption} = args;
 
-        if(ifContains !== undefined && (!this.containsMatch(ifContains))){return;}
+        if(ifOption !== undefined && !(args.if = this.checkIfConditions(ifOption))) return;
 
         if (DbUtils.checkTimestamp(this.timestamp, timestamp)) {
             this.componentValue = undefined;

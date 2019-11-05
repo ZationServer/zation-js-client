@@ -25,7 +25,7 @@ import {
     DbClientOutputSignalPackage,
     DbCudProcessedSelector,
     DbCudSelector, DeleteArgs,
-    IfContainsOption,
+    IfOption,
     InfoOption, InsertArgs, PotentialInsertOption, PotentialUpdateOption,
     TimestampOption, UpdateArgs
 } from "./dbDefinitions";
@@ -751,7 +751,7 @@ export default class Databox implements DbEditAble {
                         timestamp,
                         code: c,
                         data: d,
-                        ifContains: operation.i,
+                        if: operation.i,
                         potentialInsert: !!operation.p
                     });
                     break;
@@ -760,7 +760,7 @@ export default class Databox implements DbEditAble {
                         timestamp,
                         code: c,
                         data: d,
-                        ifContains: operation.i,
+                        if: operation.i,
                         potentialUpdate: !!operation.p
                     });
                     break;
@@ -769,7 +769,7 @@ export default class Databox implements DbEditAble {
                         timestamp,
                         code: c,
                         data: d,
-                        ifContains: operation.i,
+                        if: operation.i,
                     });
                     break;
             }
@@ -888,7 +888,7 @@ export default class Databox implements DbEditAble {
      * @param value
      * @param options
      */
-    insert(selector: DbCudSelector, value: any, options: IfContainsOption & PotentialUpdateOption & InfoOption & TimestampOption = {}): Databox {
+    insert(selector: DbCudSelector, value: any, options: IfOption & PotentialUpdateOption & InfoOption & TimestampOption = {}): Databox {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         this._insert(DbUtils.processSelector(selector),value,options as (InsertArgs & InfoOption));
         return this;
@@ -935,7 +935,7 @@ export default class Databox implements DbEditAble {
      * @param value
      * @param options
      */
-    update(selector: DbCudSelector, value: any, options: IfContainsOption & PotentialInsertOption & InfoOption & TimestampOption = {}): Databox {
+    update(selector: DbCudSelector, value: any, options: IfOption & PotentialInsertOption & InfoOption & TimestampOption = {}): Databox {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         this._update(DbUtils.processSelector(selector),value,options as (UpdateArgs & InfoOption));
         return this;
@@ -981,7 +981,7 @@ export default class Databox implements DbEditAble {
      * All numeric values will be converted to a string because the key can only be a string.
      * @param options
      */
-    delete(selector: DbCudSelector, options: IfContainsOption & InfoOption & TimestampOption = {}): Databox {
+    delete(selector: DbCudSelector, options: IfOption & InfoOption & TimestampOption = {}): Databox {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         this._delete(DbUtils.processSelector(selector),options as (DeleteArgs & InfoOption));
         return this;

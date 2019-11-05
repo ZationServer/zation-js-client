@@ -11,6 +11,7 @@ import {
     DbCudProcessedSelector,
     DbCudProcessedSelectorItem,
     DbForintQuery, DeleteArgs,
+    IfOptionArgsValue, IfQuery,
     InsertArgs, UpdateArgs
 } from "../../dbDefinitions";
 
@@ -55,23 +56,52 @@ export default abstract class DbsSimplePathCoordinator {
         for(let i = 0; i < keysLegth; i++){func(keysTmp[i]);}
     }
 
-    findItem(forintQuery : DbForintQuery) : string | undefined {
+    checkIfConditions(ifOption : IfOptionArgsValue) : boolean {
+        if(typeof ifOption === 'boolean') return ifOption;
+
         const keysTmp = this._getAllKeys();
-        const keysLegth = keysTmp.length;
-        const keyQuery = forintQuery.key;
-        const valueQuery = forintQuery.value;
-        if(keyQuery || valueQuery){
-            const keyQueryFunc = keyQuery ? forint(keyQuery) : undefined;
-            const valueQueryFunc = valueQuery ? forint(valueQuery) : undefined;
-            let tmpKey;
-            for(let i = 0; i < keysLegth; i++){
-                tmpKey = keysTmp[i];
-                if((!keyQueryFunc || keyQueryFunc(tmpKey)) && (!valueQueryFunc || valueQueryFunc(this._getValue(tmpKey))))
-                    return tmpKey;
+        const keysLength = keysTmp.length;
+        const itemExists =  keysLength > 0;
+
+        const queriesLength = ifOption.length;
+        let tmpRes;
+        let tmpMatch;
+        let tmpQuery : IfQuery;
+        let tmpKeyQuery;
+        let tmpKeyQueryFunc;
+        let tmpValueQuery;
+        let tmpValueQueryFunc;
+        for(let i = 0; i < queriesLength; i++) {
+            //query
+            tmpQuery = ifOption[i];
+            tmpKeyQuery = tmpQuery.key;
+            tmpValueQuery = tmpQuery.value;
+            if (tmpKeyQuery || tmpValueQuery) {
+                tmpKeyQueryFunc = tmpKeyQuery ? forint(tmpKeyQuery) : undefined;
+                tmpValueQueryFunc = tmpValueQuery ? forint(tmpValueQuery) : undefined;
+                tmpMatch = false;
+                let tmpKey;
+                for (let i = 0; i < keysLength; i++) {
+                    //elements
+                    tmpKey = keysTmp[i];
+                    if ((!tmpKeyQueryFunc || tmpKeyQueryFunc(tmpKey)) && (!tmpValueQueryFunc || tmpValueQueryFunc(this._getValue(tmpKey)))) {
+                        //query match
+                        tmpRes = !tmpQuery.not;
+                        tmpMatch = true;
+                        break;
+                    }
+                }
+                if(!tmpMatch){
+                    //not match
+                    tmpRes = !!tmpQuery.not;
+                }
+            } else {
+                //any constant
+                tmpRes = tmpQuery.not ? !itemExists : itemExists;
             }
-            return undefined;
+            if (!tmpRes) return false;
         }
-        return keysLegth > 0 ? keysTmp[0] : undefined;
+        return true;
     }
 
     /**
@@ -153,8 +183,10 @@ export default abstract class DbsSimplePathCoordinator {
             const nextComponents = this._getDbsComponents(selector[0]);
             selector.shift();
             const len = nextComponents.length;
+            //Clone args because if conditions result can only be prepared for one element.
+            const cloneArgs = (len > 1) && args.if !== undefined;
             for(let i = 0; i < len; i++) {
-                (nextComponents[i] as DbsComponent).insert(selector,value,args,mt);
+                (nextComponents[i] as DbsComponent).insert(selector,value,cloneArgs ? {...args} : args,mt);
             }
         }
     }
@@ -193,8 +225,10 @@ export default abstract class DbsSimplePathCoordinator {
             const nextComponents = this._getDbsComponents(selector[0]);
             selector.shift();
             const len = nextComponents.length;
+            //Clone args because if conditions result can only be prepared for one element.
+            const cloneArgs = (len > 1) && args.if !== undefined;
             for(let i = 0; i < len; i++) {
-                (nextComponents[i] as DbsComponent).update(selector,value,args,mt);
+                (nextComponents[i] as DbsComponent).update(selector,value,cloneArgs ? {...args} : args,mt);
             }
         }
     }
@@ -230,8 +264,10 @@ export default abstract class DbsSimplePathCoordinator {
             const nextComponents = this._getDbsComponents(selector[0]);
             selector.shift();
             const len = nextComponents.length;
+            //Clone args because if conditions result can only be prepared for one element.
+            const cloneArgs = (len > 1) && args.if !== undefined;
             for(let i = 0; i < len; i++){
-                (nextComponents[i] as DbsComponent).delete(selector,args,mt);
+                (nextComponents[i] as DbsComponent).delete(selector,cloneArgs ? {...args} : args,mt);
             }
         }
     }

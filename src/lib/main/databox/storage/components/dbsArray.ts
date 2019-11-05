@@ -182,14 +182,14 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
      * @return if the action was fully executed. (Data changed)
      * @param key
      * @param value
-     * @param timestamp
-     * @param ifContains
-     * @param potentialUpdate
+     * @param args
      * @param mt
      * @private
      */
-    _insert(key: string, value: any, {timestamp,ifContains,potentialUpdate} : InsertArgs,mt : ModifyToken): void
+    _insert(key: string, value: any, args : InsertArgs, mt : ModifyToken): void
     {
+        const {timestamp,if : ifOption,potentialUpdate} = args;
+
         let index = parseInt(key);
         if(isNaN(index)){
             index = this.componentStructure.length;
@@ -198,13 +198,13 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
         if(this.hasIndex(index)) {
             if(potentialUpdate){
                 mt.potential = true;
-                this._update(key,value,{timestamp,ifContains,potentialInsert : false},mt);
+                this._update(key,value,args,mt);
                 mt.potential = false;
             }
             return;
         }
 
-        if(ifContains !== undefined && (this.findItem(ifContains) === undefined)){return;}
+        if(ifOption !== undefined && !(args.if = this.checkIfConditions(ifOption))) return;
 
         if (DbUtils.checkTimestamp(this.getTimestamp(index),timestamp)) {
             const parsed = DbDataParser.parse(value);
@@ -220,26 +220,26 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
      * @return the modify level.
      * @param key
      * @param value
-     * @param timestamp
-     * @param ifContains
-     * @param potentialInsert
+     * @param args
      * @param mt
      * @private
      */
-    _update(key: string, value: any, {timestamp,ifContains,potentialInsert} : UpdateArgs,mt : ModifyToken): void
+    _update(key: string, value: any, args : UpdateArgs, mt : ModifyToken): void
     {
+        const {timestamp,if : ifOption,potentialInsert} = args;
+
         const index = parseInt(key);
 
         if(!this.hasIndex(index)) {
             if(potentialInsert){
                 mt.potential = true;
-                this._insert(key,value,{timestamp,ifContains,potentialUpdate : false},mt);
+                this._insert(key,value,args,mt);
                 mt.potential = false;
             }
             return;
         }
 
-        if(ifContains !== undefined && (this.findItem(ifContains) === undefined)){return;}
+        if(ifOption !== undefined && !(args.if = this.checkIfConditions(ifOption))) return;
 
         if (DbUtils.checkTimestamp(this.getTimestamp(index),timestamp)) {
             mt.level = ModifyLevel.DATA_TOUCHED;
@@ -258,12 +258,11 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
      * Delete process.
      * @return if the action was fully executed. (Data changed)
      * @param key
-     * @param timestamp
-     * @param ifContains
+     * @param args
      * @param mt
      * @private
      */
-    _delete(key: string, {timestamp,ifContains} : DeleteArgs,mt : ModifyToken): void {
+    _delete(key: string, args : DeleteArgs, mt : ModifyToken): void {
         let index = parseInt(key);
         if(isNaN(index)){
             index = this.componentStructure.length-1;
@@ -272,7 +271,9 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
 
         if(!this.hasIndex(index)) return;
 
-        if(ifContains !== undefined && (this.findItem(ifContains) === undefined)){return;}
+        const {timestamp,if : ifOption} = args;
+
+        if(ifOption !== undefined && !(args.if = this.checkIfConditions(ifOption))) return;
 
         if (DbUtils.checkTimestamp(this.getTimestamp(index),timestamp)) {
             this.data.splice(index, 1);

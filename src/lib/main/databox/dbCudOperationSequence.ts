@@ -8,7 +8,7 @@ import {
     CudOperation,
     CudType,
     DbCudSelector,
-    IfContainsOption,
+    IfOption,
     InfoOption, PotentialInsertOption,
     PotentialUpdateOption,
 } from "./dbDefinitions";
@@ -60,14 +60,14 @@ export default class DbCudOperationSequence
      * @param value
      * @param options
      */
-    insert(selector : DbCudSelector,value : any,{ifContains,code,data,potentialUpdate} : IfContainsOption & PotentialUpdateOption & InfoOption = {}) : DbCudOperationSequence {
+    insert(selector : DbCudSelector,value : any,{if,code,data,potentialUpdate} : IfOption & PotentialUpdateOption & InfoOption = {}) : DbCudOperationSequence {
         this.operations.push({
             t : CudType.insert,
             s : DbUtils.processSelector(selector),
             v : value,
             c : code,
             d : data,
-            i : ifContains,
+            i : if,
             p : potentialUpdate ? 1 : 0
         });
         return this;
@@ -94,14 +94,14 @@ export default class DbCudOperationSequence
      * @param value
      * @param options
      */
-    update(selector : DbCudSelector,value : any,{ifContains,code,data,potentialInsert} : IfContainsOption & PotentialInsertOption & InfoOption = {}) : DbCudOperationSequence {
+    update(selector : DbCudSelector,value : any,{if,code,data,potentialInsert} : IfOption & PotentialInsertOption & InfoOption = {}) : DbCudOperationSequence {
         this.operations.push({
             t : CudType.update,
             s : DbUtils.processSelector(selector),
             v : value,
             c : code,
             d : data,
-            i : ifContains,
+            i : if,
             p : potentialInsert ? 1 : 0
         });
         return this;
@@ -127,13 +127,13 @@ export default class DbCudOperationSequence
      * All numeric values will be converted to a string because the key can only be a string.
      * @param options
      */
-    delete(selector : DbCudSelector,{ifContains,code,data} : IfContainsOption & InfoOption = {}) : DbCudOperationSequence {
+    delete(selector : DbCudSelector,{if,code,data} : IfOption & InfoOption = {}) : DbCudOperationSequence {
         this.operations.push({
             t : CudType.delete,
             s : DbUtils.processSelector(selector),
             c : code,
             d : data,
-            i : ifContains
+            i : if
         });
         return this;
     }

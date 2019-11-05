@@ -93,7 +93,7 @@ describe('MAIN.Databox.Storage',() => {
             it('KeyArray - normal (With ifContains)', () => {
                 const head = new DbsHead(buildKeyArray([{id : 1},{id : 2},{id : 4},{id : 5}],'id'));
 
-                head.insert(['3'],{id : 3},{timestamp : Date.now(),ifContains : {key : '4'}},createSimpleModifyToken());
+                head.insert(['3'],{id : 3},{timestamp : Date.now(),if : [{key : '4'}]},createSimpleModifyToken());
 
                 assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
 
