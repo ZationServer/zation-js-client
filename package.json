@@ -72,7 +72,7 @@
     "form-data": "2.3.3",
     "fast-stringify": "1.1.1",
     "tiny-emitter": "2.1.0",
-    "forint": "0.1.6"
+    "forint": "0.1.7"
   },
   "devDependencies": {
     "@babel/core": "7.1.0",
