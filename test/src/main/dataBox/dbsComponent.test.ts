@@ -80,6 +80,20 @@ describe('MAIN.Databox.Storage',() => {
 
         describe('Insert',() => {
 
+            it('Head', () => {
+                const head = new DbsHead(undefined);
+
+                head.insert([],{name : 'max'},{timestamp : Date.now()},createSimpleModifyToken());
+
+                assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
+                assert.deepEqual(head.getData(),{name : 'max'});
+
+                head.insert([],{name : 'luca'},{timestamp : Date.now()},createSimpleModifyToken());
+
+                assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
+                assert.deepEqual(head.getData(),{name : 'max'});
+            });
+
             it('KeyArray - normal', () => {
                 const head = new DbsHead(buildKeyArray([{id : 1},{id : 2},{id : 3}],'id'));
 
@@ -143,6 +157,16 @@ describe('MAIN.Databox.Storage',() => {
 
         describe('Update',() => {
 
+            it('Head', () => {
+                const head = new DbsHead({name : 'luca'});
+
+                head.update([],{name : 'tara'},{timestamp : Date.now()},createSimpleModifyToken());
+
+                assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
+
+                assert.deepEqual(head.getData(),{name : 'tara'});
+            });
+
             it('KeyArray - normal', () => {
                 const head = new DbsHead(buildKeyArray([{id : 1},{id : 3},{id : 4}],'id'));
 
@@ -195,6 +219,16 @@ describe('MAIN.Databox.Storage',() => {
         });
 
         describe('Delete',() => {
+
+            it('Head', () => {
+                const head = new DbsHead({name : 'luca'});
+
+                head.delete([],{timestamp : Date.now()},createSimpleModifyToken());
+
+                assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
+
+                assert.deepEqual(head.getData(),undefined);
+            });
 
             it('KeyArray - normal', () => {
                 const head = new DbsHead(buildKeyArray([{id : 1},{id : 2},{id : 3},{id : 4}],'id'));
