@@ -299,6 +299,20 @@ describe('MAIN.Databox.Storage',() => {
             assert.deepEqual(head.getData(),[{id : 1},{id : 2},{id : 2},{id : 3},{id : 4}]);
         });
 
+        it('KeyArray - Sort-3 (With insert)', () => {
+            const head = new DbsHead(buildKeyArray([{id : 2},{id : 4},{id : 3}],'id'));
+
+            head.forEachComp((c) => {
+                c.setComparator((a,b) => b.id-a.id);
+            });
+
+            head.insert(['1'],{id : 1},{timestamp : Date.now()},createSimpleModifyToken());
+            head.insert(['5'],{id : 5},{timestamp : Date.now()},createSimpleModifyToken());
+
+            assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
+            assert.deepEqual(head.getData(),[{id : 5},{id :4},{id : 3},{id : 2},{id : 1}]);
+        });
+
     });
 
     describe('Timestamp tests', () => {
