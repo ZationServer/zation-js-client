@@ -6,7 +6,7 @@ Copyright(c) Luca Scaringella
 
 import {
     CudOperation,
-    DbCudSelector,
+    DbSelector,
     IfOption,
     InfoOption, PotentialInsertOption,
     PotentialUpdateOption,
@@ -59,7 +59,7 @@ export default class DbCudOperationSequence
      * @param value
      * @param options
      */
-    insert(selector : DbCudSelector,value : any,{if : ifOption,potentialUpdate,code,data} : IfOption & PotentialUpdateOption & InfoOption = {}) : DbCudOperationSequence {
+    insert(selector : DbSelector, value : any, {if : ifOption,potentialUpdate,code,data} : IfOption & PotentialUpdateOption & InfoOption = {}) : DbCudOperationSequence {
         this.operations.push(DbUtils.buildInsert(selector,value,ifOption,potentialUpdate,code,data));
         return this;
     }
@@ -85,7 +85,7 @@ export default class DbCudOperationSequence
      * @param value
      * @param options
      */
-    update(selector : DbCudSelector,value : any,{if : ifOption,potentialInsert,code,data} : IfOption & PotentialInsertOption & InfoOption = {}) : DbCudOperationSequence {
+    update(selector : DbSelector, value : any, {if : ifOption,potentialInsert,code,data} : IfOption & PotentialInsertOption & InfoOption = {}) : DbCudOperationSequence {
         this.operations.push(DbUtils.buildUpdate(selector,value,ifOption,potentialInsert,code,data));
         return this;
     }
@@ -110,7 +110,7 @@ export default class DbCudOperationSequence
      * All numeric values will be converted to a string because the key can only be a string.
      * @param options
      */
-    delete(selector : DbCudSelector,{if : ifOption,code,data} : IfOption & InfoOption = {}) : DbCudOperationSequence {
+    delete(selector : DbSelector, {if : ifOption,code,data} : IfOption & InfoOption = {}) : DbCudOperationSequence {
         this.operations.push(DbUtils.buildDelete(selector,ifOption,code,data));
         return this;
     }

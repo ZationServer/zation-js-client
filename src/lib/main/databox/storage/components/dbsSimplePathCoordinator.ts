@@ -8,8 +8,8 @@ import DbsComponent  from "./dbsComponent";
 import forint        from "forint";
 import {ModifyToken} from "./modifyToken";
 import {
-    DbCudProcessedSelector,
-    DbCudProcessedSelectorItem,
+    DbProcessedSelector,
+    DbProcessedSelectorItem,
     DbForintQuery,
     IfOptionProcessArgsValue,
     IfQuery,
@@ -111,7 +111,7 @@ export default abstract class DbsSimplePathCoordinator {
      * Returns all dbsComponents with a single selector item.
      * @param selectorItem
      */
-    _getDbsComponents(selectorItem : DbCudProcessedSelectorItem) : DbsComponent[] {
+    _getDbsComponents(selectorItem : DbProcessedSelectorItem) : DbsComponent[] {
         if(typeof selectorItem === 'string'){
             const component = this._getDbsComponent(selectorItem);
             if(component) return [component];
@@ -136,7 +136,7 @@ export default abstract class DbsSimplePathCoordinator {
      * Returns all dbsComponents with selector.
      * @param selector
      */
-    getDbsComponents(selector : DbCudProcessedSelector) : DbsComponent[] {
+    getDbsComponents(selector : DbProcessedSelector) : DbsComponent[] {
         if(selector.length === 1){
             return this._getDbsComponents(selector[0]);
         }
@@ -170,7 +170,7 @@ export default abstract class DbsSimplePathCoordinator {
      * @param args
      * @param mt
      */
-    insert(selector : DbCudProcessedSelector, value : any, args : InsertProcessArgs, mt : ModifyToken): void
+    insert(selector : DbProcessedSelector, value : any, args : InsertProcessArgs, mt : ModifyToken): void
     {
         if(selector.length === 1){
             if(typeof selector[0] === 'string'){
@@ -213,7 +213,7 @@ export default abstract class DbsSimplePathCoordinator {
      * @param args
      * @param mt
      */
-    update(selector : DbCudProcessedSelector, value : any, args : UpdateProcessArgs, mt : ModifyToken): void
+    update(selector : DbProcessedSelector, value : any, args : UpdateProcessArgs, mt : ModifyToken): void
     {
         if(selector.length === 1){
             if(typeof selector[0] === 'string'){
@@ -253,7 +253,7 @@ export default abstract class DbsSimplePathCoordinator {
      * @param args
      * @param mt
      */
-    delete(selector : DbCudProcessedSelector, args : DeleteProcessArgs, mt : ModifyToken): void {
+    delete(selector : DbProcessedSelector, args : DeleteProcessArgs, mt : ModifyToken): void {
         if(selector.length === 1){
             if(typeof selector[0] === 'string'){
                 this._delete(selector[0] as string,args,mt);

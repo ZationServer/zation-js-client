@@ -8,8 +8,8 @@ import {DbEditAble}            from "./dbEditAble";
 import {
     CudOperation,
     CudType,
-    DbCudProcessedSelector,
-    DbCudSelector,
+    DbProcessedSelector,
+    DbSelector,
     IfOptionProcessedValue,
     IfOptionValue
 } from "./dbDefinitions";
@@ -55,13 +55,13 @@ export default class DbUtils {
         return ifOption;
     }
 
-    static processSelector(selector : DbCudSelector) : DbCudProcessedSelector {
+    static processSelector(selector : DbSelector) : DbProcessedSelector {
         if(Array.isArray(selector)) return selector.map((v) => typeof v === 'number' ? v.toString() : v);
         else if (typeof selector === 'string') return (selector === '' ? [] : selector.split('.'));
         return [typeof selector === 'number' ? selector.toString() : selector];
     }
 
-    static buildInsert(selector : DbCudSelector, value : any, ifOption ?: IfOptionValue, potentialUpdate ?: boolean,
+    static buildInsert(selector : DbSelector, value : any, ifOption ?: IfOptionValue, potentialUpdate ?: boolean,
                        code ?: number | string, data ?: any) : CudOperation {
         return {
             t : CudType.insert,
@@ -74,7 +74,7 @@ export default class DbUtils {
         };
     }
 
-    static buildUpdate(selector : DbCudSelector, value : any, ifOption ?: IfOptionValue, potentialInsert ?: boolean,
+    static buildUpdate(selector : DbSelector, value : any, ifOption ?: IfOptionValue, potentialInsert ?: boolean,
                        code ?: number | string, data ?: any) : CudOperation {
         return {
             t : CudType.update,
@@ -87,7 +87,7 @@ export default class DbUtils {
         };
     }
 
-    static buildDelete(selector : DbCudSelector, ifOption ?: IfOptionValue,
+    static buildDelete(selector : DbSelector, ifOption ?: IfOptionValue,
                        code ?: number | string, data ?: any) : CudOperation {
         return {
             t : CudType.delete,

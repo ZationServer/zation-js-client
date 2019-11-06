@@ -23,8 +23,8 @@ import {
     DbClientOutputPackage,
     DbClientOutputReloadPackage,
     DbClientOutputSignalPackage,
-    DbCudProcessedSelector,
-    DbCudSelector, DeleteArgs,
+    DbProcessedSelector,
+    DbSelector, DeleteArgs,
     IfOption,
     InfoOption, InsertArgs, PotentialInsertOption, PotentialUpdateOption,
     TimestampOption, UpdateArgs
@@ -888,7 +888,7 @@ export default class Databox implements DbEditAble {
      * @param value
      * @param options
      */
-    insert(selector: DbCudSelector, value: any, options: IfOption & PotentialUpdateOption & InfoOption & TimestampOption = {}): Databox {
+    insert(selector: DbSelector, value: any, options: IfOption & PotentialUpdateOption & InfoOption & TimestampOption = {}): Databox {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         options.if = DbUtils.processIfOption(options.if);
         this._insert(DbUtils.processSelector(selector),value,options as (InsertArgs & InfoOption));
@@ -903,7 +903,7 @@ export default class Databox implements DbEditAble {
      * @param options
      * @private
      */
-    _insert(selector: DbCudProcessedSelector, value: any, options: InsertArgs & InfoOption): void {
+    _insert(selector: DbProcessedSelector, value: any, options: InsertArgs & InfoOption): void {
         for (let dbStorage of this.dbStorages) {
             // @ts-ignore
             dbStorage._insert(selector, value, options);
@@ -936,7 +936,7 @@ export default class Databox implements DbEditAble {
      * @param value
      * @param options
      */
-    update(selector: DbCudSelector, value: any, options: IfOption & PotentialInsertOption & InfoOption & TimestampOption = {}): Databox {
+    update(selector: DbSelector, value: any, options: IfOption & PotentialInsertOption & InfoOption & TimestampOption = {}): Databox {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         options.if = DbUtils.processIfOption(options.if);
         this._update(DbUtils.processSelector(selector),value,options as (UpdateArgs & InfoOption));
@@ -951,7 +951,7 @@ export default class Databox implements DbEditAble {
      * @param options
      * @private
      */
-    _update(selector: DbCudProcessedSelector, value: any, options: UpdateArgs & InfoOption): void {
+    _update(selector: DbProcessedSelector, value: any, options: UpdateArgs & InfoOption): void {
         for (let dbStorage of this.dbStorages) {
             // @ts-ignore
             dbStorage._update(selector, value, options);
@@ -983,7 +983,7 @@ export default class Databox implements DbEditAble {
      * All numeric values will be converted to a string because the key can only be a string.
      * @param options
      */
-    delete(selector: DbCudSelector, options: IfOption & InfoOption & TimestampOption = {}): Databox {
+    delete(selector: DbSelector, options: IfOption & InfoOption & TimestampOption = {}): Databox {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         options.if = DbUtils.processIfOption(options.if);
         this._delete(DbUtils.processSelector(selector),options as (DeleteArgs & InfoOption));
@@ -997,7 +997,7 @@ export default class Databox implements DbEditAble {
      * @param options
      * @private
      */
-    _delete(selector: DbCudProcessedSelector, options: DeleteArgs & InfoOption): void {
+    _delete(selector: DbProcessedSelector, options: DeleteArgs & InfoOption): void {
         for (let dbStorage of this.dbStorages) {
             // @ts-ignore
             dbStorage._delete(selector, options);

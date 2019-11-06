@@ -18,7 +18,7 @@ import forint                                          from "forint";
 import {ModifyToken}                                   from "./modifyToken";
 import {deepEqual}                                     from "../../../utils/deepEqual";
 import {
-    DbCudProcessedSelector,
+    DbProcessedSelector,
     IfOptionProcessArgsValue,
     IfQuery,
     InsertProcessArgs,
@@ -82,7 +82,7 @@ export default class DbsHead implements DbsComponent {
      * Returns the dbs component with that selector.
      * @param selector
      */
-    getDbsComponents(selector : DbCudProcessedSelector): DbsComponent[] {
+    getDbsComponents(selector : DbProcessedSelector): DbsComponent[] {
         if (selector.length === 0) {
             return isDbsComponent(this.componentValue) ? [this.componentValue] : [];
         } else if (selector.length > 0) {
@@ -178,7 +178,7 @@ export default class DbsHead implements DbsComponent {
      * @param args
      * @param mt
      */
-    insert(selector : DbCudProcessedSelector, value: any,args : InsertProcessArgs,mt : ModifyToken): void {
+    insert(selector : DbProcessedSelector, value: any, args : InsertProcessArgs, mt : ModifyToken): void {
         if (selector.length === 0) {
             this._insert(value,args,mt);
         } else if (isDbsComponent(this.componentValue)) {
@@ -217,7 +217,7 @@ export default class DbsHead implements DbsComponent {
      * @param args
      * @param mt
      */
-    update(selector : DbCudProcessedSelector, value : any, args : UpdateProcessArgs, mt : ModifyToken): void {
+    update(selector : DbProcessedSelector, value : any, args : UpdateProcessArgs, mt : ModifyToken): void {
         if (selector.length === 0) {
             this._update(value,args,mt);
         } else if (isDbsComponent(this.componentValue)) {
@@ -259,7 +259,7 @@ export default class DbsHead implements DbsComponent {
      * @param args
      * @param mt
      */
-    delete(selector : DbCudProcessedSelector, args : DeleteProcessArgs, mt : ModifyToken): void {
+    delete(selector : DbProcessedSelector, args : DeleteProcessArgs, mt : ModifyToken): void {
         if (selector.length === 0) {
             this._delete(args,mt);
         } else if (isDbsComponent(this.componentValue)) {

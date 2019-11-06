@@ -5,12 +5,16 @@ Copyright(c) Luca Scaringella
  */
 
 import {
-    DbCudProcessedSelector,
-    DbCudSelector, DeleteArgs,
+    DbProcessedSelector,
+    DbSelector,
+    DeleteArgs,
     IfOption,
-    InfoOption, InsertArgs, PotentialInsertOption,
+    InfoOption,
+    InsertArgs,
+    PotentialInsertOption,
     PotentialUpdateOption,
-    TimestampOption, UpdateArgs
+    TimestampOption,
+    UpdateArgs
 } from "../dbDefinitions";
 import ObjectUtils                                      from "../../utils/objectUtils";
 import DbsHead                                          from "./components/dbsHead";
@@ -30,9 +34,9 @@ import {createDeleteModifyToken,
 type ClearOnCloseMiddleware = (code : number | string | undefined,data : any) => boolean;
 type ClearOnKickOutMiddleware = (code : number | string | undefined,data : any) => boolean;
 type ReloadMiddleware = (reloadData : DbStorage) => boolean;
-type InsertMiddleware = (selector : DbCudProcessedSelector, value : any,options : IfOption & InfoOption & TimestampOption) => boolean;
-type UpdateMiddleware = (selector : DbCudProcessedSelector, value : any,options : InfoOption & TimestampOption) => boolean;
-type DeleteMiddleware = (selector : DbCudProcessedSelector, options : InfoOption & TimestampOption) => boolean;
+type InsertMiddleware = (selector : DbProcessedSelector, value : any, options : IfOption & InfoOption & TimestampOption) => boolean;
+type UpdateMiddleware = (selector : DbProcessedSelector, value : any, options : InfoOption & TimestampOption) => boolean;
+type DeleteMiddleware = (selector : DbProcessedSelector, options : InfoOption & TimestampOption) => boolean;
 type AddFetchDataMiddleware = (counter : number,fetchedData : DbsHead) => boolean;
 
 export interface DbStorageOptions {
@@ -95,9 +99,9 @@ export const enum DataEventReason {
 
 export type OnDataChange = (reasons : DataEventReason[],storage : DbStorage) => void | Promise<void>;
 export type OnDataTouch = (reasons : DataEventReason[],storage : DbStorage) => void | Promise<void>;
-export type OnInsert = (selector : DbCudProcessedSelector, value : any,options : IfOption & InfoOption & TimestampOption) => void | Promise<void>;
-export type OnUpdate = (selector : DbCudProcessedSelector, value : any,options : InfoOption & TimestampOption) => void | Promise<void>;
-export type OnDelete = (selector : DbCudProcessedSelector, options : InfoOption & TimestampOption) => void | Promise<void>;
+export type OnInsert = (selector : DbProcessedSelector, value : any, options : IfOption & InfoOption & TimestampOption) => void | Promise<void>;
+export type OnUpdate = (selector : DbProcessedSelector, value : any, options : InfoOption & TimestampOption) => void | Promise<void>;
+export type OnDelete = (selector : DbProcessedSelector, options : InfoOption & TimestampOption) => void | Promise<void>;
 
 export default class DbStorage implements DbEditAble {
 
@@ -113,7 +117,7 @@ export default class DbStorage implements DbEditAble {
 
     private dbsHead : DbsHead = new DbsHead();
     private mainCompOptions: DbsComponentOptions = {};
-    private compOptionsConstraint : Map<string,{s : DbCudProcessedSelector,o : DbsComponentOptions}> = new Map();
+    private compOptionsConstraint : Map<string,{s : DbProcessedSelector,o : DbsComponentOptions}> = new Map();
 
     private cudSeqEditActive : boolean = false;
     private tmpCudInserted : boolean = false;
@@ -226,10 +230,8 @@ export default class DbStorage implements DbEditAble {
      * Sets a value merger.
      * The valueMerger is used when the component needs to merge two values.
      * These values can be anything except an object or array.
-     * You can provide a specific keyPath to the component.
-     * The keyPath can be a string array or a string where you can
-     * separate the keys with a dot.
-     * If you don't provide a keyPath, the merger will be set for all components.
+     * You can provide a specific selector to the component.
+     * If you don't provide a selector, the merger will be set for all components.
      * The storage will automatically update the component options, in case of new data.
      * @example
      * setValueMerger((oldValue,newValue) => {
@@ -239,10 +241,10 @@ export default class DbStorage implements DbEditAble {
      *     return newValue;
      * });
      * @param valueMerger
-     * @param keyPath
+     * @param selector
      */
-    setValueMerger(valueMerger : DbsValueMerger, keyPath ?: string | string[]) : DbStorage {
-        this.setCompOption((option) => option.valueMerger = valueMerger,keyPath);
+    setValueMerger(valueMerger : DbsValueMerger, selector ?: DbSelector) : DbStorage {
+        this.setCompOption((option) => option.valueMerger = valueMerger,selector);
         this.updateCompOptions();
         return this;
     }
@@ -252,25 +254,21 @@ export default class DbStorage implements DbEditAble {
      * Sets a Comparator.
      * The comparator can only be set on KeyArrays.
      * It will be used to sort the array and insert new data in the correct position.
-     * But if you provide a comparator the insert, update and
-     * merge processes need much more performance.
-     * You can provide a specific keyPath to the component.
-     * The keyPath can be a string array or a string where you can
-     * separate the keys with a dot.
-     * If you don't provide a keyPath, the merger will be set for all components.
+     * You can provide a specific selector to the component.
+     * If you don't provide a selector, the merger will be set for all components.
      * The storage will automatically update the component options, in case of new data.
      * @example
      * setComparator((a,b) => a.time - b.time,[]);
      * @param comparator
-     * @param keyPath
+     * @param selector
      */
-    setComparator(comparator : DbsComparator, keyPath ?: string | string[]) : DbStorage {
-        this.setCompOption((option) => option.comparator = comparator,keyPath);
+    setComparator(comparator : DbsComparator, selector ?: DbSelector) : DbStorage {
+        this.setCompOption((option) => option.comparator = comparator,selector);
         this.updateCompOptions(true);
         return this;
     }
 
-    private setCompOption(func : (option : DbsComponentOptions) => void, selector ?: DbCudSelector){
+    private setCompOption(func : (option : DbsComponentOptions) => void, selector ?: DbSelector){
         if(selector !== undefined){
             selector = DbUtils.processSelector(selector);
             const key = selector.join();
@@ -445,7 +443,7 @@ export default class DbStorage implements DbEditAble {
      * @param value
      * @param options
      */
-    insert(selector : DbCudSelector, value : any,options : IfOption & PotentialUpdateOption & InfoOption & TimestampOption = {}) : DbStorage {
+    insert(selector : DbSelector, value : any, options : IfOption & PotentialUpdateOption & InfoOption & TimestampOption = {}) : DbStorage {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         this._insert(DbUtils.processSelector(selector),value,options as (InsertArgs & InfoOption));
         return this;
@@ -459,7 +457,7 @@ export default class DbStorage implements DbEditAble {
      * @param options
      * @private
      */
-    _insert(selector : DbCudProcessedSelector, value : any,options : InsertArgs & InfoOption) : void {
+    _insert(selector : DbProcessedSelector, value : any, options : InsertArgs & InfoOption) : void {
         if(this.insertMiddleware(selector,value,options)) {
             const mt = createUpdateInsertModifyToken(this.hasDataChangeListener || this.hasUpdateListener);
 
@@ -501,7 +499,7 @@ export default class DbStorage implements DbEditAble {
      * @param value
      * @param options
      */
-    update(selector : DbCudSelector, value : any,options : IfOption & PotentialInsertOption & InfoOption & TimestampOption = {}) : DbStorage {
+    update(selector : DbSelector, value : any, options : IfOption & PotentialInsertOption & InfoOption & TimestampOption = {}) : DbStorage {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         this._update(DbUtils.processSelector(selector),value,options as (UpdateArgs & InfoOption));
         return this;
@@ -515,7 +513,7 @@ export default class DbStorage implements DbEditAble {
      * @param options
      * @private
      */
-    _update(selector : DbCudProcessedSelector, value : any,options : UpdateArgs & InfoOption) : void {
+    _update(selector : DbProcessedSelector, value : any, options : UpdateArgs & InfoOption) : void {
         if(this.updateMiddleware(selector,value,options)){
             const mt = createUpdateInsertModifyToken(this.hasDataChangeListener || this.hasUpdateListener);
 
@@ -557,7 +555,7 @@ export default class DbStorage implements DbEditAble {
      * All numeric values will be converted to a string because the key can only be a string.
      * @param options
      */
-    delete(selector : DbCudSelector,options : IfOption & InfoOption & TimestampOption = {}) : DbStorage {
+    delete(selector : DbSelector, options : IfOption & InfoOption & TimestampOption = {}) : DbStorage {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         this._delete(DbUtils.processSelector(selector),options as (DeleteArgs & InfoOption));
         return this;
@@ -570,7 +568,7 @@ export default class DbStorage implements DbEditAble {
      * @param options
      * @private
      */
-    _delete(selector : DbCudProcessedSelector,options : DeleteArgs & InfoOption) : void {
+    _delete(selector : DbProcessedSelector, options : DeleteArgs & InfoOption) : void {
         if(this.deleteMiddleware(selector,options)){
             const mt = createDeleteModifyToken();
             this.dbsHead.delete(selector,options,mt);

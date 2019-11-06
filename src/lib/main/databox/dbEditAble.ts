@@ -5,7 +5,7 @@ Copyright(c) Luca Scaringella
  */
 
 import {
-    DbCudProcessedSelector,
+    DbProcessedSelector,
     IfOption,
     InfoOption, PotentialInsertOption,
     PotentialUpdateOption,
@@ -13,7 +13,7 @@ import {
 } from "./dbDefinitions";
 
 export interface DbEditAble {
-    _insert(selector : DbCudProcessedSelector, value : any,options : IfOption & PotentialUpdateOption & InfoOption & TimestampOption) : any;
-    _update(selector : DbCudProcessedSelector, value : any,options : IfOption & PotentialInsertOption & InfoOption & TimestampOption) : any;
-    _delete(selector : DbCudProcessedSelector, options : IfOption & InfoOption & TimestampOption) : any;
+    _insert(selector : DbProcessedSelector, value : any, options : IfOption & PotentialUpdateOption & InfoOption & TimestampOption) : any;
+    _update(selector : DbProcessedSelector, value : any, options : IfOption & PotentialInsertOption & InfoOption & TimestampOption) : any;
+    _delete(selector : DbProcessedSelector, options : IfOption & InfoOption & TimestampOption) : any;
 }

@@ -140,7 +140,7 @@ export interface CudOperation {
     /**
      * selector
      */
-    s : DbCudProcessedSelector,
+    s : DbProcessedSelector,
     /**
      * value
      */
@@ -376,10 +376,10 @@ export type DeleteProcessArgs = Required<TimestampOption> & {if ?: IfOptionProce
 export type DbForintQuery<TK = any,TV = any> = {key ?: ForintQuery<TK>,value ?: ForintQuery<TV>};
 
 /**
- * Selector types for cud operations.
+ * Selector types.
  */
-export type DbCudProcessedSelectorItem = string | DbForintQuery;
-export type DbCudProcessedSelector = DbCudProcessedSelectorItem[];
+export type DbProcessedSelectorItem = string | DbForintQuery;
+export type DbProcessedSelector = DbProcessedSelectorItem[];
 
-type DbCudSelectorItem = string | number | DbForintQuery;
-export type DbCudSelector = DbCudSelectorItem | DbCudSelectorItem[];
+type DbSelectorItem = string | number | DbForintQuery;
+export type DbSelector = DbSelectorItem | DbSelectorItem[];
