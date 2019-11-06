@@ -10,9 +10,12 @@ import {ModifyToken} from "./modifyToken";
 import {
     DbCudProcessedSelector,
     DbCudProcessedSelectorItem,
-    DbForintQuery, DeleteArgs,
-    IfOptionArgsValue, IfQuery,
-    InsertArgs, UpdateArgs
+    DbForintQuery,
+    IfOptionProcessArgsValue,
+    IfQuery,
+    InsertProcessArgs,
+    UpdateProcessArgs,
+    DeleteProcessArgs
 } from "../../dbDefinitions";
 
 export default abstract class DbsSimplePathCoordinator {
@@ -56,7 +59,7 @@ export default abstract class DbsSimplePathCoordinator {
         for(let i = 0; i < keysLegth; i++){func(keysTmp[i]);}
     }
 
-    checkIfConditions(ifOption : IfOptionArgsValue) : boolean {
+    checkIfConditions(ifOption : IfOptionProcessArgsValue) : boolean {
         if(typeof ifOption === 'boolean') return ifOption;
 
         const keysTmp = this._getAllKeys();
@@ -157,7 +160,7 @@ export default abstract class DbsSimplePathCoordinator {
      * @param mt
      * @private
      */
-    abstract _insert(key : string, value : any, args : InsertArgs, mt : ModifyToken): void;
+    abstract _insert(key : string, value : any, args : InsertProcessArgs, mt : ModifyToken): void;
 
     /**
      * Insert coordinator.
@@ -167,7 +170,7 @@ export default abstract class DbsSimplePathCoordinator {
      * @param args
      * @param mt
      */
-    insert(selector : DbCudProcessedSelector, value : any, args : InsertArgs, mt : ModifyToken): void
+    insert(selector : DbCudProcessedSelector, value : any, args : InsertProcessArgs, mt : ModifyToken): void
     {
         if(selector.length === 1){
             if(typeof selector[0] === 'string'){
@@ -200,7 +203,7 @@ export default abstract class DbsSimplePathCoordinator {
      * @param mt
      * @private
      */
-    abstract _update(key : string, value : any, args : UpdateArgs, mt : ModifyToken): void;
+    abstract _update(key : string, value : any, args : UpdateProcessArgs, mt : ModifyToken): void;
 
     /**
      * Update coordinator.
@@ -210,7 +213,7 @@ export default abstract class DbsSimplePathCoordinator {
      * @param args
      * @param mt
      */
-    update(selector : DbCudProcessedSelector, value : any, args : UpdateArgs, mt : ModifyToken): void
+    update(selector : DbCudProcessedSelector, value : any, args : UpdateProcessArgs, mt : ModifyToken): void
     {
         if(selector.length === 1){
             if(typeof selector[0] === 'string'){
@@ -241,7 +244,7 @@ export default abstract class DbsSimplePathCoordinator {
      * @param mt
      * @private
      */
-    abstract _delete(key : string, args : DeleteArgs, mt : ModifyToken): void;
+    abstract _delete(key : string, args : DeleteProcessArgs, mt : ModifyToken): void;
 
     /**
      * Delete coordinator.
@@ -250,7 +253,7 @@ export default abstract class DbsSimplePathCoordinator {
      * @param args
      * @param mt
      */
-    delete(selector : DbCudProcessedSelector, args : DeleteArgs, mt : ModifyToken): void {
+    delete(selector : DbCudProcessedSelector, args : DeleteProcessArgs, mt : ModifyToken): void {
         if(selector.length === 1){
             if(typeof selector[0] === 'string'){
                 this._delete(selector[0] as string,args,mt);

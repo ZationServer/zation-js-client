@@ -5,7 +5,14 @@ Copyright(c) Luca Scaringella
  */
 
 import {DbEditAble}            from "./dbEditAble";
-import {CudOperation, CudType, DbCudProcessedSelector, DbCudSelector} from "./dbDefinitions";
+import {
+    CudOperation,
+    CudType,
+    DbCudProcessedSelector,
+    DbCudSelector,
+    IfOptionProcessedValue,
+    IfOptionValue
+} from "./dbDefinitions";
 
 export default class DbUtils {
 
@@ -37,10 +44,58 @@ export default class DbUtils {
         return timestamp === undefined ? Date.now() : timestamp;
     }
 
+    /**
+     * Processes the if option.
+     * @param ifOption
+     */
+    static processIfOption(ifOption ?: IfOptionValue) : IfOptionProcessedValue | undefined {
+        if(ifOption !== undefined && !Array.isArray(ifOption)){
+            return [ifOption];
+        }
+        return ifOption;
+    }
+
     static processSelector(selector : DbCudSelector) : DbCudProcessedSelector {
         if(Array.isArray(selector)) return selector.map((v) => typeof v === 'number' ? v.toString() : v);
         else if (typeof selector === 'string') return (selector === '' ? [] : selector.split('.'));
         return [typeof selector === 'number' ? selector.toString() : selector];
+    }
+
+    static buildInsert(selector : DbCudSelector, value : any, ifOption ?: IfOptionValue, potentialUpdate ?: boolean,
+                       code ?: number | string, data ?: any) : CudOperation {
+        return {
+            t : CudType.insert,
+            s : DbUtils.processSelector(selector),
+            v : value,
+            ...(ifOption !== undefined ? {i : Array.isArray(ifOption) ? ifOption : [ifOption]} : {}),
+            ...(potentialUpdate !== undefined ? {p : potentialUpdate ? 1 : 0} : {}),
+            ...(code !== undefined ? {c : code} : {}),
+            ...(data !== undefined ? {d : data} : {})
+        };
+    }
+
+    static buildUpdate(selector : DbCudSelector, value : any, ifOption ?: IfOptionValue, potentialInsert ?: boolean,
+                       code ?: number | string, data ?: any) : CudOperation {
+        return {
+            t : CudType.update,
+            s : DbUtils.processSelector(selector),
+            v : value,
+            ...(ifOption !== undefined ? {i : Array.isArray(ifOption) ? ifOption : [ifOption]} : {}),
+            ...(potentialInsert !== undefined ? {p : potentialInsert ? 1 : 0} : {}),
+            ...(code !== undefined ? {c : code} : {}),
+            ...(data !== undefined ? {d : data} : {})
+        };
+    }
+
+    static buildDelete(selector : DbCudSelector, ifOption ?: IfOptionValue,
+                       code ?: number | string, data ?: any) : CudOperation {
+        return {
+            t : CudType.delete,
+            s : DbUtils.processSelector(selector),
+            ...(ifOption !== undefined ? {i : Array.isArray(ifOption) ? ifOption : [ifOption]} : {}),
+            ...(code !== undefined ? {c : code} : {}),
+            ...(data !== undefined ? {d : data} : {})
+        };
     }
 
     /**

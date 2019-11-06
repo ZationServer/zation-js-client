@@ -361,11 +361,14 @@ export interface PotentialInsertOption {
     potentialInsert ?: boolean
 }
 
-export type IfOptionArgsValue = IfOptionProcessedValue | boolean;
+export type IfOptionProcessArgsValue = IfOptionProcessedValue | boolean;
 
-export type InsertArgs = Required<TimestampOption> & {if ?: IfOptionArgsValue} & PotentialUpdateOption;
-export type UpdateArgs = Required<TimestampOption> & {if ?: IfOptionArgsValue} & PotentialInsertOption;
-export type DeleteArgs = Required<TimestampOption> & {if ?: IfOptionArgsValue};
+export type InsertArgs = Required<TimestampOption> & {if ?: IfOptionProcessedValue} & PotentialUpdateOption;
+export type InsertProcessArgs = Required<TimestampOption> & {if ?: IfOptionProcessArgsValue} & PotentialUpdateOption;
+export type UpdateArgs = Required<TimestampOption> & {if ?: IfOptionProcessedValue} & PotentialInsertOption;
+export type UpdateProcessArgs = Required<TimestampOption> & {if ?: IfOptionProcessArgsValue} & PotentialInsertOption;
+export type DeleteArgs = Required<TimestampOption> & {if ?: IfOptionProcessedValue};
+export type DeleteProcessArgs = Required<TimestampOption> & {if ?: IfOptionProcessArgsValue};
 
 /**
  * Forint queries with the databox.

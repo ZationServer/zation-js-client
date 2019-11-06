@@ -890,6 +890,7 @@ export default class Databox implements DbEditAble {
      */
     insert(selector: DbCudSelector, value: any, options: IfOption & PotentialUpdateOption & InfoOption & TimestampOption = {}): Databox {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
+        options.if = DbUtils.processIfOption(options.if);
         this._insert(DbUtils.processSelector(selector),value,options as (InsertArgs & InfoOption));
         return this;
     }
@@ -937,6 +938,7 @@ export default class Databox implements DbEditAble {
      */
     update(selector: DbCudSelector, value: any, options: IfOption & PotentialInsertOption & InfoOption & TimestampOption = {}): Databox {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
+        options.if = DbUtils.processIfOption(options.if);
         this._update(DbUtils.processSelector(selector),value,options as (UpdateArgs & InfoOption));
         return this;
     }
@@ -983,6 +985,7 @@ export default class Databox implements DbEditAble {
      */
     delete(selector: DbCudSelector, options: IfOption & InfoOption & TimestampOption = {}): Databox {
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
+        options.if = DbUtils.processIfOption(options.if);
         this._delete(DbUtils.processSelector(selector),options as (DeleteArgs & InfoOption));
         return this;
     }

@@ -17,7 +17,10 @@ import DbsSimplePathCoordinator                        from "./dbsSimplePathCoor
 import {dbsMerger, DbsValueMerger, defaultValueMerger} from "../dbsMergerUtils";
 import {DbsComparator}                                 from "../dbsComparator";
 import {deepEqual}                                     from "../../../utils/deepEqual";
-import {DeleteArgs, InsertArgs, UpdateArgs}            from "../../dbDefinitions";
+import {
+    DeleteProcessArgs,
+    InsertProcessArgs,
+    UpdateProcessArgs}                                 from "../../dbDefinitions";
 import {ModifyToken}                                   from "./modifyToken";
 
 export default class DbsArray extends DbsSimplePathCoordinator implements DbsComponent {
@@ -186,7 +189,7 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
      * @param mt
      * @private
      */
-    _insert(key: string, value: any, args : InsertArgs, mt : ModifyToken): void
+    _insert(key: string, value: any, args : InsertProcessArgs, mt : ModifyToken): void
     {
         const {timestamp,if : ifOption,potentialUpdate} = args;
 
@@ -224,7 +227,7 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
      * @param mt
      * @private
      */
-    _update(key: string, value: any, args : UpdateArgs, mt : ModifyToken): void
+    _update(key: string, value: any, args : UpdateProcessArgs, mt : ModifyToken): void
     {
         const {timestamp,if : ifOption,potentialInsert} = args;
 
@@ -262,7 +265,7 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
      * @param mt
      * @private
      */
-    _delete(key: string, args : DeleteArgs, mt : ModifyToken): void {
+    _delete(key: string, args : DeleteProcessArgs, mt : ModifyToken): void {
         let index = parseInt(key);
         if(isNaN(index)){
             index = this.componentStructure.length-1;

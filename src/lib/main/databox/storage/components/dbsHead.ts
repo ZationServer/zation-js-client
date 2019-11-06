@@ -19,9 +19,11 @@ import {ModifyToken}                                   from "./modifyToken";
 import {deepEqual}                                     from "../../../utils/deepEqual";
 import {
     DbCudProcessedSelector,
-    DeleteArgs, IfOptionArgsValue, IfQuery,
-    InsertArgs,
-    UpdateArgs
+    IfOptionProcessArgsValue,
+    IfQuery,
+    InsertProcessArgs,
+    UpdateProcessArgs,
+    DeleteProcessArgs
 } from "../../dbDefinitions";
 
 export default class DbsHead implements DbsComponent {
@@ -130,7 +132,7 @@ export default class DbsHead implements DbsComponent {
         return {mergedValue : newValue,dataChanged : true};
     }
 
-    private checkIfConditions(ifOption : IfOptionArgsValue) : boolean {
+    private checkIfConditions(ifOption : IfOptionProcessArgsValue) : boolean {
         if(typeof ifOption === 'boolean') return ifOption;
 
         const data = this.data;
@@ -176,7 +178,7 @@ export default class DbsHead implements DbsComponent {
      * @param args
      * @param mt
      */
-    insert(selector : DbCudProcessedSelector, value: any,args : InsertArgs,mt : ModifyToken): void {
+    insert(selector : DbCudProcessedSelector, value: any,args : InsertProcessArgs,mt : ModifyToken): void {
         if (selector.length === 0) {
             this._insert(value,args,mt);
         } else if (isDbsComponent(this.componentValue)) {
@@ -184,7 +186,7 @@ export default class DbsHead implements DbsComponent {
         }
     }
 
-    _insert(value: any,args : InsertArgs,mt : ModifyToken): void {
+    _insert(value: any,args : InsertProcessArgs,mt : ModifyToken): void {
         const {timestamp,if : ifOption,potentialUpdate} = args;
 
         if(this.componentValue !== undefined){
@@ -215,7 +217,7 @@ export default class DbsHead implements DbsComponent {
      * @param args
      * @param mt
      */
-    update(selector : DbCudProcessedSelector, value : any, args : UpdateArgs, mt : ModifyToken): void {
+    update(selector : DbCudProcessedSelector, value : any, args : UpdateProcessArgs, mt : ModifyToken): void {
         if (selector.length === 0) {
             this._update(value,args,mt);
         } else if (isDbsComponent(this.componentValue)) {
@@ -223,7 +225,7 @@ export default class DbsHead implements DbsComponent {
         }
     }
 
-    _update(value : any, args : UpdateArgs, mt : ModifyToken): void {
+    _update(value : any, args : UpdateProcessArgs, mt : ModifyToken): void {
         const {timestamp,if : ifOption,potentialInsert} = args;
 
         if(this.componentValue === undefined){
@@ -257,7 +259,7 @@ export default class DbsHead implements DbsComponent {
      * @param args
      * @param mt
      */
-    delete(selector : DbCudProcessedSelector, args : DeleteArgs, mt : ModifyToken): void {
+    delete(selector : DbCudProcessedSelector, args : DeleteProcessArgs, mt : ModifyToken): void {
         if (selector.length === 0) {
             this._delete(args,mt);
         } else if (isDbsComponent(this.componentValue)) {
@@ -265,7 +267,7 @@ export default class DbsHead implements DbsComponent {
         }
     }
 
-    _delete(args : DeleteArgs, mt : ModifyToken): void {
+    _delete(args : DeleteProcessArgs, mt : ModifyToken): void {
         if(this.componentValue === undefined) return;
 
         const {timestamp,if : ifOption} = args;

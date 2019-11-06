@@ -17,13 +17,17 @@ import {dbsMerger, DbsValueMerger, defaultValueMerger} from "../dbsMergerUtils";
 import {DbsComparator}                                 from "../dbsComparator";
 import {RawKeyArray}                                   from "../keyArrayUtils";
 import {deepEqual}                                     from "../../../utils/deepEqual";
-import {DeleteArgs, InsertArgs, UpdateArgs}            from "../../dbDefinitions";
 import {ModifyToken}                                   from "./modifyToken";
+import {
+    DeleteProcessArgs,
+    InsertProcessArgs,
+    UpdateProcessArgs}                                 from "../../dbDefinitions";
 
 export default class DbsKeyArray extends DbsSimplePathCoordinator implements DbsComponent {
 
     private readonly data : any[];
     private readonly componentStructure : any[];
+    private readonly keysSorted : string[];
     private readonly keyMap : Map<string,number>;
     private readonly timestampMap : Map<string,number> = new Map<string, number>();
     private valueMerger : DbsValueMerger = defaultValueMerger;
@@ -35,6 +39,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
 
         this.data = [];
         this.componentStructure = [];
+        this.keysSorted = [];
         this.keyMap = new Map<string, number>();
 
         this.buildKeyArray(rawData);
@@ -62,7 +67,8 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
                 tmpIndex = this.keyMap.get(itemKey);
                 if(tmpIndex === undefined){
                     tmpIndex = i;
-                    this.keyMap.set(item[rawKeyKey].toString(),i);
+                    this.keyMap.set(itemKey,i);
+                    this.keysSorted[i] = itemKey;
                     i++;
                 }
 
@@ -95,12 +101,14 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
             this.data.length = 0;
             const tmpComponentStructure = this.componentStructure.slice();
             this.componentStructure.length = 0;
+            this.keysSorted.length = 0;
             const tmpArrayLength = tmpArray.length;
             for(let i = 0; i < tmpArrayLength; i++){
                 wrapper = tmpArray[i];
                 dataChanged = (wrapper.i !== i) || dataChanged;
                 targetIndex = wrapper.i;
                 this.keyMap.set(wrapper.k,i);
+                this.keysSorted[i] = wrapper.k;
                 this.data[i] = tmpData[targetIndex];
                 this.componentStructure[i] = tmpComponentStructure[targetIndex];
             }
@@ -112,15 +120,20 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
     /**
      * Returns the index where the element should be sortd in.
      * Only works if comparator is not undefined.
+     * Notice that it returns -1 if it needs to push at the end.
      * @param key
      * @param value
      */
     private getSortInIndex(key : string,value : any) {
         let sortInIndex = -1;
-        for (let [mapK, mapI] of this.keyMap.entries()){
-            if((this.comparator as DbsComparator)(value,this.data[mapI],key,mapK) <= 0){
-                sortInIndex = mapI; break;
+        const length = this.keysSorted.length;
+        let tmpIterateKey;
+        for(let i = 0; i < length; i++){
+            tmpIterateKey = this.keysSorted[i];
+            if((this.comparator as DbsComparator)(value,this.data[i],key,tmpIterateKey) <= 0){
+                sortInIndex = i; break;
             }
+
         }
         return sortInIndex;
     }
@@ -163,7 +176,8 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
     forEachComp(func: (comp: DbsComponent) => void): void {
         func(this);
         let value;
-        for(let i = 0; i < this.componentStructure.length; i++){
+        const length = this.componentStructure.length;
+        for(let i = 0; i < length; i++){
             value = this.componentStructure[i];
             if(isDbsComponent(value)){
                 value.forEachComp(func);
@@ -311,26 +325,29 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
             const sortInIndex = this.getSortInIndex(key,value);
 
             if(sortInIndex > -1){
-                this.pushBeforeWithComponentValue(sortInIndex,key,value,componentValue);
+                this.pushOnIndexWithComponentValue(sortInIndex,key,value,componentValue);
                 return;
             }
         }
         //fallback
         this.componentStructure.push(componentValue);
         this.data.push(value);
-        this.keyMap.set(key,this.componentStructure.length - 1);
+        const index = this.componentStructure.length - 1;
+        this.keysSorted[index] = key;
+        this.keyMap.set(key,index);
     }
 
     /**
-     * Pushes a new key-value pair before a index.
+     * Pushes a new key-value pair on a specific index.
      * @param index
      * @param key
      * @param value
      * @param componentValue
      */
-    private pushBeforeWithComponentValue(index : number,key : string,value : any,componentValue : any) {
+    private pushOnIndexWithComponentValue(index : number,key : string,value : any,componentValue : any) {
         this.componentStructure.splice(index,0,componentValue);
         this.data.splice(index,0,value);
+        this.keysSorted.splice(index,0,key);
 
         //update keyMap
         for (let [key, i] of this.keyMap.entries()){
@@ -350,6 +367,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
         if(index !== undefined){
             this.componentStructure.splice(index,1);
             this.data.splice(index,1);
+            this.keysSorted.splice(index, 1);
 
             //update keyMap
             this.keyMap.delete(key);
@@ -370,7 +388,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
      * @param mt
      * @private
      */
-    _insert(key: string, value: any, args : InsertArgs, mt : ModifyToken): void
+    _insert(key: string, value: any, args : InsertProcessArgs, mt : ModifyToken): void
     {
         const {timestamp,if : ifOption,potentialUpdate} = args;
 
@@ -401,7 +419,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
      * @param mt
      * @private
      */
-    _update(key: string, value: any, args : UpdateArgs, mt : ModifyToken): void
+    _update(key: string, value: any, args : UpdateProcessArgs, mt : ModifyToken): void
     {
         const {timestamp,if : ifOption,potentialInsert} = args;
 
@@ -446,7 +464,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
      * @param mt
      * @private
      */
-    _delete(key: string, args : DeleteArgs, mt : ModifyToken): void {
+    _delete(key: string, args : DeleteProcessArgs, mt : ModifyToken): void {
         if(!this.hasKey(key)) return;
 
         const {timestamp,if : ifOption} = args;
@@ -465,8 +483,11 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
      * @param func
      */
     forEachPair(func : (key : string,value : any,componentValue : any,timestamp : number | undefined) => void) : void {
-        for (let [key, value] of this.keyMap.entries()){
-           func(key,this.data[value],this.componentStructure[value],this.timestampMap.get(key));
+        const length = this.keysSorted.length;
+        let tmpkey;
+        for(let i = 0; i < length; i++){
+            tmpkey = this.keysSorted[i];
+            func(tmpkey,this.data[i],this.componentStructure[i],this.timestampMap.get(tmpkey));
         }
     }
 }

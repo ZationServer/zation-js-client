@@ -6,7 +6,6 @@ Copyright(c) Luca Scaringella
 
 import {
     CudOperation,
-    CudType,
     DbCudSelector,
     IfOption,
     InfoOption, PotentialInsertOption,
@@ -60,16 +59,8 @@ export default class DbCudOperationSequence
      * @param value
      * @param options
      */
-    insert(selector : DbCudSelector,value : any,{if,code,data,potentialUpdate} : IfOption & PotentialUpdateOption & InfoOption = {}) : DbCudOperationSequence {
-        this.operations.push({
-            t : CudType.insert,
-            s : DbUtils.processSelector(selector),
-            v : value,
-            c : code,
-            d : data,
-            i : if,
-            p : potentialUpdate ? 1 : 0
-        });
+    insert(selector : DbCudSelector,value : any,{if : ifOption,potentialUpdate,code,data} : IfOption & PotentialUpdateOption & InfoOption = {}) : DbCudOperationSequence {
+        this.operations.push(DbUtils.buildInsert(selector,value,ifOption,potentialUpdate,code,data));
         return this;
     }
 
@@ -94,16 +85,8 @@ export default class DbCudOperationSequence
      * @param value
      * @param options
      */
-    update(selector : DbCudSelector,value : any,{if,code,data,potentialInsert} : IfOption & PotentialInsertOption & InfoOption = {}) : DbCudOperationSequence {
-        this.operations.push({
-            t : CudType.update,
-            s : DbUtils.processSelector(selector),
-            v : value,
-            c : code,
-            d : data,
-            i : if,
-            p : potentialInsert ? 1 : 0
-        });
+    update(selector : DbCudSelector,value : any,{if : ifOption,potentialInsert,code,data} : IfOption & PotentialInsertOption & InfoOption = {}) : DbCudOperationSequence {
+        this.operations.push(DbUtils.buildUpdate(selector,value,ifOption,potentialInsert,code,data));
         return this;
     }
 
@@ -127,14 +110,8 @@ export default class DbCudOperationSequence
      * All numeric values will be converted to a string because the key can only be a string.
      * @param options
      */
-    delete(selector : DbCudSelector,{if,code,data} : IfOption & InfoOption = {}) : DbCudOperationSequence {
-        this.operations.push({
-            t : CudType.delete,
-            s : DbUtils.processSelector(selector),
-            c : code,
-            d : data,
-            i : if
-        });
+    delete(selector : DbCudSelector,{if : ifOption,code,data} : IfOption & InfoOption = {}) : DbCudOperationSequence {
+        this.operations.push(DbUtils.buildDelete(selector,ifOption,code,data));
         return this;
     }
 

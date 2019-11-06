@@ -11,7 +11,12 @@ import DbsKeyArray       from "./dbsKeyArray";
 import {DbsComparator}   from "../dbsComparator";
 import DbsHead           from "./dbsHead";
 import {ModifyToken}     from "./modifyToken";
-import {DbCudProcessedSelector, DeleteArgs, InsertArgs, UpdateArgs} from "../../dbDefinitions";
+import {
+    DbCudProcessedSelector,
+    DeleteProcessArgs,
+    InsertProcessArgs,
+    UpdateProcessArgs
+} from "../../dbDefinitions";
 
 export default interface DbsComponent {
 
@@ -25,7 +30,7 @@ export default interface DbsComponent {
      * @param args
      * @param mt
      */
-    insert(selector : DbCudProcessedSelector, value : any,  args : InsertArgs, mt : ModifyToken): void;
+    insert(selector : DbCudProcessedSelector, value : any,  args : InsertProcessArgs, mt : ModifyToken): void;
     /**
      * @return the modify level.
      * @param selector
@@ -33,14 +38,14 @@ export default interface DbsComponent {
      * @param args
      * @param mt
      */
-    update(selector : DbCudProcessedSelector, value : any, args : UpdateArgs, mt : ModifyToken): void;
+    update(selector : DbCudProcessedSelector, value : any, args : UpdateProcessArgs, mt : ModifyToken): void;
     /**
      * @return the modify level.
      * @param selector
      * @param args
      * @param mt
      */
-    delete(selector : DbCudProcessedSelector, args : DeleteArgs, mt : ModifyToken): void;
+    delete(selector : DbCudProcessedSelector, args : DeleteProcessArgs, mt : ModifyToken): void;
 
     /**
      * Merge this dbs component with the new component.
