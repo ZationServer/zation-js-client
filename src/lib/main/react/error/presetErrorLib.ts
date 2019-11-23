@@ -1620,7 +1620,7 @@ export abstract class PresetErrorLib<T>
      * Preset for noAccessWithHttpMethod.
      * The BackError error can be thrown if you have no access to the controller
      * with the requested http method.
-     * So the error can only throws by an http request.
+     * The error can only throw by an HTTP request.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * controller
@@ -1728,8 +1728,22 @@ export abstract class PresetErrorLib<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
+     * Preset for tokenClusterKeyIsInvalid.
+     * The BackError error can be thrown by invalid token cluster key.
+     * The error can only throw by an HTTP request.
+     */
+    tokenClusterKeyIsInvalid() : T {
+        this._presetAdd(this._zationErrorBuild
+        (ErrorType.TOKEN_ERROR,'tokenClusterKeyIsInvalid'));
+        return this.self();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
      * Preset for authenticateMiddlewareBlock.
      * The BackError error can be thrown by authenticate middleware block.
+     * The error can only throw by an HTTP request.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * err
