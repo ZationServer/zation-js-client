@@ -44,7 +44,8 @@ import afterPromise                               from "../utils/promiseUtils";
 import DbCudOperationSequence                     from "./dbCudOperationSequence";
 import {DbEditAble}                               from "./dbEditAble";
 import {TinyEmitter}                              from "tiny-emitter";
-import {createSimpleModifyToken} from "./storage/components/modifyToken";
+import {createSimpleModifyToken}                  from "./storage/components/modifyToken";
+import {deepCloneInstance}                        from "../utils/cloneUtils";
 
 export interface DataboxOptions {
     /**
@@ -489,9 +490,10 @@ export default class Databox implements DbEditAble {
             const dbsHead = new DbsHead(resp.d);
             const counter = resp.c;
 
+            let needCloneHead = this.dbStorages.size > 1;
             for (let dbStorage of this.dbStorages) {
                 if (dbStorage.shouldAddFetchData(counter,dbsHead)) {
-                    dbStorage.addData(dbsHead);
+                    dbStorage._addDataHead(needCloneHead ? deepCloneInstance(dbsHead) : dbsHead);
                 }
             }
             this.newDataEvent.emit(this);
@@ -896,6 +898,7 @@ export default class Databox implements DbEditAble {
     }
 
     /**
+     * @internal
      * Internal used insert method.
      * Please use the normal method without a pre underscore.
      * @param selector
@@ -944,6 +947,7 @@ export default class Databox implements DbEditAble {
     }
 
     /**
+     * @internal
      * Internal used update method.
      * Please use the normal method without a pre underscore.
      * @param selector
@@ -991,6 +995,7 @@ export default class Databox implements DbEditAble {
     }
 
     /**
+     * @internal
      * Internal used delete method.
      * Please use the normal method without a pre underscore.
      * @param selector

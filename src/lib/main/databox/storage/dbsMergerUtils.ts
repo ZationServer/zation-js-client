@@ -15,7 +15,7 @@ export function defaultValueMerger(oldValue : any, newValue : any) : any {
 
 export function dbsMerger(oldValue : any, newValue : any,valueMerger : DbsValueMerger) : MergeResult {
     if(isDbsComponent(oldValue)){
-        return oldValue.meregeWithNew(newValue);
+        return oldValue.mergeWithNew(newValue);
     }
     else {
         if(isDbsComponent(newValue)){

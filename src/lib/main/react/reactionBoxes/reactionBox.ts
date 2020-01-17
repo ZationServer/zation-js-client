@@ -27,6 +27,7 @@ export class ReactionBox<S>
 
     // noinspection JSUnusedGlobalSymbols
     /**
+     * @internal
      * @description
      * This method is used internal!
      */
@@ -36,6 +37,7 @@ export class ReactionBox<S>
 
     // noinspection JSUnusedGlobalSymbols
     /**
+     * @internal
      * @description
      * This method is used internal!
      */
@@ -143,6 +145,7 @@ export class ReactionBox<S>
 
     // noinspection JSUnusedGlobalSymbols
     /**
+     * @internal
      * @description
      * This method is used internal!
      */
@@ -153,6 +156,7 @@ export class ReactionBox<S>
 
     // noinspection JSUnusedGlobalSymbols
     /**
+     * @internal
      * @description
      * This method is used internal!
      */

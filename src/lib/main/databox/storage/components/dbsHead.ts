@@ -116,7 +116,7 @@ export default class DbsHead implements DbsComponent {
      * Merge this dbs component with the new component.
      * @param newValue
      */
-    meregeWithNew(newValue: any) : MergeResult {
+    mergeWithNew(newValue: any) : MergeResult {
         if (isDbsHead(newValue)) {
             const newTimestamp = newValue.getTimestamp();
             const newComponentValue = newValue.getComponentValue();
@@ -179,6 +179,8 @@ export default class DbsHead implements DbsComponent {
      * @param mt
      */
     insert(selector : DbProcessedSelector, value: any, args : InsertProcessArgs, mt : ModifyToken): void {
+        //clone args (more storages don't conflict with if condition result prepare)
+        args = {...args};
         if (selector.length === 0) {
             this._insert(value,args,mt);
         } else if (isDbsComponent(this.componentValue)) {
@@ -218,6 +220,8 @@ export default class DbsHead implements DbsComponent {
      * @param mt
      */
     update(selector : DbProcessedSelector, value : any, args : UpdateProcessArgs, mt : ModifyToken): void {
+        //clone args (more storages don't conflict with if condition result prepare)
+        args = {...args};
         if (selector.length === 0) {
             this._update(value,args,mt);
         } else if (isDbsComponent(this.componentValue)) {
@@ -260,6 +264,8 @@ export default class DbsHead implements DbsComponent {
      * @param mt
      */
     delete(selector : DbProcessedSelector, args : DeleteProcessArgs, mt : ModifyToken): void {
+        //clone args (more storages don't conflict with if condition result prepare)
+        args = {...args};
         if (selector.length === 0) {
             this._delete(args,mt);
         } else if (isDbsComponent(this.componentValue)) {

@@ -99,6 +99,7 @@ export default class DbUtils {
     }
 
     /**
+     * @internal
      * Processes the operations with a dbEditAble target.
      * It is used internally for seqEdit.
      * @param target

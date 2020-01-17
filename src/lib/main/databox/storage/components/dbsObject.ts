@@ -152,7 +152,7 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      * Merge this dbs component with the new component.
      * @param newValue
      */
-    meregeWithNew(newValue: any) : MergeResult {
+    mergeWithNew(newValue: any) : MergeResult {
         if(isDbsObject(newValue)){
             let mainDc : boolean = false;
             newValue.forEachPair((key, value, componentValue, timestamp) => {

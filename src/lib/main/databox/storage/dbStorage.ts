@@ -18,7 +18,6 @@ import {
 } from "../dbDefinitions";
 import ObjectUtils                                      from "../../utils/objectUtils";
 import DbsHead                                          from "./components/dbsHead";
-import CloneUtils                                       from "../../utils/cloneUtils";
 import DbUtils                                          from "../dbUtils";
 import {DbsComparator}                                  from "./dbsComparator";
 import {DbsValueMerger}                                 from "./dbsMergerUtils";
@@ -29,7 +28,8 @@ import DbCudOperationSequence                           from "../dbCudOperationS
 import {DbEditAble}                                     from "../dbEditAble";
 import {createDeleteModifyToken,
     createUpdateInsertModifyToken,
-    getModifyTokenReaons} from "./components/modifyToken";
+    getModifyTokenReaons}                               from "./components/modifyToken";
+import {deepCloneInstance}                              from "../../utils/cloneUtils";
 
 type ClearOnCloseMiddleware = (code : number | string | undefined,data : any) => boolean;
 type ClearOnKickOutMiddleware = (code : number | string | undefined,data : any) => boolean;
@@ -343,10 +343,22 @@ export default class DbStorage implements DbEditAble {
     /**
      * Adds new data to the storage.
      * The data will be merged with the old data.
+     * @param data
+     */
+    addData(data : any) : DbStorage {
+        this._addDataHead((data instanceof DbsHead) ? deepCloneInstance(data) : new DbsHead(data));
+        return this;
+    }
+
+    /**
+     * @internal
+     * This method is used internally.
+     * Adds the dbsHead without cloning it.
+     * @private
      * @param dbsHead
      */
-    addData(dbsHead : DbsHead) : DbStorage {
-        const {mergedValue,dataChanged} = this.dbsHead.meregeWithNew(dbsHead);
+    _addDataHead(dbsHead : DbsHead) : void {
+        const {mergedValue,dataChanged} = this.dbsHead.mergeWithNew(dbsHead);
         this.dbsHead = mergedValue;
         if(dataChanged){
             this.updateCompOptions();
@@ -354,7 +366,6 @@ export default class DbStorage implements DbEditAble {
             this.dataChangeEvent.emit([DataEventReason.ADDED],this);
             this.dataChangeCombineSeqEvent.emit([DataEventReason.ADDED],this);
         }
-        return this;
     }
 
     /**
@@ -368,7 +379,7 @@ export default class DbStorage implements DbEditAble {
 
     private _copyFrom(dbStorage : DbStorage,isReload : boolean) : void {
         const tmpOldHead = this.dbsHead;
-        this.dbsHead = CloneUtils.deepCloneInstance(dbStorage.getDbsHead());
+        this.dbsHead = deepCloneInstance(dbStorage.getDbsHead());
         this.updateCompOptions();
 
         const reason : DataEventReason = isReload ?
@@ -402,6 +413,7 @@ export default class DbStorage implements DbEditAble {
     }
 
     /**
+     * @internal
      * Do an insert operation.
      * This method is used internally.
      * Notice if you do a cud operation locally on the client,
@@ -450,6 +462,7 @@ export default class DbStorage implements DbEditAble {
     }
 
     /**
+     * @internal
      * Internal used insert method.
      * Please use the normal method without a pre underscore.
      * @param selector
@@ -506,6 +519,7 @@ export default class DbStorage implements DbEditAble {
     }
 
     /**
+     * @internal
      * Internal used update method.
      * Please use the normal method without a pre underscore.
      * @param selector
@@ -562,6 +576,7 @@ export default class DbStorage implements DbEditAble {
     }
 
     /**
+     * @internal
      * Internal used delete method.
      * Please use the normal method without a pre underscore.
      * @param selector

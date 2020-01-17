@@ -156,7 +156,7 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
      * Merge this dbs component with the new component.
      * @param newValue
      */
-    meregeWithNew(newValue: any) : MergeResult {
+    mergeWithNew(newValue: any) : MergeResult {
         if(isDbsArray(newValue)){
             let mainDc : boolean = false;
             newValue.forEachPair((index, value, componentValue, timestamp) => {

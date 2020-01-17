@@ -283,6 +283,7 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
 
     // noinspection JSUnusedGlobalSymbols
     /**
+     * @internal
      * @description
      * Used internally.
      * Only use this method carefully.

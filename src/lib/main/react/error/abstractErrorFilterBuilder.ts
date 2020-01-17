@@ -252,6 +252,7 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
 
     // noinspection JSUnusedGlobalSymbols
     /**
+     * @internal
      * @description
      * Add a raw filter to the filters of this builder.
      * The filter are linked with OR so the filtered errors
@@ -300,6 +301,7 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
 
     // noinspection JSUnusedGlobalSymbols
     /**
+     * @internal
      * @description
      * Sets the tmp filter with of this builder.
      * Notice that you override the tmpFilter

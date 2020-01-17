@@ -282,6 +282,7 @@ export class Zation
     //Part Auth
     // noinspection JSUnusedGlobalSymbols
     /**
+     * @internal
      * @description
      * Don't use this method,
      * it is used internal and returns the auth engine.
@@ -1595,6 +1596,7 @@ export class Zation
 
     // noinspection JSUnusedGlobalSymbols
     /**
+     * @internal
      * @description
      * Used internally.
      * Only use this method carefully.
@@ -1605,6 +1607,7 @@ export class Zation
 
     // noinspection JSUnusedGlobalSymbols
     /**
+     * @internal
      * @description
      * Used internally.
      * Only use this method carefully.
@@ -1618,6 +1621,7 @@ export class Zation
 
     // noinspection JSUnusedGlobalSymbols
     /**
+     * @internal
      * @description
      * Used internally.
      * Only use this method carefully.

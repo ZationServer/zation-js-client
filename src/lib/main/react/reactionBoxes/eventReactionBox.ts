@@ -780,6 +780,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
 
     // noinspection JSUnusedGlobalSymbols
     /**
+     * @internal
      * @description
      * Used internally.
      * Only use this method carefully.

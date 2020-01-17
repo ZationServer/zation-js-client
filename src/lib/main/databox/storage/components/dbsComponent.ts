@@ -51,7 +51,7 @@ export default interface DbsComponent {
      * Merge this dbs component with the new component.
      * @param newValue
      */
-    meregeWithNew(newValue : any) : MergeResult;
+    mergeWithNew(newValue : any) : MergeResult;
 
     /**
      * Sets the value merger of this component.

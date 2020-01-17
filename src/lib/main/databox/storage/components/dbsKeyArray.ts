@@ -266,7 +266,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
      * Merge this dbs component with the new component.
      * @param newValue
      */
-    meregeWithNew(newValue: any) : MergeResult {
+    mergeWithNew(newValue: any) : MergeResult {
         if(isDbsKeyArray(newValue)){
             let mainDc : boolean = false;
             let needResort : boolean = false;

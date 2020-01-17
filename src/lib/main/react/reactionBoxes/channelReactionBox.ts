@@ -2288,6 +2288,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
 
     // noinspection JSUnusedGlobalSymbols
     /**
+     * @internal
      * @description
      * Used internally.
      * Only use this method carefully.
@@ -2333,6 +2334,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
 
     // noinspection JSUnusedGlobalSymbols
     /**
+     * @internal
      * @description
      * Used internally.
      * Only use this method carefully.

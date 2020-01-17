@@ -197,6 +197,7 @@ export class AbortTrigger {
     }
 
     /**
+     * @internal
      * This method is used internally.
      * @param func
      * @private
