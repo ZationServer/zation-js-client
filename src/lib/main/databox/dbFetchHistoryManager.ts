@@ -7,8 +7,7 @@ Copyright(c) Luca Scaringella
 export interface FetchHistoryItem {
     counter : number;
     input : any;
-    data ?: any;
-    failed ?: boolean;
+    data : any;
 }
 
 export default class DbFetchHistoryManager {
@@ -27,28 +26,18 @@ export default class DbFetchHistoryManager {
     }
 
     /**
-     * Push successful information to history.
+     * Push information to history.
      * @param counter
      * @param input
      * @param data
      */
-    pushHistorySuccess(counter : number, input : any, data : any) {
+    pushHistory(counter : number, input : any, data : any) {
         this.history.push({counter,input,data});
     }
 
     /**
-     * Push failed information to history.
-     * @param counter
-     * @param input
-     */
-    pushHistoryFail(counter : number,input : any) {
-        this.history.push({counter,input,failed : true});
-    }
-
-    /**
      * Returns the latest history and removes it from the current history.
-     * You should call commit to tell the history manager that all went good
-     * or rollback to revert the latest history in the last state.
+     * You should call done when you finished working with the history.
      */
     getHistory() : FetchHistoryItem[] {
         const historyTmp = this.history;
@@ -57,29 +46,11 @@ export default class DbFetchHistoryManager {
         historyTmp.sort((a,b) => a.counter - b.counter);
         this.returnedHistory = this.returnedHistory.concat(historyTmp);
 
-        return this.optimizeHistory(historyTmp);
-    }
-
-    // noinspection JSMethodCanBeStatic
-    /**
-     * Optimize the history by removing the failed history items at the end.
-     * @param history
-     */
-    private optimizeHistory(history : FetchHistoryItem[]) : FetchHistoryItem[] {
-        let iteratedOverSucceededItem = false;
-        const optimizeHistory : FetchHistoryItem[] = [];
-        for(let i = history.length - 1; i > -1; --i) {
-            if(history[i].failed){
-                if(!iteratedOverSucceededItem) continue;
-            }
-            else iteratedOverSucceededItem = true;
-            optimizeHistory.unshift(history[i]);
-        }
-        return optimizeHistory;
+        return historyTmp;
     }
 
     /**
-     * Tells the history manager that the reload is done.
+     * Tells the history manager that the work is done.
      */
     done() : void {
         this.history = this.returnedHistory.concat(this.history);

@@ -484,7 +484,7 @@ export default class Databox implements DbEditAble {
             const resp = await this._fetch(data, DBClientInputSessionTarget.mainSession);
 
             if(addToHistory){
-                this.fetchHistoryManager.pushHistorySuccess(resp.c, data, resp.d);
+                this.fetchHistoryManager.pushHistory(resp.c, data, resp.d);
             }
 
             const dbsHead = new DbsHead(resp.d);
@@ -498,9 +498,6 @@ export default class Databox implements DbEditAble {
             }
             this.newDataEvent.emit(this);
         } catch (e) {
-            if(typeof e['counter'] === 'number'){
-                this.fetchHistoryManager.pushHistoryFail(e['counter'],data);
-            }
             if(e.name === ErrorName.INVALID_INPUT) {
                 throw new InvalidInputError('Invalid fetch input.',e);
             }
@@ -550,7 +547,7 @@ export default class Databox implements DbEditAble {
                     this.tmpReloadDataSets.add(dbsHead);
                 } catch (err) {
                     if ((err.name as ErrorName) !== ErrorName.NO_MORE_DATA_AVAILABLE &&
-                        (err.name as ErrorName) !== ErrorName.NO_DATA_AVAILABLE && !history[i].failed) {
+                        (err.name as ErrorName) !== ErrorName.NO_DATA_AVAILABLE) {
                         throw err;
                     }
                 }
@@ -575,7 +572,7 @@ export default class Databox implements DbEditAble {
                 this.tmpReloadDataSets.add(dbsHead);
             } catch (err) {
                 if ((err.name as ErrorName) !== ErrorName.NO_MORE_DATA_AVAILABLE &&
-                    (err.name as ErrorName) !== ErrorName.NO_DATA_AVAILABLE && !history[i].failed) {
+                    (err.name as ErrorName) !== ErrorName.NO_DATA_AVAILABLE) {
                     throw err;
                 }
             }
@@ -624,7 +621,7 @@ export default class Databox implements DbEditAble {
 
                     const missedHistory = this.fetchHistoryManager.getHistory();
                     for (let i = 0; i < missedHistory.length; i++) {
-                        if(!missedHistory[i].failed) result.push(new DbsHead(missedHistory[i].data));
+                        result.push(new DbsHead(missedHistory[i].data));
                     }
 
                     this.tmpReloadStroage.clear();
