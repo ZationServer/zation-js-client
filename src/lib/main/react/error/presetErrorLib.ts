@@ -1244,16 +1244,16 @@ export abstract class PresetErrorLib<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for apiLevelNotCompatible.
+     * Preset for apiLevelIncompatible.
      * The BackError error can be thrown when the API level of the client is not compatible with the request.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * controller
      * apiLevel
      */
-    apiLevelNotCompatible() : T {
+    apiLevelIncompatible() : T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'apiLevelNotCompatible'));
+        (ErrorType.INPUT_ERROR,'apiLevelIncompatible'));
         return this.self();
     }
 
