@@ -58,11 +58,11 @@ export default class DbError {
     }
 
     /**
-     * Returns if the API level is not compatible.
+     * Returns if the API level is incompatible.
      * @param err
      */
-    static isApiLevelNotCompatible(err : any) : boolean {
-        return err.name === ErrorName.API_LEVEL_NOT_COMPATIBLE;
+    static isApiLevelIncompatible(err : any) : boolean {
+        return err.name === ErrorName.API_LEVEL_INCOMPATIBLE;
     }
 
     /**

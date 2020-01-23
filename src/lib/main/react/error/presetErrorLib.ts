@@ -1245,7 +1245,7 @@ export abstract class PresetErrorLib<T>
     /**
      * @description
      * Preset for apiLevelIncompatible.
-     * The BackError error can be thrown when the API level of the client is not compatible with the request.
+     * The BackError error can be thrown when the API level of the client is incompatible with the request.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * controller
