@@ -5,7 +5,7 @@ Copyright(c) Luca Scaringella
  */
 
 import DbsHead          from "../../../../src/lib/main/databox/storage/components/dbsHead";
-import {buildKeyArray}  from "../../../../src";
+import {$any, $contains, $key, $matches, $notContains, $notMatches, $value, buildKeyArray} from "../../../../src";
 import {assert}         from 'chai';
 import {createSimpleModifyToken} from "../../../../src/lib/main/databox/storage/components/modifyToken";
 
@@ -107,7 +107,7 @@ describe('MAIN.Databox.Storage',() => {
             it('KeyArray - normal (With if condition)', () => {
                 const head = new DbsHead(buildKeyArray([{id : 1},{id : 2},{id : 4},{id : 5}],'id'));
 
-                head.insert(['3'],{id : 3},{timestamp : Date.now(),if : [{key : '4'}]},createSimpleModifyToken());
+                head.insert(['3'],{id : 3},{timestamp : Date.now(),if : [$contains($key('4'))]},createSimpleModifyToken());
 
                 assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
 
@@ -366,6 +366,94 @@ describe('MAIN.Databox.Storage',() => {
         });
     });
 
+    describe('If Conditions tests', () => {
+        it('Object (Matches)',() => {
+            const head = new DbsHead({name : 'luca',age : 20});
+
+            head.update(['name'],'tom',{timestamp : Date.now(),
+                if : [$matches({age : 20})]},createSimpleModifyToken());
+
+            assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
+            assert.deepEqual(head.getData(),{name : 'tom',age : 20});
+
+            head.update(['name'],'luca',{timestamp : Date.now(),
+                if : [$matches({age : {$gt : 18}}),
+                    $notMatches({name : 'tom'})]},createSimpleModifyToken());
+
+            assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
+            assert.deepEqual(head.getData(),{name : 'tom',age : 20});
+        });
+
+        it('Object (Contains)',() => {
+            const head = new DbsHead({name : 'luca',age : 20});
+
+            head.update(['name'],'tom',{timestamp : Date.now(),
+                if : [$contains($value({$gt : 18}))]},createSimpleModifyToken());
+
+            assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
+            assert.deepEqual(head.getData(),{name : 'tom',age : 20});
+
+            head.update(['name'],'luca',{timestamp : Date.now(),
+                if : [$contains($key('name')),$notContains($key('age'))]},createSimpleModifyToken());
+
+            assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
+            assert.deepEqual(head.getData(),{name : 'tom',age : 20});
+        });
+
+        it('Object (Contains (any))',() => {
+            const head = new DbsHead({brand: 'XU',price : 200});
+
+            head.update(['price'],300,{timestamp : Date.now(),
+                if : [$contains($any)]},createSimpleModifyToken());
+
+            assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
+            assert.deepEqual(head.getData(),{brand: 'XU',price : 300});
+
+            head.update(['price'],0,{timestamp : Date.now(),
+                if : [$notContains($any)]},createSimpleModifyToken());
+
+            assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
+            assert.deepEqual(head.getData(),{brand: 'XU',price : 300});
+        });
+
+        it('Object (Combined)',() => {
+            const head = new DbsHead({name : 'luca',age : 20});
+
+            head.update(['name'],'tom',{timestamp : Date.now(),
+                if : [$matches({age : 20}),$contains($value('luca'))]},createSimpleModifyToken());
+
+            assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
+            assert.deepEqual(head.getData(),{name : 'tom',age : 20});
+        });
+
+        it('Head (Matches)',() => {
+            const head = new DbsHead({name: 'luca'});
+            head.update([],{name: 'tom'},{timestamp : Date.now(),
+                if : [$matches({name: 'luca'})]},createSimpleModifyToken());
+
+            assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
+            assert.deepEqual(head.getData(),{name: 'tom'});
+        });
+
+        it('Head (Contains)',() => {
+            const head = new DbsHead({name: 'luca'});
+            head.update([],{name: 'tom'},{timestamp : Date.now(),
+                if : [$contains($value({name: 'luca'}))]},createSimpleModifyToken());
+
+            assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
+            assert.deepEqual(head.getData(),{name: 'tom'});
+        });
+
+        it('Head (Contains (any))',() => {
+            const head = new DbsHead({name: 'luca'});
+            head.update([],{name: 'tom'},{timestamp : Date.now(),
+                if : [$contains($any)]},createSimpleModifyToken());
+
+            assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
+            assert.deepEqual(head.getData(),{name: 'tom'});
+        });
+    });
+
     describe('Value merger tests', () => {
 
         it('Object value merge', () => {
@@ -386,7 +474,7 @@ describe('MAIN.Databox.Storage',() => {
                 }
             }));
 
-            const merged = head1.meregeWithNew(head2).mergedValue;
+            const merged = head1.mergeWithNew(head2).mergedValue;
 
             assert.deepEqual(merged.getData(),merged.getDataCopy(),'Copy should be deep equal');
             assert.deepEqual(merged.getData(),{name : 'lucaluca',age : 40});
@@ -399,7 +487,7 @@ describe('MAIN.Databox.Storage',() => {
             const head1 = new DbsHead(buildKeyArray([{id : 1},{id : 2},{id : 3}],'id'));
             const head2 = new DbsHead(buildKeyArray([{id : 3},{id : 4},{id : 1}],'id'));
 
-            const merged = head1.meregeWithNew(head2).mergedValue;
+            const merged = head1.mergeWithNew(head2).mergedValue;
 
             assert.deepEqual(merged.getData(),merged.getDataCopy(),'Copy should be deep equal');
             assert.deepEqual(merged.getData(),[{id : 1},{id : 2},{id : 3},{id : 4}]);
@@ -409,7 +497,7 @@ describe('MAIN.Databox.Storage',() => {
             const head1 = new DbsHead({msgs : buildKeyArray([{id : 1},{id : 2},{id : 3}],'id')});
             const head2 = new DbsHead({msgs : buildKeyArray([{id : 3},{id : 4},{id : 1}],'id')});
 
-            const merged = head1.meregeWithNew(head2).mergedValue;
+            const merged = head1.mergeWithNew(head2).mergedValue;
 
             assert.deepEqual(merged.getData(),merged.getDataCopy(),'Copy should be deep equal');
             assert.deepEqual(merged.getData(),{msgs : [{id : 1},{id : 2},{id : 3},{id : 4}]});
