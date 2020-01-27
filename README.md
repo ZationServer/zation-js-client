@@ -1,1 +1,1 @@
-# zation-js-client
+# zation-ts-client
