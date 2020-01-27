@@ -10,15 +10,20 @@ import {ModifyToken} from "./modifyToken";
 import {
     DbProcessedSelector,
     DbProcessedSelectorItem,
-    DbForintQuery,
+    ForintSearchQuery,
     IfOptionProcessArgsValue,
     IfQuery,
     InsertProcessArgs,
     UpdateProcessArgs,
-    DeleteProcessArgs
+    DeleteProcessArgs, IfQueryType
 } from "../../dbDefinitions";
 
 export default abstract class DbsSimplePathCoordinator {
+
+    /**
+     * Returns the data.
+     */
+    abstract getData() : any;
 
     /**
      * Returns all keys.
@@ -40,11 +45,11 @@ export default abstract class DbsSimplePathCoordinator {
      */
     abstract _getDbsComponent(key : string) : DbsComponent | undefined;
 
-    queryForEachKey(forintQuery : DbForintQuery, func : (key : string) => void) : void {
+    queryForEachKey(forintQuery : ForintSearchQuery, func : (key : string) => void) : void {
         const keysTmp = this._getAllKeys();
         const keysLegth = keysTmp.length;
-        const keyQuery = forintQuery.key;
-        const valueQuery = forintQuery.value;
+        const keyQuery = forintQuery.k;
+        const valueQuery = forintQuery.v;
         if(keyQuery || valueQuery){
             const keyQueryFunc = keyQuery ? forint(keyQuery) : undefined;
             const valueQueryFunc = valueQuery ? forint(valueQuery) : undefined;
@@ -62,9 +67,11 @@ export default abstract class DbsSimplePathCoordinator {
     checkIfConditions(ifOption : IfOptionProcessArgsValue) : boolean {
         if(typeof ifOption === 'boolean') return ifOption;
 
-        const keysTmp = this._getAllKeys();
-        const keysLength = keysTmp.length;
-        const itemExists =  keysLength > 0;
+        //key information
+        let loadedKeysInformation = false;
+        let keysTmp;
+        let keysLength;
+        let keyExists;
 
         const queriesLength = ifOption.length;
         let tmpRes;
@@ -77,30 +84,48 @@ export default abstract class DbsSimplePathCoordinator {
         for(let i = 0; i < queriesLength; i++) {
             //query
             tmpQuery = ifOption[i];
-            tmpKeyQuery = tmpQuery.key;
-            tmpValueQuery = tmpQuery.value;
-            if (tmpKeyQuery || tmpValueQuery) {
-                tmpKeyQueryFunc = tmpKeyQuery ? forint(tmpKeyQuery) : undefined;
-                tmpValueQueryFunc = tmpValueQuery ? forint(tmpValueQuery) : undefined;
-                tmpMatch = false;
-                let tmpKey;
-                for (let i = 0; i < keysLength; i++) {
-                    //elements
-                    tmpKey = keysTmp[i];
-                    if ((!tmpKeyQueryFunc || tmpKeyQueryFunc(tmpKey)) && (!tmpValueQueryFunc || tmpValueQueryFunc(this._getValue(tmpKey)))) {
-                        //query match
-                        tmpRes = !tmpQuery.not;
-                        tmpMatch = true;
-                        break;
+            switch (tmpQuery.t) {
+                case IfQueryType.full:
+                    tmpRes = forint(tmpQuery.q)(this.getData()) ? !tmpQuery.n : !!tmpQuery.n;
+                    break;
+                case IfQueryType.search:
+
+                    if(!loadedKeysInformation){
+                        keysTmp = this._getAllKeys();
+                        keysLength = keysTmp.length;
+                        keyExists = keysLength > 0;
+                        loadedKeysInformation = true;
                     }
-                }
-                if(!tmpMatch){
-                    //not match
-                    tmpRes = !!tmpQuery.not;
-                }
-            } else {
-                //any constant
-                tmpRes = tmpQuery.not ? !itemExists : itemExists;
+
+                    tmpKeyQuery = tmpQuery.q.k;
+                    tmpValueQuery = tmpQuery.q.v;
+                    if (tmpKeyQuery || tmpValueQuery) {
+                        tmpKeyQueryFunc = tmpKeyQuery ? forint(tmpKeyQuery) : undefined;
+                        tmpValueQueryFunc = tmpValueQuery ? forint(tmpValueQuery) : undefined;
+                        tmpMatch = false;
+                        let tmpKey;
+                        for (let i = 0; i < keysLength; i++) {
+                            //elements
+                            tmpKey = keysTmp[i];
+                            if ((!tmpKeyQueryFunc || tmpKeyQueryFunc(tmpKey)) && (!tmpValueQueryFunc || tmpValueQueryFunc(this._getValue(tmpKey)))) {
+                                //query match
+                                tmpRes = !tmpQuery.n;
+                                tmpMatch = true;
+                                break;
+                            }
+                        }
+                        if(!tmpMatch){
+                            //not match
+                            tmpRes = !!tmpQuery.n;
+                        }
+                    } else {
+                        //any constant
+                        tmpRes = tmpQuery.n ? !keyExists : keyExists;
+                    }
+                    break;
+                default:
+                    tmpRes = false;
+                    break;
             }
             if (!tmpRes) return false;
         }
@@ -178,7 +203,7 @@ export default abstract class DbsSimplePathCoordinator {
             }
             else {
                 //can be used as a update with PotentialUpdate
-                this.queryForEachKey(selector[0] as DbForintQuery,(k) =>
+                this.queryForEachKey(selector[0] as ForintSearchQuery,(k) =>
                     this._insert(k,value,args,mt));
             }
         }
@@ -220,7 +245,7 @@ export default abstract class DbsSimplePathCoordinator {
                 this._update(selector[0] as string,value,args,mt);
             }
             else {
-                this.queryForEachKey(selector[0] as DbForintQuery,(k) =>
+                this.queryForEachKey(selector[0] as ForintSearchQuery,(k) =>
                     this._update(k,value,args,mt));
             }
         }
@@ -259,7 +284,7 @@ export default abstract class DbsSimplePathCoordinator {
                 this._delete(selector[0] as string,args,mt);
             }
             else {
-                this.queryForEachKey(selector[0] as DbForintQuery,(k) =>
+                this.queryForEachKey(selector[0] as ForintSearchQuery,(k) =>
                     this._delete(k,args,mt));
             }
         }

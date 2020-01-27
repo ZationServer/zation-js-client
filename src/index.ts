@@ -18,7 +18,17 @@ import {WsRequest}                     from "./lib/main/request/main/wsRequest";
 import {HttpRequest}                   from "./lib/main/request/main/httpRequest";
 import {AuthRequest}                   from "./lib/main/request/main/authRequest";
 import {ValidationCheck, ValidationRequest} from "./lib/main/request/main/validationRequest";
-import {$all, $any, $contains, $key, $notContains, $pair, $value} from "./lib/main/databox/dbApiUtils";
+import {
+    $all,
+    $any,
+    $contains,
+    $key,
+    $matches,
+    $notContains,
+    $notMatches,
+    $pair,
+    $value
+} from "./lib/main/databox/dbApiUtils";
 import {AuthenticationFailedError}     from "./lib/main/error/authenticationFailedError";
 import {AuthenticationRequiredError}   from "./lib/main/error/authenticationRequiredError";
 import {ConnectionAbortError}          from "./lib/main/error/connectionAbortError";
@@ -132,6 +142,8 @@ export {
     $contains,
     $notContains,
     $any,
+    $matches,
+    $notMatches,
     DataEventReason,
     DbError,
     AbortTrigger,

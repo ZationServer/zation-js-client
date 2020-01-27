@@ -23,7 +23,7 @@ import {
     IfQuery,
     InsertProcessArgs,
     UpdateProcessArgs,
-    DeleteProcessArgs
+    DeleteProcessArgs, IfQueryType
 } from "../../dbDefinitions";
 
 export default class DbsHead implements DbsComponent {
@@ -147,23 +147,33 @@ export default class DbsHead implements DbsComponent {
         for(let i = 0; i < queriesLength; i++) {
             //query
             tmpQuery = ifOption[i];
-            tmpKeyQuery = tmpQuery.key;
-            tmpValueQuery = tmpQuery.value;
-            if(tmpKeyQuery || tmpValueQuery) {
-                tmpKeyQueryFunc = tmpKeyQuery ? forint(tmpKeyQuery) : undefined;
-                tmpValueQueryFunc = tmpValueQuery ? forint(tmpValueQuery) : undefined;
-                if ((!tmpKeyQuery || tmpKeyQueryFunc('')) && (!tmpValueQuery || tmpValueQueryFunc(data))) {
-                    //query match
-                    tmpRes = !tmpQuery.not;
-                }
-                else {
-                    //not match
-                    tmpRes = !!tmpQuery.not;
-                }
-            }
-            else {
-                //any constant
-                tmpRes = tmpQuery.not ? !dataExists : dataExists;
+            switch (tmpQuery.t) {
+                case IfQueryType.full:
+                    tmpRes = forint(tmpQuery.q)(data) ? !tmpQuery.n : !!tmpQuery.n;
+                    break;
+                case IfQueryType.search:
+                    tmpKeyQuery = tmpQuery.q.k;
+                    tmpValueQuery = tmpQuery.q.v;
+                    if(tmpKeyQuery || tmpValueQuery) {
+                        tmpKeyQueryFunc = tmpKeyQuery ? forint(tmpKeyQuery) : undefined;
+                        tmpValueQueryFunc = tmpValueQuery ? forint(tmpValueQuery) : undefined;
+                        if ((!tmpKeyQuery || tmpKeyQueryFunc('')) && (!tmpValueQuery || tmpValueQueryFunc(data))) {
+                            //query match
+                            tmpRes = !tmpQuery.n;
+                        }
+                        else {
+                            //not match
+                            tmpRes = !!tmpQuery.n;
+                        }
+                    }
+                    else {
+                        //any constant
+                        tmpRes = tmpQuery.n ? !dataExists : dataExists;
+                    }
+                    break;
+                default:
+                    tmpRes = false;
+                    break;
             }
             if (!tmpRes) return false;
         }
