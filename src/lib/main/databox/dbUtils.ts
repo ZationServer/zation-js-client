@@ -4,10 +4,7 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {DbEditAble}            from "./dbEditAble";
 import {
-    CudOperation,
-    CudType,
     DbProcessedSelector,
     DbSelector,
     IfOptionProcessedValue,
@@ -60,74 +57,4 @@ export default class DbUtils {
         else if (typeof selector === 'string') return (selector === '' ? [] : selector.split('.'));
         return [typeof selector === 'number' ? selector.toString() : selector];
     }
-
-    static buildInsert(selector : DbSelector, value : any, ifOption ?: IfOptionValue, potentialUpdate ?: boolean,
-                       code ?: number | string, data ?: any) : CudOperation {
-        return {
-            t : CudType.insert,
-            s : DbUtils.processSelector(selector),
-            v : value,
-            ...(ifOption !== undefined ? {i : Array.isArray(ifOption) ? ifOption : [ifOption]} : {}),
-            ...(potentialUpdate !== undefined ? {p : potentialUpdate ? 1 : 0} : {}),
-            ...(code !== undefined ? {c : code} : {}),
-            ...(data !== undefined ? {d : data} : {})
-        };
-    }
-
-    static buildUpdate(selector : DbSelector, value : any, ifOption ?: IfOptionValue, potentialInsert ?: boolean,
-                       code ?: number | string, data ?: any) : CudOperation {
-        return {
-            t : CudType.update,
-            s : DbUtils.processSelector(selector),
-            v : value,
-            ...(ifOption !== undefined ? {i : Array.isArray(ifOption) ? ifOption : [ifOption]} : {}),
-            ...(potentialInsert !== undefined ? {p : potentialInsert ? 1 : 0} : {}),
-            ...(code !== undefined ? {c : code} : {}),
-            ...(data !== undefined ? {d : data} : {})
-        };
-    }
-
-    static buildDelete(selector : DbSelector, ifOption ?: IfOptionValue,
-                       code ?: number | string, data ?: any) : CudOperation {
-        return {
-            t : CudType.delete,
-            s : DbUtils.processSelector(selector),
-            ...(ifOption !== undefined ? {i : Array.isArray(ifOption) ? ifOption : [ifOption]} : {}),
-            ...(code !== undefined ? {c : code} : {}),
-            ...(data !== undefined ? {d : data} : {})
-        };
-    }
-
-    /**
-     * @internal
-     * Processes the operations with a dbEditAble target.
-     * It is used internally for seqEdit.
-     * @param target
-     * @param operations
-     * @param timestamp
-     */
-    static processOpertions(target : DbEditAble,operations : CudOperation[],timestamp ?: number) : void {
-        let operation : CudOperation;
-        for(let i = 0; i < operations.length; i++){
-            operation = operations[i];
-            switch (operation.t) {
-                case CudType.insert:
-                    target._insert(operation.s,operation.v,
-                        {code : operation.c,data : operation.d,timestamp,
-                            if : operation.i,potentialUpdate : !!operation.p});
-                    break;
-                case CudType.update:
-                    target._update(operation.s,operation.v,
-                        {code : operation.c,data : operation.d,timestamp,
-                            if : operation.i,potentialInsert : !!operation.p});
-                    break;
-                case CudType.delete:
-                    target._delete(operation.s,
-                        {code : operation.c,data : operation.d,timestamp,
-                            if : operation.i});
-                    break;
-            }
-        }
-    }
-
 }

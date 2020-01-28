@@ -130,6 +130,44 @@ export const enum CudType {
 }
 
 /**
+ * A local cud operation.
+ */
+export interface LocalCudOperation {
+    /**
+     * type
+     */
+    type : CudType,
+    /**
+     * timestamp
+     */
+    timestamp ?: number,
+    /**
+     * selector
+     */
+    selector : DbProcessedSelector,
+    /**
+     * value
+     */
+    value ?: any;
+    /**
+     * code
+     */
+    code ?: any;
+    /**
+     * data
+     */
+    data ?: any;
+    /**
+     * if conditions
+     */
+    if ?: IfOptionProcessedValue;
+    /**
+     * potential Insert/Update
+     */
+    potential ?: boolean;
+}
+
+/**
  * A cud operation.
  */
 export interface CudOperation {

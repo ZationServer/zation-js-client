@@ -5,34 +5,36 @@ Copyright(c) Luca Scaringella
  */
 
 import {
-    CudOperation,
+    CudType,
     DbSelector,
     IfOption,
-    InfoOption, PotentialInsertOption,
+    InfoOption,
+    LocalCudOperation,
+    PotentialInsertOption,
     PotentialUpdateOption,
 } from "./dbDefinitions";
-import DbUtils                                               from "./dbUtils";
+import DbUtils from "./dbUtils";
 
-type CommitFunction = (operations : CudOperation[]) => void;
+type CommitFunction = (operations : LocalCudOperation[]) => void;
 
 /**
  * Saves all commands for execute later.
  */
-export default class DbCudOperationSequence
+export default class DbLocalCudOperationSequence
 {
-    private operations : CudOperation[] = [];
+    private operations : LocalCudOperation[] = [];
+    private readonly timestamp?: number;
     private readonly commitFunction : CommitFunction;
 
-    constructor(commitFunc : CommitFunction) {
+    constructor(timestamp : number | undefined, commitFunc : CommitFunction) {
+        this.timestamp = timestamp;
         this.commitFunction = commitFunc;
     }
 
     /**
      * Do an insert operation.
-     * Notice if you do a cud operation locally on the client,
-     * that this operation is not done on the server-side.
-     * So if the Databox reloads the data or resets the changes are lost.
-     * If you want to do more changes, you should look at the seqEdit method.
+     * Notice that this cud operation is executed only locally and
+     * only affects this specific instance.
      * Insert behavior:
      * Notice that in every case, the insert only happens when the key
      * does not exist on the client.
@@ -62,17 +64,24 @@ export default class DbCudOperationSequence
      * @param value
      * @param options
      */
-    insert(selector : DbSelector, value : any, {if : ifOption,potentialUpdate,code,data} : IfOption & PotentialUpdateOption & InfoOption = {}) : DbCudOperationSequence {
-        this.operations.push(DbUtils.buildInsert(selector,value,ifOption,potentialUpdate,code,data));
+    insert(selector : DbSelector, value : any, {if : ifOption,potentialUpdate,code,data} : IfOption & PotentialUpdateOption & InfoOption = {}) : DbLocalCudOperationSequence {
+        this.operations.push({
+            type: CudType.insert,
+            selector: DbUtils.processSelector(selector),
+            value,
+            code,
+            data,
+            potential: potentialUpdate,
+            timestamp: this.timestamp,
+            if: DbUtils.processIfOption(ifOption)
+        });
         return this;
     }
 
     /**
      * Do an update operation.
-     * Notice if you do a cud operation locally on the client,
-     * that this operation is not done on the server-side.
-     * So if the Databox reloads the data or resets the changes are lost.
-     * If you want to do more changes, you should look at the seqEdit method.
+     * Notice that this cud operation is executed only locally and
+     * only affects this specific instance.
      * Update behavior:
      * Notice that in every case, the update only happens when the key
      * on the client does exist.
@@ -101,17 +110,24 @@ export default class DbCudOperationSequence
      * @param value
      * @param options
      */
-    update(selector : DbSelector, value : any, {if : ifOption,potentialInsert,code,data} : IfOption & PotentialInsertOption & InfoOption = {}) : DbCudOperationSequence {
-        this.operations.push(DbUtils.buildUpdate(selector,value,ifOption,potentialInsert,code,data));
+    update(selector : DbSelector, value : any, {if : ifOption,potentialInsert,code,data} : IfOption & PotentialInsertOption & InfoOption = {}) : DbLocalCudOperationSequence {
+        this.operations.push({
+            type: CudType.update,
+            selector: DbUtils.processSelector(selector),
+            value,
+            code,
+            data,
+            potential: potentialInsert,
+            timestamp: this.timestamp,
+            if: DbUtils.processIfOption(ifOption)
+        });
         return this;
     }
 
     /**
      * Do an delete operation.
-     * Notice if you do a cud operation locally on the client,
-     * that this operation is not done on the server-side.
-     * So if the Databox reloads the data or resets the changes are lost.
-     * If you want to do more changes, you should look at the seqEdit method.
+     * Notice that this cud operation is executed only locally and
+     * only affects this specific instance.
      * Delete behavior:
      * Notice that in every case, the delete only happens when the key
      * on the client does exist.
@@ -139,8 +155,15 @@ export default class DbCudOperationSequence
      * split by dots to create a string array.
      * @param options
      */
-    delete(selector : DbSelector, {if : ifOption,code,data} : IfOption & InfoOption = {}) : DbCudOperationSequence {
-        this.operations.push(DbUtils.buildDelete(selector,ifOption,code,data));
+    delete(selector : DbSelector, {if : ifOption,code,data} : IfOption & InfoOption = {}) : DbLocalCudOperationSequence {
+        this.operations.push({
+            type: CudType.delete,
+            selector: DbUtils.processSelector(selector),
+            code,
+            data,
+            timestamp: this.timestamp,
+            if: DbUtils.processIfOption(ifOption)
+        });
         return this;
     }
 

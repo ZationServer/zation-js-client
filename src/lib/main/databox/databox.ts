@@ -4,7 +4,6 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {Socket} from "../sc/socket";
 import {
     CudPackage,
     CudType,
@@ -24,28 +23,36 @@ import {
     DbClientOutputReloadPackage,
     DbClientOutputSignalPackage,
     DbProcessedSelector,
-    DbSelector, DeleteArgs,
+    DbSelector,
+    DeleteArgs,
     IfOption,
-    InfoOption, InsertArgs, PotentialInsertOption, PotentialUpdateOption,
-    TimestampOption, UpdateArgs
-} from "./dbDefinitions";
+    InfoOption,
+    InsertArgs,
+    LocalCudOperation,
+    PotentialInsertOption,
+    PotentialUpdateOption,
+    TimestampOption,
+    UpdateArgs
+}
+from "./dbDefinitions";
+import {Socket}                                                 from "../sc/socket";
 import DbStorage, {DbStorageOptions, OnDataChange, OnDataTouch} from "./storage/dbStorage";
-import DbFetchHistoryManager, {FetchHistoryItem}  from "./dbFetchHistoryManager";
-import ObjectUtils                                from "../utils/objectUtils";
-import {Zation}                                   from "../../core/zation";
-import ConnectionUtils, {WaitForConnectionOption} from "../utils/connectionUtils";
-import EventManager                               from "../utils/eventManager";
-import {RawError}                                 from "../error/rawError";
-import {ErrorName}                                from "../constants/errorName";
-import DbsHead                                    from "./storage/components/dbsHead";
-import DbUtils                                    from "./dbUtils";
-import {InvalidInputError}                        from "../../main/error/invalidInputError";
-import afterPromise                               from "../utils/promiseUtils";
-import DbCudOperationSequence                     from "./dbCudOperationSequence";
-import {DbEditAble}                               from "./dbEditAble";
-import {TinyEmitter}                              from "tiny-emitter";
-import {createSimpleModifyToken}                  from "./storage/components/modifyToken";
-import {deepCloneInstance}                        from "../utils/cloneUtils";
+import DbFetchHistoryManager, {FetchHistoryItem}                from "./dbFetchHistoryManager";
+import ObjectUtils                                              from "../utils/objectUtils";
+import {Zation}                                                 from "../../core/zation";
+import ConnectionUtils, {WaitForConnectionOption}               from "../utils/connectionUtils";
+import EventManager                                             from "../utils/eventManager";
+import {RawError}                                               from "../error/rawError";
+import {ErrorName}                                              from "../constants/errorName";
+import DbsHead                                                  from "./storage/components/dbsHead";
+import DbUtils                                                  from "./dbUtils";
+import {InvalidInputError}                                      from "../../main/error/invalidInputError";
+import afterPromise                                             from "../utils/promiseUtils";
+import DbLocalCudOperationSequence                              from "./dbLocalCudOperationSequence";
+import {TinyEmitter}                                            from "tiny-emitter";
+import {createSimpleModifyToken}                                from "./storage/components/modifyToken";
+import {deepCloneInstance}                                      from "../utils/cloneUtils";
+import LocalCudOperationsMemory                                 from "./localCudOperationsMemory";
 
 export interface DataboxOptions {
     /**
@@ -138,7 +145,7 @@ type OnCud         = (cudPackage : CudPackage) => void | Promise<void>
 type OnNewData     = (db : Databox) => void | Promise<void>
 type OnSignal      = (data : any) => void | Promise<void>
 
-export default class Databox implements DbEditAble {
+export default class Databox {
 
     private readonly name: string;
     private readonly id: string | undefined;
@@ -157,6 +164,8 @@ export default class Databox implements DbEditAble {
 
     private created: boolean = false;
     private token: string | undefined = undefined;
+
+    private readonly localCudOperationsMemory: LocalCudOperationsMemory = new LocalCudOperationsMemory();
 
     /**
      * The current cud id of this Databox.
@@ -227,8 +236,10 @@ export default class Databox implements DbEditAble {
      * You should call this method whenever you no longer need this Databox.
      * But you able to connect later again by calling the connect method.
      * @param clearStorages
+     * @param clearLocalCudOperations
+     * Indicates if the local cud operations in memory should be cleared.
      */
-    async disconnect(clearStorages: boolean = true) {
+    async disconnect(clearStorages: boolean = true, clearLocalCudOperations: boolean = true) {
         let disconnectResp;
         if (this.connected) {
             disconnectResp = new Promise<void>((res) => {
@@ -240,6 +251,9 @@ export default class Databox implements DbEditAble {
         this._clearListenersAndReset();
         if (clearStorages) {
             this.clearStorages();
+        }
+        if(clearLocalCudOperations){
+            this.clearLocalCudOpertions();
         }
         await disconnectResp;
         this.disconnectEvent.emit(true);
@@ -583,9 +597,12 @@ export default class Databox implements DbEditAble {
     /**
      * Resets the databox by disconnect and connect again.
      * @throws RawError,TimeoutError,ConnectionRequiredError
+     * @param clearLocalCudOperations
+     * Indicates if the local cud operations in memory should be cleared.
+     *
      */
-    async reset() {
-        await this.disconnect();
+    async reset(clearLocalCudOperations: boolean = true) {
+        await this.disconnect(true,clearLocalCudOperations);
         await this.connect();
     }
 
@@ -630,6 +647,11 @@ export default class Databox implements DbEditAble {
                             continue;
                         }
                         this.tmpReloadStroage.addData(result[i]);
+                    }
+                    //re-execute local cud operations.
+                    const localCudOperations = this.localCudOperationsMemory.getAll();
+                    for(let i = 0; i < localCudOperations.length; i++){
+                        this.tmpReloadStroage._executeLocalCudOperation(localCudOperations[i],true);
                     }
 
                     await this.sendSessionAction(DbClientInputAction.copySession, DBClientInputSessionTarget.reloadSession);
@@ -746,7 +768,7 @@ export default class Databox implements DbEditAble {
             const {s, v, c, d} = operation;
             switch (operation.t) {
                 case CudType.update:
-                    this._update(s, v, {
+                    this._remoteUpdate(s, v, {
                         timestamp,
                         code: c,
                         data: d,
@@ -755,7 +777,7 @@ export default class Databox implements DbEditAble {
                     });
                     break;
                 case CudType.insert:
-                    this._insert(s, v, {
+                    this._remoteInsert(s, v, {
                         timestamp,
                         code: c,
                         data: d,
@@ -764,7 +786,7 @@ export default class Databox implements DbEditAble {
                     });
                     break;
                 case CudType.delete:
-                    this._delete(s, {
+                    this._remoteDelete(s, {
                         timestamp,
                         code: c,
                         data: d,
@@ -854,12 +876,44 @@ export default class Databox implements DbEditAble {
         }
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
-     * Do an insert operation on all connected storages.
-     * This method is used internally.
-     * Notice if you do a cud operation locally on the client,
-     * that this operation is not done on the server-side.
-     * So if the Databox reloads the data or resets the changes are lost.
+     * Returns the last added local cud operations.
+     */
+    public getLastLocalCudOpertions(): LocalCudOperation[] {
+        return this.localCudOperationsMemory.getLast();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Removes local cud operations from memory.
+     * That means that the operations will no longer
+     * re-executed after a reload of the databox.
+     * @param operations
+     */
+    public removeLocalCudOpertions(operations: LocalCudOperation[]): Databox {
+        this.localCudOperationsMemory.remove(operations);
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Clears the local cud operations memory.
+     * That means that the operations will no longer
+     * re-executed after a reload of the databox.
+     */
+    public clearLocalCudOpertions(): Databox {
+        this.localCudOperationsMemory.clear();
+        return this;
+    }
+
+    /**
+     * Do an insert operation.
+     * Notice that this cud operation is executed only locally and
+     * only affects this specific databox instance.
+     * If the parameter keepInMemory is true and the databox reloads the data from
+     * the server-side, all local cud operations will be re-executed.
+     * Otherwise, the changes are also lost in the case of a reload.
      * If you want to do more changes, you should look at the seqEdit method.
      * Insert behavior:
      * Notice that in every case, the insert only happens when the key
@@ -889,26 +943,49 @@ export default class Databox implements DbEditAble {
      * split by dots to create a string array.
      * @param value
      * @param options
+     * @param keepInMemory
+     * Indicates if the cud operation should be kept in memory.
+     * In the case of a reload, the databox is then able to re-execute
+     * all cud operations to prevent that the changes are lost.
+     * It's also possible to remove the cud operations later manually from memory.
+     * This can be done with the methods: getLastLocalCudOpertions and removeLocalCudOpertions.
      */
-    insert(selector: DbSelector, value: any, options: IfOption & PotentialUpdateOption & InfoOption & TimestampOption = {}): Databox {
-        options.timestamp = DbUtils.processTimestamp(options.timestamp);
+    insert(selector: DbSelector, value: any, options: IfOption & PotentialUpdateOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true): Databox {
+        const timestampTmp = options.timestamp;
+        options.timestamp = DbUtils.processTimestamp(timestampTmp);
         options.if = DbUtils.processIfOption(options.if);
-        this._insert(DbUtils.processSelector(selector),value,options as (InsertArgs & InfoOption));
+        const processedSelector = DbUtils.processSelector(selector);
+
+        for (let dbStorage of this.dbStorages) {
+            dbStorage._insert(processedSelector, value, options as (InsertArgs & InfoOption));
+        }
+
+        if(keepInMemory){
+            this.localCudOperationsMemory.add({
+                type: CudType.insert,
+                selector: processedSelector,
+                value: value,
+                code: options.code,
+                data: options.data,
+                if: options.if,
+                potential: options.potentialUpdate,
+                timestamp: timestampTmp
+            });
+        }
         return this;
     }
 
     /**
      * @internal
-     * Internal used insert method.
+     * Internal used insert method (remote cud).
      * Please use the normal method without a pre underscore.
      * @param selector
      * @param value
      * @param options
      * @private
      */
-    _insert(selector: DbProcessedSelector, value: any, options: InsertArgs & InfoOption): void {
+    _remoteInsert(selector: DbProcessedSelector, value: any, options: InsertArgs & InfoOption): void {
         for (let dbStorage of this.dbStorages) {
-            // @ts-ignore
             dbStorage._insert(selector, value, options);
         }
         for (let dataSet of this.tmpReloadDataSets) {
@@ -918,11 +995,12 @@ export default class Databox implements DbEditAble {
     }
 
     /**
-     * Do an update operation on all connected storages.
-     * This method is used internally.
-     * Notice if you do a cud operation locally on the client,
-     * that this operation is not done on the server-side.
-     * So if the Databox reloads the data or resets the changes are lost.
+     * Do an update operation.
+     * Notice that this cud operation is executed only locally and
+     * only affects this specific databox instance.
+     * If the parameter keepInMemory is true and the databox reloads the data from
+     * the server-side, all local cud operations will be re-executed.
+     * Otherwise, the changes are also lost in the case of a reload.
      * If you want to do more changes, you should look at the seqEdit method.
      * Update behavior:
      * Notice that in every case, the update only happens when the key
@@ -951,26 +1029,49 @@ export default class Databox implements DbEditAble {
      * split by dots to create a string array.
      * @param value
      * @param options
+     * @param keepInMemory
+     * Indicates if the cud operation should be kept in memory.
+     * In the case of a reload, the databox is then able to re-execute
+     * all cud operations to prevent that the changes are lost.
+     * It's also possible to remove the cud operations later manually from memory.
+     * This can be done with the methods: getLastLocalCudOpertions and removeLocalCudOpertions.
      */
-    update(selector: DbSelector, value: any, options: IfOption & PotentialInsertOption & InfoOption & TimestampOption = {}): Databox {
-        options.timestamp = DbUtils.processTimestamp(options.timestamp);
+    update(selector: DbSelector, value: any, options: IfOption & PotentialInsertOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true): Databox {
+        const timestampTmp = options.timestamp;
+        options.timestamp = DbUtils.processTimestamp(timestampTmp);
         options.if = DbUtils.processIfOption(options.if);
-        this._update(DbUtils.processSelector(selector),value,options as (UpdateArgs & InfoOption));
+        const processedSelector = DbUtils.processSelector(selector);
+
+        for (let dbStorage of this.dbStorages) {
+            dbStorage._update(processedSelector, value, options as (UpdateArgs & InfoOption));
+        }
+
+        if(keepInMemory){
+            this.localCudOperationsMemory.add({
+                type: CudType.update,
+                selector: processedSelector,
+                value: value,
+                code: options.code,
+                data: options.data,
+                if: options.if,
+                potential: options.potentialInsert,
+                timestamp: timestampTmp
+            });
+        }
         return this;
     }
 
     /**
      * @internal
-     * Internal used update method.
+     * Internal used update method (remote cud).
      * Please use the normal method without a pre underscore.
      * @param selector
      * @param value
      * @param options
      * @private
      */
-    _update(selector: DbProcessedSelector, value: any, options: UpdateArgs & InfoOption): void {
+    _remoteUpdate(selector: DbProcessedSelector, value: any, options: UpdateArgs & InfoOption): void {
         for (let dbStorage of this.dbStorages) {
-            // @ts-ignore
             dbStorage._update(selector, value, options);
         }
         for (let dataSet of this.tmpReloadDataSets) {
@@ -980,11 +1081,12 @@ export default class Databox implements DbEditAble {
     }
 
     /**
-     * Do an delete operation on all connected storages.
-     * This method is used internally.
-     * Notice if you do a cud operation locally on the client,
-     * that this operation is not done on the server-side.
-     * So if the Databox reloads the data or resets the changes are lost.
+     * Do an delete operation.
+     * Notice that this cud operation is executed only locally and
+     * only affects this specific databox instance.
+     * If the parameter keepInMemory is true and the databox reloads the data from
+     * the server-side, all local cud operations will be re-executed.
+     * Otherwise, the changes are also lost in the case of a reload.
      * If you want to do more changes, you should look at the seqEdit method.
      * Delete behavior:
      * Notice that in every case, the delete only happens when the key
@@ -1012,25 +1114,46 @@ export default class Databox implements DbEditAble {
      * If you provide a string instead of an array, the string will be
      * split by dots to create a string array.
      * @param options
+     * @param keepInMemory
+     * Indicates if the cud operation should be kept in memory.
+     * In the case of a reload, the databox is then able to re-execute
+     * all cud operations to prevent that the changes are lost.
+     * It's also possible to remove the cud operations later manually from memory.
+     * This can be done with the methods: getLastLocalCudOpertions and removeLocalCudOpertions.
      */
-    delete(selector: DbSelector, options: IfOption & InfoOption & TimestampOption = {}): Databox {
-        options.timestamp = DbUtils.processTimestamp(options.timestamp);
+    delete(selector: DbSelector, options: IfOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true): Databox {
+        const timestampTmp = options.timestamp;
+        options.timestamp = DbUtils.processTimestamp(timestampTmp);
         options.if = DbUtils.processIfOption(options.if);
-        this._delete(DbUtils.processSelector(selector),options as (DeleteArgs & InfoOption));
+        const processedSelector = DbUtils.processSelector(selector);
+
+        for (let dbStorage of this.dbStorages) {
+            dbStorage._delete(processedSelector, options as (DeleteArgs & InfoOption));
+        }
+
+        if(keepInMemory){
+            this.localCudOperationsMemory.add({
+                type: CudType.delete,
+                selector: processedSelector,
+                code: options.code,
+                data: options.data,
+                if: options.if,
+                timestamp: timestampTmp
+            });
+        }
         return this;
     }
 
     /**
      * @internal
-     * Internal used delete method.
+     * Internal used delete method (remote cud).
      * Please use the normal method without a pre underscore.
      * @param selector
      * @param options
      * @private
      */
-    _delete(selector: DbProcessedSelector, options: DeleteArgs & InfoOption): void {
+    _remoteDelete(selector: DbProcessedSelector, options: DeleteArgs & InfoOption): void {
         for (let dbStorage of this.dbStorages) {
-            // @ts-ignore
             dbStorage._delete(selector, options);
         }
         for (let dataSet of this.tmpReloadDataSets) {
@@ -1041,24 +1164,35 @@ export default class Databox implements DbEditAble {
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Sequence edit on all connected storages.
-     * Notice if you do a cud operation locally on the client,
-     * that this operation is not done on the server-side.
-     * So if the Databox reloads the data or resets the changes are lost.
+     * Do an sequence edit.
+     * Notice that this cud operations are executed only locally and
+     * only affects this specific databox instance.
+     * If the parameter keepInMemory is true and the databox reloads the data from
+     * the server-side, all local cud operations will be re-executed.
+     * Otherwise, the changes are also lost in the case of a reload.
      * @param timestamp
      * With the timestamp option, you can change the sequence of data.
      * The storage, for example, will only update data that is older as incoming data.
      * Use this option only if you know what you are doing.
+     * @param keepInMemory
+     * Indicates if the cud operation should be kept in memory.
+     * In the case of a reload, the databox is then able to re-execute
+     * all cud operations to prevent that the changes are lost.
+     * It's also possible to remove the cud operations later manually from memory.
+     * This can be done with the methods: getLastLocalCudOpertions and removeLocalCudOpertions.
      */
-    seqEdit(timestamp ?: number) : DbCudOperationSequence {
-        timestamp = DbUtils.processTimestamp(timestamp);
-        return new DbCudOperationSequence( (operations) => {
+    seqEdit(timestamp ?: number, keepInMemory: boolean = true) : DbLocalCudOperationSequence {
+        return new DbLocalCudOperationSequence(timestamp,(operations) => {
+            const operationLength = operations.length;
             for (let dbStorage of this.dbStorages) {
                 dbStorage.startCudSeq();
-            }
-            DbUtils.processOpertions(this,operations,timestamp);
-            for (let dbStorage of this.dbStorages) {
+                for(let i = 0; i < operationLength; i++){
+                    dbStorage._executeLocalCudOperation(operations[i],false);
+                }
                 dbStorage.endCudSeq();
+            }
+            if(keepInMemory) {
+                this.localCudOperationsMemory.addMultiple(operations);
             }
         });
     }
@@ -1113,6 +1247,7 @@ export default class Databox implements DbEditAble {
         return this;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Returns if this Databox is connected to the server-side.
      */

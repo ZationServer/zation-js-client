@@ -5,12 +5,13 @@ Copyright(c) Luca Scaringella
  */
 
 import {
+    CudType,
     DbProcessedSelector,
     DbSelector,
     DeleteArgs,
     IfOption,
     InfoOption,
-    InsertArgs,
+    InsertArgs, LocalCudOperation,
     PotentialInsertOption,
     PotentialUpdateOption,
     TimestampOption,
@@ -24,12 +25,12 @@ import {DbsValueMerger}                                 from "./dbsMergerUtils";
 import DbsComponent, {DbsComponentOptions, ModifyLevel} from "./components/dbsComponent";
 import EventManager                                     from "../../utils/eventManager";
 import {deepEqual}                                      from "../../utils/deepEqual";
-import DbCudOperationSequence                           from "../dbCudOperationSequence";
-import {DbEditAble}                                     from "../dbEditAble";
+import DbLocalCudOperationSequence                      from "../dbLocalCudOperationSequence";
 import {createDeleteModifyToken,
     createUpdateInsertModifyToken,
     getModifyTokenReaons}                               from "./components/modifyToken";
 import {deepCloneInstance}                              from "../../utils/cloneUtils";
+import LocalCudOperationsMemory from "../localCudOperationsMemory";
 
 type ClearOnCloseMiddleware = (code : number | string | undefined,data : any) => boolean;
 type ClearOnKickOutMiddleware = (code : number | string | undefined,data : any) => boolean;
@@ -103,7 +104,7 @@ export type OnInsert = (selector : DbProcessedSelector, value : any, options : I
 export type OnUpdate = (selector : DbProcessedSelector, value : any, options : InfoOption & TimestampOption) => void | Promise<void>;
 export type OnDelete = (selector : DbProcessedSelector, options : InfoOption & TimestampOption) => void | Promise<void>;
 
-export default class DbStorage implements DbEditAble {
+export default class DbStorage {
 
     private dbStorageOptions : Required<DbStorageOptions> = {
         clearOnClose : true,
@@ -133,6 +134,8 @@ export default class DbStorage implements DbEditAble {
     private updateMiddleware : UpdateMiddleware;
     private deleteMiddleware : DeleteMiddleware;
     private addFetchDataMiddleware : AddFetchDataMiddleware;
+
+    private readonly localCudOperationsMemory = new LocalCudOperationsMemory();
 
     private readonly dataChangeEvent : EventManager<OnDataChange> = new EventManager<OnDataChange>();
     private readonly dataChangeCombineSeqEvent : EventManager<OnDataChange> = new EventManager<OnDataChange>();
@@ -327,8 +330,10 @@ export default class DbStorage implements DbEditAble {
 
     /**
      * Clears the storage.
+     * @param clearLocalCudOperations
+     * Indicates if the local cud operations in memory should be cleared.
      */
-    clear() : DbStorage {
+    clear(clearLocalCudOperations: boolean = true) : DbStorage {
         const tmpOldHead = this.dbsHead;
         this.dbsHead = new DbsHead();
         this.updateCompOptions();
@@ -382,6 +387,11 @@ export default class DbStorage implements DbEditAble {
         this.dbsHead = deepCloneInstance(dbStorage.getDbsHead());
         this.updateCompOptions();
 
+        const localCudOperations = this.localCudOperationsMemory.getAll();
+        for(let i = 0; i < localCudOperations.length; i++){
+            this._executeLocalCudOperation(localCudOperations[i],true);
+        }
+
         const reason : DataEventReason = isReload ?
             DataEventReason.RELOADED : DataEventReason.COPIED;
 
@@ -390,6 +400,37 @@ export default class DbStorage implements DbEditAble {
             this.dataChangeEvent.emit([reason],this);
             this.dataChangeCombineSeqEvent.emit([reason],this);
         }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Returns the last added local cud operations.
+     */
+    public getLastLocalCudOpertions(): LocalCudOperation[] {
+        return this.localCudOperationsMemory.getLast();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Removes local cud operations from memory.
+     * That means that the operations will no longer
+     * re-executed after a reload or copy of data.
+     * @param operations
+     */
+    public removeLocalCudOpertions(operations: LocalCudOperation[]): DbStorage {
+        this.localCudOperationsMemory.remove(operations);
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Clears the local cud operations memory.
+     * That means that the operations will no longer
+     * re-executed after a reload or copy of data.
+     */
+    public clearLocalCudOpertions(): DbStorage {
+        this.localCudOperationsMemory.clear();
+        return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -415,10 +456,11 @@ export default class DbStorage implements DbEditAble {
     /**
      * @internal
      * Do an insert operation.
-     * This method is used internally.
-     * Notice if you do a cud operation locally on the client,
-     * that this operation is not done on the server-side.
-     * So if the Databox reloads the data or resets the changes are lost.
+     * Notice that this cud operation is executed only locally
+     * and only affects this specific storage instance.
+     * If the parameter keepInMemory is true and the storage reloads
+     * or copy data, all local cud operations will be re-executed.
+     * Otherwise, the changes are also lost in the case of a reload or copy.
      * If you want to do more changes, you should look at the seqEdit method.
      * Insert behavior:
      * Notice that in every case, the insert only happens when the key
@@ -448,10 +490,34 @@ export default class DbStorage implements DbEditAble {
      * split by dots to create a string array.
      * @param value
      * @param options
+     * @param keepInMemory
+     * Indicates if the cud operation should be kept in memory.
+     * In the case of a reload or copy, the storage is then able to
+     * re-execute all cud operations to prevent that the changes are lost.
+     * It's also possible to remove the cud operations later manually from memory.
+     * This can be done with the methods: getLastLocalCudOpertions and removeLocalCudOpertions.
      */
-    insert(selector : DbSelector, value : any, options : IfOption & PotentialUpdateOption & InfoOption & TimestampOption = {}) : DbStorage {
+    insert(selector : DbSelector, value : any, options : IfOption & PotentialUpdateOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true) : DbStorage {
+        const timestampTmp = options.timestamp;
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
-        this._insert(DbUtils.processSelector(selector),value,options as (InsertArgs & InfoOption));
+        options.if = DbUtils.processIfOption(options.if);
+        const processedSelector = DbUtils.processSelector(selector);
+
+        this._insert(processedSelector,value,options as (InsertArgs & InfoOption));
+
+        if(keepInMemory){
+            this.localCudOperationsMemory.add({
+                type: CudType.insert,
+                selector: processedSelector,
+                value: value,
+                code: options.code,
+                data: options.data,
+                if: options.if,
+                potential: options.potentialUpdate,
+                timestamp: timestampTmp
+            });
+        }
+
         return this;
     }
 
@@ -462,34 +528,39 @@ export default class DbStorage implements DbEditAble {
      * @param selector
      * @param value
      * @param options
+     * @param silent
      * @private
      */
-    _insert(selector : DbProcessedSelector, value : any, options : InsertArgs & InfoOption) : void {
+    _insert(selector : DbProcessedSelector, value : any, options : InsertArgs & InfoOption,silent: boolean = false) : void {
         if(this.insertMiddleware(selector,value,options)) {
-            const mt = createUpdateInsertModifyToken(this.hasDataChangeListener || this.hasUpdateListener);
+            const mt = createUpdateInsertModifyToken(
+                !silent && (this.hasDataChangeListener || this.hasUpdateListener));
 
             this.dbsHead.insert(selector,value,options,mt);
 
-            let reasons;
-            if(mt.level > 0){
-                this.updateCompOptions();
-                reasons = getModifyTokenReaons(mt,DataEventReason.INSERTED,DataEventReason.UPDATED);
-                this.dataTouchEvent.emit([...reasons],this);
-            }
-            if(mt.level === ModifyLevel.DATA_CHANGED){
-                this.tmpCudInserted = true;
-                this.insertEvent.emit(selector,value,options);
-                this._triggerChangeEvents(reasons);
+            if(!silent){
+                let reasons;
+                if(mt.level > 0){
+                    this.updateCompOptions();
+                    reasons = getModifyTokenReaons(mt,DataEventReason.INSERTED,DataEventReason.UPDATED);
+                    this.dataTouchEvent.emit([...reasons],this);
+                }
+                if(mt.level === ModifyLevel.DATA_CHANGED){
+                    this.tmpCudInserted = true;
+                    this.insertEvent.emit(selector,value,options);
+                    this._triggerChangeEvents(reasons);
+                }
             }
         }
     }
 
     /**
      * Do an update operation.
-     * This method is used internally.
-     * Notice if you do a cud operation locally on the client,
-     * that this operation is not done on the server-side.
-     * So if the Databox reloads the data or resets the changes are lost.
+     * Notice that this cud operation is executed only locally
+     * and only affects this specific storage instance.
+     * If the parameter keepInMemory is true and the storage reloads
+     * or copy data, all local cud operations will be re-executed.
+     * Otherwise, the changes are also lost in the case of a reload or copy.
      * If you want to do more changes, you should look at the seqEdit method.
      * Update behavior:
      * Notice that in every case, the update only happens when the key
@@ -518,10 +589,34 @@ export default class DbStorage implements DbEditAble {
      * split by dots to create a string array.
      * @param value
      * @param options
+     * @param keepInMemory
+     * Indicates if the cud operation should be kept in memory.
+     * In the case of a reload or copy, the storage is then able to
+     * re-execute all cud operations to prevent that the changes are lost.
+     * It's also possible to remove the cud operations later manually from memory.
+     * This can be done with the methods: getLastLocalCudOpertions and removeLocalCudOpertions.
      */
-    update(selector : DbSelector, value : any, options : IfOption & PotentialInsertOption & InfoOption & TimestampOption = {}) : DbStorage {
+    update(selector : DbSelector, value : any, options : IfOption & PotentialInsertOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true) : DbStorage {
+        const timestampTmp = options.timestamp;
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
-        this._update(DbUtils.processSelector(selector),value,options as (UpdateArgs & InfoOption));
+        options.if = DbUtils.processIfOption(options.if);
+        const processedSelector = DbUtils.processSelector(selector);
+
+        this._update(processedSelector,value,options as (UpdateArgs & InfoOption));
+
+        if(keepInMemory){
+            this.localCudOperationsMemory.add({
+                type: CudType.update,
+                selector: processedSelector,
+                value: value,
+                code: options.code,
+                data: options.data,
+                if: options.if,
+                potential: options.potentialInsert,
+                timestamp: timestampTmp
+            });
+        }
+
         return this;
     }
 
@@ -532,35 +627,40 @@ export default class DbStorage implements DbEditAble {
      * @param selector
      * @param value
      * @param options
+     * @param silent
      * @private
      */
-    _update(selector : DbProcessedSelector, value : any, options : UpdateArgs & InfoOption) : void {
+    _update(selector : DbProcessedSelector, value : any, options : UpdateArgs & InfoOption, silent: boolean = false) : void {
         if(this.updateMiddleware(selector,value,options)){
-            const mt = createUpdateInsertModifyToken(this.hasDataChangeListener || this.hasUpdateListener);
+            const mt = createUpdateInsertModifyToken(!silent &&
+                (this.hasDataChangeListener || this.hasUpdateListener));
 
             this.dbsHead.update(selector,value,options,mt);
 
-            let reasons;
-            if(mt.level > 0){
-                this.updateCompOptions();
-                reasons = getModifyTokenReaons(mt,DataEventReason.UPDATED,DataEventReason.INSERTED);
-                this.dataTouchEvent.emit([...reasons],this);
-            }
-            // noinspection DuplicatedCode
-            if(mt.level === ModifyLevel.DATA_CHANGED){
-                this.tmpCudUpdated = true;
-                this.updateEvent.emit(selector,value,options);
-                this._triggerChangeEvents(reasons);
+            if(!silent) {
+                let reasons;
+                if(mt.level > 0){
+                    this.updateCompOptions();
+                    reasons = getModifyTokenReaons(mt,DataEventReason.UPDATED,DataEventReason.INSERTED);
+                    this.dataTouchEvent.emit([...reasons],this);
+                }
+                // noinspection DuplicatedCode
+                if(mt.level === ModifyLevel.DATA_CHANGED){
+                    this.tmpCudUpdated = true;
+                    this.updateEvent.emit(selector,value,options);
+                    this._triggerChangeEvents(reasons);
+                }
             }
         }
     }
 
     /**
      * Do an delete operation
-     * This method is used internally.
-     * Notice if you do a cud operation locally on the client,
-     * that this operation is not done on the server-side.
-     * So if the Databox reloads the data or resets the changes are lost.
+     * Notice that this cud operation is executed only locally
+     * and only affects this specific storage instance.
+     * If the parameter keepInMemory is true and the storage reloads
+     * or copy data, all local cud operations will be re-executed.
+     * Otherwise, the changes are also lost in the case of a reload or copy.
      * If you want to do more changes, you should look at the seqEdit method.
      * Delete behavior:
      * Notice that in every case, the delete only happens when the key
@@ -588,10 +688,32 @@ export default class DbStorage implements DbEditAble {
      * If you provide a string instead of an array, the string will be
      * split by dots to create a string array.
      * @param options
+     * @param keepInMemory
+     * Indicates if the cud operation should be kept in memory.
+     * In the case of a reload or copy, the storage is then able to
+     * re-execute all cud operations to prevent that the changes are lost.
+     * It's also possible to remove the cud operations later manually from memory.
+     * This can be done with the methods: getLastLocalCudOpertions and removeLocalCudOpertions.
      */
-    delete(selector : DbSelector, options : IfOption & InfoOption & TimestampOption = {}) : DbStorage {
+    delete(selector : DbSelector, options : IfOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true) : DbStorage {
+        const timestampTmp = options.timestamp;
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
-        this._delete(DbUtils.processSelector(selector),options as (DeleteArgs & InfoOption));
+        options.if = DbUtils.processIfOption(options.if);
+        const processedSelector = DbUtils.processSelector(selector);
+
+        this._delete(processedSelector,options as (DeleteArgs & InfoOption));
+
+        if(keepInMemory){
+            this.localCudOperationsMemory.add({
+                type: CudType.delete,
+                selector: processedSelector,
+                code: options.code,
+                data: options.data,
+                if: options.if,
+                timestamp: timestampTmp
+            });
+        }
+
         return this;
     }
 
@@ -601,14 +723,15 @@ export default class DbStorage implements DbEditAble {
      * Please use the normal method without a pre underscore.
      * @param selector
      * @param options
+     * @param silent
      * @private
      */
-    _delete(selector : DbProcessedSelector, options : DeleteArgs & InfoOption) : void {
+    _delete(selector : DbProcessedSelector, options : DeleteArgs & InfoOption,silent: boolean = false) : void {
         if(this.deleteMiddleware(selector,options)){
             const mt = createDeleteModifyToken();
             this.dbsHead.delete(selector,options,mt);
 
-            if(mt.level > 0) {
+            if(!silent && mt.level > 0) {
                 this.updateCompOptions();
                 this.tmpCudDeleted = true;
                 this.deleteEvent.emit(selector,options);
@@ -621,20 +744,33 @@ export default class DbStorage implements DbEditAble {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Sequence edit.
-     * Notice if you do a cud operation locally on the client,
-     * that this operation is not done on the server-side.
-     * So if the Databox reloads the data or resets the changes are lost.
+     * Notice that this cud operations are executed only locally
+     * and only affects this specific storage instance.
+     * If the parameter keepInMemory is true and the storage reloads
+     * or copy data, all local cud operations will be re-executed.
+     * Otherwise, the changes are also lost in the case of a reload or copy.
      * @param timestamp
      * With the timestamp option, you can change the sequence of data.
      * The storage, for example, will only update data that is older as incoming data.
      * Use this option only if you know what you are doing.
+     * @param keepInMemory
+     * Indicates if the cud operation should be kept in memory.
+     * In the case of a reload or copy, the storage is then able to
+     * re-execute all cud operations to prevent that the changes are lost.
+     * It's also possible to remove the cud operations later manually from memory.
+     * This can be done with the methods: getLastLocalCudOpertions and removeLocalCudOpertions.
      */
-    seqEdit(timestamp ?: number) : DbCudOperationSequence {
-        timestamp = DbUtils.processTimestamp(timestamp);
-        return new DbCudOperationSequence( (operations) => {
+    seqEdit(timestamp ?: number, keepInMemory: boolean = true) : DbLocalCudOperationSequence {
+        return new DbLocalCudOperationSequence( timestamp,(operations) => {
+            const operationLength = operations.length;
             this.startCudSeq();
-            DbUtils.processOpertions(this,operations,timestamp);
+            for(let i = 0; i < operationLength; i++){
+                this._executeLocalCudOperation(operations[i],false);
+            }
             this.endCudSeq();
+            if(keepInMemory) {
+                this.localCudOperationsMemory.addMultiple(operations);
+            }
         });
     }
 
@@ -682,6 +818,45 @@ export default class DbStorage implements DbEditAble {
             this.dataChangeCombineSeqEvent.emit([...reasons],this);
         }
     }
+
+    /**
+     * @internal
+     * This method is used internally.
+     * @param operation
+     * @param silent
+     * @private
+     */
+    public _executeLocalCudOperation(operation: LocalCudOperation,silent: boolean): void {
+        switch (operation.type) {
+            case CudType.insert:
+                this._insert(operation.selector,operation.value,{
+                    if: operation.if,
+                    timestamp: DbUtils.processTimestamp(operation.timestamp),
+                    potentialUpdate: operation.potential,
+                    data: operation.data,
+                    code: operation.code
+                },true);
+                break;
+            case CudType.update:
+                this._update(operation.selector,operation.value,{
+                    if: operation.if,
+                    timestamp: DbUtils.processTimestamp(operation.timestamp),
+                    potentialInsert: operation.potential,
+                    data: operation.data,
+                    code: operation.code
+                },true);
+                break;
+            case CudType.delete:
+                this._delete(operation.selector,{
+                    if: operation.if,
+                    timestamp: DbUtils.processTimestamp(operation.timestamp),
+                    data: operation.data,
+                    code: operation.code
+                },true);
+                break;
+        }
+    }
+
     //events
 
     // noinspection JSUnusedGlobalSymbols
