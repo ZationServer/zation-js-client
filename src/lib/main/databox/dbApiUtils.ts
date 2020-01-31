@@ -42,6 +42,15 @@ export function $pair<TK,TV>(keyQuery : ForintQuery<TK>,valueQuery : ForintQuery
 }
 
 /**
+ * Inverts the condition.
+ * @param ifQuery
+ */
+export function $not(ifQuery: IfQuery) {
+    ifQuery.n = true;
+    return ifQuery;
+}
+
+/**
  * @description
  * Databox filter constant to select all values.
  * @example
@@ -53,24 +62,17 @@ export const $all = Object.freeze({});
  * @description
  * Util function for creating an if condition for cud operations of databoxes.
  * It creates a condition that at least one item must match with the provided query.
+ * It's possible to invert the condition using the $not function. (None of the items should match)
  * @example
  * await db.update(['34','name'],'luca',{if : $contains($key('35'))});
+ * await db.update(['34','name'],'luca',{if : $not($contains($key('39')))});
  * @param query
  */
 export function $contains<TK,TV>(query : ForintSearchQuery<TK,TV>) : IfQuery {
-    return {q : query,t : IfQueryType.search};
-}
-
-/**
- * @description
- * Util function for creating an if condition for cud operations of databoxes.
- * It creates a condition that none of the items should match with the provided query.
- * @example
- * await db.update(['34','name'],'luca',{if : $notContains($key('39'))});
- * @param query
- */
-export function $notContains<TK,TV>(query : ForintSearchQuery<TK,TV>) : IfQuery {
-    return {q : query,n : true,t : IfQueryType.search};
+    return {
+        q : query,
+        t : IfQueryType.search
+    };
 }
 
 /**
@@ -87,23 +89,15 @@ export const $any = Object.freeze({});
  * Util function for creating an if condition for cud operations of databoxes.
  * It creates a condition that the complete object (all key-value pairs)
  * must match with the provided query.
+ * It's possible to invert the condition using the $not function.
  * @example
  * await db.update(['34','name'],'luca',{if: $matches({email: 'test1@test.de', age: {gte: 18}})});
+ * await db.update(['34','name'],'luca',{if: $not($matches({email: 'test1@test.de', age: {gte: 18}}))});
  * @param query
  */
 export function $matches<T>(query : ForintQuery<T>) : IfQuery {
-    return {q : query,t : IfQueryType.full};
-}
-
-/**
- * @description
- * Util function for creating an if condition for cud operations of databoxes.
- * It creates a condition that the complete object (all key-value pairs)
- * must not match with the provided query.
- * @example
- * await db.update(['34','name'],'luca',{if: $notMatches({email: 'test1@test.de', age: {gte: 18}})});
- * @param query
- */
-export function $notMatches<T>(query : ForintQuery<T>) : IfQuery {
-    return {q : query,n : true,t : IfQueryType.full};
+    return {
+        q : query,
+        t : IfQueryType.full,
+    };
 }
