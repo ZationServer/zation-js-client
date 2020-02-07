@@ -67,7 +67,7 @@ import {AbortSignal, AbortTrigger}     from "./lib/main/utils/connectionUtils";
 // noinspection JSUnusedGlobalSymbols
 /**
  * @description
- * Creates the returnTarget zation client.
+ * Creates a zation client.
  * @param options
  * @param reactionBox
  */

@@ -68,7 +68,7 @@ export class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Creates the returnTarget zation client.
+     * Creates a zation client.
      * @param settings
      * @param reactionBox
      */

@@ -269,7 +269,7 @@ export class Response
         });
     }
 
-    //Part returnTarget system
+    //Part main system
 
     private _readData(data : ZationResponse)
     {
