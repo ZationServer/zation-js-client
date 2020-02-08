@@ -427,7 +427,7 @@ export class Zation
      * The default values are:
      * Protocol: WebSocket
      * Controller: ''
-     * Data: {}
+     * Data: undefined
      * SystemController: false
      * UseAuth: true
      * AttachedHttpContent: []
@@ -445,7 +445,7 @@ export class Zation
      * @param controller
      * @param data
      */
-    request(controller : string = '',data : object = {}) : RequestBuilder {
+    request(controller : string = '',data : any = undefined) : RequestBuilder {
         const helper = new RequestBuilder(this);
         helper.controller(controller);
         helper.data(data);
@@ -460,7 +460,7 @@ export class Zation
      * This is another way to authenticate this client.
      * The default values are:
      * Protocol: WebSocket
-     * AuthData: {}
+     * AuthData: undefined
      * AttachedHttpContent: []
      * @example
      * await zation.authRequest()
@@ -474,7 +474,7 @@ export class Zation
      * @param authData
      * @param protocolType
      */
-    authRequest(authData : object = {}, protocolType : ProtocolType = ProtocolType.WebSocket) : AuthRequestBuilder {
+    authRequest(authData : any = undefined, protocolType : ProtocolType = ProtocolType.WebSocket) : AuthRequestBuilder {
         const helper = new AuthRequestBuilder(this);
         helper.protocol(protocolType);
         helper.authData(authData);
@@ -486,7 +486,7 @@ export class Zation
      * @description
      * Returns an validation request helper.
      * Where you can easy build an validation request with reactions and send it.
-     * This is useful for validate individual controller parameters.
+     * This is useful to validate individual controller data.
      * The default values are:
      * Protocol: WebSocket
      * Controller: ''
