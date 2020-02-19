@@ -251,7 +251,7 @@ export class Zation
     /**
      * @description
      * Send a ping request to the server
-     * and returns the ping time.
+     * and returns the ping time in milliseconds, with microseconds in the fractional part.
      * @example
      * const ping = await ping();
      * @throws ConnectionRequiredError,TimeoutError
@@ -274,9 +274,9 @@ export class Zation
     {
         const req = new WsRequest(SystemController.PING,{},true);
         req.setWaitForConnection(waitForConnection);
-        const start = Date.now();
+        const start = performance.now();
         await this.send(req);
-        return Date.now() - start;
+        return performance.now() - start;
     }
 
     //Part Auth
