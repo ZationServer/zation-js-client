@@ -15,13 +15,13 @@ import {WsRequest}             from "../main/wsRequest";
 
 export class RequestBuilder extends AbstractRequestBuilder<RequestBuilder>
 {
-    private _useAuth : boolean = true;
-    private _controller : string = '';
-    private _systemController : boolean = false;
-    private _data : any = undefined;
-    private _httpAttachedContent : {key : string,data : string | Blob}[] = [];
+    private _useAuth: boolean = true;
+    private _controller: string = '';
+    private _systemController: boolean = false;
+    private _data: any = undefined;
+    private _httpAttachedContent: {key: string,data: string | Blob}[] = [];
 
-    constructor(zation : Zation) {
+    constructor(zation: Zation) {
         super(zation);
     }
 
@@ -32,7 +32,7 @@ export class RequestBuilder extends AbstractRequestBuilder<RequestBuilder>
      * @param useAuth
      * @default true
      */
-    useAuth(useAuth : boolean) : RequestBuilder {
+    useAuth(useAuth: boolean): RequestBuilder {
         this._useAuth = useAuth;
         return this;
     }
@@ -44,7 +44,7 @@ export class RequestBuilder extends AbstractRequestBuilder<RequestBuilder>
      * @param controller
      * @default ''
      */
-    controller(controller : string) : RequestBuilder {
+    controller(controller: string): RequestBuilder {
         this._controller = controller;
         return this;
     }
@@ -56,7 +56,7 @@ export class RequestBuilder extends AbstractRequestBuilder<RequestBuilder>
      * @default false
      * @param isSystemController
      */
-    systemController(isSystemController : boolean) : RequestBuilder {
+    systemController(isSystemController: boolean): RequestBuilder {
         this._systemController = isSystemController;
         return this;
     }
@@ -68,7 +68,7 @@ export class RequestBuilder extends AbstractRequestBuilder<RequestBuilder>
      * @param data
      * @default undefined (equals to {} on server param based input).
      */
-    data(data : any) : RequestBuilder {
+    data(data: any): RequestBuilder {
         this._data = data;
         return this;
     }
@@ -83,7 +83,7 @@ export class RequestBuilder extends AbstractRequestBuilder<RequestBuilder>
      * @param data
      * @default []
      */
-    attachHttpContent(key : string,data : string | Blob) : RequestBuilder{
+    attachHttpContent(key: string,data: string | Blob): RequestBuilder{
         this._httpAttachedContent.push({key,data});
         return this;
     }
@@ -94,7 +94,7 @@ export class RequestBuilder extends AbstractRequestBuilder<RequestBuilder>
      * Builds the request and return it.
      * Notice that the request not contains the reactions!
      */
-    buildRequest() : ZationRequest
+    buildRequest(): ZationRequest
     {
         let request;
         //buildRequest
@@ -119,7 +119,7 @@ export class RequestBuilder extends AbstractRequestBuilder<RequestBuilder>
      * @return
      * Returns the full get reuqest as an string.
      */
-    buildGetRequest() : string
+    buildGetRequest(): string
     {
         //system
         let params = `?${HttpGetReq.SYSTEM}=${this.zation.getSystem()}`;
@@ -149,7 +149,7 @@ export class RequestBuilder extends AbstractRequestBuilder<RequestBuilder>
         return this.zation.getServerAddress()+params;
     }
 
-    protected self() : RequestBuilder{
+    protected self(): RequestBuilder{
         return this;
     }
 

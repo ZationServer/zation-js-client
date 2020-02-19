@@ -12,11 +12,11 @@ import {ZationRequest}                      from "../main/zationRequest";
 
 export class ValidationRequestBuilder extends AbstractRequestBuilder<ValidationRequestBuilder>
 {
-    private _controller : string = '';
-    private _systemController : boolean = false;
-    private _checks : ValidationCheck[] = [];
+    private _controller: string = '';
+    private _systemController: boolean = false;
+    private _checks: ValidationCheck[] = [];
 
-    constructor(zation : Zation) {
+    constructor(zation: Zation) {
         super(zation);
     }
 
@@ -27,7 +27,7 @@ export class ValidationRequestBuilder extends AbstractRequestBuilder<ValidationR
      * @param controller
      * @default ''
      */
-    controller(controller : string) : ValidationRequestBuilder {
+    controller(controller: string): ValidationRequestBuilder {
         this._controller = controller;
         return this;
     }
@@ -39,7 +39,7 @@ export class ValidationRequestBuilder extends AbstractRequestBuilder<ValidationR
      * @default false
      * @param isSystemController
      */
-    systemController(isSystemController : boolean) : ValidationRequestBuilder {
+    systemController(isSystemController: boolean): ValidationRequestBuilder {
         this._systemController = isSystemController;
         return this;
     }
@@ -50,7 +50,7 @@ export class ValidationRequestBuilder extends AbstractRequestBuilder<ValidationR
      * Add validation checks.
      * @param checks
      */
-    checks(...checks : ValidationCheck[]) : ValidationRequestBuilder {
+    checks(...checks: ValidationCheck[]): ValidationRequestBuilder {
         this._checks.push(...checks);
         return this;
     }
@@ -62,8 +62,8 @@ export class ValidationRequestBuilder extends AbstractRequestBuilder<ValidationR
      * @param inputPath
      * @param value
      */
-    check(inputPath : string | string[],value : any) : ValidationRequestBuilder {
-        this._checks.push({ip : inputPath, v : value});
+    check(inputPath: string | string[],value: any): ValidationRequestBuilder {
+        this._checks.push({ip: inputPath, v: value});
         return this;
     }
 
@@ -73,7 +73,7 @@ export class ValidationRequestBuilder extends AbstractRequestBuilder<ValidationR
      * Builds the request and return it.
      * Notice that the request not contains the reactions!
      */
-    buildRequest() : ZationRequest
+    buildRequest(): ZationRequest
     {
         const req = new ValidationRequest(this._controller,this._checks,this._systemController,this._protocol);
         req.setApiLevel(this._apiLevel);
@@ -89,7 +89,7 @@ export class ValidationRequestBuilder extends AbstractRequestBuilder<ValidationR
      * @return
      * Returns the full get reuqest as an string.
      */
-    buildGetRequest() : string
+    buildGetRequest(): string
     {
         //checks
         let params = `?${HttpGetReq.INPUT}=${encodeURIComponent(JSON.stringify(this._checks))}`;
@@ -110,7 +110,7 @@ export class ValidationRequestBuilder extends AbstractRequestBuilder<ValidationR
         return this.zation.getServerAddress()+params;
     }
 
-    protected self() : ValidationRequestBuilder {
+    protected self(): ValidationRequestBuilder {
         return this;
     }
 

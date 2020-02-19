@@ -6,9 +6,9 @@ Copyright(c) Luca Scaringella
 
 export class TimeoutError extends Error {
 
-    private readonly waitForConnectionTimeout : boolean;
+    private readonly waitForConnectionTimeout: boolean;
 
-    constructor(msg : string,waitForConnectionTimeout : boolean = false) {
+    constructor(msg: string,waitForConnectionTimeout: boolean = false) {
         super(msg);
         this.waitForConnectionTimeout = waitForConnectionTimeout;
     }
@@ -17,7 +17,7 @@ export class TimeoutError extends Error {
     /**
      * Returns if this is a wait for connection timeout.
      */
-    isWaitForConnecitonTimeout() : boolean {
+    isWaitForConnecitonTimeout(): boolean {
         return this.waitForConnectionTimeout;
     }
 }

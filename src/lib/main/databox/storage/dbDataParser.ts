@@ -17,7 +17,7 @@ export default class DbDataParser {
      * This also creates a clone because every value from type objects will be divided.
      * @param rawData
      */
-    static parse(rawData : any) : any | DbsComponent {
+    static parse(rawData: any): any | DbsComponent {
         if(typeof rawData === 'object' && rawData){
             if(Array.isArray(rawData)) {
                 return new DbsArray(rawData);

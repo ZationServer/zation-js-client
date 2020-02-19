@@ -23,11 +23,11 @@ import {ResponseReactionBox}    from "../reactionBoxes/responseReactionBox";
 
 export class ResponseReact implements ResponseReactAble
 {
-    private readonly response : Response;
-    private readonly client : Zation;
-    private preAction : Promise<void>;
+    private readonly response: Response;
+    private readonly client: Zation;
+    private preAction: Promise<void>;
 
-    constructor(response : Response,client : Zation)
+    constructor(response: Response,client: Zation)
     {
         this.preAction = Promise.resolve();
         this.response = response;
@@ -39,7 +39,7 @@ export class ResponseReact implements ResponseReactAble
      * @description
      * Returns the response.
      */
-    getResponse() : Response {
+    getResponse(): Response {
         return this.response;
     }
 
@@ -50,41 +50,41 @@ export class ResponseReact implements ResponseReactAble
      * The difference to the catch error is that the filtered errors are not caught.
      * And you always respond to all the errors of the response, no matter if they were caught before.
      * @example
-     * onError((filteredErrors,response) => {},{name : 'passwordError'});
+     * onError((filteredErrors,response) => {},{name: 'passwordError'});
      *
      * -FilterExamples-
      * For errors with the name:
-     * {name : 'errorName1'}
+     * {name: 'errorName1'}
      * For errors with the names:
-     * {name : ['errorName1','errorName2']}
+     * {name: ['errorName1','errorName2']}
      * For errors with the group:
-     * {group : 'errorGroup1'}
+     * {group: 'errorGroup1'}
      * For errors with the groups:
-     * {group : ['errorGroup1','errorGroup2']}
+     * {group: ['errorGroup1','errorGroup2']}
      * For errors with the type:
-     * {type : 'errorType1'}
+     * {type: 'errorType1'}
      * For errors with the types:
-     * {type : ['errorType1','errorType2']}
+     * {type: ['errorType1','errorType2']}
      * For errors with has all keys and values in the info:
-     * {info : {inputPath : 'name', inputValue : 'value'}}
+     * {info: {inputPath: 'name', inputValue: 'value'}}
      * For errors with has at least one of all keys and values in the info:
-     * {info : [{inputPath : 'name'},{inputPath : 'firstName'}]}
+     * {info: [{inputPath: 'name'},{inputPath: 'firstName'}]}
      * For errors with the info key:
-     * {infoKey : 'inputPath'}
+     * {infoKey: 'inputPath'}
      * For errors with at least one of the info keys:
-     * {infoKey : ['inputPath','inputValue']}
+     * {infoKey: ['inputPath','inputValue']}
      * For errors with all of the info keys:
-     * {infoKey : [['inputPath','inputValue']]}
+     * {infoKey: [['inputPath','inputValue']]}
      * For errors with the info value:
-     * {infoValue : 'name'}
+     * {infoValue: 'name'}
      * For errors with at least one of the info values:
-     * {infoValue : ['name','firstName']}
+     * {infoValue: ['name','firstName']}
      * For errors with all of the info values:
-     * {infoValue : [['value1','value2']]}
+     * {infoValue: [['value1','value2']]}
      * For errors there from the zation system:
-     * {fromZationSystem : true}
+     * {fromZationSystem: true}
      * For errors there not from the zation system:
-     * {fromZationSystem : false}
+     * {fromZationSystem: false}
      * You can combine all of this properties.
      * @param reaction
      * @param filter
@@ -96,7 +96,7 @@ export class ResponseReact implements ResponseReactAble
      * If there is more than one error at the end,
      * the reaction wil be triggerd with all filtered errors.
      */
-    onError(reaction: ResponseReactionOnError, ...filter : ErrorFilter[]) : ResponseReact
+    onError(reaction: ResponseReactionOnError, ...filter: ErrorFilter[]): ResponseReact
     {
         this.preAction = this.preAction.then(async () => {
             await TriggerResponseEngine.onError(this.response,new FullReaction<ResponseReactionOnError>(reaction,filter));
@@ -110,41 +110,41 @@ export class ResponseReact implements ResponseReactAble
      * Catch an error in the response.
      * It makes sense to catch specific errors first and at the end to catch all the ones left over.
      * @example
-     * onError((filteredErrors,response) => {},{name : 'passwordError'});
+     * onError((filteredErrors,response) => {},{name: 'passwordError'});
      *
      * -FilterExamples-
      * For errors with the name:
-     * {name : 'errorName1'}
+     * {name: 'errorName1'}
      * For errors with the names:
-     * {name : ['errorName1','errorName2']}
+     * {name: ['errorName1','errorName2']}
      * For errors with the group:
-     * {group : 'errorGroup1'}
+     * {group: 'errorGroup1'}
      * For errors with the groups:
-     * {group : ['errorGroup1','errorGroup2']}
+     * {group: ['errorGroup1','errorGroup2']}
      * For errors with the type:
-     * {type : 'errorType1'}
+     * {type: 'errorType1'}
      * For errors with the types:
-     * {type : ['errorType1','errorType2']}
+     * {type: ['errorType1','errorType2']}
      * For errors with has all keys and values in the info:
-     * {info : {inputPath : 'name', inputValue : 'value'}}
+     * {info: {inputPath: 'name', inputValue: 'value'}}
      * For errors with has at least one of all keys and values in the info:
-     * {info : [{inputPath : 'name'},{inputPath : 'firstName'}]}
+     * {info: [{inputPath: 'name'},{inputPath: 'firstName'}]}
      * For errors with the info key:
-     * {infoKey : 'inputPath'}
+     * {infoKey: 'inputPath'}
      * For errors with at least one of the info keys:
-     * {infoKey : ['inputPath','inputValue']}
+     * {infoKey: ['inputPath','inputValue']}
      * For errors with all of the info keys:
-     * {infoKey : [['inputPath','inputValue']]}
+     * {infoKey: [['inputPath','inputValue']]}
      * For errors with the info value:
-     * {infoValue : 'name'}
+     * {infoValue: 'name'}
      * For errors with at least one of the info values:
-     * {infoValue : ['name','firstName']}
+     * {infoValue: ['name','firstName']}
      * For errors with all of the info values:
-     * {infoValue : [['value1','value2']]}
+     * {infoValue: [['value1','value2']]}
      * For errors there from the zation system:
-     * {fromZationSystem : true}
+     * {fromZationSystem: true}
      * For errors there not from the zation system:
-     * {fromZationSystem : false}
+     * {fromZationSystem: false}
      * You can combine all of this properties.
      * @param reaction
      * @param filter
@@ -156,7 +156,7 @@ export class ResponseReact implements ResponseReactAble
      * If there is more than one error at the end,
      * the reaction wil be triggerd with all filtered errors.
      */
-    catchError(reaction: ResponseReactionCatchError, ...filter : ErrorFilter[]) : ResponseReact
+    catchError(reaction: ResponseReactionCatchError, ...filter: ErrorFilter[]): ResponseReact
     {
         this.preAction = this.preAction.then(async () => {
             await TriggerResponseEngine.catchError(this.response,new FullReaction<ResponseReactionCatchError>(reaction,filter));
@@ -169,7 +169,7 @@ export class ResponseReact implements ResponseReactAble
      * @description
      * Returns an OnErrorBuilder to easy react on error.
      */
-    buildOnError() : OnErrorBuilder<ResponseReact,ResponseReact>
+    buildOnError(): OnErrorBuilder<ResponseReact,ResponseReact>
     {
         return new OnErrorBuilder<ResponseReact,ResponseReact>(this);
     }
@@ -179,7 +179,7 @@ export class ResponseReact implements ResponseReactAble
      * @description
      * Returns an CatchErrorBuilder to easy catch an error.
      */
-    buildCatchError() : CatchErrorBuilder<ResponseReact,ResponseReact>
+    buildCatchError(): CatchErrorBuilder<ResponseReact,ResponseReact>
     {
         return new CatchErrorBuilder<ResponseReact,ResponseReact>(this);
     }
@@ -195,11 +195,11 @@ export class ResponseReact implements ResponseReactAble
      * @param statusCode
      * can be provided to filter on with an status code.
      */
-    onSuccessful(reaction: ResponseReactionOnSuccessful, statusCode ?: number | string) : ResponseReact
+    onSuccessful(reaction: ResponseReactionOnSuccessful, statusCode?: number | string): ResponseReact
     {
         this.preAction = this.preAction.then(async () => {
             await TriggerResponseEngine.
-            onSuccessful(this.response,new FullReaction<ResponseReactionOnSuccessful>(reaction,{statusCode : statusCode}));
+            onSuccessful(this.response,new FullReaction<ResponseReactionOnSuccessful>(reaction,{statusCode: statusCode}));
         });
         return this;
     }
@@ -212,7 +212,7 @@ export class ResponseReact implements ResponseReactAble
      * onResponse((response) => {});
      * @param reaction
      */
-    onResponse(reaction:  ResponseReactionOnResponse) : ResponseReact {
+    onResponse(reaction:  ResponseReactionOnResponse): ResponseReact {
         this.preAction = this.preAction.then(async () => {
            await reaction(this.response);
         });
@@ -225,10 +225,10 @@ export class ResponseReact implements ResponseReactAble
      * React with responseReaction box/es.
      * @param respReactionBoxes
      */
-    reactWith(...respReactionBoxes : ResponseReactionBox[]) : ResponseReact
+    reactWith(...respReactionBoxes: ResponseReactionBox[]): ResponseReact
     {
         this.preAction = this.preAction.then(async () => {
-            await respReactionBoxes.forEach(async (box : ResponseReactionBox) => {
+            await respReactionBoxes.forEach(async (box: ResponseReactionBox) => {
                 await box._trigger(this.response);
             });
         });
@@ -242,7 +242,7 @@ export class ResponseReact implements ResponseReactAble
      * Only makes sense if the request was sent without its own reaction boxes.
      * Because then the boxes from the zation client were not triggered.
      */
-    zationReact() : ResponseReact
+    zationReact(): ResponseReact
     {
         this.preAction = this.preAction.then(async () => {
             await this.client._triggerResponseReactions(this.response);
@@ -255,7 +255,7 @@ export class ResponseReact implements ResponseReactAble
      * @description
      * Async wait for all reations are finshed and returns the ResponseReact.
      */
-    async wait() : Promise<ResponseReact>
+    async wait(): Promise<ResponseReact>
     {
         await this.preAction;
         return this;

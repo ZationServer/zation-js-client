@@ -52,41 +52,41 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      * The difference to the catch error is that the filtered errors are not caught.
      * And you always respond to all the errors of the response, no matter if they were caught before.
      * @example
-     * onError((filteredErrors,response) => {},{name : 'passwordError'});
+     * onError((filteredErrors,response) => {},{name: 'passwordError'});
      *
      * -FilterExamples-
      * For errors with the name:
-     * {name : 'errorName1'}
+     * {name: 'errorName1'}
      * For errors with the names:
-     * {name : ['errorName1','errorName2']}
+     * {name: ['errorName1','errorName2']}
      * For errors with the group:
-     * {group : 'errorGroup1'}
+     * {group: 'errorGroup1'}
      * For errors with the groups:
-     * {group : ['errorGroup1','errorGroup2']}
+     * {group: ['errorGroup1','errorGroup2']}
      * For errors with the type:
-     * {type : 'errorType1'}
+     * {type: 'errorType1'}
      * For errors with the types:
-     * {type : ['errorType1','errorType2']}
+     * {type: ['errorType1','errorType2']}
      * For errors with has all keys and values in the info:
-     * {info : {inputPath : 'name', inputValue : 'value'}}
+     * {info: {inputPath: 'name', inputValue: 'value'}}
      * For errors with has at least one of all keys and values in the info:
-     * {info : [{inputPath : 'name'},{inputPath : 'firstName'}]}
+     * {info: [{inputPath: 'name'},{inputPath: 'firstName'}]}
      * For errors with the info key:
-     * {infoKey : 'inputPath'}
+     * {infoKey: 'inputPath'}
      * For errors with at least one of the info keys:
-     * {infoKey : ['inputPath','inputValue']}
+     * {infoKey: ['inputPath','inputValue']}
      * For errors with all of the info keys:
-     * {infoKey : [['inputPath','inputValue']]}
+     * {infoKey: [['inputPath','inputValue']]}
      * For errors with the info value:
-     * {infoValue : 'name'}
+     * {infoValue: 'name'}
      * For errors with at least one of the info values:
-     * {infoValue : ['name','firstName']}
+     * {infoValue: ['name','firstName']}
      * For errors with all of the info values:
-     * {infoValue : [['value1','value2']]}
+     * {infoValue: [['value1','value2']]}
      * For errors there from the zation system:
-     * {fromZationSystem : true}
+     * {fromZationSystem: true}
      * For errors there not from the zation system:
-     * {fromZationSystem : false}
+     * {fromZationSystem: false}
      * You can combine all of this properties.
      * @param reaction
      * @param filter
@@ -101,7 +101,7 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      * It returns the responseReactionBox, to remove the on ErrorReaction from the box
      * you can use the getLastReaction method which is return the FullReaction.
      */
-    onError(reaction: ResponseReactionOnError, ...filter: ErrorFilter[]) : ResponseReactionBox
+    onError(reaction: ResponseReactionOnError, ...filter: ErrorFilter[]): ResponseReactionBox
     {
         const fullReaction = new FullReaction<ResponseReactionOnError>(reaction,filter);
         this.map.add(MapKey.ERROR,fullReaction);
@@ -114,7 +114,7 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      * @description
      * Returns an OnErrorBuilder to easy react on error.
      */
-    buildOnError() : OnErrorBuilder<ResponseReactionBox,ResponseReactionBox>
+    buildOnError(): OnErrorBuilder<ResponseReactionBox,ResponseReactionBox>
     {
         return new OnErrorBuilder<ResponseReactionBox,ResponseReactionBox>(this);
     }
@@ -126,7 +126,7 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offError(fullReaction ?: FullReaction<any>) : ResponseReactionBox {
+    offError(fullReaction?: FullReaction<any>): ResponseReactionBox {
         this.map.remove(MapKey.ERROR,fullReaction);
         return this;
     }
@@ -137,41 +137,41 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      * Catch an error in the response.
      * It makes sense to catch specific errors first and at the end to catch all the ones left over.
      * @example
-     * onError((filteredErrors,response) => {},{name : 'passwordError'});
+     * onError((filteredErrors,response) => {},{name: 'passwordError'});
      *
      * -FilterExamples-
      * For errors with the name:
-     * {name : 'errorName1'}
+     * {name: 'errorName1'}
      * For errors with the names:
-     * {name : ['errorName1','errorName2']}
+     * {name: ['errorName1','errorName2']}
      * For errors with the group:
-     * {group : 'errorGroup1'}
+     * {group: 'errorGroup1'}
      * For errors with the groups:
-     * {group : ['errorGroup1','errorGroup2']}
+     * {group: ['errorGroup1','errorGroup2']}
      * For errors with the type:
-     * {type : 'errorType1'}
+     * {type: 'errorType1'}
      * For errors with the types:
-     * {type : ['errorType1','errorType2']}
+     * {type: ['errorType1','errorType2']}
      * For errors with has all keys and values in the info:
-     * {info : {inputPath : 'name', inputValue : 'value'}}
+     * {info: {inputPath: 'name', inputValue: 'value'}}
      * For errors with has at least one of all keys and values in the info:
-     * {info : [{inputPath : 'name'},{inputPath : 'firstName'}]}
+     * {info: [{inputPath: 'name'},{inputPath: 'firstName'}]}
      * For errors with the info key:
-     * {infoKey : 'inputPath'}
+     * {infoKey: 'inputPath'}
      * For errors with at least one of the info keys:
-     * {infoKey : ['inputPath','inputValue']}
+     * {infoKey: ['inputPath','inputValue']}
      * For errors with all of the info keys:
-     * {infoKey : [['inputPath','inputValue']]}
+     * {infoKey: [['inputPath','inputValue']]}
      * For errors with the info value:
-     * {infoValue : 'name'}
+     * {infoValue: 'name'}
      * For errors with at least one of the info values:
-     * {infoValue : ['name','firstName']}
+     * {infoValue: ['name','firstName']}
      * For errors with all of the info values:
-     * {infoValue : [['value1','value2']]}
+     * {infoValue: [['value1','value2']]}
      * For errors there from the zation system:
-     * {fromZationSystem : true}
+     * {fromZationSystem: true}
      * For errors there not from the zation system:
-     * {fromZationSystem : false}
+     * {fromZationSystem: false}
      * You can combine all of this properties.
      * @param reaction
      * @param filter
@@ -186,7 +186,7 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      * It returns the responseReactionBox, to remove the CatchErrorReaction from the box
      * you can use the getLastReaction method which is return the FullReaction.
      */
-    catchError(reaction: ResponseReactionCatchError, ...filter: ErrorFilter[]) : ResponseReactionBox
+    catchError(reaction: ResponseReactionCatchError, ...filter: ErrorFilter[]): ResponseReactionBox
     {
         const fullReaction = new FullReaction<ResponseReactionCatchError>(reaction,filter);
         this.map.add(MapKey.CATCH_ERROR,fullReaction);
@@ -199,7 +199,7 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      * @description
      * Returns an CatchErrorBuilder to easy catch an error.
      */
-    buildCatchError() : CatchErrorBuilder<ResponseReactionBox,ResponseReactionBox>
+    buildCatchError(): CatchErrorBuilder<ResponseReactionBox,ResponseReactionBox>
     {
         return new CatchErrorBuilder<ResponseReactionBox,ResponseReactionBox>(this);
     }
@@ -211,7 +211,7 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    rmCatchError(fullReaction ?: FullReaction<any>) : ResponseReactionBox {
+    rmCatchError(fullReaction?: FullReaction<any>): ResponseReactionBox {
         this.map.remove(MapKey.CATCH_ERROR,fullReaction);
         return this;
     }
@@ -229,9 +229,9 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      * It returns the responseReactionBox, to remove the on SuccessfulReaction from the box
      * you can use the getLastReaction method which is return the FullReaction.
      */
-    onSuccessful(reaction: ResponseReactionOnSuccessful, statusCode ?: number | string) : ResponseReactionBox
+    onSuccessful(reaction: ResponseReactionOnSuccessful, statusCode?: number | string): ResponseReactionBox
     {
-        const fullReaction = new FullReaction<ResponseReactionOnSuccessful>(reaction,{statusCode : statusCode});
+        const fullReaction = new FullReaction<ResponseReactionOnSuccessful>(reaction,{statusCode: statusCode});
         this.map.add(MapKey.SUCCESSFUL,fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
@@ -244,7 +244,7 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offSuccessful(fullReaction ?: FullReaction<any>) : ResponseReactionBox {
+    offSuccessful(fullReaction?: FullReaction<any>): ResponseReactionBox {
         this.map.remove(MapKey.SUCCESSFUL,fullReaction);
         return this;
     }
@@ -261,7 +261,7 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      * It returns the responseReactionBox, to remove the on ResponseReaction from the box
      * you can use the getLastReaction method which is return the FullReaction.
      */
-    onResponse(reaction: ResponseReactionOnResponse) : ResponseReactionBox
+    onResponse(reaction: ResponseReactionOnResponse): ResponseReactionBox
     {
         const fullReaction = new FullReaction<ResponseReactionOnResponse>(reaction);
         this.map.add(MapKey.RESPONSE,fullReaction);
@@ -276,7 +276,7 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      * @param fullReaction
      * If it is not given away all will be removed.
      */
-    offResponse(fullReaction ?: FullReaction<any>) : ResponseReactionBox {
+    offResponse(fullReaction?: FullReaction<any>): ResponseReactionBox {
         this.map.remove(MapKey.RESPONSE,fullReaction);
         return this;
     }
@@ -288,7 +288,7 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      * Used internally.
      * Only use this method carefully.
      */
-    async _trigger(response : Response)
+    async _trigger(response: Response)
     {
         if(this.activate)
         {
@@ -296,7 +296,7 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
             if(response.isSuccessful()) {
                 const sucBox = this.map.tryGet(MapKey.SUCCESSFUL);
                 if(sucBox) {
-                    await sucBox.forEach(async (fullReaction : FullReaction<ResponseReactionOnSuccessful>) => {
+                    await sucBox.forEach(async (fullReaction: FullReaction<ResponseReactionOnSuccessful>) => {
                         await TriggerResponseEngine.onSuccessful(response,fullReaction);
                     });
                 }
@@ -306,20 +306,20 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
                 const errorBox = this.map.tryGet(MapKey.ERROR);
 
                 if(catchBox) {
-                    await catchBox.forEach(async (fullReaction : FullReaction<ResponseReactionCatchError>) => {
+                    await catchBox.forEach(async (fullReaction: FullReaction<ResponseReactionCatchError>) => {
                         await TriggerResponseEngine.catchError(response,fullReaction);
                     });
                 }
 
                 if(errorBox) {
-                    await errorBox.forEachAll(async (fullReaction : FullReaction<ResponseReactionOnError>) => {
+                    await errorBox.forEachAll(async (fullReaction: FullReaction<ResponseReactionOnError>) => {
                         await TriggerResponseEngine.onError(response,fullReaction);
                     });
                 }
             }
             const respBox = this.map.tryGet(MapKey.RESPONSE);
             if(respBox) {
-                await respBox.forEachAll(async (fullReaction : FullReaction<ResponseReactionOnResponse>) => {
+                await respBox.forEachAll(async (fullReaction: FullReaction<ResponseReactionOnResponse>) => {
                     await fullReaction.getReactionHandler()(response);
                 });
             }

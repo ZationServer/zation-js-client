@@ -23,12 +23,12 @@ export default class ConnectionUtils {
      * @param waitForConnection
      * @param errorMsg
      */
-    static async checkConnection(zation : Zation,waitForConnection : WaitForConnectionOption,errorMsg : string) : Promise<void> {
+    static async checkConnection(zation: Zation,waitForConnection: WaitForConnectionOption,errorMsg: string): Promise<void> {
 
         if(!zation.isConnected()){
 
             waitForConnection = waitForConnection === undefined ?
-                zation.getZc().config.waitForConnection : waitForConnection;
+                zation.getZc().config.waitForConnection: waitForConnection;
 
             if(typeof waitForConnection !== 'boolean') {
                 await ConnectionUtils.waitForConnection(zation.getSocket(),waitForConnection);
@@ -44,7 +44,7 @@ export default class ConnectionUtils {
      * @param socket
      * @param option
      */
-    private static waitForConnection(socket : Socket,option : null | number | AbortTrigger) : Promise<void>
+    private static waitForConnection(socket: Socket,option: null | number | AbortTrigger): Promise<void>
     {
         return new Promise<void>((resolve, reject) => {
             let connectListener;
@@ -88,11 +88,11 @@ export default class ConnectionUtils {
      * @param waitForDbConnection
      * @param errorMsg
      */
-    static async checkDbConnection(databox : Databox,zation : Zation,waitForDbConnection : WaitForConnectionOption,errorMsg : string){
+    static async checkDbConnection(databox: Databox,zation: Zation,waitForDbConnection: WaitForConnectionOption,errorMsg: string){
 
         if(!databox.isConnected()){
             waitForDbConnection = waitForDbConnection === undefined ?
-                zation.getZc().config.waitForDbConnection : waitForDbConnection;
+                zation.getZc().config.waitForDbConnection: waitForDbConnection;
 
             if(typeof waitForDbConnection !== 'boolean') {
                 await ConnectionUtils.waitForDbConnection(databox,zation,waitForDbConnection);
@@ -109,7 +109,7 @@ export default class ConnectionUtils {
      * @param zaiton
      * @param option
      */
-    private static async waitForDbConnection(databox : Databox,zaiton : Zation,option : null | number | AbortTrigger)
+    private static async waitForDbConnection(databox: Databox,zaiton: Zation,option: null | number | AbortTrigger)
     {
         return  new Promise<void>(async (resolve, reject) => {
             let dbConnectListener;
@@ -177,8 +177,8 @@ const abortedName = 'ABORTED';
  */
 export class AbortTrigger {
 
-    private _aborted : boolean = false;
-    private _abortProcess : () => boolean;
+    private _aborted: boolean = false;
+    private _abortProcess: () => boolean;
 
     constructor(){
     }
@@ -189,7 +189,7 @@ export class AbortTrigger {
      * Returns a boolean if it was successful.
      * Notice that the target promise will reject an AbortSignal.
      */
-    abort() : boolean {
+    abort(): boolean {
         if(!this._aborted && this._abortProcess){
            return this._abortProcess();
         }
@@ -202,7 +202,7 @@ export class AbortTrigger {
      * @param func
      * @private
      */
-    _setAbortProcess(func : () => boolean){
+    _setAbortProcess(func: () => boolean){
         this._abortProcess = func;
     }
 
@@ -210,7 +210,7 @@ export class AbortTrigger {
      * Checks if the error is an abort signal.
      * @param err
      */
-    static isAbortSignal(err : any) : boolean {
+    static isAbortSignal(err: any): boolean {
         return err && err.name === abortedName;
     }
 
@@ -220,7 +220,7 @@ export class AbortTrigger {
      * but the IDE can interpret the typescript information of this library.
      * @param value
      */
-    static cast(value : any) : AbortTrigger {
+    static cast(value: any): AbortTrigger {
         return value as AbortTrigger;
     }
 }

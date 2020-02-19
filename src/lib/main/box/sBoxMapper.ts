@@ -8,23 +8,23 @@ import {SBox} from "./sBox";
 
 export class SBoxMapper<T>
 {
-    private map : object = {};
+    private map: object = {};
 
     constructor() {
     }
 
-    add(key : PropertyKey,item : T) : void {
+    add(key: PropertyKey,item: T): void {
         this.get(key).addItem(item);
     }
 
-    remove(key : PropertyKey,item ?: T) : void{
+    remove(key: PropertyKey,item?: T): void{
         const sBox = this.tryGet(key);
         if(sBox){
             sBox.remove(item);
         }
     }
 
-    get(key : PropertyKey) : SBox<T> {
+    get(key: PropertyKey): SBox<T> {
         if(this.map.hasOwnProperty(key)) {
             return this.map[key];
         }
@@ -34,7 +34,7 @@ export class SBoxMapper<T>
         }
     }
 
-    tryGet(key : PropertyKey) : SBox<T> | undefined {
+    tryGet(key: PropertyKey): SBox<T> | undefined {
         return this.map[key];
     }
 }

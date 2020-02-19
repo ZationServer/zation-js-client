@@ -13,10 +13,10 @@ import {RequestJsonBuilder} from "../../utils/requestJsonBuilder";
 
 export class WsRequest extends ZationRequest
 {
-    private readonly controller : string;
-    private readonly isSystemController : boolean;
+    private readonly controller: string;
+    private readonly isSystemController: boolean;
 
-    constructor(controller : string,data : any = undefined,isSystemController : boolean = false)
+    constructor(controller: string,data: any = undefined,isSystemController: boolean = false)
     {
         super(data,ProtocolType.WebSocket);
         this.controller = controller;

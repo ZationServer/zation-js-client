@@ -4,14 +4,14 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-export type OrAddFunction<T> = (res : T[]) => void;
+export type OrAddFunction<T> = (res: T[]) => void;
 
 export class OrBuilder<T,R>
 {
-    private readonly main : T;
-    private readonly orAdd : Function;
+    private readonly main: T;
+    private readonly orAdd: Function;
 
-    constructor(main : T,orAdd : OrAddFunction<R>)
+    constructor(main: T,orAdd: OrAddFunction<R>)
     {
         this.main = main;
         this.orAdd = orAdd;
@@ -24,7 +24,7 @@ export class OrBuilder<T,R>
      * @param searchValues
      * The values are connected with AND.
      */
-    or(... searchValues : R[]) : OrBuilder<T,R>
+    or(... searchValues: R[]): OrBuilder<T,R>
     {
         this.orAdd(searchValues);
         return this;
@@ -35,7 +35,7 @@ export class OrBuilder<T,R>
      * @description
      * Continue with the builder before.
      */
-    continue() : T
+    continue(): T
     {
         return this.main;
     }

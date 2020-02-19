@@ -37,7 +37,7 @@ export default class DbsHead implements DbsComponent {
         this.componentValue = DbDataParser.parse(rawData);
 
         this.data = isDbsComponent(this.componentValue) ?
-            this.componentValue.getData() : this.componentValue;
+            this.componentValue.getData(): this.componentValue;
     }
 
     get dbsComponent() {
@@ -82,9 +82,9 @@ export default class DbsHead implements DbsComponent {
      * Returns the dbs component with that selector.
      * @param selector
      */
-    getDbsComponents(selector : DbProcessedSelector): DbsComponent[] {
+    getDbsComponents(selector: DbProcessedSelector): DbsComponent[] {
         if (selector.length === 0) {
-            return isDbsComponent(this.componentValue) ? [this.componentValue] : [];
+            return isDbsComponent(this.componentValue) ? [this.componentValue]: [];
         } else if (selector.length > 0) {
             if (isDbsComponent(this.componentValue)) {
                 return this.componentValue.getDbsComponents(selector);
@@ -98,7 +98,7 @@ export default class DbsHead implements DbsComponent {
      * Undefined will reset the valueMerger.
      * @param valueMerger
      */
-    setValueMerger(valueMerger : DbsValueMerger | undefined) : void {
+    setValueMerger(valueMerger: DbsValueMerger | undefined): void {
         this.valueMerger = valueMerger || defaultValueMerger;
     }
 
@@ -108,7 +108,7 @@ export default class DbsHead implements DbsComponent {
      * @return if the data has changed.
      * @param comparator
      */
-    setComparator(comparator : DbsComparator | undefined) : boolean {
+    setComparator(comparator: DbsComparator | undefined): boolean {
         return false;
     }
 
@@ -116,30 +116,30 @@ export default class DbsHead implements DbsComponent {
      * Merge this dbs component with the new component.
      * @param newValue
      */
-    mergeWithNew(newValue: any) : MergeResult {
+    mergeWithNew(newValue: any): MergeResult {
         if (isDbsHead(newValue)) {
             const newTimestamp = newValue.getTimestamp();
             const newComponentValue = newValue.getComponentValue();
-            const {mergedValue : mergedValue,dataChanged} = dbsMerger(this.componentValue,newComponentValue,this.valueMerger);
+            const {mergedValue: mergedValue,dataChanged} = dbsMerger(this.componentValue,newComponentValue,this.valueMerger);
             this.componentValue = mergedValue;
-            this.data = isDbsComponent(mergedValue) ? mergedValue.getData() : mergedValue;
+            this.data = isDbsComponent(mergedValue) ? mergedValue.getData(): mergedValue;
 
             if (DbUtils.isNewerTimestamp(this.timestamp,newTimestamp)) {
                 this.timestamp = newTimestamp;
             }
-            return {mergedValue : this,dataChanged: dataChanged};
+            return {mergedValue: this,dataChanged: dataChanged};
         }
-        return {mergedValue : newValue,dataChanged : true};
+        return {mergedValue: newValue,dataChanged: true};
     }
 
-    private checkIfConditions(ifOption : IfOptionProcessArgsValue) : boolean {
+    private checkIfConditions(ifOption: IfOptionProcessArgsValue): boolean {
         if(typeof ifOption === 'boolean') return ifOption;
 
         const data = this.data;
         const dataExists = data !== undefined;
         const queriesLength = ifOption.length;
         let tmpRes;
-        let tmpQuery : IfQuery;
+        let tmpQuery: IfQuery;
         let tmpKeyQuery;
         let tmpKeyQueryFunc;
         let tmpValueQuery;
@@ -149,14 +149,14 @@ export default class DbsHead implements DbsComponent {
             tmpQuery = ifOption[i];
             switch (tmpQuery.t) {
                 case IfQueryType.full:
-                    tmpRes = forint(tmpQuery.q)(data) ? !tmpQuery.n : !!tmpQuery.n;
+                    tmpRes = forint(tmpQuery.q)(data) ? !tmpQuery.n: !!tmpQuery.n;
                     break;
                 case IfQueryType.search:
                     tmpKeyQuery = tmpQuery.q.k;
                     tmpValueQuery = tmpQuery.q.v;
                     if(tmpKeyQuery || tmpValueQuery) {
-                        tmpKeyQueryFunc = tmpKeyQuery ? forint(tmpKeyQuery) : undefined;
-                        tmpValueQueryFunc = tmpValueQuery ? forint(tmpValueQuery) : undefined;
+                        tmpKeyQueryFunc = tmpKeyQuery ? forint(tmpKeyQuery): undefined;
+                        tmpValueQueryFunc = tmpValueQuery ? forint(tmpValueQuery): undefined;
                         if ((!tmpKeyQuery || tmpKeyQueryFunc('')) && (!tmpValueQuery || tmpValueQueryFunc(data))) {
                             //query match
                             tmpRes = !tmpQuery.n;
@@ -168,7 +168,7 @@ export default class DbsHead implements DbsComponent {
                     }
                     else {
                         //any constant
-                        tmpRes = tmpQuery.n ? !dataExists : dataExists;
+                        tmpRes = tmpQuery.n ? !dataExists: dataExists;
                     }
                     break;
                 default:
@@ -188,7 +188,7 @@ export default class DbsHead implements DbsComponent {
      * @param args
      * @param mt
      */
-    insert(selector : DbProcessedSelector, value: any, args : InsertProcessArgs, mt : ModifyToken): void {
+    insert(selector: DbProcessedSelector, value: any, args: InsertProcessArgs, mt: ModifyToken): void {
         //clone args (more storages don't conflict with if condition result prepare)
         args = {...args};
         if (selector.length === 0) {
@@ -198,8 +198,8 @@ export default class DbsHead implements DbsComponent {
         }
     }
 
-    _insert(value: any,args : InsertProcessArgs,mt : ModifyToken): void {
-        const {timestamp,if : ifOption,potentialUpdate} = args;
+    _insert(value: any,args: InsertProcessArgs,mt: ModifyToken): void {
+        const {timestamp,if: ifOption,potentialUpdate} = args;
 
         if(this.componentValue !== undefined){
             if(potentialUpdate){
@@ -215,7 +215,7 @@ export default class DbsHead implements DbsComponent {
         if (DbUtils.checkTimestamp(this.timestamp,timestamp)) {
             const parsed = DbDataParser.parse(value);
             this.componentValue = parsed;
-            this.data = isDbsComponent(parsed) ? parsed.getData() : parsed;
+            this.data = isDbsComponent(parsed) ? parsed.getData(): parsed;
             this.timestamp = timestamp;
             mt.level = ModifyLevel.DATA_CHANGED;
         }
@@ -229,7 +229,7 @@ export default class DbsHead implements DbsComponent {
      * @param args
      * @param mt
      */
-    update(selector : DbProcessedSelector, value : any, args : UpdateProcessArgs, mt : ModifyToken): void {
+    update(selector: DbProcessedSelector, value: any, args: UpdateProcessArgs, mt: ModifyToken): void {
         //clone args (more storages don't conflict with if condition result prepare)
         args = {...args};
         if (selector.length === 0) {
@@ -239,8 +239,8 @@ export default class DbsHead implements DbsComponent {
         }
     }
 
-    _update(value : any, args : UpdateProcessArgs, mt : ModifyToken): void {
-        const {timestamp,if : ifOption,potentialInsert} = args;
+    _update(value: any, args: UpdateProcessArgs, mt: ModifyToken): void {
+        const {timestamp,if: ifOption,potentialInsert} = args;
 
         if(this.componentValue === undefined){
             if(potentialInsert){
@@ -257,7 +257,7 @@ export default class DbsHead implements DbsComponent {
             mt.level = ModifyLevel.DATA_TOUCHED;
             const parsed = DbDataParser.parse(value);
             this.componentValue = parsed;
-            const newData = isDbsComponent(parsed) ? parsed.getData() : parsed;
+            const newData = isDbsComponent(parsed) ? parsed.getData(): parsed;
             if(mt.checkDataChange && !deepEqual(newData,this.data)){
                 mt.level = ModifyLevel.DATA_CHANGED;
             }
@@ -273,7 +273,7 @@ export default class DbsHead implements DbsComponent {
      * @param args
      * @param mt
      */
-    delete(selector : DbProcessedSelector, args : DeleteProcessArgs, mt : ModifyToken): void {
+    delete(selector: DbProcessedSelector, args: DeleteProcessArgs, mt: ModifyToken): void {
         //clone args (more storages don't conflict with if condition result prepare)
         args = {...args};
         if (selector.length === 0) {
@@ -283,10 +283,10 @@ export default class DbsHead implements DbsComponent {
         }
     }
 
-    _delete(args : DeleteProcessArgs, mt : ModifyToken): void {
+    _delete(args: DeleteProcessArgs, mt: ModifyToken): void {
         if(this.componentValue === undefined) return;
 
-        const {timestamp,if : ifOption} = args;
+        const {timestamp,if: ifOption} = args;
 
         if(ifOption !== undefined && !(args.if = this.checkIfConditions(ifOption))) return;
 
@@ -308,7 +308,7 @@ export default class DbsHead implements DbsComponent {
     /**
      * Returns the timestamp.
      */
-    getTimestamp() : number {
+    getTimestamp(): number {
         return this.timestamp;
     }
 
@@ -318,7 +318,7 @@ export default class DbsHead implements DbsComponent {
      * but the IDE can interpret the typescript information of this library.
      * @param value
      */
-    static cast(value : any) : DbsHead {
+    static cast(value: any): DbsHead {
         return value as DbsHead;
     }
 }

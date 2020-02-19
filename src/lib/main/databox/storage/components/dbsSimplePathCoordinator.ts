@@ -23,36 +23,36 @@ export default abstract class DbsSimplePathCoordinator {
     /**
      * Returns the data.
      */
-    abstract getData() : any;
+    abstract getData(): any;
 
     /**
      * Returns all keys.
      * @private
      */
-    abstract _getAllKeys() : string[];
+    abstract _getAllKeys(): string[];
 
     /**
      * Returns the data value of the key.
      * @param key
      * @private
      */
-    abstract _getValue(key : string) : any;
+    abstract _getValue(key: string): any;
 
     /**
      * Returns the dbs component on this
      * key or undefined if it not exists.
      * @param key
      */
-    abstract _getDbsComponent(key : string) : DbsComponent | undefined;
+    abstract _getDbsComponent(key: string): DbsComponent | undefined;
 
-    queryForEachKey(forintQuery : ForintSearchQuery, func : (key : string) => void) : void {
+    queryForEachKey(forintQuery: ForintSearchQuery, func: (key: string) => void): void {
         const keysTmp = this._getAllKeys();
         const keysLegth = keysTmp.length;
         const keyQuery = forintQuery.k;
         const valueQuery = forintQuery.v;
         if(keyQuery || valueQuery){
-            const keyQueryFunc = keyQuery ? forint(keyQuery) : undefined;
-            const valueQueryFunc = valueQuery ? forint(valueQuery) : undefined;
+            const keyQueryFunc = keyQuery ? forint(keyQuery): undefined;
+            const valueQueryFunc = valueQuery ? forint(valueQuery): undefined;
             let tmpKey;
             for(let i = 0; i < keysLegth; i++){
                 tmpKey = keysTmp[i];
@@ -64,7 +64,7 @@ export default abstract class DbsSimplePathCoordinator {
         for(let i = 0; i < keysLegth; i++){func(keysTmp[i]);}
     }
 
-    checkIfConditions(ifOption : IfOptionProcessArgsValue) : boolean {
+    checkIfConditions(ifOption: IfOptionProcessArgsValue): boolean {
         if(typeof ifOption === 'boolean') return ifOption;
 
         //key information
@@ -76,7 +76,7 @@ export default abstract class DbsSimplePathCoordinator {
         const queriesLength = ifOption.length;
         let tmpRes;
         let tmpMatch;
-        let tmpQuery : IfQuery;
+        let tmpQuery: IfQuery;
         let tmpKeyQuery;
         let tmpKeyQueryFunc;
         let tmpValueQuery;
@@ -86,7 +86,7 @@ export default abstract class DbsSimplePathCoordinator {
             tmpQuery = ifOption[i];
             switch (tmpQuery.t) {
                 case IfQueryType.full:
-                    tmpRes = forint(tmpQuery.q)(this.getData()) ? !tmpQuery.n : !!tmpQuery.n;
+                    tmpRes = forint(tmpQuery.q)(this.getData()) ? !tmpQuery.n: !!tmpQuery.n;
                     break;
                 case IfQueryType.search:
 
@@ -100,8 +100,8 @@ export default abstract class DbsSimplePathCoordinator {
                     tmpKeyQuery = tmpQuery.q.k;
                     tmpValueQuery = tmpQuery.q.v;
                     if (tmpKeyQuery || tmpValueQuery) {
-                        tmpKeyQueryFunc = tmpKeyQuery ? forint(tmpKeyQuery) : undefined;
-                        tmpValueQueryFunc = tmpValueQuery ? forint(tmpValueQuery) : undefined;
+                        tmpKeyQueryFunc = tmpKeyQuery ? forint(tmpKeyQuery): undefined;
+                        tmpValueQueryFunc = tmpValueQuery ? forint(tmpValueQuery): undefined;
                         tmpMatch = false;
                         let tmpKey;
                         for (let i = 0; i < keysLength; i++) {
@@ -120,7 +120,7 @@ export default abstract class DbsSimplePathCoordinator {
                         }
                     } else {
                         //any constant
-                        tmpRes = tmpQuery.n ? !keyExists : keyExists;
+                        tmpRes = tmpQuery.n ? !keyExists: keyExists;
                     }
                     break;
                 default:
@@ -136,13 +136,13 @@ export default abstract class DbsSimplePathCoordinator {
      * Returns all dbsComponents with a single selector item.
      * @param selectorItem
      */
-    _getDbsComponents(selectorItem : DbProcessedSelectorItem) : DbsComponent[] {
+    _getDbsComponents(selectorItem: DbProcessedSelectorItem): DbsComponent[] {
         if(typeof selectorItem === 'string'){
             const component = this._getDbsComponent(selectorItem);
             if(component) return [component];
         }
         else {
-            const components : DbsComponent[] = [];
+            const components: DbsComponent[] = [];
             let tmpComponent;
             let i = 0;
             this.queryForEachKey(selectorItem,(k) => {
@@ -161,14 +161,14 @@ export default abstract class DbsSimplePathCoordinator {
      * Returns all dbsComponents with selector.
      * @param selector
      */
-    getDbsComponents(selector : DbProcessedSelector) : DbsComponent[] {
+    getDbsComponents(selector: DbProcessedSelector): DbsComponent[] {
         if(selector.length === 1){
             return this._getDbsComponents(selector[0]);
         }
         else if(selector.length > 1){
             const nextComponents = this._getDbsComponents(selector[0]);
             selector.shift();
-            const res : DbsComponent[] = [];
+            const res: DbsComponent[] = [];
             const len = nextComponents.length;
             for(let i = 0; i < len; i++) res.push(...(nextComponents[i] as DbsComponent).getDbsComponents(selector));
             return res;
@@ -185,7 +185,7 @@ export default abstract class DbsSimplePathCoordinator {
      * @param mt
      * @private
      */
-    abstract _insert(key : string, value : any, args : InsertProcessArgs, mt : ModifyToken): void;
+    abstract _insert(key: string, value: any, args: InsertProcessArgs, mt: ModifyToken): void;
 
     /**
      * Insert coordinator.
@@ -195,7 +195,7 @@ export default abstract class DbsSimplePathCoordinator {
      * @param args
      * @param mt
      */
-    insert(selector : DbProcessedSelector, value : any, args : InsertProcessArgs, mt : ModifyToken): void
+    insert(selector: DbProcessedSelector, value: any, args: InsertProcessArgs, mt: ModifyToken): void
     {
         if(selector.length === 1){
             if(typeof selector[0] === 'string'){
@@ -214,7 +214,7 @@ export default abstract class DbsSimplePathCoordinator {
             //Clone args because if conditions result can only be prepared for one element.
             const cloneArgs = (len > 1) && args.if !== undefined;
             for(let i = 0; i < len; i++) {
-                (nextComponents[i] as DbsComponent).insert(selector,value,cloneArgs ? {...args} : args,mt);
+                (nextComponents[i] as DbsComponent).insert(selector,value,cloneArgs ? {...args}: args,mt);
             }
         }
     }
@@ -228,7 +228,7 @@ export default abstract class DbsSimplePathCoordinator {
      * @param mt
      * @private
      */
-    abstract _update(key : string, value : any, args : UpdateProcessArgs, mt : ModifyToken): void;
+    abstract _update(key: string, value: any, args: UpdateProcessArgs, mt: ModifyToken): void;
 
     /**
      * Update coordinator.
@@ -238,7 +238,7 @@ export default abstract class DbsSimplePathCoordinator {
      * @param args
      * @param mt
      */
-    update(selector : DbProcessedSelector, value : any, args : UpdateProcessArgs, mt : ModifyToken): void
+    update(selector: DbProcessedSelector, value: any, args: UpdateProcessArgs, mt: ModifyToken): void
     {
         if(selector.length === 1){
             if(typeof selector[0] === 'string'){
@@ -256,7 +256,7 @@ export default abstract class DbsSimplePathCoordinator {
             //Clone args because if conditions result can only be prepared for one element.
             const cloneArgs = (len > 1) && args.if !== undefined;
             for(let i = 0; i < len; i++) {
-                (nextComponents[i] as DbsComponent).update(selector,value,cloneArgs ? {...args} : args,mt);
+                (nextComponents[i] as DbsComponent).update(selector,value,cloneArgs ? {...args}: args,mt);
             }
         }
     }
@@ -269,7 +269,7 @@ export default abstract class DbsSimplePathCoordinator {
      * @param mt
      * @private
      */
-    abstract _delete(key : string, args : DeleteProcessArgs, mt : ModifyToken): void;
+    abstract _delete(key: string, args: DeleteProcessArgs, mt: ModifyToken): void;
 
     /**
      * Delete coordinator.
@@ -278,7 +278,7 @@ export default abstract class DbsSimplePathCoordinator {
      * @param args
      * @param mt
      */
-    delete(selector : DbProcessedSelector, args : DeleteProcessArgs, mt : ModifyToken): void {
+    delete(selector: DbProcessedSelector, args: DeleteProcessArgs, mt: ModifyToken): void {
         if(selector.length === 1){
             if(typeof selector[0] === 'string'){
                 this._delete(selector[0] as string,args,mt);
@@ -295,7 +295,7 @@ export default abstract class DbsSimplePathCoordinator {
             //Clone args because if conditions result can only be prepared for one element.
             const cloneArgs = (len > 1) && args.if !== undefined;
             for(let i = 0; i < len; i++){
-                (nextComponents[i] as DbsComponent).delete(selector,cloneArgs ? {...args} : args,mt);
+                (nextComponents[i] as DbsComponent).delete(selector,cloneArgs ? {...args}: args,mt);
             }
         }
     }

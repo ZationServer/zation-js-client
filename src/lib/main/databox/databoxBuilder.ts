@@ -11,12 +11,12 @@ import {WaitForConnectionOption}  from "../utils/connectionUtils";
 
 export default class DataboxBuilder {
 
-    private readonly zation : Zation;
-    private readonly name : string;
-    private readonly id ?: string | number;
-    private readonly dbOptions : DataboxOptions;
+    private readonly zation: Zation;
+    private readonly name: string;
+    private readonly id?: string | number;
+    private readonly dbOptions: DataboxOptions;
 
-    constructor(zation : Zation,name : string,id ?: string | number){
+    constructor(zation: Zation,name: string,id?: string | number){
         this.zation = zation;
         this.name = name;
         this.id = id;
@@ -29,7 +29,7 @@ export default class DataboxBuilder {
      * @default true
      * @param autoFetch
      */
-    autoFetch(autoFetch : boolean) : DataboxBuilder {
+    autoFetch(autoFetch: boolean): DataboxBuilder {
         this.dbOptions.autoFetch = autoFetch;
         return this;
     }
@@ -40,7 +40,7 @@ export default class DataboxBuilder {
      * @default undefined
      * @param data
      */
-    autoFetchData(data : any) : DataboxBuilder {
+    autoFetchData(data: any): DataboxBuilder {
         this.dbOptions.autoFetchData = data;
         return this;
     }
@@ -52,7 +52,7 @@ export default class DataboxBuilder {
      * @default undefined
      * @param apiLevel
      */
-    apiLevel(apiLevel : number | undefined) : DataboxBuilder {
+    apiLevel(apiLevel: number | undefined): DataboxBuilder {
         this.dbOptions.apiLevel = apiLevel;
         return this;
     }
@@ -67,7 +67,7 @@ export default class DataboxBuilder {
      * @default {}
      * @param options
      */
-    mainStorageOptions(options : DbStorageOptions) : DataboxBuilder {
+    mainStorageOptions(options: DbStorageOptions): DataboxBuilder {
         this.dbOptions.mainStorageOptions = options;
         return this;
     }
@@ -91,7 +91,7 @@ export default class DataboxBuilder {
      * @default undefined
      * @param option
      */
-    waitForConnection(option : WaitForConnectionOption) : DataboxBuilder {
+    waitForConnection(option: WaitForConnectionOption): DataboxBuilder {
         this.dbOptions.waitForConnection = option;
         return this;
     }
@@ -114,7 +114,7 @@ export default class DataboxBuilder {
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      * @default undefined
      */
-    waitForDbConnection(option : WaitForConnectionOption) : DataboxBuilder {
+    waitForDbConnection(option: WaitForConnectionOption): DataboxBuilder {
         this.dbOptions.waitForDbConnection = option;
         return this;
     }
@@ -126,7 +126,7 @@ export default class DataboxBuilder {
      * @default undefined
      * @param data
      */
-    initData(data : any) : DataboxBuilder {
+    initData(data: any): DataboxBuilder {
         this.dbOptions.initData = data;
         return this;
     }
@@ -138,7 +138,7 @@ export default class DataboxBuilder {
      * then the method will return a promise with the connected databox.
      * Otherwise, it returns the unconnected databox, but synchronous.
      */
-    get(autoConnect ?: boolean) : Databox
+    get(autoConnect?: boolean): Databox
     /**
      * Get the built databox.
      * @param autoConnect
@@ -146,7 +146,7 @@ export default class DataboxBuilder {
      * then the method will return a promise with the connected databox.
      * Otherwise, it returns the unconnected databox, but synchronous.
      */
-    get(autoConnect : true) : Promise<Databox>
+    get(autoConnect: true): Promise<Databox>
     /**
      * Get the built databox.
      * @param autoConnect
@@ -154,8 +154,8 @@ export default class DataboxBuilder {
      * then the method will return a promise with the connected databox.
      * Otherwise, it returns the unconnected databox, but synchronous.
      */
-    get(autoConnect : false) : Databox
-    get(autoConnect : boolean = false) : Databox | Promise<Databox> {
+    get(autoConnect: false): Databox
+    get(autoConnect: boolean = false): Databox | Promise<Databox> {
         const databox = new Databox(this.zation,this.dbOptions,this.name,this.id);
         if(autoConnect){
             return new Promise<Databox>(async (resolve, reject) => {

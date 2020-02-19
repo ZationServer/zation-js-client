@@ -20,16 +20,16 @@ import ConnectionUtils, {WaitForConnectionOption} from "../utils/connectionUtils
 
 export class AuthEngine
 {
-    private currentUserId : number | string | undefined = undefined;
-    private currentUserAuthGroup : string | undefined = undefined;
+    private currentUserId: number | string | undefined = undefined;
+    private currentUserAuthGroup: string | undefined = undefined;
 
-    private signToken : string | null = null;
-    private plainToken : ZationToken | null = null;
+    private signToken: string | null = null;
+    private plainToken: ZationToken | null = null;
 
-    private readonly zation : Zation;
-    private readonly chEngine : ChannelEngine;
+    private readonly zation: Zation;
+    private readonly chEngine: ChannelEngine;
 
-    constructor(zation : Zation,channelEngine : ChannelEngine)
+    constructor(zation: Zation,channelEngine: ChannelEngine)
     {
         this.zation = zation;
         this.chEngine = channelEngine;
@@ -38,7 +38,7 @@ export class AuthEngine
         this.currentUserAuthGroup = undefined;
     }
 
-    connectToSocket(socket : Socket)
+    connectToSocket(socket: Socket)
     {
         //reset on disconnection
         socket.on('close',()=> {
@@ -72,14 +72,14 @@ export class AuthEngine
     }
 
 
-    async refreshToken(plainToken : null | ZationToken,signToken : null | string)
+    async refreshToken(plainToken: null | ZationToken,signToken: null | string)
     {
         this.plainToken = plainToken;
         this.signToken = signToken;
         await this.updateToken(plainToken);
     }
 
-    async signAuthenticate(signToken : string,waitForConnection : WaitForConnectionOption) : Promise<void>
+    async signAuthenticate(signToken: string,waitForConnection: WaitForConnectionOption): Promise<void>
     {
         await ConnectionUtils.checkConnection
         (this.zation,waitForConnection,'To authenticate with sign token.');
@@ -105,7 +105,7 @@ export class AuthEngine
         });
     }
 
-    deauthenticate() : Promise<void> {
+    deauthenticate(): Promise<void> {
         return new Promise<void>(async (resolve, reject) =>
         {
             this.zation.getSocket().deauthenticate((e => {
@@ -172,7 +172,7 @@ export class AuthEngine
         }
     }
 
-    async subUserCh() : Promise<void>
+    async subUserCh(): Promise<void>
     {
         if(!!this.currentUserId) {
             await this.chEngine.subUserChannel(this.currentUserId);
@@ -182,7 +182,7 @@ export class AuthEngine
         }
     }
 
-    hasSubUserCh() : boolean
+    hasSubUserCh(): boolean
     {
         if(!!this.currentUserId) {
             return this.chEngine.hasSubUserChannel(this.currentUserId);
@@ -192,14 +192,14 @@ export class AuthEngine
         }
     }
 
-    unsubUserCh(andDestroy : boolean) : void
+    unsubUserCh(andDestroy: boolean): void
     {
         if(!!this.currentUserId) {
             this.chEngine.unsubUserChannel(this.currentUserId,andDestroy);
         }
     }
 
-    async subAuthUserGroupCh() : Promise<void> {
+    async subAuthUserGroupCh(): Promise<void> {
         if(!!this.currentUserAuthGroup) {
             await this.chEngine.subAuthUserGroupChannel(this.currentUserAuthGroup);
         }
@@ -208,7 +208,7 @@ export class AuthEngine
         }
     }
 
-    hasSubAuthUserGroupCh() : boolean {
+    hasSubAuthUserGroupCh(): boolean {
         if(!!this.currentUserAuthGroup) {
             return this.chEngine.hasSubAuthUserGroupChannel(this.currentUserAuthGroup);
         }
@@ -217,13 +217,13 @@ export class AuthEngine
         }
     }
 
-    unsubAuthUserGroupCh(andDestroy : boolean) : void {
+    unsubAuthUserGroupCh(andDestroy: boolean): void {
         if(!!this.currentUserAuthGroup) {
             this.chEngine.unsubAuthUserGroupChannel(this.currentUserAuthGroup,andDestroy);
         }
     }
 
-    async subDefaultUserGroupCh() : Promise<void> {
+    async subDefaultUserGroupCh(): Promise<void> {
         if(!this.currentUserAuthGroup) {
             await this.chEngine.subDefaultUserGroupChannel();
         }
@@ -232,13 +232,13 @@ export class AuthEngine
         }
     }
 
-    unsubDefaultUserGroupCh(andDestroy : boolean) : void {
+    unsubDefaultUserGroupCh(andDestroy: boolean): void {
         this.chEngine.unsubDefaultUserGroupChannel(andDestroy);
     }
 
-    async updateToken(token : ZationToken | null) {
+    async updateToken(token: ZationToken | null) {
         if(token === null) {token = {};}
-        let promises : Promise<void>[] = [];
+        let promises: Promise<void>[] = [];
         promises.push(this.updateAuthGroup(token.authUserGroup));
         promises.push(this.updateUserId(token.userId));
 
@@ -250,16 +250,16 @@ export class AuthEngine
         await Promise.all(promises);
     }
 
-    getSignToken() : string | null {
+    getSignToken(): string | null {
         return this.signToken;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    getPlainToken() : ZationToken | null {
+    getPlainToken(): ZationToken | null {
         return this.plainToken;
     }
 
-    getSecureSignToken() : string {
+    getSecureSignToken(): string {
         if(this.signToken !== null) {
             return this.signToken;
         }
@@ -268,7 +268,7 @@ export class AuthEngine
         }
     }
 
-    getSecurePlainToken() : ZationToken {
+    getSecurePlainToken(): ZationToken {
         if(this.plainToken !== null) {
             return this.plainToken;
         }
@@ -277,36 +277,36 @@ export class AuthEngine
         }
     }
 
-    hasSignToken() : boolean {
+    hasSignToken(): boolean {
         return this.signToken !== null;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    hasPlainToken() : boolean {
+    hasPlainToken(): boolean {
         return this.plainToken !== null;
     }
 
-    isAuthenticated() : boolean {
+    isAuthenticated(): boolean {
         return this.currentUserAuthGroup !== undefined;
     }
 
-    getTokenVariables() : object
+    getTokenVariables(): object
     {
         if(this.plainToken !== null) {
             return typeof this.plainToken.variables === 'object' ?
-                this.plainToken.variables : {};
+                this.plainToken.variables: {};
         }
         else {
             throw new AuthenticationRequiredError('To get access to token variables');
         }
     }
 
-    getAuthUserGroup() : string | undefined
+    getAuthUserGroup(): string | undefined
     {
         return this.currentUserAuthGroup;
     }
 
-    getUserId() : number | string | undefined
+    getUserId(): number | string | undefined
     {
         return this.currentUserId;
     }

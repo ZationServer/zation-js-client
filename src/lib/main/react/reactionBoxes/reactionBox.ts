@@ -10,15 +10,15 @@ import {DidProcess, WillProcess} from "../reaction/reactionHandler";
 
 export class ReactionBox<S>
 {
-    protected self : S;
+    protected self: S;
 
-    protected active : boolean;
-    private zation : Zation | undefined;
+    protected active: boolean;
+    private zation: Zation | undefined;
 
-    protected lastReactionTmp : any;
+    protected lastReactionTmp: any;
 
-    private sBoxWillProcess : SBox<WillProcess> = new SBox();
-    private sBoxDidProcess : SBox<DidProcess> = new SBox();
+    private sBoxWillProcess: SBox<WillProcess> = new SBox();
+    private sBoxDidProcess: SBox<DidProcess> = new SBox();
 
     constructor() {
         this.active = true;
@@ -31,7 +31,7 @@ export class ReactionBox<S>
      * @description
      * This method is used internal!
      */
-    _link(zation : Zation) {
+    _link(zation: Zation) {
         this.zation = zation;
     }
 
@@ -51,7 +51,7 @@ export class ReactionBox<S>
      * Returns the linked client.
      * Notice that it can be undefined if no client is linked.
      */
-    getLinkedClient() : Zation | undefined {
+    getLinkedClient(): Zation | undefined {
         return this.zation;
     }
 
@@ -66,7 +66,7 @@ export class ReactionBox<S>
      * It returns the specific ReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onWillProcess(reaction : WillProcess) : S {
+    onWillProcess(reaction: WillProcess): S {
         this.sBoxWillProcess.addItem(reaction);
         this.lastReactionTmp = reaction;
         return this.self;
@@ -79,7 +79,7 @@ export class ReactionBox<S>
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offWillProcess(reaction ?: WillProcess) : void {
+    offWillProcess(reaction?: WillProcess): void {
         this.sBoxWillProcess.remove(reaction);
     }
 
@@ -94,7 +94,7 @@ export class ReactionBox<S>
      * It returns the specific ReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onDidProcess(reaction : DidProcess) : S {
+    onDidProcess(reaction: DidProcess): S {
         this.sBoxDidProcess.addItem(reaction);
         this.lastReactionTmp = reaction;
         return this.self;
@@ -107,7 +107,7 @@ export class ReactionBox<S>
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offDidProcess(reaction ?: DidProcess) : void {
+    offDidProcess(reaction?: DidProcess): void {
         this.sBoxDidProcess.remove(reaction);
     }
 
@@ -116,7 +116,7 @@ export class ReactionBox<S>
      * @description
      * Activate the reaction box.
      */
-    activate() : void
+    activate(): void
     {
         this.active = true;
     }
@@ -126,7 +126,7 @@ export class ReactionBox<S>
      * @description
      * Deactivate the reaction box.
      */
-    deactivate() : void
+    deactivate(): void
     {
         this.active = false;
     }
@@ -139,7 +139,7 @@ export class ReactionBox<S>
      * @return
      * It returns the last added Reaction.
      */
-    getLastReaction() : any {
+    getLastReaction(): any {
         return this.lastReactionTmp;
     }
 

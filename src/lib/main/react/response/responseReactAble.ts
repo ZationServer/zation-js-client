@@ -17,41 +17,41 @@ export interface ResponseReactAble
      * Catch an error in the response.
      * It makes sense to catch specific errors first and at the end to catch all the ones left over.
      * @example
-     * onError((filteredErrors,response) => {},{name : 'passwordError'});
+     * onError((filteredErrors,response) => {},{name: 'passwordError'});
      *
      * -FilterExamples-
      * For errors with the name:
-     * {name : 'errorName1'}
+     * {name: 'errorName1'}
      * For errors with the names:
-     * {name : ['errorName1','errorName2']}
+     * {name: ['errorName1','errorName2']}
      * For errors with the group:
-     * {group : 'errorGroup1'}
+     * {group: 'errorGroup1'}
      * For errors with the groups:
-     * {group : ['errorGroup1','errorGroup2']}
+     * {group: ['errorGroup1','errorGroup2']}
      * For errors with the type:
-     * {type : 'errorType1'}
+     * {type: 'errorType1'}
      * For errors with the types:
-     * {type : ['errorType1','errorType2']}
+     * {type: ['errorType1','errorType2']}
      * For errors with has all keys and values in the info:
-     * {info : {inputPath : 'name', inputValue : 'value'}}
+     * {info: {inputPath: 'name', inputValue: 'value'}}
      * For errors with has at least one of all keys and values in the info:
-     * {info : [{inputPath : 'name'},{inputPath : 'firstName'}]}
+     * {info: [{inputPath: 'name'},{inputPath: 'firstName'}]}
      * For errors with the info key:
-     * {infoKey : 'inputPath'}
+     * {infoKey: 'inputPath'}
      * For errors with at least one of the info keys:
-     * {infoKey : ['inputPath','inputValue']}
+     * {infoKey: ['inputPath','inputValue']}
      * For errors with all of the info keys:
-     * {infoKey : [['inputPath','inputValue']]}
+     * {infoKey: [['inputPath','inputValue']]}
      * For errors with the info value:
-     * {infoValue : 'name'}
+     * {infoValue: 'name'}
      * For errors with at least one of the info values:
-     * {infoValue : ['name','firstName']}
+     * {infoValue: ['name','firstName']}
      * For errors with all of the info values:
-     * {infoValue : [['value1','value2']]}
+     * {infoValue: [['value1','value2']]}
      * For errors there from the zation system:
-     * {fromZationSystem : true}
+     * {fromZationSystem: true}
      * For errors there not from the zation system:
-     * {fromZationSystem : false}
+     * {fromZationSystem: false}
      * You can combine all of this properties.
      * @param reaction
      * @param filter
@@ -66,7 +66,7 @@ export interface ResponseReactAble
      * It returns the responseReactionBox, to remove the CatchErrorReaction from the box
      * you can use the getLastReaction method which is return the FullReaction.
      */
-    catchError(reaction : ResponseReactionOnError, ...filter : object[]) : any;
+    catchError(reaction: ResponseReactionOnError, ...filter: object[]): any;
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
@@ -74,41 +74,41 @@ export interface ResponseReactAble
      * The difference to the catch error is that the filtered errors are not caught.
      * And you always respond to all the errors of the response, no matter if they were caught before.
      * @example
-     * onError((filteredErrors,response) => {},{name : 'passwordError'});
+     * onError((filteredErrors,response) => {},{name: 'passwordError'});
      *
      * -FilterExamples-
      * For errors with the name:
-     * {name : 'errorName1'}
+     * {name: 'errorName1'}
      * For errors with the names:
-     * {name : ['errorName1','errorName2']}
+     * {name: ['errorName1','errorName2']}
      * For errors with the group:
-     * {group : 'errorGroup1'}
+     * {group: 'errorGroup1'}
      * For errors with the groups:
-     * {group : ['errorGroup1','errorGroup2']}
+     * {group: ['errorGroup1','errorGroup2']}
      * For errors with the type:
-     * {type : 'errorType1'}
+     * {type: 'errorType1'}
      * For errors with the types:
-     * {type : ['errorType1','errorType2']}
+     * {type: ['errorType1','errorType2']}
      * For errors with has all keys and values in the info:
-     * {info : {inputPath : 'name', inputValue : 'value'}}
+     * {info: {inputPath: 'name', inputValue: 'value'}}
      * For errors with has at least one of all keys and values in the info:
-     * {info : [{inputPath : 'name'},{inputPath : 'firstName'}]}
+     * {info: [{inputPath: 'name'},{inputPath: 'firstName'}]}
      * For errors with the info key:
-     * {infoKey : 'inputPath'}
+     * {infoKey: 'inputPath'}
      * For errors with at least one of the info keys:
-     * {infoKey : ['inputPath','inputValue']}
+     * {infoKey: ['inputPath','inputValue']}
      * For errors with all of the info keys:
-     * {infoKey : [['inputPath','inputValue']]}
+     * {infoKey: [['inputPath','inputValue']]}
      * For errors with the info value:
-     * {infoValue : 'name'}
+     * {infoValue: 'name'}
      * For errors with at least one of the info values:
-     * {infoValue : ['name','firstName']}
+     * {infoValue: ['name','firstName']}
      * For errors with all of the info values:
-     * {infoValue : [['value1','value2']]}
+     * {infoValue: [['value1','value2']]}
      * For errors there from the zation system:
-     * {fromZationSystem : true}
+     * {fromZationSystem: true}
      * For errors there not from the zation system:
-     * {fromZationSystem : false}
+     * {fromZationSystem: false}
      * You can combine all of this properties.
      * @param reaction
      * @param filter
@@ -123,7 +123,7 @@ export interface ResponseReactAble
      * It returns the responseReactionBox, to remove the on ErrorReaction from the box
      * you can use the getLastReaction method which is return the FullReaction.
      */
-    onError(reaction : ResponseReactionOnError, ...filter : object[]) : any;
+    onError(reaction: ResponseReactionOnError, ...filter: object[]): any;
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
@@ -137,7 +137,7 @@ export interface ResponseReactAble
      * It returns the responseReactionBox, to remove the on SuccessfulReaction from the box
      * you can use the getLastReaction method which is return the FullReaction.
      */
-    onSuccessful(reaction : ResponseReactionOnSuccessful, statusCode ?: any) : any;
+    onSuccessful(reaction: ResponseReactionOnSuccessful, statusCode?: any): any;
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
@@ -150,7 +150,7 @@ export interface ResponseReactAble
      * It returns the responseReactionBox, to remove the on ResponseReaction from the box
      * you can use the getLastReaction method which is return the FullReaction.
      */
-    onResponse(reaction: ResponseReactionOnResponse) : any
+    onResponse(reaction: ResponseReactionOnResponse): any
 }
 
 

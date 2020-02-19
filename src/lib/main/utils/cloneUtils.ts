@@ -9,7 +9,7 @@ Copyright(c) Luca Scaringella
  * Optimize to clone db storage components.
  * @param v
  */
-export function deepCloneInstance(v : any) : any {
+export function deepCloneInstance(v: any): any {
     // if not array or object or is null return self
     if (typeof v !== 'object'||v === null) return v;
     let newO, i;
@@ -38,7 +38,7 @@ export function deepCloneInstance(v : any) : any {
  * Notice that it only clones enumerable properties of an object.
  * @param v
  */
-export function deepClone<T extends any = any>(v : T) : T {
+export function deepClone<T extends any = any>(v: T): T {
     // if not array or object or is null return self
     if (typeof v !== 'object'||v === null) return v;
     let newO, i;

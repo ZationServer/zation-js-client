@@ -11,9 +11,9 @@ import {ReactionUtil}               from "./reactionUtil";
 
 export class OnErrorBuilder<T extends ResponseReactAble,R> extends AbstractErrorFilterBuilder<OnErrorBuilder<T,R>>
 {
-    private readonly target  : T;
+    private readonly target : T;
 
-    constructor(target : T) {
+    constructor(target: T) {
         super();
         this.target = target;
     }
@@ -28,7 +28,7 @@ export class OnErrorBuilder<T extends ResponseReactAble,R> extends AbstractError
      * @param reactions
      * You also can add more than one reaction.
      */
-    react(...reactions : ResponseReactionOnError[]) : R
+    react(...reactions: ResponseReactionOnError[]): R
     {
         //save last tmp
         this._pushTmpFilter();

@@ -6,12 +6,12 @@ Copyright(c) Luca Scaringella
 
 export class FilterHandlerLib
 {
-    static equals(v1 : any, v2 : any) : boolean
+    static equals(v1: any, v2: any): boolean
     {
         return v1 === v2;
     }
 
-    static objValuesAre(object : object, v2 : any) : boolean
+    static objValuesAre(object: object, v2: any): boolean
     {
         if(Array.isArray(v2))
         {
@@ -27,7 +27,7 @@ export class FilterHandlerLib
         }
     }
 
-    static objKeysAre(object : object, v2 : any) : boolean
+    static objKeysAre(object: object, v2: any): boolean
     {
         if(Array.isArray(v2))
         {
@@ -43,7 +43,7 @@ export class FilterHandlerLib
         }
     }
 
-    private static objectHasValue(obj : object,value : any) : boolean
+    private static objectHasValue(obj: object,value: any): boolean
     {
         for(let k in obj) {
             if(obj.hasOwnProperty(k) && obj[k] === value) {
@@ -53,7 +53,7 @@ export class FilterHandlerLib
         return false;
     }
 
-    static allParamsAreSame(v1 : object, v2 : object) : boolean
+    static allParamsAreSame(v1: object, v2: object): boolean
     {
         for (let k in v2) {
             if (v2.hasOwnProperty(k)) {

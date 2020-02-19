@@ -59,19 +59,19 @@ export interface DataboxOptions {
      * Activates that the Databox automatically fetch data after the first connection.
      * @default true
      */
-    autoFetch ?: boolean;
+    autoFetch?: boolean;
     /**
      * The fetch input data for the auto fetch.
      * @default undefined
      */
-    autoFetchData ?: any,
+    autoFetchData?: any,
     /**
      * The API level of this client for the Databox connection request.
      * If you don't provide one, the server will use the connection API
      * level or the default API level.
      * @default undefined
      */
-    apiLevel ?: number | undefined;
+    apiLevel?: number | undefined;
     /**
      * The main Databox storage options.
      * Change this option only if you know what you are doing.
@@ -80,7 +80,7 @@ export interface DataboxOptions {
      * copy the data from the main storage.
      * @default {}
      */
-    mainStorageOptions ?: DbStorageOptions;
+    mainStorageOptions?: DbStorageOptions;
     /**
      * With the WaitForConnection option, you can activate that the socket is
      * trying to connect when it is not connected.
@@ -99,7 +99,7 @@ export interface DataboxOptions {
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      * @default undefined
      */
-    waitForConnection ?: WaitForConnectionOption;
+    waitForConnection?: WaitForConnectionOption;
     /**
      * With the WaitForDbConnection option, you can activate that the Databox is
      * trying to connect (if it's not connected) whenever you want
@@ -117,33 +117,33 @@ export interface DataboxOptions {
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      * @default undefined
      */
-    waitForDbConnection ?: WaitForConnectionOption;
+    waitForDbConnection?: WaitForConnectionOption;
     /**
      * The init data that the Databox is sent to the server
      * when it's creating a connection.
      * @default undefined
      */
-    initData ?: any;
+    initData?: any;
 }
 
 interface RequiredDbOptions extends DataboxOptions {
-    autoFetch : boolean;
-    autoFetchData : any;
-    apiLevel : number | undefined;
-    mainStorageOptions : DbStorageOptions;
-    waitForConnection : WaitForConnectionOption;
-    waitForDbConnection : WaitForConnectionOption;
-    initData : any;
+    autoFetch: boolean;
+    autoFetchData: any;
+    apiLevel: number | undefined;
+    mainStorageOptions: DbStorageOptions;
+    waitForConnection: WaitForConnectionOption;
+    waitForDbConnection: WaitForConnectionOption;
+    initData: any;
 }
 
 type OnConnect     = () => void | Promise<void>;
-type OnDisconnect  = (fromClient : boolean) => void | Promise<void>;
-type OnKickOut     = (code : number | string | undefined,data : any) => void | Promise<void>
-type OnClose       = (code : number | string | undefined,data : any) => void | Promise<void>
-type OnReload      = (code : number | string | undefined,data : any) => void | Promise<void>
-type OnCud         = (cudPackage : CudPackage) => void | Promise<void>
-type OnNewData     = (db : Databox) => void | Promise<void>
-type OnSignal      = (data : any) => void | Promise<void>
+type OnDisconnect  = (fromClient: boolean) => void | Promise<void>;
+type OnKickOut     = (code: number | string | undefined,data: any) => void | Promise<void>
+type OnClose       = (code: number | string | undefined,data: any) => void | Promise<void>
+type OnReload      = (code: number | string | undefined,data: any) => void | Promise<void>
+type OnCud         = (cudPackage: CudPackage) => void | Promise<void>
+type OnNewData     = (db: Databox) => void | Promise<void>
+type OnSignal      = (data: any) => void | Promise<void>
 
 export default class Databox {
 
@@ -158,7 +158,7 @@ export default class Databox {
     private readonly tmpReloadDataSets: Set<DbsHead> = new Set<DbsHead>();
     private readonly fetchHistoryManager: DbFetchHistoryManager = new DbFetchHistoryManager();
     private readonly tmpReloadStroage: DbStorage;
-    private readonly signalEmitter : TinyEmitter = new TinyEmitter();
+    private readonly signalEmitter: TinyEmitter = new TinyEmitter();
 
     private readonly initData: any;
 
@@ -186,7 +186,7 @@ export default class Databox {
     private unregisterSocketStateListener: (() => void) | undefined = undefined;
     private parallelFetch: boolean;
     private connected: boolean = false;
-    private tokenReloadActive : boolean = false;
+    private tokenReloadActive: boolean = false;
 
     private connectEvent: EventManager<OnConnect> = new EventManager();
     private disconnectEvent: EventManager<OnDisconnect> = new EventManager();
@@ -202,17 +202,17 @@ export default class Databox {
         mainStorageOptions: {},
         apiLevel: undefined,
         waitForConnection: undefined,
-        waitForDbConnection : undefined,
+        waitForDbConnection: undefined,
         initData: undefined
     };
 
-    constructor(zation: Zation, options: DataboxOptions, name: string, id ?: string | number) {
+    constructor(zation: Zation, options: DataboxOptions, name: string, id?: string | number) {
         ObjectUtils.addObToOb(this.dbOptions, options, true);
         this.socket = zation.getSocket();
         this.zation = zation;
         this.apiLevel = this.dbOptions.apiLevel;
         this.name = name;
-        this.id = id !== undefined ? id.toString() : id;
+        this.id = id !== undefined ? id.toString(): id;
         this.initData = this.dbOptions.initData;
 
         const tmpRestoreStorageOptions: DbStorageOptions = {
@@ -306,7 +306,7 @@ export default class Databox {
      */
     async connect(waitForConnection: WaitForConnectionOption = undefined): Promise<void> {
         waitForConnection = waitForConnection === undefined ?
-            this.dbOptions.waitForConnection : waitForConnection;
+            this.dbOptions.waitForConnection: waitForConnection;
 
         await ConnectionUtils.checkConnection
         (this.zation, waitForConnection, 'To create a Databox.');
@@ -372,9 +372,9 @@ export default class Databox {
             this.socket.emit(DATABOX_START_INDICATOR, {
                 al: this.apiLevel,
                 d: this.name,
-                ...(this.id !== undefined ? {i: this.id} : {}),
-                ...(currentToken !== undefined ? {t: currentToken} : {}),
-                ...(this.initData !== undefined ? {ii: this.initData} : {})
+                ...(this.id !== undefined ? {i: this.id}: {}),
+                ...(currentToken !== undefined ? {t: currentToken}: {}),
+                ...(this.initData !== undefined ? {ii: this.initData}: {})
             } as DataboxConnectReq, async (err, res: DataboxConnectRes) => {
 
                 if (err) {return reject(err);}
@@ -486,10 +486,10 @@ export default class Databox {
      * @throws ConnectionRequiredError,TimeoutError,RawError,InvalidInputError,AbortSignal
      * To react to the error, you can use the DbError class.
      */
-    async fetch(data ?: any, waitForDbConnection: WaitForConnectionOption = undefined, addToHistory : boolean = true): Promise<void> {
+    async fetch(data?: any, waitForDbConnection: WaitForConnectionOption = undefined, addToHistory: boolean = true): Promise<void> {
 
         waitForDbConnection = waitForDbConnection === undefined ?
-            this.dbOptions.waitForDbConnection : waitForDbConnection;
+            this.dbOptions.waitForDbConnection: waitForDbConnection;
 
         await ConnectionUtils.checkDbConnection
         (this, this.zation, waitForDbConnection, 'To fetch new data.');
@@ -507,7 +507,7 @@ export default class Databox {
             let needCloneHead = this.dbStorages.size > 1;
             for (let dbStorage of this.dbStorages) {
                 if (dbStorage.shouldAddFetchData(counter,dbsHead)) {
-                    dbStorage._addDataHead(needCloneHead ? deepCloneInstance(dbsHead) : dbsHead);
+                    dbStorage._addDataHead(needCloneHead ? deepCloneInstance(dbsHead): dbsHead);
                 }
             }
             this.newDataEvent.emit(this);
@@ -628,7 +628,7 @@ export default class Databox {
     async reload(waitForConnection: WaitForConnectionOption = false) {
         const tmpCudId = this.cudId;
         await ConnectionUtils.checkDbConnection(this, this.zation, waitForConnection, 'To reload Databox');
-        const reloadPromise : Promise<void> =
+        const reloadPromise: Promise<void> =
             afterPromise(this.reloadProcessPromise, async () => {
             const history = this.fetchHistoryManager.getHistory();
             if (history.length > 0) {
@@ -1181,7 +1181,7 @@ export default class Databox {
      * It's also possible to remove the cud operations later manually from memory.
      * This can be done with the methods: getLastLocalCudOpertions and removeLocalCudOpertions.
      */
-    seqEdit(timestamp ?: number, keepInMemory: boolean = true) : DbLocalCudOperationSequence {
+    seqEdit(timestamp?: number, keepInMemory: boolean = true): DbLocalCudOperationSequence {
         return new DbLocalCudOperationSequence(timestamp,(operations) => {
             const operationLength = operations.length;
             for (let dbStorage of this.dbStorages) {
@@ -1267,7 +1267,7 @@ export default class Databox {
     /**
      * Returns the current cud id.
      */
-    getCurrentCudId() : string | undefined {
+    getCurrentCudId(): string | undefined {
         return this.cudId;
     }
 
@@ -1276,7 +1276,7 @@ export default class Databox {
      * Connect a new Storage to the Databox.
      * @param dbStorage
      */
-    connectStorage(dbStorage : DbStorage) : Databox {
+    connectStorage(dbStorage: DbStorage): Databox {
         this.dbStorages.add(dbStorage);
         return this;
     }
@@ -1286,7 +1286,7 @@ export default class Databox {
      * Disconnect a Storage from the Databox.
      * @param dbStorage
      */
-    disconnectStorage(dbStorage : DbStorage) : Databox {
+    disconnectStorage(dbStorage: DbStorage): Databox {
         this.dbStorages.delete(dbStorage);
         return this;
     }
@@ -1302,7 +1302,7 @@ export default class Databox {
      * You can use it if you need extreme performance.
      * But you need to be careful that you only read from the data.
      */
-    getData<T = any>(directAccess : boolean = false) : T {
+    getData<T = any>(directAccess: boolean = false): T {
         return this.mainDbStorage.getData<T>(directAccess);
     }
 
@@ -1314,7 +1314,7 @@ export default class Databox {
      * That also includes reconnections.
      * @param listener
      */
-    onConnect(listener : OnConnect) : Databox {
+    onConnect(listener: OnConnect): Databox {
         this.connectEvent.on(listener);
         return this;
     }
@@ -1325,7 +1325,7 @@ export default class Databox {
      * That also includes reconnections.
      * @param listener
      */
-    onceConnect(listener : OnConnect) : Databox {
+    onceConnect(listener: OnConnect): Databox {
         this.connectEvent.once(listener);
         return this;
     }
@@ -1335,7 +1335,7 @@ export default class Databox {
      * Can be a once or normal listener.
      * @param listener
      */
-    offConnect(listener : OnConnect){
+    offConnect(listener: OnConnect){
         this.connectEvent.off(listener);
         return this;
     }
@@ -1346,7 +1346,7 @@ export default class Databox {
      * whenever the Databox is disconnected from the server.
      * @param listener
      */
-    onDisconnect(listener : OnDisconnect) : Databox {
+    onDisconnect(listener: OnDisconnect): Databox {
         this.disconnectEvent.on(listener);
         return this;
     }
@@ -1357,7 +1357,7 @@ export default class Databox {
      * the Databox is disconnected from the server.
      * @param listener
      */
-    onceDiconnect(listener : OnDisconnect) : Databox {
+    onceDiconnect(listener: OnDisconnect): Databox {
         this.disconnectEvent.once(listener);
         return this;
     }
@@ -1368,7 +1368,7 @@ export default class Databox {
      * Can be a once or normal listener.
      * @param listener
      */
-    offDisonnect(listener : OnDisconnect){
+    offDisonnect(listener: OnDisconnect){
         this.disconnectEvent.off(listener);
         return this;
     }
@@ -1379,7 +1379,7 @@ export default class Databox {
      * whenever the socket is kicked out from the Databox.
      * @param listener
      */
-    onKickOut(listener : OnKickOut) : Databox {
+    onKickOut(listener: OnKickOut): Databox {
         this.kickOutEvent.on(listener);
         return this;
     }
@@ -1390,7 +1390,7 @@ export default class Databox {
      * the socket is kicked out from the Databox.
      * @param listener
      */
-    onceKickOut(listener : OnKickOut) : Databox {
+    onceKickOut(listener: OnKickOut): Databox {
         this.kickOutEvent.once(listener);
         return this;
     }
@@ -1401,7 +1401,7 @@ export default class Databox {
      * Can be a once or normal listener.
      * @param listener
      */
-    offKickOut(listener : OnKickOut){
+    offKickOut(listener: OnKickOut){
         this.kickOutEvent.off(listener);
         return this;
     }
@@ -1412,7 +1412,7 @@ export default class Databox {
      * whenever the server closes the Databox.
      * @param listener
      */
-    onClose(listener : OnClose) : Databox {
+    onClose(listener: OnClose): Databox {
         this.closeEvent.on(listener);
         return this;
     }
@@ -1423,7 +1423,7 @@ export default class Databox {
      * the server closes the Databox.
      * @param listener
      */
-    onceClose(listener : OnClose) : Databox {
+    onceClose(listener: OnClose): Databox {
         this.closeEvent.once(listener);
         return this;
     }
@@ -1434,7 +1434,7 @@ export default class Databox {
      * Can be a once or normal listener.
      * @param listener
      */
-    offClose(listener : OnClose){
+    offClose(listener: OnClose){
         this.closeEvent.off(listener);
         return this;
     }
@@ -1445,7 +1445,7 @@ export default class Databox {
      * whenever the server tolds the Databox to reload the data.
      * @param listener
      */
-    onReload(listener : OnReload) : Databox {
+    onReload(listener: OnReload): Databox {
         this.reloadEvent.on(listener);
         return this;
     }
@@ -1456,7 +1456,7 @@ export default class Databox {
      * the server tolds the Databox to reload the data.
      * @param listener
      */
-    onceReload(listener : OnReload) : Databox {
+    onceReload(listener: OnReload): Databox {
         this.reloadEvent.once(listener);
         return this;
     }
@@ -1467,7 +1467,7 @@ export default class Databox {
      * Can be a once or normal listener.
      * @param listener
      */
-    offReload(listener : OnReload){
+    offReload(listener: OnReload){
         this.reloadEvent.off(listener);
         return this;
     }
@@ -1478,7 +1478,7 @@ export default class Databox {
      * whenever this Databox gets a new cud opertion.
      * @param listener
      */
-    onCud(listener : OnCud) : Databox {
+    onCud(listener: OnCud): Databox {
         this.cudEvent.on(listener);
         return this;
     }
@@ -1489,7 +1489,7 @@ export default class Databox {
      * this Databox gets a new cud opertion.
      * @param listener
      */
-    onceCud(listener : OnCud) : Databox {
+    onceCud(listener: OnCud): Databox {
         this.cudEvent.once(listener);
         return this;
     }
@@ -1500,7 +1500,7 @@ export default class Databox {
      * Can be a once or normal listener.
      * @param listener
      */
-    offCud(listener : OnCud){
+    offCud(listener: OnCud){
         this.cudEvent.off(listener);
         return this;
     }
@@ -1515,7 +1515,7 @@ export default class Databox {
      * or newly fetched data.
      * @param listener
      */
-    onNewData(listener : OnNewData) : Databox {
+    onNewData(listener: OnNewData): Databox {
         this.newDataEvent.on(listener);
         return this;
     }
@@ -1530,7 +1530,7 @@ export default class Databox {
      * or newly fetched data.
      * @param listener
      */
-    onceNewData(listener : OnNewData) : Databox {
+    onceNewData(listener: OnNewData): Databox {
         this.newDataEvent.once(listener);
         return this;
     }
@@ -1541,7 +1541,7 @@ export default class Databox {
      * Can be a once or normal listener.
      * @param listener
      */
-    offNewData(listener : OnNewData){
+    offNewData(listener: OnNewData){
         this.newDataEvent.off(listener);
         return this;
     }
@@ -1567,7 +1567,7 @@ export default class Databox {
      * For example, you do four updates then this event triggers after all four updates.
      * If you have deactivated, then it will trigger for each updater separately.
      */
-    onDataChange(listener : OnDataChange,combineCudSeqOperations : boolean = true) : Databox {
+    onDataChange(listener: OnDataChange,combineCudSeqOperations: boolean = true): Databox {
         this.mainDbStorage.onDataChange(listener,combineCudSeqOperations);
         return this;
     }
@@ -1593,7 +1593,7 @@ export default class Databox {
      * For example, you do four updates then this event triggers after all four updates.
      * If you have deactivated, then it will trigger for each updater separately.
      */
-    onceDataChange(listener : OnDataChange,combineCudSeqOperations : boolean = true) : Databox {
+    onceDataChange(listener: OnDataChange,combineCudSeqOperations: boolean = true): Databox {
         this.mainDbStorage.onceDataChange(listener,combineCudSeqOperations);
         return this;
     }
@@ -1605,7 +1605,7 @@ export default class Databox {
      * Can be a once or normal listener.
      * @param listener
      */
-    offDataChange(listener : OnDataChange) : Databox {
+    offDataChange(listener: OnDataChange): Databox {
         this.mainDbStorage.offDataChange(listener);
         return this;
     }
@@ -1621,7 +1621,7 @@ export default class Databox {
      * then the data touch event will be triggered but not the data change event.
      * @param listener
      */
-    onDataTouch(listener : OnDataTouch) : Databox {
+    onDataTouch(listener: OnDataTouch): Databox {
         this.mainDbStorage.onDataTouch(listener);
         return this;
     }
@@ -1637,7 +1637,7 @@ export default class Databox {
      * then the data touch event will be triggered but not the data change event.
      * @param listener
      */
-    onceDataTouch(listener : OnDataTouch) : Databox {
+    onceDataTouch(listener: OnDataTouch): Databox {
         this.mainDbStorage.onceDataTouch(listener);
         return this;
     }
@@ -1649,7 +1649,7 @@ export default class Databox {
      * Can be a once or normal listener.
      * @param listener
      */
-    offDataTouch(listener : OnDataTouch) : Databox {
+    offDataTouch(listener: OnDataTouch): Databox {
         this.mainDbStorage.offDataTouch(listener);
         return this;
     }
@@ -1661,7 +1661,7 @@ export default class Databox {
      * @param signal
      * @param listener
      */
-    onSignal(signal : string,listener : OnSignal) : Databox {
+    onSignal(signal: string,listener: OnSignal): Databox {
         this.signalEmitter.on(signal,listener);
         return this;
     }
@@ -1673,7 +1673,7 @@ export default class Databox {
      * @param signal
      * @param listener
      */
-    onceSignal(signal : string,listener : OnSignal) : Databox {
+    onceSignal(signal: string,listener: OnSignal): Databox {
         this.signalEmitter.once(signal,listener);
         return this;
     }
@@ -1685,7 +1685,7 @@ export default class Databox {
      * @param signal
      * @param listener
      */
-    offSignal(signal : string,listener ?: OnSignal) : Databox {
+    offSignal(signal: string,listener?: OnSignal): Databox {
         this.signalEmitter.off(signal,listener);
         return this;
     }
@@ -1696,7 +1696,7 @@ export default class Databox {
      * but the IDE can interpret the typescript information of this library.
      * @param value
      */
-    static cast(value : any) : Databox {
+    static cast(value: any): Databox {
         return value as Databox;
     }
 }

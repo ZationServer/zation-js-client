@@ -8,7 +8,7 @@ import {ResponseReactionOnError} from "../reaction/reactionHandler";
 
 export class ReactionUtil {
 
-    static mergeReaction(reactions : ResponseReactionOnError[]) : ResponseReactionOnError
+    static mergeReaction(reactions: ResponseReactionOnError[]): ResponseReactionOnError
     {
         return (resp,filteredErrors) => {
             reactions.forEach((reaction) => {

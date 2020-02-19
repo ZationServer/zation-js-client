@@ -12,10 +12,10 @@ import {RequestJsonBuilder} from "../../utils/requestJsonBuilder";
 
 export class ValidationRequest extends ZationRequest
 {
-    private readonly controller : string;
-    private readonly isSystemController : boolean;
+    private readonly controller: string;
+    private readonly isSystemController: boolean;
 
-    constructor(controller : string,checks : ValidationCheck[],isSystemController : boolean = false,protocol : ProtocolType = ProtocolType.Http)
+    constructor(controller: string,checks: ValidationCheck[],isSystemController: boolean = false,protocol: ProtocolType = ProtocolType.Http)
     {
         super(checks,protocol);
         this.controller = controller;
@@ -36,7 +36,7 @@ export class ValidationRequest extends ZationRequest
 }
 
 export interface ValidationCheck {
-    ip : string | string[]
-    v : any
+    ip: string | string[]
+    v: any
 }
 

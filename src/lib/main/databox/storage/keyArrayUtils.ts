@@ -5,12 +5,12 @@ Copyright(c) Luca Scaringella
  */
 
 export interface RawKeyArray {
-    ___a___ : any[],
-    k : string,
-    v ?: string
+    ___a___: any[],
+    k: string,
+    v?: string
 }
 
-export function isRawKeyArray(value : any) : value is RawKeyArray {
+export function isRawKeyArray(value: any): value is RawKeyArray {
     return value && Array.isArray(value['___a___']) && typeof value['k'] === 'string';
 }
 
@@ -38,17 +38,17 @@ export function isRawKeyArray(value : any) : value is RawKeyArray {
  * @example
  * //First possibility:
  * buildKeyArray(
- * [{id : '2033323',msg : 'hello'},{id : '2435435',msg : 'hi'}],
+ * [{id: '2033323',msg: 'hello'},{id: '2435435',msg: 'hi'}],
  * 'id');
  * //Second possibility:
  * buildKeyArray(
- * [{k : 'name',v : 'luca'},{k : 'age',v : 20}],
+ * [{k: 'name',v: 'luca'},{k: 'age',v: 20}],
  * 'k','v');
  */
-export function buildKeyArray<T>(array : T[],key : keyof T,value ?: keyof T) {
+export function buildKeyArray<T>(array: T[],key: keyof T,value?: keyof T) {
     return {
-        ___a___ : array,
-        k : key,
-        ...(value !== undefined ? {v : value} : {})
+        ___a___: array,
+        k: key,
+        ...(value !== undefined ? {v: value}: {})
     }
 }

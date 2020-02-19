@@ -8,7 +8,7 @@ import {RawError} from "./rawError";
 
 export class PublishFailedError extends RawError
 {
-    constructor(rawError : Error) {
+    constructor(rawError: Error) {
         super(`Publish in the channel is failed. ${rawError.toString()}`,rawError);
     }
 }

@@ -8,7 +8,7 @@ import {RawError} from "./rawError";
 
 export class DeauthenticationFailedError extends RawError
 {
-    constructor(rawError : Error) {
+    constructor(rawError: Error) {
         super(`The deauthentication of the socket is failed. ${rawError.toString()}`,rawError);
     }
 }

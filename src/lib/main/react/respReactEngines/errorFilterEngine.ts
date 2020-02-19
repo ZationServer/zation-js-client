@@ -11,12 +11,12 @@ import {FilterHandlerLib} from "../../filter/filterHandlerLib";
 
 export class ErrorFilterEngine
 {
-    static filterErrors(errors : BackError[], filters : ErrorFilter[]) : BackError[] {
+    static filterErrors(errors: BackError[], filters: ErrorFilter[]): BackError[] {
         if (filters.length === 0) {
             return errors;
         }
         else {
-            let filteredErrors : BackError[] = [];
+            let filteredErrors: BackError[] = [];
             for(let i = 0; i < filters.length; i++) {
                 filteredErrors = filteredErrors.concat(ErrorFilterEngine._oneFilterErrors(errors,filters[i]));
             }
@@ -24,7 +24,7 @@ export class ErrorFilterEngine
         }
     }
 
-    private static _oneFilterErrors(errors : BackError[], filter : ErrorFilter) : BackError[]
+    private static _oneFilterErrors(errors: BackError[], filter: ErrorFilter): BackError[]
     {
         if(filter === {}) {
             return errors;
@@ -115,7 +115,7 @@ export class ErrorFilterEngine
 
         if(typeof filter['fromZationSystem'] === 'boolean')
         {
-            let filTemp : BackError[] = [];
+            let filTemp: BackError[] = [];
             for(let i = 0; i < cachedFilterErrors.length; i++) {
                 if (cachedFilterErrors[i].isFromZationSystem() === filter['fromZationSystem']) {
                     filTemp.push(cachedFilterErrors[i]);

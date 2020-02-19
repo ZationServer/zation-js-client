@@ -24,13 +24,13 @@ import {
 
 export default class DbsObject extends DbsSimplePathCoordinator implements DbsComponent {
 
-    private readonly data : Record<string,any>;
-    private readonly componentStructure : Record<string,any>;
-    private readonly keys : Set<string>;
-    private readonly timestampMap : Map<string,number> = new Map<string, number>();
-    private valueMerger : DbsValueMerger = defaultValueMerger;
+    private readonly data: Record<string,any>;
+    private readonly componentStructure: Record<string,any>;
+    private readonly keys: Set<string>;
+    private readonly timestampMap: Map<string,number> = new Map<string, number>();
+    private valueMerger: DbsValueMerger = defaultValueMerger;
 
-    constructor(rawData : Record<string,any>) {
+    constructor(rawData: Record<string,any>) {
         super();
 
         this.keys = new Set<string>(Object.keys(rawData));
@@ -41,7 +41,7 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
         for (let key of this.keys.values()) {
             parsed = DbDataParser.parse(rawData[key]);
             this.componentStructure[key] = parsed;
-            this.data[key] = isDbsComponent(parsed) ? parsed.getData() : parsed;
+            this.data[key] = isDbsComponent(parsed) ? parsed.getData(): parsed;
         }
     }
 
@@ -53,7 +53,7 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      * Undefined will reset the valueMerger.
      * @param valueMerger
      */
-    setValueMerger(valueMerger : DbsValueMerger | undefined) : void {
+    setValueMerger(valueMerger: DbsValueMerger | undefined): void {
         this.valueMerger = valueMerger || defaultValueMerger;
     }
 
@@ -63,7 +63,7 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      * @return if the data has changed.
      * @param comparator
      */
-    setComparator(comparator : DbsComparator | undefined) : boolean {
+    setComparator(comparator: DbsComparator | undefined): boolean {
         return false;
     }
 
@@ -88,16 +88,16 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      * it does not exist a 0.
      * @param key
      */
-    private getTimestamp(key : string) : number {
+    private getTimestamp(key: string): number {
         const timestamp = this.timestampMap.get(key);
-        return timestamp !== undefined ? timestamp : 0;
+        return timestamp !== undefined ? timestamp: 0;
     }
 
     /**
      * Returns if the key exists.
      * @param key
      */
-    private hasKey(key : string) : boolean {
+    private hasKey(key: string): boolean {
         return key in this.componentStructure;
     }
 
@@ -125,18 +125,18 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      */
     _getDbsComponent(key: string): DbsComponent | undefined {
         const component = this.componentStructure[key];
-        return isDbsComponent(component) ? component : undefined;
+        return isDbsComponent(component) ? component: undefined;
     }
 
     /**
      * Returns a copy of the data.
      */
-    getDataCopy() : Record<string,any> {
+    getDataCopy(): Record<string,any> {
         const data = {};
         let value;
         for(let key of this.keys.values()){
             value = this.componentStructure[key];
-            data[key] = isDbsComponent(value) ? value.getDataCopy() : value;
+            data[key] = isDbsComponent(value) ? value.getDataCopy(): value;
         }
         return data;
     }
@@ -152,15 +152,15 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      * Merge this dbs component with the new component.
      * @param newValue
      */
-    mergeWithNew(newValue: any) : MergeResult {
+    mergeWithNew(newValue: any): MergeResult {
         if(isDbsObject(newValue)){
-            let mainDc : boolean = false;
+            let mainDc: boolean = false;
             newValue.forEachPair((key, value, componentValue, timestamp) => {
                 if(this.hasKey(key)){
                     const {mergedValue,dataChanged} = dbsMerger(this.componentStructure[key],componentValue,this.valueMerger);
                     mainDc = mainDc || dataChanged;
                     this.componentStructure[key] = mergedValue;
-                    this.data[key] = isDbsComponent(mergedValue) ? mergedValue.getData() : mergedValue;
+                    this.data[key] = isDbsComponent(mergedValue) ? mergedValue.getData(): mergedValue;
                 }
                 else {
                     this.data[key] = value;
@@ -172,9 +172,9 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
                     this.timestampMap.set(key,timestamp);
                 }
             });
-            return {mergedValue : this,dataChanged : mainDc};
+            return {mergedValue: this,dataChanged: mainDc};
         }
-        return {mergedValue : newValue,dataChanged : true};
+        return {mergedValue: newValue,dataChanged: true};
     }
 
     /**
@@ -186,9 +186,9 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      * @param mt
      * @private
      */
-    _insert(key: string, value: any, args : InsertProcessArgs, mt : ModifyToken): void
+    _insert(key: string, value: any, args: InsertProcessArgs, mt: ModifyToken): void
     {
-        const {timestamp,if : ifOption,potentialUpdate} = args;
+        const {timestamp,if: ifOption,potentialUpdate} = args;
 
         if(this.hasKey(key)){
             if(potentialUpdate){
@@ -204,7 +204,7 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
         if (DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
             const parsed = DbDataParser.parse(value);
             this.componentStructure[key] = parsed;
-            this.data[key] = isDbsComponent(parsed) ? parsed.getData() : parsed;
+            this.data[key] = isDbsComponent(parsed) ? parsed.getData(): parsed;
 
             this.keys.add(key);
             this.timestampMap.set(key,timestamp);
@@ -222,9 +222,9 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      * @param mt
      * @private
      */
-    _update(key: string, value: any, args : UpdateProcessArgs, mt : ModifyToken): void
+    _update(key: string, value: any, args: UpdateProcessArgs, mt: ModifyToken): void
     {
-        const {timestamp,if : ifOption,potentialInsert} = args;
+        const {timestamp,if: ifOption,potentialInsert} = args;
 
         if(!this.hasKey(key)) {
             if(potentialInsert){
@@ -240,7 +240,7 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
         if (DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
             mt.level = ModifyLevel.DATA_TOUCHED;
             const parsed = DbDataParser.parse(value);
-            const newData = isDbsComponent(parsed) ? parsed.getData() : parsed;
+            const newData = isDbsComponent(parsed) ? parsed.getData(): parsed;
             if(mt.checkDataChange && !deepEqual(newData,this.data[key])){
                 mt.level = ModifyLevel.DATA_CHANGED;
             }
@@ -259,10 +259,10 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      * @param mt
      * @private
      */
-    _delete(key: string, args : DeleteProcessArgs, mt : ModifyToken): void {
+    _delete(key: string, args: DeleteProcessArgs, mt: ModifyToken): void {
         if(!this.hasKey(key)) return;
 
-        const {timestamp,if : ifOption} = args;
+        const {timestamp,if: ifOption} = args;
 
         if(ifOption !== undefined && !(args.if = this.checkIfConditions(ifOption))) return;
 
@@ -279,7 +279,7 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      * For each pair in this dbsObject.
      * @param func
      */
-    forEachPair(func : (key : string,value : any,componentValue : any,timestamp : number | undefined) => void) : void {
+    forEachPair(func: (key: string,value: any,componentValue: any,timestamp: number | undefined) => void): void {
         for(let key of this.keys.values()){
             func(key,this.data[key],this.componentStructure[key],this.timestampMap.get(key));
         }

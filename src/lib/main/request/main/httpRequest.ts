@@ -11,12 +11,12 @@ import {ZationRequest}      from "./zationRequest";
 
 export class HttpRequest extends ZationRequest
 {
-    private readonly controller : string;
-    private readonly useAuth : boolean;
-    private readonly isSystemController : boolean;
-    private httpAttachedContent : {key : string,data : string | Blob}[] = [];
+    private readonly controller: string;
+    private readonly useAuth: boolean;
+    private readonly isSystemController: boolean;
+    private httpAttachedContent: {key: string,data: string | Blob}[] = [];
 
-    constructor(controller : string,data : any = undefined,useAuth : boolean = true,isSystemController : boolean = false)
+    constructor(controller: string,data: any = undefined,useAuth: boolean = true,isSystemController: boolean = false)
     {
         super(data,ProtocolType.Http);
         this.controller = controller;
@@ -27,7 +27,7 @@ export class HttpRequest extends ZationRequest
     async getSendData(zation: Zation): Promise<object>
     {
         const compiledData = await this.getCompiledData();
-        let signToken : null | string = null;
+        let signToken: null | string = null;
 
         if(this.useAuth && zation._getAuthEngine().hasSignToken()) {
             signToken = zation._getAuthEngine().getSignToken();
@@ -50,7 +50,7 @@ export class HttpRequest extends ZationRequest
      * Attach http content to request.
      * Can be used for attaching files.
      */
-    attachHttpContent(key : string,data : string | Blob) {
+    attachHttpContent(key: string,data: string | Blob) {
         this.httpAttachedContent.push({key,data});
     }
 
@@ -60,7 +60,7 @@ export class HttpRequest extends ZationRequest
      * Set http attached content from request.
      * Can be used for attaching files.
      */
-    setHttpAttachedContent(content : {key : string,data : string | Blob}[]) {
+    setHttpAttachedContent(content: {key: string,data: string | Blob}[]) {
         this.httpAttachedContent = content;
     }
 
@@ -69,7 +69,7 @@ export class HttpRequest extends ZationRequest
      * @description
      * Returns http atteched content as an array.
      */
-    getAttachedHttpContent() : {key : string,data : string | Blob}[] {
+    getAttachedHttpContent(): {key: string,data: string | Blob}[] {
         return this.httpAttachedContent;
     }
 

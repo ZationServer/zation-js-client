@@ -4,7 +4,7 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-export default class EventManager<T extends (...any : any[]) => any> {
+export default class EventManager<T extends (...any: any[]) => any> {
 
     private listeners: T[] = [];
     private onceListeners: T[] = [];
@@ -13,7 +13,7 @@ export default class EventManager<T extends (...any : any[]) => any> {
      * Registers a listener for the event.
      * @param listener
      */
-    on(listener : T) {
+    on(listener: T) {
         this.listeners.push(listener);
     }
 
@@ -22,7 +22,7 @@ export default class EventManager<T extends (...any : any[]) => any> {
      * Registers a once listener that will only trigger once.
      * @param listener
      */
-    once(listener: T) : void {
+    once(listener: T): void {
         this.onceListeners.push(listener);
     }
 
@@ -36,12 +36,12 @@ export default class EventManager<T extends (...any : any[]) => any> {
         this._rmListener(this.onceListeners,listener);
     }
 
-    private _rmListener(listeners : T[],listener : T) {
+    private _rmListener(listeners: T[],listener: T) {
         const index = listeners.indexOf(listener);
         if (index > -1) listeners.splice(index, 1);
     }
 
-    private _emit(listeners : T[],...params : Parameters<T>) {
+    private _emit(listeners: T[],...params: Parameters<T>) {
         for(let i = 0; i < listeners.length; i++){
             listeners[i](...params);
         }
@@ -60,7 +60,7 @@ export default class EventManager<T extends (...any : any[]) => any> {
      * Emit the events.
      * @param params
      */
-    emit(...params : Parameters<T>) {
+    emit(...params: Parameters<T>) {
         this._emit(this.listeners,...params);
         this._emit(this.onceListeners,...params);
         this.onceListeners = [];
@@ -69,7 +69,7 @@ export default class EventManager<T extends (...any : any[]) => any> {
     /**
      * Returns if the event manager has a listener.
      */
-    hasListener() :  boolean {
+    hasListener():  boolean {
         return this.listeners.length > 0 || this.onceListeners.length > 0;
     }
 }

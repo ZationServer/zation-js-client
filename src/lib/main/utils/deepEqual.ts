@@ -9,7 +9,7 @@ Copyright(c) Luca Scaringella
  * @param v1
  * @param v2
  */
-export function deepEqual(v1 : any,v2 : any) : boolean {
+export function deepEqual(v1: any,v2: any): boolean {
     if (v1 === v2) return true;
     if(typeof v1 === "object"){
         if(typeof v2 === "object"){

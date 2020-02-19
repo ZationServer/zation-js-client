@@ -10,22 +10,22 @@ export class RequestJsonBuilder
 {
     static buildHttpRequestData
     (
-        data : any,
-        controller : string,
-        isSystemController : boolean,
-        system : string,
-        version : number,
-        apiLevel : number | undefined,
-        signToken ?: string | null
-    ) : ZationRequest
+        data: any,
+        controller: string,
+        isSystemController: boolean,
+        system: string,
+        version: number,
+        apiLevel: number | undefined,
+        signToken?: string | null
+    ): ZationRequest
     {
-        const request : ZationRequest = {
-            v : version,
-            s : system,
-            ...(apiLevel ? {al : apiLevel} : {}),
-            t : {
-                i : data,
-                [!isSystemController ? 'c' : 'sc'] : controller
+        const request: ZationRequest = {
+            v: version,
+            s: system,
+            ...(apiLevel ? {al: apiLevel}: {}),
+            t: {
+                i: data,
+                [!isSystemController ? 'c': 'sc']: controller
             }
         };
 
@@ -37,29 +37,29 @@ export class RequestJsonBuilder
 
     static buildWsRequestData
     (
-        data : any,
-        controller : string,
-        isSystemController : boolean,
-        apiLevel : number | undefined
-    ) : ZationRequest
+        data: any,
+        controller: string,
+        isSystemController: boolean,
+        apiLevel: number | undefined
+    ): ZationRequest
     {
         return  {
-            ...(apiLevel ? {al : apiLevel} : {}),
-            t : {
-                [!isSystemController ? 'c' : 'sc'] : controller,
-                i : data
+            ...(apiLevel ? {al: apiLevel}: {}),
+            t: {
+                [!isSystemController ? 'c': 'sc']: controller,
+                i: data
             }
         };
     }
 
-    static buildHttpAuthRequestData(data : any,system : string, version : number,apiLevel : number | undefined,signToken ?: string | null) : ZationRequest
+    static buildHttpAuthRequestData(data: any,system: string, version: number,apiLevel: number | undefined,signToken?: string | null): ZationRequest
     {
-        const res : ZationRequest = {
-            v : version,
-            s : system,
-            ...(apiLevel ? {al : apiLevel} : {}),
-            a : {
-                i : data,
+        const res: ZationRequest = {
+            v: version,
+            s: system,
+            ...(apiLevel ? {al: apiLevel}: {}),
+            a: {
+                i: data,
             }
         };
         if(!!signToken) {
@@ -68,23 +68,23 @@ export class RequestJsonBuilder
         return res;
     }
 
-    static buildWsAuthRequestData(data : any,apiLevel : number | undefined) : ZationRequest
+    static buildWsAuthRequestData(data: any,apiLevel: number | undefined): ZationRequest
     {
         return {
-            ...(apiLevel ? {al : apiLevel} : {}),
-            a : {
-                i : data
+            ...(apiLevel ? {al: apiLevel}: {}),
+            a: {
+                i: data
             }
         };
     }
 
-    static buildValidationRequestData(input : object | any[],controller : string,isSystemController : boolean,apiLevel : number | undefined) : ZationRequest
+    static buildValidationRequestData(input: object | any[],controller: string,isSystemController: boolean,apiLevel: number | undefined): ZationRequest
     {
         return {
-            ...(apiLevel ? {al : apiLevel} : {}),
-            v : {
-                [!isSystemController ? 'c' : 'sc'] : controller,
-                i : input
+            ...(apiLevel ? {al: apiLevel}: {}),
+            v: {
+                [!isSystemController ? 'c': 'sc']: controller,
+                i: input
             }
         };
     }

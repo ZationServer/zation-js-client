@@ -32,13 +32,13 @@ import {createDeleteModifyToken,
 import {deepCloneInstance}                              from "../../utils/cloneUtils";
 import LocalCudOperationsMemory from "../localCudOperationsMemory";
 
-type ClearOnCloseMiddleware = (code : number | string | undefined,data : any) => boolean;
-type ClearOnKickOutMiddleware = (code : number | string | undefined,data : any) => boolean;
-type ReloadMiddleware = (reloadData : DbStorage) => boolean;
-type InsertMiddleware = (selector : DbProcessedSelector, value : any, options : IfOption & InfoOption & TimestampOption) => boolean;
-type UpdateMiddleware = (selector : DbProcessedSelector, value : any, options : InfoOption & TimestampOption) => boolean;
-type DeleteMiddleware = (selector : DbProcessedSelector, options : InfoOption & TimestampOption) => boolean;
-type AddFetchDataMiddleware = (counter : number,fetchedData : DbsHead) => boolean;
+type ClearOnCloseMiddleware = (code: number | string | undefined,data: any) => boolean;
+type ClearOnKickOutMiddleware = (code: number | string | undefined,data: any) => boolean;
+type ReloadMiddleware = (reloadData: DbStorage) => boolean;
+type InsertMiddleware = (selector: DbProcessedSelector, value: any, options: IfOption & InfoOption & TimestampOption) => boolean;
+type UpdateMiddleware = (selector: DbProcessedSelector, value: any, options: InfoOption & TimestampOption) => boolean;
+type DeleteMiddleware = (selector: DbProcessedSelector, options: InfoOption & TimestampOption) => boolean;
+type AddFetchDataMiddleware = (counter: number,fetchedData: DbsHead) => boolean;
 
 export interface DbStorageOptions {
     /**
@@ -46,45 +46,45 @@ export interface DbStorageOptions {
      * You also can provide a function that decides if the storage should do the clear.
      * @default true
      */
-    clearOnClose ?: ClearOnCloseMiddleware | ClearOnCloseMiddleware[] | boolean,
+    clearOnClose?: ClearOnCloseMiddleware | ClearOnCloseMiddleware[] | boolean,
     /**
      * Indicates if this storage should be cleared when the socket
      * is kicked out from a connected databox.
      * You also can provide a function that decides if the storage should do the clear.
      * @default true
      */
-    clearOnKickOut ?: ClearOnKickOutMiddleware | ClearOnKickOutMiddleware[] | boolean,
+    clearOnKickOut?: ClearOnKickOutMiddleware | ClearOnKickOutMiddleware[] | boolean,
     /**
      * Indicates if this storage should load complete reloaded data.
      * Can happen in the case that the socket missed some cud operations.
      * You also can provide a function that decides if the storage should do the reload.
      * @default true
      */
-    doReload ?: ReloadMiddleware | ReloadMiddleware[] | boolean,
+    doReload?: ReloadMiddleware | ReloadMiddleware[] | boolean,
     /**
      * Indicates if this storage should do insert operations.
      * You also can provide a function that decides if the storage should do the insertion.
      * @default true
      */
-    doInsert ?: InsertMiddleware | InsertMiddleware[] | boolean,
+    doInsert?: InsertMiddleware | InsertMiddleware[] | boolean,
     /**
      * Indicates if this storage should do update operations.
      * You also can provide a function that decides if the storage should do the update.
      * @default true
      */
-    doUpdate ?: UpdateMiddleware | UpdateMiddleware[] | boolean,
+    doUpdate?: UpdateMiddleware | UpdateMiddleware[] | boolean,
     /**
      * Indicates if this storage should do delete operations.
      * You also can provide a function that decides if the storage should do the deletion.
      * @default true
      */
-    doDelete ?: DeleteMiddleware | DeleteMiddleware[] | boolean,
+    doDelete?: DeleteMiddleware | DeleteMiddleware[] | boolean,
     /**
      * Indicates if this storage should add fetch data to the storage.
      * You also can provide a function that decides if the storage should do it.
      * @default true
      */
-    doAddFetchData ?: AddFetchDataMiddleware | AddFetchDataMiddleware[] | boolean
+    doAddFetchData?: AddFetchDataMiddleware | AddFetchDataMiddleware[] | boolean
 }
 
 export const enum DataEventReason {
@@ -98,55 +98,55 @@ export const enum DataEventReason {
     COPIED
 }
 
-export type OnDataChange = (reasons : DataEventReason[],storage : DbStorage) => void | Promise<void>;
-export type OnDataTouch = (reasons : DataEventReason[],storage : DbStorage) => void | Promise<void>;
-export type OnInsert = (selector : DbProcessedSelector, value : any, options : IfOption & InfoOption & TimestampOption) => void | Promise<void>;
-export type OnUpdate = (selector : DbProcessedSelector, value : any, options : InfoOption & TimestampOption) => void | Promise<void>;
-export type OnDelete = (selector : DbProcessedSelector, options : InfoOption & TimestampOption) => void | Promise<void>;
+export type OnDataChange = (reasons: DataEventReason[],storage: DbStorage) => void | Promise<void>;
+export type OnDataTouch = (reasons: DataEventReason[],storage: DbStorage) => void | Promise<void>;
+export type OnInsert = (selector: DbProcessedSelector, value: any, options: IfOption & InfoOption & TimestampOption) => void | Promise<void>;
+export type OnUpdate = (selector: DbProcessedSelector, value: any, options: InfoOption & TimestampOption) => void | Promise<void>;
+export type OnDelete = (selector: DbProcessedSelector, options: InfoOption & TimestampOption) => void | Promise<void>;
 
 export default class DbStorage {
 
-    private dbStorageOptions : Required<DbStorageOptions> = {
-        clearOnClose : true,
-        clearOnKickOut : true,
-        doReload : true,
-        doInsert : true,
-        doUpdate : true,
-        doDelete : true,
-        doAddFetchData : true
+    private dbStorageOptions: Required<DbStorageOptions> = {
+        clearOnClose: true,
+        clearOnKickOut: true,
+        doReload: true,
+        doInsert: true,
+        doUpdate: true,
+        doDelete: true,
+        doAddFetchData: true
     };
 
-    private dbsHead : DbsHead = new DbsHead();
+    private dbsHead: DbsHead = new DbsHead();
     private mainCompOptions: DbsComponentOptions = {};
-    private compOptionsConstraint : Map<string,{s : DbProcessedSelector,o : DbsComponentOptions}> = new Map();
+    private compOptionsConstraint: Map<string,{s: DbProcessedSelector,o: DbsComponentOptions}> = new Map();
 
-    private cudSeqEditActive : boolean = false;
-    private tmpCudInserted : boolean = false;
-    private tmpCudUpdated : boolean = false;
-    private tmpCudDeleted : boolean = false;
+    private cudSeqEditActive: boolean = false;
+    private tmpCudInserted: boolean = false;
+    private tmpCudUpdated: boolean = false;
+    private tmpCudDeleted: boolean = false;
 
-    private hasDataChangeListener : boolean = false;
+    private hasDataChangeListener: boolean = false;
 
-    private clearOnCloseMiddleware : ClearOnCloseMiddleware;
-    private clearOnKickOutMiddleware : ClearOnKickOutMiddleware;
-    private reloadMiddleware : ReloadMiddleware;
-    private insertMiddleware : InsertMiddleware;
-    private updateMiddleware : UpdateMiddleware;
-    private deleteMiddleware : DeleteMiddleware;
-    private addFetchDataMiddleware : AddFetchDataMiddleware;
+    private clearOnCloseMiddleware: ClearOnCloseMiddleware;
+    private clearOnKickOutMiddleware: ClearOnKickOutMiddleware;
+    private reloadMiddleware: ReloadMiddleware;
+    private insertMiddleware: InsertMiddleware;
+    private updateMiddleware: UpdateMiddleware;
+    private deleteMiddleware: DeleteMiddleware;
+    private addFetchDataMiddleware: AddFetchDataMiddleware;
 
     private readonly localCudOperationsMemory = new LocalCudOperationsMemory();
 
-    private readonly dataChangeEvent : EventManager<OnDataChange> = new EventManager<OnDataChange>();
-    private readonly dataChangeCombineSeqEvent : EventManager<OnDataChange> = new EventManager<OnDataChange>();
-    private readonly dataTouchEvent : EventManager<OnDataTouch> = new EventManager<OnDataTouch>();
+    private readonly dataChangeEvent: EventManager<OnDataChange> = new EventManager<OnDataChange>();
+    private readonly dataChangeCombineSeqEvent: EventManager<OnDataChange> = new EventManager<OnDataChange>();
+    private readonly dataTouchEvent: EventManager<OnDataTouch> = new EventManager<OnDataTouch>();
 
-    private readonly insertEvent : EventManager<OnInsert> = new EventManager<OnInsert>();
-    private readonly updateEvent : EventManager<OnUpdate> = new EventManager<OnUpdate>();
-    private hasUpdateListener : boolean = false;
-    private readonly deleteEvent : EventManager<OnDelete> = new EventManager<OnDelete>();
+    private readonly insertEvent: EventManager<OnInsert> = new EventManager<OnInsert>();
+    private readonly updateEvent: EventManager<OnUpdate> = new EventManager<OnUpdate>();
+    private hasUpdateListener: boolean = false;
+    private readonly deleteEvent: EventManager<OnDelete> = new EventManager<OnDelete>();
 
-    constructor(options : DbStorageOptions = {},dbStorage ?: DbStorage) {
+    constructor(options: DbStorageOptions = {},dbStorage?: DbStorage) {
         ObjectUtils.addObToOb(this.dbStorageOptions,options,true);
 
         this.loadMiddleware();
@@ -166,14 +166,14 @@ export default class DbStorage {
         this.addFetchDataMiddleware = this.processMiddlewareOption(this.dbStorageOptions.doAddFetchData);
     }
 
-    private processMiddlewareOption<T extends (...args : any[]) => boolean>(value : boolean | T | T[]) :
-        (...args : any[]) => boolean
+    private processMiddlewareOption<T extends (...args: any[]) => boolean>(value: boolean | T | T[]) :
+        (...args: any[]) => boolean
     {
         if(typeof value === 'boolean'){
             return () => value;
         }
         else if(Array.isArray(value)){
-            return (...args : any[]) => {
+            return (...args: any[]) => {
                 for(let i = 0; i < value.length; i++){
                     if(!value[i](...args)){
                         return false;
@@ -187,10 +187,10 @@ export default class DbStorage {
         }
     }
 
-    private updateCompOptions(triggerDataEvents : boolean = false) {
+    private updateCompOptions(triggerDataEvents: boolean = false) {
         let dataChanged = false;
-        const setMergerComp : DbsComponent[] = [];
-        const setComparatorComp : DbsComponent[] = [];
+        const setMergerComp: DbsComponent[] = [];
+        const setComparatorComp: DbsComponent[] = [];
         for (let {s,o} of this.compOptionsConstraint.values()){
             const comps = this.dbsHead.getDbsComponents(s);
             const compsLength = comps.length;
@@ -246,7 +246,7 @@ export default class DbStorage {
      * @param valueMerger
      * @param selector
      */
-    setValueMerger(valueMerger : DbsValueMerger, selector ?: DbSelector) : DbStorage {
+    setValueMerger(valueMerger: DbsValueMerger, selector?: DbSelector): DbStorage {
         this.setCompOption((option) => option.valueMerger = valueMerger,selector);
         this.updateCompOptions();
         return this;
@@ -265,13 +265,13 @@ export default class DbStorage {
      * @param comparator
      * @param selector
      */
-    setComparator(comparator : DbsComparator, selector ?: DbSelector) : DbStorage {
+    setComparator(comparator: DbsComparator, selector?: DbSelector): DbStorage {
         this.setCompOption((option) => option.comparator = comparator,selector);
         this.updateCompOptions(true);
         return this;
     }
 
-    private setCompOption(func : (option : DbsComponentOptions) => void, selector ?: DbSelector){
+    private setCompOption(func: (option: DbsComponentOptions) => void, selector?: DbSelector){
         if(selector !== undefined){
             selector = DbUtils.processSelector(selector);
             const key = selector.join();
@@ -282,7 +282,7 @@ export default class DbStorage {
             else {
                 const options = {};
                 func(options);
-                this.compOptionsConstraint.set(key,{s : DbUtils.processSelector(selector),o : options})
+                this.compOptionsConstraint.set(key,{s: DbUtils.processSelector(selector),o: options})
             }
         }
         else {
@@ -293,35 +293,35 @@ export default class DbStorage {
     /**
      * Returns the current DbsHead.
      */
-    getDbsHead() : DbsHead {
+    getDbsHead(): DbsHead {
         return this.dbsHead;
     }
 
     /**
      * Returns if the storage should be cleared on close.
      */
-    shouldClearOnClose(code : number | string | undefined,data : any) : boolean {
+    shouldClearOnClose(code: number | string | undefined,data: any): boolean {
         return this.clearOnCloseMiddleware(code,data);
     }
 
     /**
      * Returns if the storage should be cleared on kick out.
      */
-    shouldClearOnKickOut(code : number | string | undefined,data : any) : boolean {
+    shouldClearOnKickOut(code: number | string | undefined,data: any): boolean {
         return this.clearOnKickOutMiddleware(code,data);
     }
 
     /**
      * Returns if newly fetched data should be added to the storage.
      */
-    shouldAddFetchData(counter : number,fetchedData : DbsHead) : boolean {
+    shouldAddFetchData(counter: number,fetchedData: DbsHead): boolean {
         return this.addFetchDataMiddleware(counter,fetchedData);
     }
 
     /**
      * Reloads the data.
      */
-    reload(relodedData : DbStorage) : DbStorage {
+    reload(relodedData: DbStorage): DbStorage {
         if(this.reloadMiddleware(relodedData)){
             this._copyFrom(relodedData,true);
         }
@@ -333,7 +333,7 @@ export default class DbStorage {
      * @param clearLocalCudOperations
      * Indicates if the local cud operations in memory should be cleared.
      */
-    clear(clearLocalCudOperations: boolean = true) : DbStorage {
+    clear(clearLocalCudOperations: boolean = true): DbStorage {
         const tmpOldHead = this.dbsHead;
         this.dbsHead = new DbsHead();
         this.updateCompOptions();
@@ -350,8 +350,8 @@ export default class DbStorage {
      * The data will be merged with the old data.
      * @param data
      */
-    addData(data : any) : DbStorage {
-        this._addDataHead((data instanceof DbsHead) ? deepCloneInstance(data) : new DbsHead(data));
+    addData(data: any): DbStorage {
+        this._addDataHead((data instanceof DbsHead) ? deepCloneInstance(data): new DbsHead(data));
         return this;
     }
 
@@ -362,7 +362,7 @@ export default class DbStorage {
      * @private
      * @param dbsHead
      */
-    _addDataHead(dbsHead : DbsHead) : void {
+    _addDataHead(dbsHead: DbsHead): void {
         const {mergedValue,dataChanged} = this.dbsHead.mergeWithNew(dbsHead);
         this.dbsHead = mergedValue;
         if(dataChanged){
@@ -377,12 +377,12 @@ export default class DbStorage {
      * Copies the data from another storage.
      * @param dbStorage
      */
-    copyFrom(dbStorage : DbStorage) : DbStorage {
+    copyFrom(dbStorage: DbStorage): DbStorage {
         this._copyFrom(dbStorage,false);
         return this;
     }
 
-    private _copyFrom(dbStorage : DbStorage,isReload : boolean) : void {
+    private _copyFrom(dbStorage: DbStorage,isReload: boolean): void {
         const tmpOldHead = this.dbsHead;
         this.dbsHead = deepCloneInstance(dbStorage.getDbsHead());
         this.updateCompOptions();
@@ -392,8 +392,8 @@ export default class DbStorage {
             this._executeLocalCudOperation(localCudOperations[i],true);
         }
 
-        const reason : DataEventReason = isReload ?
-            DataEventReason.RELOADED : DataEventReason.COPIED;
+        const reason: DataEventReason = isReload ?
+            DataEventReason.RELOADED: DataEventReason.COPIED;
 
         this.dataTouchEvent.emit([reason],this);
         if(this.hasDataChangeListener && !deepEqual(tmpOldHead.getData(),this.dbsHead.getData())){
@@ -444,7 +444,7 @@ export default class DbStorage {
      * You can use it if you need extreme performance.
      * But you need to be careful that you only read from the data.
      */
-    getData<T = any>(directAccess : boolean = false) : T {
+    getData<T = any>(directAccess: boolean = false): T {
         if(directAccess){
             return this.dbsHead.getData();
         }
@@ -497,7 +497,7 @@ export default class DbStorage {
      * It's also possible to remove the cud operations later manually from memory.
      * This can be done with the methods: getLastLocalCudOpertions and removeLocalCudOpertions.
      */
-    insert(selector : DbSelector, value : any, options : IfOption & PotentialUpdateOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true) : DbStorage {
+    insert(selector: DbSelector, value: any, options: IfOption & PotentialUpdateOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true): DbStorage {
         const timestampTmp = options.timestamp;
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         options.if = DbUtils.processIfOption(options.if);
@@ -531,7 +531,7 @@ export default class DbStorage {
      * @param silent
      * @private
      */
-    _insert(selector : DbProcessedSelector, value : any, options : InsertArgs & InfoOption,silent: boolean = false) : void {
+    _insert(selector: DbProcessedSelector, value: any, options: InsertArgs & InfoOption,silent: boolean = false): void {
         if(this.insertMiddleware(selector,value,options)) {
             const mt = createUpdateInsertModifyToken(
                 !silent && (this.hasDataChangeListener || this.hasUpdateListener));
@@ -596,7 +596,7 @@ export default class DbStorage {
      * It's also possible to remove the cud operations later manually from memory.
      * This can be done with the methods: getLastLocalCudOpertions and removeLocalCudOpertions.
      */
-    update(selector : DbSelector, value : any, options : IfOption & PotentialInsertOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true) : DbStorage {
+    update(selector: DbSelector, value: any, options: IfOption & PotentialInsertOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true): DbStorage {
         const timestampTmp = options.timestamp;
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         options.if = DbUtils.processIfOption(options.if);
@@ -630,7 +630,7 @@ export default class DbStorage {
      * @param silent
      * @private
      */
-    _update(selector : DbProcessedSelector, value : any, options : UpdateArgs & InfoOption, silent: boolean = false) : void {
+    _update(selector: DbProcessedSelector, value: any, options: UpdateArgs & InfoOption, silent: boolean = false): void {
         if(this.updateMiddleware(selector,value,options)){
             const mt = createUpdateInsertModifyToken(!silent &&
                 (this.hasDataChangeListener || this.hasUpdateListener));
@@ -695,7 +695,7 @@ export default class DbStorage {
      * It's also possible to remove the cud operations later manually from memory.
      * This can be done with the methods: getLastLocalCudOpertions and removeLocalCudOpertions.
      */
-    delete(selector : DbSelector, options : IfOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true) : DbStorage {
+    delete(selector: DbSelector, options: IfOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true): DbStorage {
         const timestampTmp = options.timestamp;
         options.timestamp = DbUtils.processTimestamp(options.timestamp);
         options.if = DbUtils.processIfOption(options.if);
@@ -726,7 +726,7 @@ export default class DbStorage {
      * @param silent
      * @private
      */
-    _delete(selector : DbProcessedSelector, options : DeleteArgs & InfoOption,silent: boolean = false) : void {
+    _delete(selector: DbProcessedSelector, options: DeleteArgs & InfoOption,silent: boolean = false): void {
         if(this.deleteMiddleware(selector,options)){
             const mt = createDeleteModifyToken();
             this.dbsHead.delete(selector,options,mt);
@@ -760,7 +760,7 @@ export default class DbStorage {
      * It's also possible to remove the cud operations later manually from memory.
      * This can be done with the methods: getLastLocalCudOpertions and removeLocalCudOpertions.
      */
-    seqEdit(timestamp ?: number, keepInMemory: boolean = true) : DbLocalCudOperationSequence {
+    seqEdit(timestamp?: number, keepInMemory: boolean = true): DbLocalCudOperationSequence {
         return new DbLocalCudOperationSequence( timestamp,(operations) => {
             const operationLength = operations.length;
             this.startCudSeq();
@@ -792,7 +792,7 @@ export default class DbStorage {
      * The method is essential for the data change event with combine seq edit.
      */
     endCudSeq() {
-        const reasons : DataEventReason[] = [];
+        const reasons: DataEventReason[] = [];
         if(this.tmpCudInserted){reasons.push(DataEventReason.INSERTED);}
         if(this.tmpCudUpdated){reasons.push(DataEventReason.UPDATED);}
         if(this.tmpCudDeleted){reasons.push(DataEventReason.DELETED);}
@@ -803,16 +803,16 @@ export default class DbStorage {
         this.cudSeqEditActive = false;
     }
 
-    private updateHasDataChangeListener() : void {
+    private updateHasDataChangeListener(): void {
         this.hasDataChangeListener = this.dataChangeEvent.hasListener() ||
             this.dataChangeCombineSeqEvent.hasListener()
     }
 
-    private updateHasUpdateListener() : void {
+    private updateHasUpdateListener(): void {
         this.hasUpdateListener = this.updateEvent.hasListener();
     }
 
-    private _triggerChangeEvents(reasons : DataEventReason[]) {
+    private _triggerChangeEvents(reasons: DataEventReason[]) {
         this.dataChangeEvent.emit([...reasons],this);
         if(!this.cudSeqEditActive){
             this.dataChangeCombineSeqEvent.emit([...reasons],this);
@@ -880,7 +880,7 @@ export default class DbStorage {
      * For example, you do four updates then this event triggers after all four updates.
      * If you have deactivated, then it will trigger for each updater separately.
      */
-    onDataChange(listener : OnDataChange,combineCudSeqOperations : boolean = true) : DbStorage {
+    onDataChange(listener: OnDataChange,combineCudSeqOperations: boolean = true): DbStorage {
         if(combineCudSeqOperations){
             this.dataChangeCombineSeqEvent.on(listener);
         }
@@ -912,7 +912,7 @@ export default class DbStorage {
      * For example, you do four updates then this event triggers after all four updates.
      * If you have deactivated, then it will trigger for each updater separately.
      */
-    onceDataChange(listener : OnDataChange,combineCudSeqOperations : boolean = true) : DbStorage {
+    onceDataChange(listener: OnDataChange,combineCudSeqOperations: boolean = true): DbStorage {
         if(combineCudSeqOperations){
             this.dataChangeCombineSeqEvent.once(listener);
         }
@@ -929,7 +929,7 @@ export default class DbStorage {
      * Can be a once or normal listener.
      * @param listener
      */
-    offDataChange(listener : OnDataChange) : DbStorage {
+    offDataChange(listener: OnDataChange): DbStorage {
         this.dataChangeCombineSeqEvent.off(listener);
         this.dataChangeEvent.off(listener);
         this.updateHasDataChangeListener();
@@ -947,7 +947,7 @@ export default class DbStorage {
      * then the data touch event will be triggered but not the data change event.
      * @param listener
      */
-    onDataTouch(listener : OnDataTouch) : DbStorage {
+    onDataTouch(listener: OnDataTouch): DbStorage {
         this.dataTouchEvent.on(listener);
         return this;
     }
@@ -963,7 +963,7 @@ export default class DbStorage {
      * then the data touch event will be triggered but not the data change event.
      * @param listener
      */
-    onceDataTouch(listener : OnDataTouch) : DbStorage {
+    onceDataTouch(listener: OnDataTouch): DbStorage {
         this.dataTouchEvent.once(listener);
         return this;
     }
@@ -974,7 +974,7 @@ export default class DbStorage {
      * Can be a once or normal listener.
      * @param listener
      */
-    offDataTouch(listener : OnDataTouch) : DbStorage {
+    offDataTouch(listener: OnDataTouch): DbStorage {
         this.dataTouchEvent.off(listener);
         return this;
     }
@@ -984,7 +984,7 @@ export default class DbStorage {
      * Adds a listener that gets triggered whenever new data is inserted (not added).
      * @param listener
      */
-    onInsert(listener : OnInsert) : DbStorage {
+    onInsert(listener: OnInsert): DbStorage {
         this.insertEvent.on(listener);
         return this;
     }
@@ -994,7 +994,7 @@ export default class DbStorage {
      * Adds a once listener that gets triggered when new data is inserted (not added).
      * @param listener
      */
-    onceInsert(listener : OnInsert) : DbStorage {
+    onceInsert(listener: OnInsert): DbStorage {
         this.insertEvent.once(listener);
         return this;
     }
@@ -1005,7 +1005,7 @@ export default class DbStorage {
      * Can be a once or normal listener.
      * @param listener
      */
-    offInsert(listener : OnInsert) : DbStorage {
+    offInsert(listener: OnInsert): DbStorage {
         this.insertEvent.off(listener);
         return this;
     }
@@ -1019,7 +1019,7 @@ export default class DbStorage {
      * the deep equal algorithm change detection is activated whenever an update happens.
      * @param listener
      */
-    onUpdate(listener : OnUpdate) : DbStorage {
+    onUpdate(listener: OnUpdate): DbStorage {
         this.updateEvent.on(listener);
         this.updateHasUpdateListener();
         return this;
@@ -1034,7 +1034,7 @@ export default class DbStorage {
      * the deep equal algorithm change detection is activated whenever an update happens.
      * @param listener
      */
-    onceUpdate(listener : OnUpdate) : DbStorage {
+    onceUpdate(listener: OnUpdate): DbStorage {
         this.updateEvent.once(listener);
         this.updateHasUpdateListener();
         return this;
@@ -1046,7 +1046,7 @@ export default class DbStorage {
      * Can be a once or normal listener.
      * @param listener
      */
-    offUpdate(listener : OnUpdate) : DbStorage {
+    offUpdate(listener: OnUpdate): DbStorage {
         this.updateEvent.off(listener);
         this.updateHasUpdateListener();
         return this;
@@ -1057,7 +1057,7 @@ export default class DbStorage {
      * Adds a listener that gets triggered whenever data is deleted.
      * @param listener
      */
-    onDelete(listener : OnDelete) : DbStorage {
+    onDelete(listener: OnDelete): DbStorage {
         this.deleteEvent.on(listener);
         return this;
     }
@@ -1067,7 +1067,7 @@ export default class DbStorage {
      * Adds a once listener that gets triggered when data is deleted.
      * @param listener
      */
-    onceDelete(listener : OnDelete) : DbStorage {
+    onceDelete(listener: OnDelete): DbStorage {
         this.deleteEvent.once(listener);
         return this;
     }
@@ -1078,7 +1078,7 @@ export default class DbStorage {
      * Can be a once or normal listener.
      * @param listener
      */
-    offDelete(listener : OnDelete) : DbStorage {
+    offDelete(listener: OnDelete): DbStorage {
         this.deleteEvent.off(listener);
         return this;
     }
@@ -1089,7 +1089,7 @@ export default class DbStorage {
      * but the IDE can interpret the typescript information of this library.
      * @param value
      */
-    static cast(value : any) : DbStorage {
+    static cast(value: any): DbStorage {
         return value as DbStorage;
     }
 }

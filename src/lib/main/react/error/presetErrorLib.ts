@@ -11,15 +11,15 @@ import {ErrorType}   from "../../constants/errorType";
 
 export abstract class PresetErrorLib<T>
 {
-    protected abstract self() : T;
-    protected abstract _presetAdd(preset : ErrorFilter) : void;
+    protected abstract self(): T;
+    protected abstract _presetAdd(preset: ErrorFilter): void;
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
      * Preset for any validation error.
      */
-    validationError() : T {
+    validationError(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.VALIDATION_ERROR));
         return this.self();
@@ -35,7 +35,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputTypeError(inputPath ?: string,inputValue ?: any) : T {
+    inputTypeError(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -51,7 +51,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeObject(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeObject(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeObject',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -67,7 +67,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeArray(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeArray(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeArray',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -83,7 +83,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeString(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeString(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeString',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -99,7 +99,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeChar(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeChar(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeChar',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -115,7 +115,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeNull(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeNull(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeNull',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -131,7 +131,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeInt(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeInt(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeInt',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -147,7 +147,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeFloat(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeFloat(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeFloat',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -163,7 +163,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeNumber(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeNumber(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeNumber',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -179,7 +179,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeDate(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeDate(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeDate',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -195,7 +195,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeEmail(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeEmail(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeEmail',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -211,7 +211,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeBoolean(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeBoolean(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeBoolean',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -227,7 +227,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeSha512(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeSha512(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeSha512',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -243,7 +243,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeSha256(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeSha256(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeSha256',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -259,7 +259,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeSha384(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeSha384(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeSha384',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -275,7 +275,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeSha1(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeSha1(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeSha1',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -291,7 +291,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeMd5(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeMd5(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeMd5',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -307,7 +307,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeHexColor(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeHexColor(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeHexColor',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -323,7 +323,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeHexadecimal(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeHexadecimal(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeHexadecimal',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -339,7 +339,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeIp4(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeIp4(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeIp4',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -355,7 +355,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeIp6(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeIp6(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeIp6',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -371,7 +371,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeIsbn10(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeIsbn10(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeIsbn10',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -387,7 +387,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeIsbn13(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeIsbn13(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeIsbn13',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -403,7 +403,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeJson(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeJson(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeJson',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -419,7 +419,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeUrl(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeUrl(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeUrl',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -435,7 +435,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeMimeType(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeMimeType(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeMimeType',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -451,7 +451,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeMacAddress(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeMacAddress(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeMacAddress',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -467,7 +467,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeMobileNumber(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeMobileNumber(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeMobileNumber',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -483,7 +483,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeUuid3(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeUuid3(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeUuid3',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -499,7 +499,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeUuid4(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeUuid4(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeUuid4',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -515,7 +515,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeUuid5(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeUuid5(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeUuid5',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -531,7 +531,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeBase64(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeBase64(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeBase64',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -547,7 +547,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeAscii(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeAscii(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypescii',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -563,7 +563,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeUserId(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeUserId(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeUserId',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -579,7 +579,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeMongoId(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeMongoId(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeMongoId',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -595,7 +595,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotTypeLatLong(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotTypeLatLong(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotTypeLatLong',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -611,7 +611,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputValueLengthError(inputPath ?: string,inputValue ?: any) : T {
+    inputValueLengthError(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroup.VALUE_LENGTH_ERROR));
         return this.self();
@@ -630,7 +630,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputNotMatchWithMinLength(inputPath ?: string,inputValue ?: any) : T {
+    inputNotMatchWithMinLength(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputNotMatchWithMinLength',inputPath,inputValue,ErrorGroup.VALUE_LENGTH_ERROR));
         return this.self();
@@ -649,7 +649,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputNotMatchWithMaxLength(inputPath ?: string,inputValue ?: any) : T {
+    inputNotMatchWithMaxLength(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputNotMatchWithMaxLength',inputPath,inputValue,ErrorGroup.VALUE_LENGTH_ERROR));
         return this.self();
@@ -668,7 +668,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputNotMatchWithLength(inputPath ?: string,inputValue ?: any) : T {
+    inputNotMatchWithLength(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputNotMatchWithLength',inputPath,inputValue,ErrorGroup.VALUE_LENGTH_ERROR));
         return this.self();
@@ -684,7 +684,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputLettersFormatError(inputPath ?: string,inputValue ?: any) : T {
+    inputLettersFormatError(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroup.LETTERS_FORMAT_ERROR));
         return this.self();
@@ -700,7 +700,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotUppercase(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotUppercase(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotUppercase',inputPath,inputValue,ErrorGroup.LETTERS_FORMAT_ERROR));
         return this.self();
@@ -716,7 +716,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotLowercase(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotLowercase(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotLowercase',inputPath,inputValue,ErrorGroup.LETTERS_FORMAT_ERROR));
         return this.self();
@@ -735,7 +735,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotMatchWithCharClass(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotMatchWithCharClass(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotMatchWithCharClass',inputPath,inputValue));
         return this.self();
@@ -751,7 +751,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputDateError(inputPath ?: string,inputValue ?: any) : T {
+    inputDateError(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroup.DATE_ERROR));
         return this.self();
@@ -770,7 +770,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputDateIsNotBefore(inputPath ?: string,inputValue ?: any) : T {
+    inputDateIsNotBefore(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputDateIsNotBefore',inputPath,inputValue,ErrorGroup.DATE_ERROR));
         return this.self();
@@ -789,7 +789,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputDateIsNotAfter(inputPath ?: string,inputValue ?: any) : T {
+    inputDateIsNotAfter(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputDateIsNotAfter',inputPath,inputValue,ErrorGroup.DATE_ERROR));
         return this.self();
@@ -809,7 +809,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotContains(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotContains(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotContains',inputPath,inputValue));
         return this.self();
@@ -828,7 +828,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotEquals(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotEquals(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotEquals',inputPath,inputValue));
         return this.self();
@@ -844,7 +844,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputNumberSizeError(inputPath ?: string,inputValue ?: any) : T {
+    inputNumberSizeError(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroup.NUMBER_SIZE_ERROR));
         return this.self();
@@ -863,7 +863,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputNotMatchWithMinValue(inputPath ?: string,inputValue ?: any) : T {
+    inputNotMatchWithMinValue(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputNotMatchWithMinValue',inputPath,inputValue,ErrorGroup.NUMBER_SIZE_ERROR));
         return this.self();
@@ -882,7 +882,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputNotMatchWithMaxValue(inputPath ?: string,inputValue ?: any) : T {
+    inputNotMatchWithMaxValue(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputNotMatchWithMaxValue',inputPath,inputValue,ErrorGroup.NUMBER_SIZE_ERROR));
         return this.self();
@@ -900,7 +900,7 @@ export abstract class PresetErrorLib<T>
      * @param regexName
      * Parameter can be used to check the regexName in the info.
      */
-    inputIsNotMatchWithRegex(inputPath ?: string,inputValue ?: any,regexName ?: string) : T {
+    inputIsNotMatchWithRegex(inputPath?: string,inputValue?: any,regexName?: string): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotMatchWithRegex',inputPath,inputValue,undefined,'regexName',regexName));
         return this.self();
@@ -919,7 +919,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotStartsWith(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotStartsWith(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotStartsWith',inputPath,inputValue));
         return this.self();
@@ -938,7 +938,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotEndsWith(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotEndsWith(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotEndsWith',inputPath,inputValue));
         return this.self();
@@ -954,7 +954,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputEnumError(inputPath ?: string,inputValue ?: any) : T {
+    inputEnumError(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroup.ENUM_ERROR));
         return this.self();
@@ -973,7 +973,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotMatchWithEnum(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotMatchWithEnum(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotMatchWithEnum',inputPath,inputValue,ErrorGroup.ENUM_ERROR));
         return this.self();
@@ -989,7 +989,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotMatchWithPrivateEnum(inputPath ?: string,inputValue ?: any) : T {
+    inputIsNotMatchWithPrivateEnum(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputIsNotMatchWithPrivateEnum',inputPath,inputValue,ErrorGroup.ENUM_ERROR));
         return this.self();
@@ -1005,7 +1005,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputArrayLengthError(inputPath ?: string,inputValue ?: any) : T {
+    inputArrayLengthError(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroup.ARRAY_LENGTH_ERROR));
         return this.self();
@@ -1024,7 +1024,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputArrayNotMatchWithMaxLength(inputPath ?: string,inputValue ?: any) : T {
+    inputArrayNotMatchWithMaxLength(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputArrayNotMatchWithMaxLength',inputPath,inputValue,ErrorGroup.ARRAY_LENGTH_ERROR));
         return this.self();
@@ -1043,7 +1043,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputArrayNotMatchWithMinLength(inputPath ?: string,inputValue ?: any) : T {
+    inputArrayNotMatchWithMinLength(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputArrayNotMatchWithMinLength',inputPath,inputValue,ErrorGroup.ARRAY_LENGTH_ERROR));
         return this.self();
@@ -1062,7 +1062,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputArrayNotMatchWithLength(inputPath ?: string,inputValue ?: any) : T {
+    inputArrayNotMatchWithLength(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputArrayNotMatchWithLength',inputPath,inputValue,ErrorGroup.ARRAY_LENGTH_ERROR));
         return this.self();
@@ -1081,7 +1081,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputNotMatchWithMinByteSize(inputPath ?: string,inputValue ?: any) : T {
+    inputNotMatchWithMinByteSize(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputNotMatchWithMinByteSize',inputPath,inputValue,ErrorGroup.BYTE_SIZE_ERROR));
         return this.self();
@@ -1100,7 +1100,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputNotMatchWithMaxByteSize(inputPath ?: string,inputValue ?: any) : T {
+    inputNotMatchWithMaxByteSize(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputNotMatchWithMaxByteSize',inputPath,inputValue,ErrorGroup.BYTE_SIZE_ERROR));
         return this.self();
@@ -1116,7 +1116,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputByteSizeError(inputPath ?: string,inputValue ?: any) : T {
+    inputByteSizeError(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroup.BYTE_SIZE_ERROR));
         return this.self();
@@ -1135,7 +1135,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputNotMatchWithMimeType(inputPath ?: string,inputValue ?: any) : T {
+    inputNotMatchWithMimeType(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputNotMatchWithMimeType',inputPath,inputValue,ErrorGroup.CONTENT_TYPE_ERROR));
         return this.self();
@@ -1154,7 +1154,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputNotMatchWithMimeSubType(inputPath ?: string,inputValue ?: any) : T {
+    inputNotMatchWithMimeSubType(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('inputNotMatchWithMimeSubType',inputPath,inputValue,ErrorGroup.CONTENT_TYPE_ERROR));
         return this.self();
@@ -1170,7 +1170,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputContentTypeError(inputPath ?: string,inputValue ?: any) : T {
+    inputContentTypeError(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         (undefined,inputPath,inputValue,ErrorGroup.CONTENT_TYPE_ERROR));
         return this.self();
@@ -1189,7 +1189,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    noValidTypeWasFound(inputPath ?: string,inputValue ?: any) : T {
+    noValidTypeWasFound(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('noValidTypeWasFound',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
         return this.self();
@@ -1205,7 +1205,7 @@ export abstract class PresetErrorLib<T>
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    noAnyOfMatch(inputPath ?: string,inputValue ?: any) : T {
+    noAnyOfMatch(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
         ('noAnyOfMatch',inputPath,inputValue));
         return this.self();
@@ -1220,7 +1220,7 @@ export abstract class PresetErrorLib<T>
      * Possibilities are:
      * controller
      */
-    controllerNotFound() : T {
+    controllerNotFound(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'controllerNotFound'));
         return this.self();
@@ -1235,7 +1235,7 @@ export abstract class PresetErrorLib<T>
      * Possibilities are:
      * controller
      */
-    systemControllerNotFound() : T {
+    systemControllerNotFound(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'systemControllerNotFound'));
         return this.self();
@@ -1251,7 +1251,7 @@ export abstract class PresetErrorLib<T>
      * controller
      * apiLevel
      */
-    apiLevelIncompatible() : T {
+    apiLevelIncompatible(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'apiLevelIncompatible'));
         return this.self();
@@ -1263,7 +1263,7 @@ export abstract class PresetErrorLib<T>
      * Preset for authControllerNotSet.
      * The BackError error can be thrown when no auth controller is set.
      */
-    authControllerNotSet() : T {
+    authControllerNotSet(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'authControllerNotSet'));
         return this.self();
@@ -1278,7 +1278,7 @@ export abstract class PresetErrorLib<T>
      * Possibilities are:
      * system
      */
-    noAccessWithSystem() : T {
+    noAccessWithSystem(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.NO_ACCESS_ERROR,'noAccessWithSystem'));
         return this.self();
@@ -1293,7 +1293,7 @@ export abstract class PresetErrorLib<T>
      * Possibilities are:
      * version
      */
-    noAccessWithVersion() : T {
+    noAccessWithVersion(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.NO_ACCESS_ERROR,'noAccessWithVersion'));
         return this.self();
@@ -1304,7 +1304,7 @@ export abstract class PresetErrorLib<T>
      * @description
      * Preset for any code error.
      */
-    codeError() : T {
+    codeError(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.CODE_ERROR));
         return this.self();
@@ -1316,7 +1316,7 @@ export abstract class PresetErrorLib<T>
      * Preset for authenticationError.
      * The BackError error can be thrown by trying to authenticate an sc.
      */
-    authenticationError() : T {
+    authenticationError(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.SYSTEM_ERROR,'authenticationError'));
         return this.self();
@@ -1327,7 +1327,7 @@ export abstract class PresetErrorLib<T>
      * @description
      * Preset for any input error.
      */
-    inputError() : T {
+    inputError(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR));
         return this.self();
@@ -1342,7 +1342,7 @@ export abstract class PresetErrorLib<T>
      * paramName (the name of the missing param)
      * input (the input object where the param is missing)
      */
-    inputParamIsMissing() : T {
+    inputParamIsMissing(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'inputParamIsMissing'));
         return this.self();
@@ -1356,7 +1356,7 @@ export abstract class PresetErrorLib<T>
      * Possibilities are:
      * paramName (the unknown input param name)
      */
-    unknownInputParam() : T {
+    unknownInputParam(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'unknownInputParam'));
         return this.self();
@@ -1373,7 +1373,7 @@ export abstract class PresetErrorLib<T>
      * index (index of the input param that is not assignable)
      * value (input value of the input param that is not assignable)
      */
-    inputParamNotAssignable() : T {
+    inputParamNotAssignable(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'inputParamNotAssignable'));
         return this.self();
@@ -1388,7 +1388,7 @@ export abstract class PresetErrorLib<T>
      * inputPath (full path to the value where an array was expected)
      * inputValue (the input value that is not from type array)
      */
-    arrayWasExpected() : T {
+    arrayWasExpected(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'arrayWasExpected'));
         return this.self();
@@ -1403,7 +1403,7 @@ export abstract class PresetErrorLib<T>
      * inputPath (full path to the value where an object was expected)
      * inputValue (the input value that is not from type object)
      */
-    objectWasExpected() : T {
+    objectWasExpected(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'objectWasExpected'));
         return this.self();
@@ -1420,7 +1420,7 @@ export abstract class PresetErrorLib<T>
      * propertyName (name of missing property)
      * inputPath (the full input path to missing property)
      */
-    objectPropertyIsMissing() : T {
+    objectPropertyIsMissing(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'objectPropertyIsMissing'));
         return this.self();
@@ -1435,7 +1435,7 @@ export abstract class PresetErrorLib<T>
      * propertyName (name of the unknown property)
      * inputPath (full input path to unknown property)
      */
-    unknownObjectProperty() : T {
+    unknownObjectProperty(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'unknownObjectProperty'));
         return this.self();
@@ -1447,7 +1447,7 @@ export abstract class PresetErrorLib<T>
      * Preset for wrongPanelAuthData.
      * The BackError error can be thrown if the panel authData is wrong.
      */
-    wrongPanelAuthData() : T {
+    wrongPanelAuthData(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.AUTH_ERROR,'wrongPanelAuthData'));
         return this.self();
@@ -1460,7 +1460,7 @@ export abstract class PresetErrorLib<T>
      * The BackError error can be thrown if you try to authenticate for the panel,
      * but the panel is not activated.
      */
-    panelIsNotActivated() : T {
+    panelIsNotActivated(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'panelIsNotActivated'));
         return this.self();
@@ -1473,7 +1473,7 @@ export abstract class PresetErrorLib<T>
      * The BackError error can be thrown if the server is in auth start mode
      * and you send an normal request.
      */
-    authStartActive() : T {
+    authStartActive(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.TIME_ERROR,'authStartActive'));
         return this.self();
@@ -1491,7 +1491,7 @@ export abstract class PresetErrorLib<T>
      * authUserGroup (your auth user group)
      * userId (your user id)
      */
-    noAccessWithTokenState() : T {
+    noAccessWithTokenState(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.NO_ACCESS_ERROR,'noAccessWithTokenState'));
         return this.self();
@@ -1503,7 +1503,7 @@ export abstract class PresetErrorLib<T>
      * Preset for wrongInputDataStructure.
      * The BackError error can be thrown if the request has a wrong structure.
      */
-    wrongInputDataStructure() : T {
+    wrongInputDataStructure(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'wrongInputDataStructure'));
         return this.self();
@@ -1518,7 +1518,7 @@ export abstract class PresetErrorLib<T>
      * Possibilities are:
      * inputType
      */
-    wrongInputTypeInParamBasedInput() : T {
+    wrongInputTypeInParamBasedInput(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'wrongInputTypeInParamBasedInput'));
         return this.self();
@@ -1530,7 +1530,7 @@ export abstract class PresetErrorLib<T>
      * Preset for JSONParseSyntaxError.
      * The BackError error can be thrown if the json parse with the input thwors an error.
      */
-    JSONParseSyntaxError() : T {
+    JSONParseSyntaxError(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'JSONParseSyntaxError'));
         return this.self();
@@ -1546,7 +1546,7 @@ export abstract class PresetErrorLib<T>
      * Possibilities are:
      * checkIndex
      */
-    wrongValidationCheckStructure() : T {
+    wrongValidationCheckStructure(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'wrongValidationCheckStructure'));
         return this.self();
@@ -1563,7 +1563,7 @@ export abstract class PresetErrorLib<T>
      * inputPath
      * checkIndex
      */
-    inputPathNotResolvable() : T {
+    inputPathNotResolvable(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'inputPathNotResolvable'));
         return this.self();
@@ -1580,7 +1580,7 @@ export abstract class PresetErrorLib<T>
      * limit
      * checksCount
      */
-    validationCheckLimitReached() : T {
+    validationCheckLimitReached(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.INPUT_ERROR,'validationCheckLimitReached'));
         return this.self();
@@ -1591,7 +1591,7 @@ export abstract class PresetErrorLib<T>
      * @description
      * Preset for any protocol error.
      */
-    protocolError() : T {
+    protocolError(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.PROTOCOL_ERROR));
         return this.self();
@@ -1608,7 +1608,7 @@ export abstract class PresetErrorLib<T>
      * controller
      * protocol
      */
-    noAccessWithProtocol() : T {
+    noAccessWithProtocol(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.PROTOCOL_ERROR,'noAccessWithProtocol'));
         return this.self();
@@ -1626,7 +1626,7 @@ export abstract class PresetErrorLib<T>
      * controller
      * method
      */
-    noAccessWithHttpMethod() : T {
+    noAccessWithHttpMethod(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.PROTOCOL_ERROR,'noAccessWithHttpMethod'));
         return this.self();
@@ -1637,7 +1637,7 @@ export abstract class PresetErrorLib<T>
      * @description
      * Preset for any system error.
      */
-    systemError() : T {
+    systemError(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.SYSTEM_ERROR));
         return this.self();
@@ -1652,7 +1652,7 @@ export abstract class PresetErrorLib<T>
      * Possibilities are:
      * info (only server is running in debug mode)
      */
-    unknownError() : T {
+    unknownError(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.SYSTEM_ERROR,'unknownError'));
         return this.self();
@@ -1663,7 +1663,7 @@ export abstract class PresetErrorLib<T>
      * @description
      * Preset for any token error.
      */
-    tokenError() : T {
+    tokenError(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.TOKEN_ERROR));
         return this.self();
@@ -1676,7 +1676,7 @@ export abstract class PresetErrorLib<T>
      * The BackError error can be thrown by any unknown error by verify a token.
      * More info checks you need to do by yourself.
      */
-    unknownTokenVerifyError() : T {
+    unknownTokenVerifyError(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.TOKEN_ERROR,'unknownTokenVerifyError'));
         return this.self();
@@ -1689,7 +1689,7 @@ export abstract class PresetErrorLib<T>
      * The BackError error can be thrown by any unknown error by sign a token.
      * More info checks you need to do by yourself.
      */
-    unknownTokenSignError() : T {
+    unknownTokenSignError(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.TOKEN_ERROR,'unknownTokenSignError'));
         return this.self();
@@ -1704,7 +1704,7 @@ export abstract class PresetErrorLib<T>
      * Possibilities are:
      * expiredAt
      */
-    tokenExpiredError() : T {
+    tokenExpiredError(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.TOKEN_ERROR,'tokenExpiredError'));
         return this.self();
@@ -1719,7 +1719,7 @@ export abstract class PresetErrorLib<T>
      * Possibilities are:
      * message
      */
-    jsonWebTokenError() : T {
+    jsonWebTokenError(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.TOKEN_ERROR,'jsonWebTokenError'));
         return this.self();
@@ -1732,7 +1732,7 @@ export abstract class PresetErrorLib<T>
      * The BackError error can be thrown by invalid token cluster key.
      * The error can only throw by an HTTP request.
      */
-    tokenClusterKeyIsInvalid() : T {
+    tokenClusterKeyIsInvalid(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.TOKEN_ERROR,'tokenClusterKeyIsInvalid'));
         return this.self();
@@ -1748,16 +1748,16 @@ export abstract class PresetErrorLib<T>
      * Possibilities are:
      * err
      */
-    authenticateMiddlewareBlock() : T {
+    authenticateMiddlewareBlock(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.TOKEN_ERROR,'authenticateMiddlewareBlock'));
         return this.self();
     }
 
     // noinspection JSMethodCanBeStatic
-    private _validationErrorBuild(name ?: string,inputPath ?: string,inputValue ?: any,group ?: string,opInfoKey ?: string, opInfoValue ?: any) : ErrorFilter
+    private _validationErrorBuild(name?: string,inputPath?: string,inputValue?: any,group?: string,opInfoKey?: string, opInfoValue?: any): ErrorFilter
     {
-        const preset : ErrorFilter = {};
+        const preset: ErrorFilter = {};
         preset.fromZationSystem = true;
         preset.type = ErrorType.VALIDATION_ERROR;
         if(name) {
@@ -1784,9 +1784,9 @@ export abstract class PresetErrorLib<T>
     }
 
     // noinspection JSMethodCanBeStatic
-    private _zationErrorBuild(type ?: string,name ?: string,group ?: string) : ErrorFilter
+    private _zationErrorBuild(type?: string,name?: string,group?: string): ErrorFilter
     {
-        const preset : ErrorFilter = {};
+        const preset: ErrorFilter = {};
         preset.fromZationSystem = true;
         if(name) {
             preset.name = name;

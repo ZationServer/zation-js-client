@@ -8,7 +8,7 @@ import {RawError} from "./rawError";
 
 export class SubscribeFailedError extends RawError
 {
-    constructor(rawError : Error) {
+    constructor(rawError: Error) {
         super(`Subscribe to the channel is failed. ${rawError.toString()}`,rawError);
     }
 }

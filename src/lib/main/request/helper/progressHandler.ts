@@ -4,4 +4,4 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-export type ProgressHandler = (percentage : number) => void;
+export type ProgressHandler = (percentage: number) => void;

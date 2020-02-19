@@ -4,22 +4,22 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-type ForEeachFunction<T> = (item : T) => Promise<void>;
+type ForEeachFunction<T> = (item: T) => Promise<void>;
 
 export class SBox<T>
 {
-    protected items : T[] = [] = [];
-    protected inUse : boolean = false;
+    protected items: T[] = [] = [];
+    protected inUse: boolean = false;
 
     constructor() {}
 
     // noinspection JSUnusedGlobalSymbols
-    setInUse(inUse : boolean) {
+    setInUse(inUse: boolean) {
         this.inUse = inUse;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    async forEach(func : ForEeachFunction<T>) : Promise<void>
+    async forEach(func: ForEeachFunction<T>): Promise<void>
     {
         this.inUse = true;
         //use extra refernce
@@ -31,13 +31,13 @@ export class SBox<T>
         this.inUse = false;
     }
 
-    async forEachAll(func : ForEeachFunction<T>) : Promise<void>
+    async forEachAll(func: ForEeachFunction<T>): Promise<void>
     {
         this.inUse = true;
         //use extra refernce
         //the this.items can maybe changed to a new list. (by edit the list)
         const array = this.items;
-        const promise : Promise<void>[] = [];
+        const promise: Promise<void>[] = [];
         for(let i = 0; i < array.length; i++) {
             promise.push(func(array[i]));
         }
@@ -45,14 +45,14 @@ export class SBox<T>
         await Promise.all(promise);
     }
 
-    getItems() : T[] {
+    getItems(): T[] {
         return this.items;
     }
 
     //Part Items
 
     // noinspection JSUnusedGlobalSymbols
-    addItem(item : T) : void {
+    addItem(item: T): void {
         if(this.inUse){this._copyInternal();}
         this.items.push(item);
     }
@@ -62,7 +62,7 @@ export class SBox<T>
     }
 
     // noinspection JSUnusedGlobalSymbols
-    removeItem(item : T) : boolean {
+    removeItem(item: T): boolean {
         const index = this.items.indexOf(item);
         if (index != -1) {
             if(this.inUse){this._copyInternal();}
@@ -74,7 +74,7 @@ export class SBox<T>
         }
     }
 
-    remove(item ?: T) : void {
+    remove(item?: T): void {
         if(item){
             this.removeItem(item);
         }
@@ -86,7 +86,7 @@ export class SBox<T>
     //Part Remove All
 
     // noinspection JSUnusedGlobalSymbols
-    removeAllItems() : void {
+    removeAllItems(): void {
         this.items = [];
     }
 }

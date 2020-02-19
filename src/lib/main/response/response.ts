@@ -14,21 +14,21 @@ import {ResponseReact}   from "../react/response/responseReact";
 export class Response
 {
     private successful = false;
-    private readonly type : ProtocolType;
-    protected readonly client : Zation;
+    private readonly type: ProtocolType;
+    protected readonly client: Zation;
 
-    private result : any;
-    private statusCode : string | number | undefined;
-    private readonly erros : BackError[] = [];
-    private notCatchedErrors : BackError[] = [];
+    private result: any;
+    private statusCode: string | number | undefined;
+    private readonly erros: BackError[] = [];
+    private notCatchedErrors: BackError[] = [];
 
-    private zationInfo : string[] = [];
+    private zationInfo: string[] = [];
 
     //Part Token (ONLY HTTP)
-    private newSignedToken : string | undefined = undefined;
-    private newPlainToken : object | undefined = undefined;
+    private newSignedToken: string | undefined = undefined;
+    private newPlainToken: object | undefined = undefined;
 
-    constructor(data,client : Zation,type : ProtocolType)
+    constructor(data,client: Zation,type: ProtocolType)
     {
         this.successful = false;
         this.erros = [];
@@ -46,7 +46,7 @@ export class Response
      * Returns the result from the response.
      * Is undefined if it is not set.
      */
-    getResult() : any | undefined {
+    getResult(): any | undefined {
         return this.result;
     }
 
@@ -55,7 +55,7 @@ export class Response
      * @description
      * Returns if the response has a result.
      */
-    hasResult() : boolean
+    hasResult(): boolean
     {
        return this.result !== undefined;
     }
@@ -68,7 +68,7 @@ export class Response
      * Returns the status code from the response.
      * Is undefined if it is not set.
      */
-    getStatusCode() : string | number | undefined
+    getStatusCode(): string | number | undefined
     {
        return this.statusCode;
     }
@@ -78,7 +78,7 @@ export class Response
      * @description
      * Returns if the response has a status code.
      */
-    hasStatusCode() : boolean
+    hasStatusCode(): boolean
     {
         return this.statusCode !== undefined;
     }
@@ -90,7 +90,7 @@ export class Response
      * @description
      * Returns if the response was successful.
      */
-    isSuccessful() : boolean
+    isSuccessful(): boolean
     {
         return this.successful;
     }
@@ -102,7 +102,7 @@ export class Response
      * @description
      * Returns if the response has a new token (only http).
      */
-    hasNewToken() : boolean
+    hasNewToken(): boolean
     {
         return this.newSignedToken !== undefined && this.newPlainToken !== undefined;
     }
@@ -113,7 +113,7 @@ export class Response
      * Returns the new signed token from response (only http).
      * Is undefined if it is not set.
      */
-    getNewSignedToken() : string | undefined
+    getNewSignedToken(): string | undefined
     {
         return this.newSignedToken;
     }
@@ -124,7 +124,7 @@ export class Response
      * Returns the new plain token from response (only http).
      * Is undefined if it is not set.
      */
-    getNewPlainToken() : object | undefined
+    getNewPlainToken(): object | undefined
     {
         return this.newPlainToken;
     }
@@ -137,7 +137,7 @@ export class Response
      * If there is no error it returns an empty array.
      * @param useFiltered if true than it returns only the errors there are not catched.
      */
-    getErrors(useFiltered : boolean = true) : BackError[]
+    getErrors(useFiltered: boolean = true): BackError[]
     {
         if(useFiltered) {
             return this.notCatchedErrors;
@@ -153,7 +153,7 @@ export class Response
      * Checks if the response has errors.
      * @param useFiltered if true than it checks only the errors there are not catched.
      */
-    hasErrors(useFiltered : boolean = true) : boolean
+    hasErrors(useFiltered: boolean = true): boolean
     {
         if(useFiltered) {
             return this.notCatchedErrors.length > 0;
@@ -169,7 +169,7 @@ export class Response
      * Returns the error count of the response.
      * @param useFiltered if true than it returns the count only of the errors there are not catched.
      */
-    errorCount(useFiltered : boolean = true) : number
+    errorCount(useFiltered: boolean = true): number
     {
         if(useFiltered) {
             return this.notCatchedErrors.length;
@@ -186,7 +186,7 @@ export class Response
      * @description
      * Returns the an response react for rect directly on the repsonse.
      */
-    react() : ResponseReact {
+    react(): ResponseReact {
         return new ResponseReact(this,this.client);
     }
 
@@ -197,7 +197,7 @@ export class Response
      * @description
      * Returns the protocol type of the repsonse.
      */
-    getProtocolType() : ProtocolType
+    getProtocolType(): ProtocolType
     {
         return this.type;
     }
@@ -207,7 +207,7 @@ export class Response
      * @description
      * Returns if the protocol type of the response is websocket.
      */
-    isWsProtocolType() : boolean
+    isWsProtocolType(): boolean
     {
         return this.type === ProtocolType.WebSocket;
     }
@@ -217,7 +217,7 @@ export class Response
      * @description
      * Returns if the protocol type of the response is http.
      */
-    isHttpProtocolType() : boolean
+    isHttpProtocolType(): boolean
     {
         return this.type === ProtocolType.Http;
     }
@@ -229,7 +229,7 @@ export class Response
      * This makes only sense by an http request.
      * @param key
      */
-    hasZationHttpInfo(key : string) : boolean
+    hasZationHttpInfo(key: string): boolean
     {
         return this.zationInfo.indexOf(key) !== -1;
     }
@@ -240,7 +240,7 @@ export class Response
      * Returns the zation http info.
      * This makes only sense by an http request.
      */
-    getZationHttpInfo() : string[]
+    getZationHttpInfo(): string[]
     {
         return this.zationInfo;
     }
@@ -252,18 +252,18 @@ export class Response
      * @description
      * Reset all catched errors.
      */
-    resetNotCatchedErrors() : Response {
+    resetNotCatchedErrors(): Response {
         this.notCatchedErrors = this.erros.slice();
         return this;
     }
 
-    _getNotCatchedErrors() : BackError[] {
+    _getNotCatchedErrors(): BackError[] {
         return this.notCatchedErrors;
     }
 
-    _errorsAreCatched(errors : BackError[])
+    _errorsAreCatched(errors: BackError[])
     {
-        errors.forEach((error : BackError) => {
+        errors.forEach((error: BackError) => {
             const index = this.notCatchedErrors.indexOf(error);
             if (index > -1) {this.notCatchedErrors.splice(index, 1);}
         });
@@ -271,7 +271,7 @@ export class Response
 
     //Part main system
 
-    private _readData(data : ZationResponse)
+    private _readData(data: ZationResponse)
     {
         if(typeof data === 'object'){
             if (typeof data.r === 'object') {
@@ -288,7 +288,7 @@ export class Response
 
             if (Array.isArray(data.e))
             {
-                const errors : any[] = data.e;
+                const errors: any[] = data.e;
 
                 this.successful = errors.length === 0;
 
@@ -321,15 +321,15 @@ export class Response
         }
     }
 
-    toString() : string
+    toString(): string
     {
         return `Response: -> \n`+
             `   Successful: ${this.isSuccessful()}\n`+
-            `   StatusCode: ${this.isSuccessful() ? (this.getStatusCode() || 'NO STATUS CODE') : 'ERROR'}\n` +
+            `   StatusCode: ${this.isSuccessful() ? (this.getStatusCode() || 'NO STATUS CODE'): 'ERROR'}\n` +
             `   Protocol: ${ProtocolType[this.getProtocolType()]}\n` +
-            (this.hasNewToken() ? `   NewToken: ${this.getNewPlainToken() || 'UNKNOWN'}\n` : '')+
-            (this.isSuccessful() ? `   Result: ${this.result || 'NO RESULT'}\n` : '') +
-            (!this.isSuccessful() ? `   Errors: (${this.erros.toString()})` : '');
+            (this.hasNewToken() ? `   NewToken: ${this.getNewPlainToken() || 'UNKNOWN'}\n`: '')+
+            (this.isSuccessful() ? `   Result: ${this.result || 'NO RESULT'}\n`: '') +
+            (!this.isSuccessful() ? `   Errors: (${this.erros.toString()})`: '');
     }
 }
 

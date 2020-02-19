@@ -10,10 +10,10 @@ import {WaitForConnectionOption} from "../../utils/connectionUtils";
 
 export abstract class SendAble
 {
-    abstract async getSendData(zation : Zation) : Promise<object>;
+    abstract async getSendData(zation: Zation): Promise<object>;
     // noinspection JSMethodCanBeStatic
-    abstract getProtocol() : ProtocolType;
-    abstract getTimeout() : null | number | undefined;
+    abstract getProtocol(): ProtocolType;
+    abstract getTimeout(): null | number | undefined;
 
-    abstract getWaitForConnection() : WaitForConnectionOption
+    abstract getWaitForConnection(): WaitForConnectionOption
 }

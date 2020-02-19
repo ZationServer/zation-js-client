@@ -8,7 +8,7 @@ import {RawError} from "./rawError";
 
 export class ConnectionAbortError extends RawError
 {
-    constructor(rawError : Error) {
+    constructor(rawError: Error) {
         super(`Connection aborted: ${rawError.toString()}`,rawError);
     }
 }

@@ -11,9 +11,9 @@ import {RequestJsonBuilder} from "../../utils/requestJsonBuilder";
 
 export class AuthRequest extends ZationRequest
 {
-    private httpAttachedContent : {key : string,data : string | Blob}[] = [];
+    private httpAttachedContent: {key: string,data: string | Blob}[] = [];
 
-    constructor(data : any = undefined,protocol : ProtocolType)
+    constructor(data: any = undefined,protocol: ProtocolType)
     {
         super(data,protocol);
     }
@@ -26,7 +26,7 @@ export class AuthRequest extends ZationRequest
             return RequestJsonBuilder.buildWsAuthRequestData(compiledData,this.apiLevel);
         }
         else {
-            let signToken : null | string = null;
+            let signToken: null | string = null;
             if(zation._getAuthEngine().hasSignToken()){
                 signToken = zation._getAuthEngine().getSignToken();
             }
@@ -46,7 +46,7 @@ export class AuthRequest extends ZationRequest
      * Attach http content to request.
      * Can be used for attaching files.
      */
-    attachHttpContent(key : string,data : string | Blob) {
+    attachHttpContent(key: string,data: string | Blob) {
         this.httpAttachedContent.push({key,data});
     }
 
@@ -56,7 +56,7 @@ export class AuthRequest extends ZationRequest
      * Set http attached content from request.
      * Can be used for attaching files.
      */
-    setHttpAttachedContent(content : {key : string,data : string | Blob}[]) {
+    setHttpAttachedContent(content: {key: string,data: string | Blob}[]) {
         this.httpAttachedContent = content;
     }
 
@@ -65,7 +65,7 @@ export class AuthRequest extends ZationRequest
      * @description
      * Returns http atteched content as an array.
      */
-    getAttachedHttpContent() : {key : string,data : string | Blob}[] {
+    getAttachedHttpContent(): {key: string,data: string | Blob}[] {
         return this.httpAttachedContent;
     }
 }

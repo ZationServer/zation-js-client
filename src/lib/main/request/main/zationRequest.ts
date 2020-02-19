@@ -16,14 +16,14 @@ export abstract class ZationRequest extends SendAble
 {
     private readonly data: any;
     private readonly type: ProtocolType;
-    protected apiLevel : number | undefined;
-    private timeout : null | number | undefined = undefined;
+    protected apiLevel: number | undefined;
+    private timeout: null | number | undefined = undefined;
 
-    private compiledData : object | any[];
+    private compiledData: object | any[];
     private progressHandler: ProgressHandler | undefined = undefined;
-    private waitForConnection : WaitForConnectionOption = undefined;
+    private waitForConnection: WaitForConnectionOption = undefined;
 
-    protected constructor(data : any, type : ProtocolType)
+    protected constructor(data: any, type: ProtocolType)
     {
         super();
         this.data = data;
@@ -35,7 +35,7 @@ export abstract class ZationRequest extends SendAble
      * @description
      * Returns the protocol type of the request.
      */
-    getProtocol() : ProtocolType {
+    getProtocol(): ProtocolType {
         return this.type;
     }
 
@@ -44,7 +44,7 @@ export abstract class ZationRequest extends SendAble
      * @description
      * Returns the api level of the request.
      */
-    getApiLevel() : number | undefined {
+    getApiLevel(): number | undefined {
         return this.apiLevel;
     }
 
@@ -66,7 +66,7 @@ export abstract class ZationRequest extends SendAble
      * Set the API level of the request.
      * If you don't provide one the connection API level or server default API level will be used.
      */
-    setApiLevel(apiLevel : number | undefined) : void {
+    setApiLevel(apiLevel: number | undefined): void {
         this.apiLevel = apiLevel;
     }
 
@@ -79,7 +79,7 @@ export abstract class ZationRequest extends SendAble
      * or it can be a number that indicates the milliseconds.
      * @param timeout
      */
-    setTimeout(timeout : number | null | undefined): void {
+    setTimeout(timeout: number | null | undefined): void {
         this.timeout = timeout;
     }
 
@@ -88,7 +88,7 @@ export abstract class ZationRequest extends SendAble
      * @description
      * Returns the data of the request.
      */
-    getData() : any {
+    getData(): any {
         return this.data;
     }
 
@@ -98,7 +98,7 @@ export abstract class ZationRequest extends SendAble
      * Set a progress handler for the request.
      * @param pogressHandler
      */
-    setProgressHandler(pogressHandler : ProgressHandler) : void {
+    setProgressHandler(pogressHandler: ProgressHandler): void {
         this.progressHandler = pogressHandler;
     }
 
@@ -107,7 +107,7 @@ export abstract class ZationRequest extends SendAble
      * @description
      * Returns the progress handler of the request.
      */
-    getPogressHandler() : ProgressHandler | undefined {
+    getPogressHandler(): ProgressHandler | undefined {
         return this.progressHandler;
     }
 
@@ -136,7 +136,7 @@ export abstract class ZationRequest extends SendAble
      * @param value
      * @default undefined
      */
-    setWaitForConnection(value : WaitForConnectionOption) {
+    setWaitForConnection(value: WaitForConnectionOption) {
         this.waitForConnection = value;
     }
 
@@ -152,9 +152,9 @@ export abstract class ZationRequest extends SendAble
         return this.compiledData;
     }
 
-    private async compileValueData(data : any) : Promise<any>
+    private async compileValueData(data: any): Promise<any>
     {
-        let promises : Promise<void>[] = [];
+        let promises: Promise<void>[] = [];
         if(data instanceof RequestAble) {
             promises.push(new Promise<void>(async (resolve,reject) =>
             {
@@ -183,9 +183,9 @@ export abstract class ZationRequest extends SendAble
         return data;
     }
 
-    private async compileArrayData(data : any[]) : Promise<any[]>
+    private async compileArrayData(data: any[]): Promise<any[]>
     {
-        let promises : Promise<void>[] = [];
+        let promises: Promise<void>[] = [];
         for(let i = 0; i < data.length; i++)
         {
             promises.push(new Promise<void>(async (resolve) =>
@@ -198,9 +198,9 @@ export abstract class ZationRequest extends SendAble
         return data;
     }
 
-    private async compileObjectData(data : object) : Promise<object>
+    private async compileObjectData(data: object): Promise<object>
     {
-        let promises : Promise<void>[] = [];
+        let promises: Promise<void>[] = [];
         for(let key in data)
         {
             if(data.hasOwnProperty(key)) {

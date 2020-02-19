@@ -10,9 +10,9 @@ const windowDefined = typeof window === 'object';
 
 export class ZationConfig
 {
-    private _config : ZationOptionsInternal;
+    private _config: ZationOptionsInternal;
 
-    constructor(config ?: ZationOptions)
+    constructor(config?: ZationOptions)
     {
         this.loadDefaults(config);
         this.loadSettingsFromClientPrepare();
@@ -22,14 +22,14 @@ export class ZationConfig
         ZationConfig._preBuildConfig(this._config);
     }
 
-    static _preBuildConfig(config : ZationOptionsInternal) {
+    static _preBuildConfig(config: ZationOptionsInternal) {
         //path slash
         if(!config.path.startsWith('/')) {
             config.path = ('/'+config.path);
         }
     }
 
-    addToConfig(obj : object,override : boolean = false)
+    addToConfig(obj: object,override: boolean = false)
     {
         for(let k in obj) {
             if (obj.hasOwnProperty(k) && override || (!override && !this._config.hasOwnProperty(k))) {
@@ -40,43 +40,43 @@ export class ZationConfig
 
     private static getDefaultPort(customOptions,defaultSecure) {
         const isSecure = customOptions && typeof customOptions.secure === 'boolean' ?
-            customOptions.secure : defaultSecure;
+            customOptions.secure: defaultSecure;
 
         return (windowDefined && window.location && window.location.port) ?
-            parseInt(window.location.port) : isSecure ? 443 : 80;
+            parseInt(window.location.port): isSecure ? 443: 80;
     }
 
     private static getDefaultSecure() {
         return windowDefined && window.location && window.location.protocol ?
-            (window.location.protocol === 'https:') : false;
+            (window.location.protocol === 'https:'): false;
     }
 
-    loadDefaults(customOptions ?: ZationOptions)
+    loadDefaults(customOptions?: ZationOptions)
     {
         const defaultSecure = ZationConfig.getDefaultSecure();
         const defaultPort = ZationConfig.getDefaultPort(customOptions,defaultSecure);
         this._config = {
-            debug : false,
-            system : 'Default',
-            version : 1.0,
-            hostname : windowDefined && window.location && window.location.hostname || 'localhost',
-            path : '/zation',
-            port : defaultPort,
-            secure : defaultSecure,
-            rejectUnauthorized : false,
-            postKey : 'zation',
-            multiplex : true,
-            autoAllChSub : true,
-            autoUserChSub : true,
-            autoDefaultUserGroupChSub : true,
-            autoAuthUserGroupChSub : true,
-            handshakeVariables : {},
-            useAllServerSettings : false,
-            autoReconnect : true,
-            autoReconnectOptions : {},
-            requestTimeout : 10000,
-            waitForConnection : false,
-            waitForDbConnection : false
+            debug: false,
+            system: 'Default',
+            version: 1.0,
+            hostname: windowDefined && window.location && window.location.hostname || 'localhost',
+            path: '/zation',
+            port: defaultPort,
+            secure: defaultSecure,
+            rejectUnauthorized: false,
+            postKey: 'zation',
+            multiplex: true,
+            autoAllChSub: true,
+            autoUserChSub: true,
+            autoDefaultUserGroupChSub: true,
+            autoAuthUserGroupChSub: true,
+            handshakeVariables: {},
+            useAllServerSettings: false,
+            autoReconnect: true,
+            autoReconnectOptions: {},
+            requestTimeout: 10000,
+            waitForConnection: false,
+            waitForDbConnection: false
         };
     }
 
@@ -112,17 +112,17 @@ export class ZationConfig
         return this._config;
     }
 
-    isDebug() : boolean
+    isDebug(): boolean
     {
         return this.config.debug;
     }
 
-    setConfig(key : any,value : any) : void
+    setConfig(key: any,value: any): void
     {
         this._config[key] = value;
     }
 
-    isConfig(key : any) : boolean
+    isConfig(key: any): boolean
     {
         return this._config[key] !== undefined;
     }

@@ -54,7 +54,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onConnect(reaction : EventReactionOnConnect) : EventReactionBox {
+    onConnect(reaction: EventReactionOnConnect): EventReactionBox {
         this.map.add(Events.Connect,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -73,7 +73,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onceConnect(reaction : EventReactionOnConnect) : EventReactionBox {
+    onceConnect(reaction: EventReactionOnConnect): EventReactionBox {
         this.onceMap.add(Events.Connect,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -86,7 +86,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offConnect(reaction ?: EventReaction) : void {
+    offConnect(reaction?: EventReaction): void {
         this.map.remove(Events.Connect,reaction);
         this.onceMap.remove(Events.Connect,reaction)
     }
@@ -103,7 +103,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onFirstConnect(reaction : EventReactionOnFirstConnect) : EventReactionBox {
+    onFirstConnect(reaction: EventReactionOnFirstConnect): EventReactionBox {
         this.map.add(Events.FirstConnect,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -123,7 +123,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onceFirstConnect(reaction : EventReactionOnFirstConnect) : EventReactionBox {
+    onceFirstConnect(reaction: EventReactionOnFirstConnect): EventReactionBox {
         this.onceMap.add(Events.FirstConnect,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -136,7 +136,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offFirstConnect(reaction ?: EventReaction) : void {
+    offFirstConnect(reaction?: EventReaction): void {
         this.map.remove(Events.FirstConnect,reaction);
         this.onceMap.remove(Events.FirstConnect,reaction);
     }
@@ -153,7 +153,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onReconnect(reaction : EventReactionOnReconnect) : EventReactionBox {
+    onReconnect(reaction: EventReactionOnReconnect): EventReactionBox {
         this.map.add(Events.Reconnect,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -173,7 +173,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onceReconnect(reaction : EventReactionOnReconnect) : EventReactionBox {
+    onceReconnect(reaction: EventReactionOnReconnect): EventReactionBox {
         this.onceMap.add(Events.Reconnect,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -186,7 +186,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offReconnect(reaction ?: EventReaction) : void {
+    offReconnect(reaction?: EventReaction): void {
         this.map.remove(Events.Reconnect,reaction);
         this.onceMap.remove(Events.Reconnect,reaction);
     }
@@ -203,7 +203,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onClinetDisconnect(reaction : EventReactionOnClientDisconnect) : EventReactionBox {
+    onClinetDisconnect(reaction: EventReactionOnClientDisconnect): EventReactionBox {
         this.map.add(Events.ClientDisconnect,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -223,7 +223,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onceClinetDisconnect(reaction : EventReactionOnClientDisconnect) : EventReactionBox {
+    onceClinetDisconnect(reaction: EventReactionOnClientDisconnect): EventReactionBox {
         this.onceMap.add(Events.ClientDisconnect,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -236,7 +236,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offClientDisconnect(reaction ?: EventReaction) : void {
+    offClientDisconnect(reaction?: EventReaction): void {
         this.map.remove(Events.ClientDisconnect,reaction);
         this.onceMap.remove(Events.ClientDisconnect,reaction);
     }
@@ -254,7 +254,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onServerDisconnect(reaction : EventReactionOnServerDisconnect) : EventReactionBox {
+    onServerDisconnect(reaction: EventReactionOnServerDisconnect): EventReactionBox {
         this.map.add(Events.ServerDisconnect,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -275,7 +275,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onceServerDisconnect(reaction : EventReactionOnServerDisconnect) : EventReactionBox {
+    onceServerDisconnect(reaction: EventReactionOnServerDisconnect): EventReactionBox {
         this.onceMap.add(Events.ServerDisconnect,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -288,7 +288,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offServerDisconnect(reaction ?: EventReaction) : void {
+    offServerDisconnect(reaction?: EventReaction): void {
         this.map.remove(Events.ServerDisconnect,reaction);
         this.onceMap.remove(Events.ServerDisconnect,reaction);
     }
@@ -306,7 +306,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onDisconnect(reaction : EventReactionOnDisconnect) : EventReactionBox {
+    onDisconnect(reaction: EventReactionOnDisconnect): EventReactionBox {
         this.map.add(Events.Disconnect,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -327,7 +327,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onceDisconnect(reaction : EventReactionOnDisconnect) : EventReactionBox {
+    onceDisconnect(reaction: EventReactionOnDisconnect): EventReactionBox {
         this.onceMap.add(Events.Disconnect,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -340,7 +340,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offDisconnect(reaction ?: EventReaction) : void {
+    offDisconnect(reaction?: EventReaction): void {
         this.map.remove(Events.Disconnect,reaction);
         this.onceMap.remove(Events.Disconnect,reaction);
     }
@@ -358,7 +358,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onAuthenticate(reaction : EventReactionOnAuthenticate) : EventReactionBox {
+    onAuthenticate(reaction: EventReactionOnAuthenticate): EventReactionBox {
         this.map.add(Events.Authenticate,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -379,7 +379,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onceAuthenticate(reaction : EventReactionOnAuthenticate) : EventReactionBox {
+    onceAuthenticate(reaction: EventReactionOnAuthenticate): EventReactionBox {
         this.onceMap.add(Events.Authenticate,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -392,7 +392,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offAuthenticate(reaction ?: EventReaction) : void {
+    offAuthenticate(reaction?: EventReaction): void {
         this.map.remove(Events.Authenticate,reaction);
         this.onceMap.remove(Events.Authenticate,reaction);
     }
@@ -409,7 +409,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onClientDeauthenticate(reaction : EventReactionOnClinetDeauthenticate) : EventReactionBox {
+    onClientDeauthenticate(reaction: EventReactionOnClinetDeauthenticate): EventReactionBox {
         this.map.add(Events.ClientDeauthenticate,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -429,7 +429,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onceClientDeauthenticate(reaction : EventReactionOnClinetDeauthenticate) : EventReactionBox {
+    onceClientDeauthenticate(reaction: EventReactionOnClinetDeauthenticate): EventReactionBox {
         this.onceMap.add(Events.ClientDeauthenticate,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -442,7 +442,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offClientDeauthenticate(reaction ?: EventReaction) : void {
+    offClientDeauthenticate(reaction?: EventReaction): void {
         this.map.remove(Events.ClientDeauthenticate,reaction);
         this.onceMap.remove(Events.ClientDeauthenticate,reaction);
     }
@@ -460,7 +460,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onServerDeauthenticate(reaction : EventReactionOnServerDeauthenticate) : EventReactionBox {
+    onServerDeauthenticate(reaction: EventReactionOnServerDeauthenticate): EventReactionBox {
         this.map.add(Events.ServerDeauthenticate,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -481,7 +481,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onceServerDeauthenticate(reaction : EventReactionOnServerDeauthenticate) : EventReactionBox {
+    onceServerDeauthenticate(reaction: EventReactionOnServerDeauthenticate): EventReactionBox {
         this.onceMap.add(Events.ServerDeauthenticate,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -494,7 +494,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offServerDeauthenticate(reaction ?: EventReaction) : void {
+    offServerDeauthenticate(reaction?: EventReaction): void {
         this.map.remove(Events.ServerDeauthenticate,reaction);
         this.onceMap.remove(Events.ServerDeauthenticate,reaction);
     }
@@ -512,7 +512,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onDeauthenticate(reaction : EventReactionOnDeauthenticate) : EventReactionBox {
+    onDeauthenticate(reaction: EventReactionOnDeauthenticate): EventReactionBox {
         this.map.add(Events.Deauthenticate,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -533,7 +533,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onceDeauthenticate(reaction : EventReactionOnDeauthenticate) : EventReactionBox {
+    onceDeauthenticate(reaction: EventReactionOnDeauthenticate): EventReactionBox {
         this.onceMap.add(Events.Deauthenticate,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -546,7 +546,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offDeauthenticate(reaction ?: EventReaction) : void {
+    offDeauthenticate(reaction?: EventReaction): void {
         this.map.remove(Events.Deauthenticate,reaction);
         this.onceMap.remove(Events.Deauthenticate,reaction);
     }
@@ -565,7 +565,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onConnectAbort(reaction : EventReactionOnConnectAbort) : EventReactionBox {
+    onConnectAbort(reaction: EventReactionOnConnectAbort): EventReactionBox {
         this.map.add(Events.ConnectAbort,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -587,7 +587,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onceConnectAbort(reaction : EventReactionOnConnectAbort) : EventReactionBox {
+    onceConnectAbort(reaction: EventReactionOnConnectAbort): EventReactionBox {
         this.onceMap.add(Events.ConnectAbort,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -600,7 +600,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offConnectAbort(reaction ?: EventReaction) : void {
+    offConnectAbort(reaction?: EventReaction): void {
         this.map.remove(Events.ConnectAbort,reaction);
         this.onceMap.remove(Events.ConnectAbort,reaction);
     }
@@ -618,7 +618,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onConnecting(reaction : EventReactionOnConnecting) : EventReactionBox {
+    onConnecting(reaction: EventReactionOnConnecting): EventReactionBox {
         this.map.add(Events.Connecting,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -639,7 +639,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onceConnecting(reaction : EventReactionOnConnecting) : EventReactionBox {
+    onceConnecting(reaction: EventReactionOnConnecting): EventReactionBox {
         this.onceMap.add(Events.Connecting,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -652,7 +652,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offConnecting(reaction ?: EventReaction) : void {
+    offConnecting(reaction?: EventReaction): void {
         this.map.remove(Events.Connecting,reaction);
         this.onceMap.remove(Events.Connecting,reaction);
     }
@@ -669,7 +669,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onError(reaction : EventReactionOnError) : EventReactionBox {
+    onError(reaction: EventReactionOnError): EventReactionBox {
         this.map.add(Events.Error,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -689,7 +689,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onceError(reaction : EventReactionOnError) : EventReactionBox {
+    onceError(reaction: EventReactionOnError): EventReactionBox {
         this.onceMap.add(Events.Error,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -702,7 +702,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offError(reaction ?: EventReaction) : void {
+    offError(reaction?: EventReaction): void {
         this.map.remove(Events.Error,reaction);
         this.onceMap.remove(Events.Error,reaction);
     }
@@ -719,7 +719,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onClose(reaction : EventReactionOnClose) : EventReactionBox {
+    onClose(reaction: EventReactionOnClose): EventReactionBox {
         this.map.add(Events.Close,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -739,7 +739,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onceClose(reaction : EventReactionOnClose) : EventReactionBox {
+    onceClose(reaction: EventReactionOnClose): EventReactionBox {
         this.onceMap.add(Events.Close,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -752,17 +752,17 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * @param reaction
      * If it is not given away all will be removed.
      */
-    offClose(reaction ?: EventReaction) : void {
+    offClose(reaction?: EventReaction): void {
         this.map.remove(Events.Close,reaction);
         this.onceMap.remove(Events.Close,reaction);
     }
 
-    private async _triggerDataEventBox(mapKey : number, ...data : any[])
+    private async _triggerDataEventBox(mapKey: number, ...data: any[])
     {
-        let promises : Promise<void>[] = [];
+        let promises: Promise<void>[] = [];
         const box = this.map.tryGet(mapKey);
         if(box) {
-            promises.push(box.forEachAll(async (reaction : Function) => {
+            promises.push(box.forEachAll(async (reaction: Function) => {
                 await reaction(...data);
             }));
         }
@@ -785,7 +785,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * Used internally.
      * Only use this method carefully.
      */
-    async _trigger(event : Events,...arg : any[])
+    async _trigger(event: Events,...arg: any[])
     {
         if(this.active)
         {

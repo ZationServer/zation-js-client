@@ -6,11 +6,11 @@ Copyright(c) Luca Scaringella
 
 export class FullReaction<T extends Function>
 {
-    private readonly reactionHandler : T;
-    private readonly filter : object;
-    private readonly once : boolean;
+    private readonly reactionHandler: T;
+    private readonly filter: object;
+    private readonly once: boolean;
 
-    constructor(reactionHandler : T,filter ?: object,once : boolean = false)
+    constructor(reactionHandler: T,filter?: object,once: boolean = false)
     {
         this.once = once;
         this.reactionHandler = reactionHandler;
@@ -27,7 +27,7 @@ export class FullReaction<T extends Function>
      * @description
      * Returns if it is a once reaction.
      */
-    isOnce() : boolean {
+    isOnce(): boolean {
         return this.once;
     }
 
@@ -35,7 +35,7 @@ export class FullReaction<T extends Function>
      * @description
      * Returns the reaction handler.
      */
-    getReactionHandler() : T {
+    getReactionHandler(): T {
         return this.reactionHandler;
     }
 
@@ -43,7 +43,7 @@ export class FullReaction<T extends Function>
      * @description
      * Returns the filter.
      */
-    getFilter() : any {
+    getFilter(): any {
         return this.filter;
     }
 

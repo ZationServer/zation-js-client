@@ -18,11 +18,11 @@ import ConnectionUtils, {WaitForConnectionOption} from "../utils/connectionUtils
 export class SendEngine
 {
     static wsSend(
-        zation : Zation,data : object,
-        timeout : null | number | undefined,
-        progressHandler ?: ProgressHandler,
-        waitForConnection : WaitForConnectionOption = undefined
-    ) : Promise<Response>
+        zation: Zation,data: object,
+        timeout: null | number | undefined,
+        progressHandler?: ProgressHandler,
+        waitForConnection: WaitForConnectionOption = undefined
+    ): Promise<Response>
     {
         return new Promise(async (resolve, reject)=>
         {
@@ -37,7 +37,7 @@ export class SendEngine
             }
 
             if(timeout !== null){
-                timeout = timeout === undefined ? zation.getZc().config.requestTimeout : timeout;
+                timeout = timeout === undefined ? zation.getZc().config.requestTimeout: timeout;
             }
 
             zation.getSocket().emit('>',data,async (err,res) =>
@@ -62,16 +62,16 @@ export class SendEngine
     }
 
     static async httpSend(
-        zation : Zation,
-        data : object,
-        timeout : null | number | undefined,
-        attachedContent ?: {key : string,data : Blob | string}[],
-        progressHandler ?: ProgressHandler
-    ) : Promise<Response>
+        zation: Zation,
+        data: object,
+        timeout: null | number | undefined,
+        attachedContent?: {key: string,data: Blob | string}[],
+        progressHandler?: ProgressHandler
+    ): Promise<Response>
     {
         return new Promise<Response>(async (resolve,reject) =>
         {
-            const config : AxiosRequestConfig = {};
+            const config: AxiosRequestConfig = {};
 
             if (!!progressHandler) {
                 config.onUploadProgress = progressEvent => {
@@ -80,7 +80,7 @@ export class SendEngine
             }
 
             if(timeout !== null){
-               config.timeout = timeout === undefined ? zation.getZc().config.requestTimeout : timeout;
+               config.timeout = timeout === undefined ? zation.getZc().config.requestTimeout: timeout;
             }
 
             const bodyFormData = new FormData();

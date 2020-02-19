@@ -71,16 +71,16 @@ import {AbortSignal, AbortTrigger}     from "./lib/main/utils/connectionUtils";
  * @param options
  * @param reactionBox
  */
-const create = (options ?: Options,...reactionBox : (ResponseReactionBox | ChannelReactionBox | EventReactionBox)[]) : Zation =>
+const create = (options?: Options,...reactionBox: (ResponseReactionBox | ChannelReactionBox | EventReactionBox)[]): Zation =>
 {
     return new ZationClient(options,...reactionBox);
 };
 
-const save = (client : ZationClient, key : string = 'default') => {
+const save = (client: ZationClient, key: string = 'default') => {
     ZationSaver.save(client,key);
 };
 
-const load = (key : string = 'default') : ZationClient => {
+const load = (key: string = 'default'): ZationClient => {
     return ZationSaver.load(key);
 };
 

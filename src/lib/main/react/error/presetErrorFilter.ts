@@ -10,17 +10,17 @@ import {PresetErrorLib}             from "./presetErrorLib";
 
 export class PresetErrorFilter<T extends AbstractErrorFilterBuilder<T>> extends PresetErrorLib<T>
 {
-    private readonly errorFilterBuilder : T;
-    private readonly pushPreset : boolean;
+    private readonly errorFilterBuilder: T;
+    private readonly pushPreset: boolean;
 
-    constructor(errorFilterBuilder : T,pushPreset : boolean)
+    constructor(errorFilterBuilder: T,pushPreset: boolean)
     {
         super();
         this.pushPreset = pushPreset;
         this.errorFilterBuilder = errorFilterBuilder;
     }
 
-    protected _presetAdd(filter : ErrorFilter) : void
+    protected _presetAdd(filter: ErrorFilter): void
     {
         if(this.pushPreset) {
             this.errorFilterBuilder.addErrorFilter(filter);

@@ -7,21 +7,21 @@ Copyright(c) Luca Scaringella
 import {ModifyLevel} from "./dbsComponent";
 
 export interface ModifyToken {
-    level : ModifyLevel,
-    potential ?: boolean,
-    actionUsed ?: boolean,
-    potentialUsed ?: boolean,
-    checkDataChange ?: boolean
+    level: ModifyLevel,
+    potential?: boolean,
+    actionUsed?: boolean,
+    potentialUsed?: boolean,
+    checkDataChange?: boolean
 }
 
-export const createUpdateInsertModifyToken : (checkDataChange : boolean) => ModifyToken =
+export const createUpdateInsertModifyToken: (checkDataChange: boolean) => ModifyToken =
     (checkDataChange) => {
     let level = ModifyLevel.NOTHING;
 
     return {
-        potential : false,
-        actionUsed : false,
-        potentialUsed : false,
+        potential: false,
+        actionUsed: false,
+        potentialUsed: false,
         checkDataChange,
         set level(value) {
             if(value > 0){
@@ -40,7 +40,7 @@ export const createUpdateInsertModifyToken : (checkDataChange : boolean) => Modi
     }
 };
 
-export const createDeleteModifyToken : () => ModifyToken =
+export const createDeleteModifyToken: () => ModifyToken =
     () => {
         let level = ModifyLevel.NOTHING;
 
@@ -54,16 +54,16 @@ export const createDeleteModifyToken : () => ModifyToken =
         }
     };
 
-export const createSimpleModifyToken : () => ModifyToken =
+export const createSimpleModifyToken: () => ModifyToken =
     () => {
         return {
-            checkDataChange : false,
+            checkDataChange: false,
             set level(value) {},
         }
 };
 
-export const getModifyTokenReaons = (mt : ModifyToken,reason : number,potentialReason : number) => {
-    let tmp : number[] = [];
+export const getModifyTokenReaons = (mt: ModifyToken,reason: number,potentialReason: number) => {
+    let tmp: number[] = [];
     if(mt.actionUsed) tmp.push(reason);
     if(mt.potentialUsed) tmp.push(potentialReason);
     return tmp;

@@ -15,18 +15,18 @@ import {
 } from "./dbDefinitions";
 import DbUtils from "./dbUtils";
 
-type CommitFunction = (operations : LocalCudOperation[]) => void;
+type CommitFunction = (operations: LocalCudOperation[]) => void;
 
 /**
  * Saves all commands for execute later.
  */
 export default class DbLocalCudOperationSequence
 {
-    private operations : LocalCudOperation[] = [];
+    private operations: LocalCudOperation[] = [];
     private readonly timestamp?: number;
-    private readonly commitFunction : CommitFunction;
+    private readonly commitFunction: CommitFunction;
 
-    constructor(timestamp : number | undefined, commitFunc : CommitFunction) {
+    constructor(timestamp: number | undefined, commitFunc: CommitFunction) {
         this.timestamp = timestamp;
         this.commitFunction = commitFunc;
     }
@@ -64,7 +64,7 @@ export default class DbLocalCudOperationSequence
      * @param value
      * @param options
      */
-    insert(selector : DbSelector, value : any, {if : ifOption,potentialUpdate,code,data} : IfOption & PotentialUpdateOption & InfoOption = {}) : DbLocalCudOperationSequence {
+    insert(selector: DbSelector, value: any, {if: ifOption,potentialUpdate,code,data}: IfOption & PotentialUpdateOption & InfoOption = {}): DbLocalCudOperationSequence {
         this.operations.push({
             type: CudType.insert,
             selector: DbUtils.processSelector(selector),
@@ -110,7 +110,7 @@ export default class DbLocalCudOperationSequence
      * @param value
      * @param options
      */
-    update(selector : DbSelector, value : any, {if : ifOption,potentialInsert,code,data} : IfOption & PotentialInsertOption & InfoOption = {}) : DbLocalCudOperationSequence {
+    update(selector: DbSelector, value: any, {if: ifOption,potentialInsert,code,data}: IfOption & PotentialInsertOption & InfoOption = {}): DbLocalCudOperationSequence {
         this.operations.push({
             type: CudType.update,
             selector: DbUtils.processSelector(selector),
@@ -155,7 +155,7 @@ export default class DbLocalCudOperationSequence
      * split by dots to create a string array.
      * @param options
      */
-    delete(selector : DbSelector, {if : ifOption,code,data} : IfOption & InfoOption = {}) : DbLocalCudOperationSequence {
+    delete(selector: DbSelector, {if: ifOption,code,data}: IfOption & InfoOption = {}): DbLocalCudOperationSequence {
         this.operations.push({
             type: CudType.delete,
             selector: DbUtils.processSelector(selector),

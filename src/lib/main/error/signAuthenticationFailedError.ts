@@ -8,7 +8,7 @@ import {RawError} from "./rawError";
 
 export class SignAuthenticationFailedError extends RawError
 {
-    constructor(rawError : Error) {
+    constructor(rawError: Error) {
         super(`Sign authentication is failed. ${rawError.toString()}`,rawError);
     }
 }

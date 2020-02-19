@@ -8,9 +8,9 @@ import {BackErrorInfo, ResponseBackError} from "../constants/internal";
 
 export class BackError
 {
-    private readonly data : ResponseBackError;
+    private readonly data: ResponseBackError;
 
-    constructor(data : ResponseBackError) {
+    constructor(data: ResponseBackError) {
         this.data = data
     }
 
@@ -19,7 +19,7 @@ export class BackError
      * @description
      * Returns the name of the BackError.
      */
-    getName() : string {
+    getName(): string {
         return this.data.n;
     }
 
@@ -28,7 +28,7 @@ export class BackError
      * @description
      * Returns the group of the BackError.
      */
-    getGroup() : string | undefined {
+    getGroup(): string | undefined {
         return this.data.g;
     }
 
@@ -37,7 +37,7 @@ export class BackError
      * @description
      * Returns if the BackError has a group.
      */
-    hasGroup() : boolean {
+    hasGroup(): boolean {
         return this.data.g !== undefined;
     }
 
@@ -46,7 +46,7 @@ export class BackError
      * @description
      * Returns the type of the BackError.
      */
-    getType() : string {
+    getType(): string {
         return this.data.t
     }
 
@@ -56,7 +56,7 @@ export class BackError
      * Returns the description of the BackError.
      * Is undefined if it was not sended.
      */
-    getDescription() : string | undefined {
+    getDescription(): string | undefined {
         return this.data.d;
     }
 
@@ -66,7 +66,7 @@ export class BackError
      * Returns if the BackError is from zation system.
      * Is undefined if it was not sended.
      */
-    isFromZationSystem() : boolean | undefined {
+    isFromZationSystem(): boolean | undefined {
         return this.data.zs;
     }
 
@@ -76,9 +76,9 @@ export class BackError
      * Returns the info of the BackError.
      * If the info is not an object, it will return an empty object.
      */
-    getInfo() : object {
+    getInfo(): object {
         return typeof this.data.i === 'object' ?
-            this.data.i : {};
+            this.data.i: {};
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -86,7 +86,7 @@ export class BackError
      * @description
      * Returns if the BackError has an info object.
      */
-    hasInfo() : boolean {
+    hasInfo(): boolean {
         return typeof this.data.i === 'object';
     }
 
@@ -95,7 +95,7 @@ export class BackError
      * @description
      * Returns the main info of the BackError.
      */
-    getMainInfo() : string | undefined {
+    getMainInfo(): string | undefined {
         return this.getInfo()[BackErrorInfo.MAIN];
     }
 
@@ -104,7 +104,7 @@ export class BackError
      * @description
      * Returns if the BackError has main info.
      */
-    hasMainInfo() : boolean {
+    hasMainInfo(): boolean {
         return this.getInfo()[BackErrorInfo.MAIN] !== undefined;
     }
 
@@ -114,12 +114,12 @@ export class BackError
      * Returns the info value form a key.
      * Is undefined if it was not sended.
      */
-    getInfoValue(key : string) : any | undefined {
+    getInfoValue(key: string): any | undefined {
         const info = this.getInfo();
-        return !!info ? info[key] : undefined;
+        return !!info ? info[key]: undefined;
     }
 
-    toString() : string
+    toString(): string
     {
         return `BackError -> \n` +
             `   Name: ${this.getName()}\n` +
@@ -127,7 +127,7 @@ export class BackError
             `   Type: ${this.getType()}\n` +
             `   FromZationSystem: ${this.isFromZationSystem() || 'UNKNOWN'}\n`+
             `   Description: ${this.getDescription() || 'UNKNOWN'}\n`+
-            `   Info: ${typeof this.getInfo() === 'object' ? JSON.stringify(this.getInfo()) : (this.getInfo() || 'UNKNOWN')}\n`;
+            `   Info: ${typeof this.getInfo() === 'object' ? JSON.stringify(this.getInfo()): (this.getInfo() || 'UNKNOWN')}\n`;
     }
 
 }

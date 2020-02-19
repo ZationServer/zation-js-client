@@ -12,7 +12,7 @@ export default class ObjectUtils {
      * @param addOb
      * @param overwrite
      */
-    static addObToOb(mainOb : object,addOb : object,overwrite : boolean = false) : void
+    static addObToOb(mainOb: object,addOb: object,overwrite: boolean = false): void
     {
         for(let key in addOb) {
             if(addOb.hasOwnProperty(key)) {

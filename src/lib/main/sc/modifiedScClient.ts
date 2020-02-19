@@ -29,7 +29,7 @@ SocketClusterClient.SCClientSocket.prototype.deauthenticate = function (callback
     });
 };
 
-SocketClusterClient.SCClientSocket.prototype._changeToUnauthenticatedStateAndClearTokens = function (fromClient : boolean = false) {
+SocketClusterClient.SCClientSocket.prototype._changeToUnauthenticatedStateAndClearTokens = function (fromClient: boolean = false) {
     if (this.authState !== this.UNAUTHENTICATED) {
         const oldState = this.authState;
         const oldSignedToken = this.signedAuthToken;
@@ -58,7 +58,7 @@ SocketClusterClient.SCClientSocket.prototype.unsubscribe = function (channelName
     }
 };
 
-SocketClusterClient.SCClientSocket.prototype._triggerChannelUnsubscribe = function (channel, newState, fromClient : boolean = false) {
+SocketClusterClient.SCClientSocket.prototype._triggerChannelUnsubscribe = function (channel, newState, fromClient: boolean = false) {
     const channelName = channel.name;
     const oldState = channel.state;
 

@@ -43,27 +43,27 @@ import DataboxBuilder                from "../main/databox/databoxBuilder";
 
 export class Zation
 {
-    private readonly authEngine : AuthEngine;
-    private readonly channelEngine : ChannelEngine;
-    private readonly zc : ZationConfig;
+    private readonly authEngine: AuthEngine;
+    private readonly channelEngine: ChannelEngine;
+    private readonly zc: ZationConfig;
 
     //Responds
-    private readonly responseReactionMainBox : Box<ResponseReactionBox>;
-    private readonly channelReactionMainBox : Box<ChannelReactionBox>;
-    private readonly eventReactionMainBox : Box<EventReactionBox>;
+    private readonly responseReactionMainBox: Box<ResponseReactionBox>;
+    private readonly channelReactionMainBox: Box<ChannelReactionBox>;
+    private readonly eventReactionMainBox: Box<EventReactionBox>;
 
     //User system reaction boxes
-    private readonly userResponseReactionBox : ResponseReactionBox;
-    private readonly userChannelReactionBox : ChannelReactionBox;
-    private readonly userEventReactionBox : EventReactionBox;
+    private readonly userResponseReactionBox: ResponseReactionBox;
+    private readonly userChannelReactionBox: ChannelReactionBox;
+    private readonly userEventReactionBox: EventReactionBox;
 
     //webSockets
-    private socket : Socket;
+    private socket: Socket;
 
     /**
      * Indicates if the current connection is the first connection of the socket.
      */
-    private firstConnection : boolean = true;
+    private firstConnection: boolean = true;
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -72,7 +72,7 @@ export class Zation
      * @param settings
      * @param reactionBox
      */
-    constructor(settings ?: ZationOptions,...reactionBox : (ResponseReactionBox | ChannelReactionBox | EventReactionBox)[])
+    constructor(settings?: ZationOptions,...reactionBox: (ResponseReactionBox | ChannelReactionBox | EventReactionBox)[])
     {
         //config
         this.zc = new ZationConfig(settings);
@@ -109,7 +109,7 @@ export class Zation
      * @description
      * Removes all reaction boxes that you added.
      */
-    removeAllReactionBoxes() : void
+    removeAllReactionBoxes(): void
     {
         this.responseReactionMainBox.removeAllItems();
         this.channelReactionMainBox.removeAllItems();
@@ -127,7 +127,7 @@ export class Zation
      * addReactionBox(myResponseReactionBox,myChannelReactionBox,myEventReactionBox);
      * @param reactionBox
      */
-    addReactionBox(...reactionBox : (ResponseReactionBox | ChannelReactionBox | EventReactionBox)[]) : void
+    addReactionBox(...reactionBox: (ResponseReactionBox | ChannelReactionBox | EventReactionBox)[]): void
     {
         for(let i = 0; i < reactionBox.length; i++) {
             const box = reactionBox[i];
@@ -152,7 +152,7 @@ export class Zation
      * removeReactionBox(myResponseReactionBox,myChannelReactionBox,myEventReactionBox);
      * @param reactionBox
      */
-    removeReactionBox(...reactionBox : (ResponseReactionBox | ChannelReactionBox | EventReactionBox)[]): void
+    removeReactionBox(...reactionBox: (ResponseReactionBox | ChannelReactionBox | EventReactionBox)[]): void
     {
         for(let i = 0; i < reactionBox.length; i++) {
             const box = reactionBox[i];
@@ -184,7 +184,7 @@ export class Zation
      * @description
      * Returns the system fixed user channel reaction box.
      */
-    channelReact() : ChannelReactionBox {
+    channelReact(): ChannelReactionBox {
         return this.userChannelReactionBox;
     }
 
@@ -194,7 +194,7 @@ export class Zation
      * Returns the system fixed user response reaction box.
      * Can be used to catch the remaining errors.
      */
-    responseReact() : ResponseReactionBox {
+    responseReact(): ResponseReactionBox {
         return this.userResponseReactionBox;
     }
 
@@ -203,7 +203,7 @@ export class Zation
      * @description
      * Returns the system fixed user event reaction box.
      */
-    eventReact() : EventReactionBox {
+    eventReact(): EventReactionBox {
         return this.userEventReactionBox;
     }
 
@@ -215,7 +215,7 @@ export class Zation
      * Returns a new channel reaction box
      * and add this box to the client.
      */
-    newChannelReactionBox(addReactionBoxToClient : boolean = true) : ChannelReactionBox {
+    newChannelReactionBox(addReactionBoxToClient: boolean = true): ChannelReactionBox {
         const box = new ChannelReactionBox();
         if(addReactionBoxToClient){this.addReactionBox(box);}
         return box;
@@ -227,7 +227,7 @@ export class Zation
      * Returns a new response reaction box
      * and add this box to the client.
      */
-    newResponseReactionBox(addReactionBoxToClient : boolean = true) : ResponseReactionBox {
+    newResponseReactionBox(addReactionBoxToClient: boolean = true): ResponseReactionBox {
         const box = new ResponseReactionBox();
         if(addReactionBoxToClient){this.addReactionBox(box);}
         return box;
@@ -239,7 +239,7 @@ export class Zation
      * Returns a new event reaction box
      * and add this box to the client.
      */
-    newEventReactionBox(addReactionBoxToClient : boolean = true) : EventReactionBox {
+    newEventReactionBox(addReactionBoxToClient: boolean = true): EventReactionBox {
         const box = new EventReactionBox();
         if(addReactionBoxToClient){this.addReactionBox(box);}
         return box;
@@ -270,7 +270,7 @@ export class Zation
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      * This options is only used in the WebSocket protocol.
      */
-    async ping(waitForConnection : WaitForConnectionOption = undefined) : Promise<number>
+    async ping(waitForConnection: WaitForConnectionOption = undefined): Promise<number>
     {
         const req = new WsRequest(SystemController.PING,{},true);
         req.setWaitForConnection(waitForConnection);
@@ -287,7 +287,7 @@ export class Zation
      * Don't use this method,
      * it is used internal and returns the auth engine.
      */
-    _getAuthEngine() : AuthEngine {
+    _getAuthEngine(): AuthEngine {
         return this.authEngine;
     }
 
@@ -305,9 +305,9 @@ export class Zation
      * then trigger the zation response reaction boxes (using zationReact()).
      * @example
      * try{
-     *  await client.authenticate({userName : 'Tim', password : 'opqdjß2jdp1d'});
+     *  await client.authenticate({userName: 'Tim', password: 'opqdjß2jdp1d'});
      * }
-     * catch (e : AuthenticationFailedError) {
+     * catch (e: AuthenticationFailedError) {
      *   const response = e.getResponse();
      * }
      * @throws
@@ -331,7 +331,7 @@ export class Zation
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      * This options is only used in the WebSocket protocol.
      */
-    async authenticate(authData : object = {}, protocolType : ProtocolType = ProtocolType.WebSocket,waitForConnection : WaitForConnectionOption = undefined) : Promise<Response>
+    async authenticate(authData: object = {}, protocolType: ProtocolType = ProtocolType.WebSocket,waitForConnection: WaitForConnectionOption = undefined): Promise<Response>
     {
         const req = new AuthRequest(authData,protocolType);
         req.setWaitForConnection(waitForConnection);
@@ -370,7 +370,7 @@ export class Zation
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
-    async signAuthenticate(signToken : string,waitForConnection : WaitForConnectionOption = undefined) : Promise<void> {
+    async signAuthenticate(signToken: string,waitForConnection: WaitForConnectionOption = undefined): Promise<void> {
         await this.authEngine.signAuthenticate(signToken,waitForConnection);
     }
 
@@ -380,7 +380,7 @@ export class Zation
      * Deauthenticate the connection if it is authenticated.
      * @throws DeauthenticationFailedError
      */
-    async deauthenticate() : Promise<void> {
+    async deauthenticate(): Promise<void> {
         await this.authEngine.deauthenticate();
     }
 
@@ -394,11 +394,11 @@ export class Zation
      * Because then you have the opportunity to react with the response on specific things
      * then trigger the zation response reaction boxes (using response.react().zationReact()).
      * @example
-     * await conAndAuth({userName : 'Tim', password : 'opqdjß2jdp1d'});
+     * await conAndAuth({userName: 'Tim', password: 'opqdjß2jdp1d'});
      * @param authData The authentication credentials for the client.
      * @throws connectionAbortError
      */
-    async conAuth(authData : object) : Promise<Response>
+    async conAuth(authData: object): Promise<Response>
     {
         await this.connect();
         return await this.authenticate(authData);
@@ -413,7 +413,7 @@ export class Zation
      * @param code error code (disconnection)
      * @param data reason code for disconnection
      */
-    async deauthDis(code ?: number, data : object = {}) : Promise<void>
+    async deauthDis(code?: number, data: object = {}): Promise<void>
     {
         await this.deauthenticate();
         await this.disconnect(code,data);
@@ -434,7 +434,7 @@ export class Zation
      * @example
      * await zation.request()
      * .controller('sendMessage')
-     * .data({msg : 'hallo'})
+     * .data({msg: 'hallo'})
      * .buildCatchError()
      * .presets()
      * .inputNotMatchWithMinLength('msg')
@@ -445,7 +445,7 @@ export class Zation
      * @param controller
      * @param data
      */
-    request(controller : string = '',data : any = undefined) : RequestBuilder {
+    request(controller: string = '',data: any = undefined): RequestBuilder {
         const helper = new RequestBuilder(this);
         helper.controller(controller);
         helper.data(data);
@@ -464,7 +464,7 @@ export class Zation
      * AttachedHttpContent: []
      * @example
      * await zation.authRequest()
-     * .authData({userName : 'luca',password : '123'})
+     * .authData({userName: 'luca',password: '123'})
      * .buildOnError()
      * .nameIs('passwordIsWrong')
      * .react(() => {console.log('The password is wrong')})
@@ -474,7 +474,7 @@ export class Zation
      * @param authData
      * @param protocolType
      */
-    authRequest(authData : any = undefined, protocolType : ProtocolType = ProtocolType.WebSocket) : AuthRequestBuilder {
+    authRequest(authData: any = undefined, protocolType: ProtocolType = ProtocolType.WebSocket): AuthRequestBuilder {
         const helper = new AuthRequestBuilder(this);
         helper.protocol(protocolType);
         helper.authData(authData);
@@ -505,7 +505,7 @@ export class Zation
      * @param controller
      * @param checks
      */
-    validationRequest(controller : string = '',...checks : ValidationCheck[]) : ValidationRequestBuilder {
+    validationRequest(controller: string = '',...checks: ValidationCheck[]): ValidationRequestBuilder {
         const helper = new ValidationRequestBuilder(this);
         helper.controller(controller);
         helper.checks(...checks);
@@ -528,7 +528,7 @@ export class Zation
      * The id is only needed if you want to connect to a DataboxFamiliy.
      * The id represents the member id of the family.
      */
-    databox(name : string,id ?: string | number) : DataboxBuilder {
+    databox(name: string,id?: string | number): DataboxBuilder {
         return new DataboxBuilder(this,name,id);
     }
 
@@ -548,9 +548,9 @@ export class Zation
      * @param triggerZationBoxes
      * @param responseReactionBox
      */
-    async send(sendAble : SendAble, progressHandler ?: ProgressHandler,triggerZationBoxes : boolean = false,...responseReactionBox : ResponseReactionBox[]) : Promise<Response>
+    async send(sendAble: SendAble, progressHandler?: ProgressHandler,triggerZationBoxes: boolean = false,...responseReactionBox: ResponseReactionBox[]): Promise<Response>
     {
-        let ph : undefined | ProgressHandler = undefined;
+        let ph: undefined | ProgressHandler = undefined;
         if(!!progressHandler) {
             ph = progressHandler;
         }
@@ -560,12 +560,12 @@ export class Zation
 
         const jsonObj = await sendAble.getSendData(this);
 
-        let response : Response;
+        let response: Response;
         if(sendAble.getProtocol() === ProtocolType.WebSocket) {
             response = await SendEngine.wsSend(this,jsonObj,sendAble.getTimeout(),ph,sendAble.getWaitForConnection());
         }
         else {
-            let attachedHttpContent : undefined | {key : string, data : Blob | string}[] = undefined;
+            let attachedHttpContent: undefined | {key: string, data: Blob | string}[] = undefined;
 
             if(sendAble instanceof HttpRequest || sendAble instanceof AuthRequest) {
                 attachedHttpContent = sendAble.getAttachedHttpContent();
@@ -587,7 +587,7 @@ export class Zation
         return response;
     };
 
-    private async _respondsActions(response : Response)
+    private async _respondsActions(response: Response)
     {
         //response for update new token by http req
         if(response.hasNewToken())
@@ -619,7 +619,7 @@ export class Zation
      * @description
      * Returns the current socket.
      */
-    getSocket() : Socket {
+    getSocket(): Socket {
         return this.socket;
     }
 
@@ -628,7 +628,7 @@ export class Zation
      * @description
      * Returns if the socket is connected to the server.
      */
-    isConnected() : boolean {
+    isConnected(): boolean {
         return this.socket.state === this.socket.OPEN;
     }
 
@@ -642,7 +642,7 @@ export class Zation
      * the client will automatically try to establish a new connection when gets disconnected.
      * @throws ConnectionAbortError,TimeoutError
      */
-    async connect(timeout : number | null = null) : Promise<void>
+    async connect(timeout: number | null = null): Promise<void>
     {
         if(this.isConnected()) {
             return;
@@ -691,7 +691,7 @@ export class Zation
      * @param code error code (disconnection)
      * @param data reason code for disconnection
      */
-    disconnect(code ?: number, data : object = {}) : void {
+    disconnect(code?: number, data: object = {}): void {
         data['#internal-fromZationClient'] = true;
         this.socket.disconnect(code,data);
         this.firstConnection = true;
@@ -704,7 +704,7 @@ export class Zation
      * @param code error code (disconnection)
      * @param data reason code for disconnection
      */
-    async reconnect(code ?: number, data : object = {}) : Promise<void> {
+    async reconnect(code?: number, data: object = {}): Promise<void> {
        this.disconnect(code,data);
        await this.connect();
     }
@@ -737,7 +737,7 @@ export class Zation
 
         this.socket.on('disconnect',async (code,data) =>
         {
-            const fromClient : any = data ? data['#internal-fromZationClient'] : false;
+            const fromClient: any = data ? data['#internal-fromZationClient']: false;
             if(typeof fromClient === "boolean" && fromClient){
                 if(this.zc.isDebug()) {
                     Logger.printInfo(`Client is disconnected from client. Code:'${code}' Data:'${data}'`);
@@ -797,31 +797,31 @@ export class Zation
 
         //events for any channel
         this.socket.on('kickOut',async (msg,chName) => {
-            await this._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
-                await chReactionBox._triggerEvent(chReactionBox.mapKick,ChannelTarget.ANY,{chFullName : chName},msg);
+            await this._getChannelReactionMainBox().forEachAll(async (chReactionBox: ChannelReactionBox) => {
+                await chReactionBox._triggerEvent(chReactionBox.mapKick,ChannelTarget.ANY,{chFullName: chName},msg);
             });
         });
 
         this.socket.on('subscribeFail',async (err,chName) => {
-            await this._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
-                await chReactionBox._triggerEvent(chReactionBox.mapSubFail,ChannelTarget.ANY,{chFullName : chName},err);
+            await this._getChannelReactionMainBox().forEachAll(async (chReactionBox: ChannelReactionBox) => {
+                await chReactionBox._triggerEvent(chReactionBox.mapSubFail,ChannelTarget.ANY,{chFullName: chName},err);
             });
         });
 
         this.socket.on('subscribe',async (chName) => {
-            await this._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
-                await chReactionBox._triggerEvent(chReactionBox.mapSub,ChannelTarget.ANY,{chFullName : chName});
+            await this._getChannelReactionMainBox().forEachAll(async (chReactionBox: ChannelReactionBox) => {
+                await chReactionBox._triggerEvent(chReactionBox.mapSub,ChannelTarget.ANY,{chFullName: chName});
             });
         });
 
         this.socket.on('unsubscribe',async (chName,fromClient) => {
             if(fromClient){
-                await this._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
-                    await chReactionBox._triggerEvent(chReactionBox.mapClientUnsub,ChannelTarget.ANY,{chFullName : chName});
+                await this._getChannelReactionMainBox().forEachAll(async (chReactionBox: ChannelReactionBox) => {
+                    await chReactionBox._triggerEvent(chReactionBox.mapClientUnsub,ChannelTarget.ANY,{chFullName: chName});
                 });
             }
-            await this._getChannelReactionMainBox().forEachAll(async (chReactionBox : ChannelReactionBox) => {
-                await chReactionBox._triggerEvent(chReactionBox.mapUnsub,ChannelTarget.ANY,{chFullName : chName},fromClient);
+            await this._getChannelReactionMainBox().forEachAll(async (chReactionBox: ChannelReactionBox) => {
+                await chReactionBox._triggerEvent(chReactionBox.mapUnsub,ChannelTarget.ANY,{chFullName: chName},fromClient);
             });
         });
     }
@@ -833,18 +833,18 @@ export class Zation
             port: this.zc.config.port,
             secure: this.zc.config.secure,
             rejectUnauthorized: this.zc.config.rejectUnauthorized,
-            path : this.zc.config.path,
+            path: this.zc.config.path,
             autoReconnect: this.zc.config.autoReconnect,
-            autoReconnectOptions : this.zc.config.autoReconnectOptions,
-            autoConnect : false,
-            multiplex : this.zc.config.multiplex,
-            timestampRequests : this.zc.config.timestampRequests,
-            ackTimeout : this.zc.config.requestTimeout,
+            autoReconnectOptions: this.zc.config.autoReconnectOptions,
+            autoConnect: false,
+            multiplex: this.zc.config.multiplex,
+            timestampRequests: this.zc.config.timestampRequests,
+            ackTimeout: this.zc.config.requestTimeout,
             query: {
-                system : this.zc.config.system,
-                version : this.zc.config.version,
-                apiLevel : this.zc.config.apiLevel,
-                variables : stringify(this.zc.config.handshakeVariables)
+                system: this.zc.config.system,
+                version: this.zc.config.version,
+                apiLevel: this.zc.config.apiLevel,
+                variables: stringify(this.zc.config.handshakeVariables)
             }
         };
     }
@@ -863,7 +863,7 @@ export class Zation
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
      * @throws UserIdRequiredError, SubscribeFailError, SocketNotCreatedError
      */
-    async subUserCh() : Promise<void> {
+    async subUserCh(): Promise<void> {
         await this.authEngine.subUserCh();
     }
 
@@ -873,7 +873,7 @@ export class Zation
      * Returns if the socket has subscribed the user channel.
      * @throws UserIdRequiredError
      */
-    hasSubUserCh() : boolean {
+    hasSubUserCh(): boolean {
        return this.authEngine.hasSubUserCh();
     }
 
@@ -884,7 +884,7 @@ export class Zation
      * @throws UserIdRequiredError
      * @param andDestroy
      */
-    unsubUserCh(andDestroy : boolean = true) : void {
+    unsubUserCh(andDestroy: boolean = true): void {
         this.authEngine.unsubUserCh(andDestroy);
     }
 
@@ -896,7 +896,7 @@ export class Zation
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
      * @throws AuthUserGroupRequiredError, SubscribeFailError, SocketNotCreatedError
      */
-    async subAuthUserGroupCh() : Promise<void> {
+    async subAuthUserGroupCh(): Promise<void> {
         await this.authEngine.subAuthUserGroupCh();
     }
 
@@ -906,7 +906,7 @@ export class Zation
      * Returns if the socket has subscribed the auth user group channel.
      * @throws AuthUserGroupRequiredError
      */
-    hasSubAuthUserGroupCh() : boolean {
+    hasSubAuthUserGroupCh(): boolean {
         return this.authEngine.hasSubAuthUserGroupCh();
     }
 
@@ -917,7 +917,7 @@ export class Zation
      * @throws AuthUserGroupRequiredError
      * @param andDestroy
      */
-    unsubAuthUserGroupCh(andDestroy : boolean = true) : void {
+    unsubAuthUserGroupCh(andDestroy: boolean = true): void {
         this.authEngine.unsubAuthUserGroupCh(andDestroy);
     }
 
@@ -929,7 +929,7 @@ export class Zation
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
      * @throws SubscribeFailedError, DeauthenticationNeededError, SocketNotCreatedError
      */
-    async subDefaultUserGroupCh() : Promise<void> {
+    async subDefaultUserGroupCh(): Promise<void> {
         await this.authEngine.subDefaultUserGroupCh();
     }
 
@@ -938,7 +938,7 @@ export class Zation
      * @description
      * Returns if the socket has subscribed the default user group channel.
      */
-    hasSubDefaultUserGroupCh() : boolean {
+    hasSubDefaultUserGroupCh(): boolean {
         return this.channelEngine.hasSubDefaultUserGroupChannel();
     }
 
@@ -948,7 +948,7 @@ export class Zation
      * Unsubscribes the default user group channel.
      * @param andDestroy
      */
-    unsubDefaultUserGroupCh(andDestroy : boolean = true) : void {
+    unsubDefaultUserGroupCh(andDestroy: boolean = true): void {
         this.authEngine.unsubDefaultUserGroupCh(andDestroy);
     }
 
@@ -960,7 +960,7 @@ export class Zation
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
      * @throws SubscribeFailedError, SocketNotCreatedError
      */
-    async subAllCh() : Promise<void> {
+    async subAllCh(): Promise<void> {
         await this.channelEngine.subAllChannel();
     }
 
@@ -969,7 +969,7 @@ export class Zation
      * @description
      * Returns if the socket has subscribed the all channel.
      */
-    hasSubAllCh() : boolean {
+    hasSubAllCh(): boolean {
         return this.channelEngine.hasSubAllChannel();
     }
 
@@ -979,7 +979,7 @@ export class Zation
      * Unsubscribes the all channel.
      * @param andDestroy
      */
-    unsubAllCh(andDestroy : boolean = true) : void {
+    unsubAllCh(andDestroy: boolean = true): void {
         this.channelEngine.unsubAllChannel(andDestroy);
     }
 
@@ -997,7 +997,7 @@ export class Zation
      * It will automatically retry to subscribe it if the authentication token change or the client is reconnected.
      * The default value is true.
      */
-    async subCustomCh(name : string, id ?: string,retrySubForever : boolean = true) : Promise<void> {
+    async subCustomCh(name: string, id?: string,retrySubForever: boolean = true): Promise<void> {
         await this.channelEngine.subCustomCh(name,id,retrySubForever);
     }
 
@@ -1010,7 +1010,7 @@ export class Zation
      * @param id if not provided it checks
      * if the socket has subscribed any custom channel with channel name.
      */
-    hasSubCustomCh(name ?: string, id ?: string) : boolean {
+    hasSubCustomCh(name?: string, id?: string): boolean {
         return this.channelEngine.hasSubCustomCh(name,id);
     }
 
@@ -1024,7 +1024,7 @@ export class Zation
      * @return
      * An string array with all custom channels there are unsubscribed.
      */
-    unsubCustomCh(name ?: string, id ?: string,andDestroy : boolean = true) : string[] {
+    unsubCustomCh(name?: string, id?: string,andDestroy: boolean = true): string[] {
         return this.channelEngine.unsubscribeCustomCh(name,id,andDestroy);
     }
 
@@ -1036,7 +1036,7 @@ export class Zation
      * @param id if not provided it will return all custom channels which are subscribed and have the
      * same channel name.
      */
-    getSubscribedCustomCh(name ?: string, id ?: string) : string[] {
+    getSubscribedCustomCh(name?: string, id?: string): string[] {
         return this.channelEngine.getSubCustomCh(name,id);
     }
 
@@ -1051,7 +1051,7 @@ export class Zation
      * @param name
      * @param id
      */
-    async switchCustomCh(name : string,id : string) : Promise<void>
+    async switchCustomCh(name: string,id: string): Promise<void>
     {
         this.unsubCustomCh(name);
         await this.subCustomCh(name,id);
@@ -1064,7 +1064,7 @@ export class Zation
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
      * @throws SubscribeFailedError, SocketNotCreatedError
      */
-    async subPanelOutCh() : Promise<void> {
+    async subPanelOutCh(): Promise<void> {
         await this.channelEngine.subPanelOutChannel();
     }
 
@@ -1073,7 +1073,7 @@ export class Zation
      * @description
      * Returns if the socket has subscribed the panel out channel.
      */
-    hasSubPanelOutCh() : boolean {
+    hasSubPanelOutCh(): boolean {
         return this.channelEngine.hasSubPanelOutChannel();
     }
 
@@ -1083,7 +1083,7 @@ export class Zation
      * Unsubscribes panel out channel.
      * @param andDestroy
      */
-    unsubPanelOutCh(andDestroy : boolean = true) : void {
+    unsubPanelOutCh(andDestroy: boolean = true): void {
         this.channelEngine.unsubPanelOutChannel(andDestroy);
     }
 
@@ -1114,7 +1114,7 @@ export class Zation
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
-    async pubUserCh(userId : string | number,event : string, data : any = {},waitForConnection : WaitForConnectionOption = undefined) : Promise<void> {
+    async pubUserCh(userId: string | number,event: string, data: any = {},waitForConnection: WaitForConnectionOption = undefined): Promise<void> {
         return this.channelEngine.pubUserCh(userId,event,data,waitForConnection);
     }
 
@@ -1143,7 +1143,7 @@ export class Zation
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
-    async pubAuthUserGroupCh(authUserGroup : string,event : string, data : any = {},waitForConnection : WaitForConnectionOption = undefined) : Promise<void> {
+    async pubAuthUserGroupCh(authUserGroup: string,event: string, data: any = {},waitForConnection: WaitForConnectionOption = undefined): Promise<void> {
         return this.channelEngine.pubAuthUserGroupCh(authUserGroup,event,data,waitForConnection);
     }
 
@@ -1171,7 +1171,7 @@ export class Zation
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
-    async pubDefaultUserGroupCh(event : string, data : any = {},waitForConnection : WaitForConnectionOption = undefined) : Promise<void> {
+    async pubDefaultUserGroupCh(event: string, data: any = {},waitForConnection: WaitForConnectionOption = undefined): Promise<void> {
         return this.channelEngine.pubDefaultUserGroupCh(event,data,waitForConnection);
     }
 
@@ -1199,7 +1199,7 @@ export class Zation
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
-    async pubAllCh(event : string, data : any = {},waitForConnection : WaitForConnectionOption = undefined) : Promise<void> {
+    async pubAllCh(event: string, data: any = {},waitForConnection: WaitForConnectionOption = undefined): Promise<void> {
         return this.channelEngine.pubAllCh(event,data,waitForConnection);
     }
 
@@ -1225,7 +1225,7 @@ export class Zation
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
-    async pubPanelInCh(event : string, data : any = {},waitForConnection : WaitForConnectionOption = undefined) : Promise<void> {
+    async pubPanelInCh(event: string, data: any = {},waitForConnection: WaitForConnectionOption = undefined): Promise<void> {
         return this.channelEngine.pubPanelInCh(event,data,waitForConnection);
     }
 
@@ -1254,7 +1254,7 @@ export class Zation
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
-    async pubCustomCh(target : {name : string,id ?: string},event : string, data : any = {},waitForConnection : WaitForConnectionOption = undefined) : Promise<void> {
+    async pubCustomCh(target: {name: string,id?: string},event: string, data: any = {},waitForConnection: WaitForConnectionOption = undefined): Promise<void> {
         return this.channelEngine.pubCustomCh(target,event,data,waitForConnection);
     }
 
@@ -1271,7 +1271,7 @@ export class Zation
      * @param path
      * @throws AuthenticationRequiredError
      */
-    hasTokenVariable(path ?: string | string[]) : boolean {
+    hasTokenVariable(path?: string | string[]): boolean {
         return ObjectPath.has(this.authEngine.getTokenVariables(),path);
     }
 
@@ -1287,7 +1287,7 @@ export class Zation
      * @param path Notice if you don't provide a path, it returns all variables in an object.
      * @throws AuthenticationRequiredError
      */
-    getTokenVariable(path ?: string | string[]) : any {
+    getTokenVariable(path?: string | string[]): any {
         return ObjectPath.get(this.authEngine.getTokenVariables(),path);
     }
 
@@ -1299,7 +1299,7 @@ export class Zation
      * Returns token id of the token form the sc.
      * @throws AuthenticationRequiredError
      */
-    getTokenId() : string
+    getTokenId(): string
     {
        // @ts-ignore
         return this.authEngine.getSecurePlainToken().tid;
@@ -1311,7 +1311,7 @@ export class Zation
      * Returns the expire of the token from the sc.
      * @throws AuthenticationRequiredError
      */
-    getTokenExpire() : number
+    getTokenExpire(): number
     {
         // @ts-ignore
         return this.authEngine.getSecurePlainToken().exp;
@@ -1323,7 +1323,7 @@ export class Zation
      * Returns if the socket has panel access with the token.
      * @throws AuthenticationRequiredError
      */
-    hasPanelAccess() : boolean
+    hasPanelAccess(): boolean
     {
         // @ts-ignore
         return this.authEngine.getSecurePlainToken().panelAccess;
@@ -1335,7 +1335,7 @@ export class Zation
      * Returns the current plain token.
      * @throws AuthenticationRequiredError
      */
-    getPlainToken() : ZationToken
+    getPlainToken(): ZationToken
     {
         return this.authEngine.getSecurePlainToken();
     }
@@ -1346,7 +1346,7 @@ export class Zation
      * Returns the current sign token.
      * @throws AuthenticationRequiredError
      */
-    getSignToken() : string
+    getSignToken(): string
     {
         return this.authEngine.getSecureSignToken();
     }
@@ -1356,7 +1356,7 @@ export class Zation
      * @description
      * Returns if the socket is authenticated (token with auth user group).
      */
-    isAuthenticated() : boolean
+    isAuthenticated(): boolean
     {
         return this.authEngine.isAuthenticated();
     }
@@ -1367,7 +1367,7 @@ export class Zation
      * Returns the auth user group.
      * Is undefined if socket is not authenticated.
      */
-    getAuthUserGroup() : string | undefined
+    getAuthUserGroup(): string | undefined
     {
         return this.authEngine.getAuthUserGroup();
     }
@@ -1378,7 +1378,7 @@ export class Zation
      * Returns the user id.
      * Is undefined if socket is not authenticated or has not a userId.
      */
-    getUserId() : string | number | undefined
+    getUserId(): string | number | undefined
     {
         return this.authEngine.getUserId()
     }
@@ -1392,7 +1392,7 @@ export class Zation
      * The function that gets called when the event occurs,
      * parameters are the data and a response function that you can call to respond on the event back.
      */
-    on(event : string,handler : OnHandlerFunction) : void {
+    on(event: string,handler: OnHandlerFunction): void {
         this.socket.on(event,handler);
     }
 
@@ -1405,8 +1405,8 @@ export class Zation
      * The function that gets called when the event occurs,
      * parameters are the data and a response function that you can call to respond on the event back.
      */
-    once(event : string,handler : OnHandlerFunction) : void {
-        const tmpHandler : OnHandlerFunction = (data, response) => {
+    once(event: string,handler: OnHandlerFunction): void {
+        const tmpHandler: OnHandlerFunction = (data, response) => {
             tmpHandler(data,response);
             this.socket.off(event,tmpHandler);
         };
@@ -1414,9 +1414,9 @@ export class Zation
     }
 
     // noinspection JSUnusedGlobalSymbols
-    async emit(eventName : string,data : any,onlyTransmit : true,options : {waitForConnection ?: WaitForConnectionOption,timeout ?: number | null}) : Promise<void>
+    async emit(eventName: string,data: any,onlyTransmit: true,options: {waitForConnection?: WaitForConnectionOption,timeout?: number | null}): Promise<void>
     // noinspection JSUnusedGlobalSymbols
-    async emit(eventName : string,data : any,onlyTransmit : false,options : {waitForConnection ?: WaitForConnectionOption,timeout ?: number | null}) : Promise<any>
+    async emit(eventName: string,data: any,onlyTransmit: false,options: {waitForConnection?: WaitForConnectionOption,timeout?: number | null}): Promise<any>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
@@ -1450,8 +1450,8 @@ export class Zation
      * undefined then it will use the default timeout of the zation config,
      * or it can be a number that indicates the milliseconds.
      */
-    async emit(event : string,data : any,onlyTransmit : boolean = true,
-               {waitForConnection,timeout} : {waitForConnection ?: WaitForConnectionOption,timeout ?: number | null} = {}) : Promise<object | void>
+    async emit(event: string,data: any,onlyTransmit: boolean = true,
+               {waitForConnection,timeout}: {waitForConnection?: WaitForConnectionOption,timeout?: number | null} = {}): Promise<object | void>
     {
         await ConnectionUtils.checkConnection(this,waitForConnection,'To emit an event.');
 
@@ -1487,7 +1487,7 @@ export class Zation
      * which will carry the provided data.
      * @throws ConnectionRequiredError
      */
-    sendRaw(data : any) : void
+    sendRaw(data: any): void
     {
         if(this.isConnected()) {
             this.socket.send(data);
@@ -1500,81 +1500,81 @@ export class Zation
 
     //Part Getter/Setter
     // noinspection JSUnusedGlobalSymbols
-    isAutoAllChSub() : boolean {
+    isAutoAllChSub(): boolean {
         return this.zc.config.autoAllChSub
     }
 
     // noinspection JSUnusedGlobalSymbols
-    setAutoAllChSub(value : boolean) : void {
+    setAutoAllChSub(value: boolean): void {
         this.zc.config.autoAllChSub = value;
     }
 
-    isAutoUserChSub() : boolean {
+    isAutoUserChSub(): boolean {
         return this.zc.config.autoUserChSub;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    setAutoUserChSub(value : boolean) : void {
+    setAutoUserChSub(value: boolean): void {
         this.zc.config.autoUserChSub = value;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    isAutoDefaultUserGroupChSub() : boolean {
+    isAutoDefaultUserGroupChSub(): boolean {
         return this.zc.config.autoDefaultUserGroupChSub;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    setAutoDefaultUserGroupChSub(value : boolean) : void {
+    setAutoDefaultUserGroupChSub(value: boolean): void {
         this.zc.config.autoDefaultUserGroupChSub = value;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    isAutoAuthUserGroupChSub() : boolean {
+    isAutoAuthUserGroupChSub(): boolean {
         return this.zc.config.autoAuthUserGroupChSub;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    setAutoAuthUserGroupChSub(value : boolean) : void {
+    setAutoAuthUserGroupChSub(value: boolean): void {
         this.zc.config.autoAuthUserGroupChSub = value;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    getRejectUnauthorized() : boolean{
+    getRejectUnauthorized(): boolean{
         return this.zc.config.rejectUnauthorized;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    getSystem() : string {
+    getSystem(): string {
         return this.zc.config.system;
     };
 
     // noinspection JSUnusedGlobalSymbols
-    getVersion() : number {
+    getVersion(): number {
         return this.zc.config.version;
     };
 
     // noinspection JSUnusedGlobalSymbols
-    getHostname() : string {
+    getHostname(): string {
         return this.zc.config.hostname;
     };
 
     // noinspection JSUnusedGlobalSymbols
-    getPort() : number {
+    getPort(): number {
         return this.zc.config.port;
     };
 
     // noinspection JSUnusedGlobalSymbols
-    getPostKey() : string {
+    getPostKey(): string {
         return this.zc.config.postKey;
     };
 
     // noinspection JSUnusedGlobalSymbols
-    getSecure() : boolean {
+    getSecure(): boolean {
         return this.zc.config.secure;
     };
 
     // noinspection JSUnusedGlobalSymbols
-    isDebug() : boolean {
+    isDebug(): boolean {
         return this.zc.config.debug;
     };
 
@@ -1583,13 +1583,13 @@ export class Zation
      * @description
      * Returns the full server address with protocol (http/https), hostname, port and path.
      */
-    getServerAddress() : string
+    getServerAddress(): string
     {
         const path = this.zc.config.path;
         const hostname = this.zc.config.hostname;
         const port = this.zc.config.port;
         const secure = this.zc.config.secure;
-        return `${secure ? 'https' : 'http'}://${hostname}:${port}${path}`;
+        return `${secure ? 'https': 'http'}://${hostname}:${port}${path}`;
     };
 
     //Part trigger
@@ -1601,7 +1601,7 @@ export class Zation
      * Used internally.
      * Only use this method carefully.
      */
-    _getChannelReactionMainBox() : Box<ChannelReactionBox> {
+    _getChannelReactionMainBox(): Box<ChannelReactionBox> {
         return this.channelReactionMainBox;
     }
 
@@ -1612,9 +1612,9 @@ export class Zation
      * Used internally.
      * Only use this method carefully.
      */
-    async _triggerResponseReactions(response : Response) : Promise<void>
+    async _triggerResponseReactions(response: Response): Promise<void>
     {
-        await this.responseReactionMainBox.forEach(async (responseReactionBox : ResponseReactionBox) => {
+        await this.responseReactionMainBox.forEach(async (responseReactionBox: ResponseReactionBox) => {
             await responseReactionBox._trigger(response);
         });
     }
@@ -1626,9 +1626,9 @@ export class Zation
      * Used internally.
      * Only use this method carefully.
      */
-    private async _triggerEventReactions(event : Events,...arg : any[]) : Promise<void>
+    private async _triggerEventReactions(event: Events,...arg: any[]): Promise<void>
     {
-        await this.eventReactionMainBox.forEachAll(async (eventReactionBox : EventReactionBox) => {
+        await this.eventReactionMainBox.forEachAll(async (eventReactionBox: EventReactionBox) => {
             await eventReactionBox._trigger(event,...arg);
         });
     }
@@ -1640,7 +1640,7 @@ export class Zation
      * Used internally.
      * Only use this method carefully.
      */
-    getZc() : ZationConfig {
+    getZc(): ZationConfig {
         return this.zc;
     }
 
@@ -1650,7 +1650,7 @@ export class Zation
      * but the IDE can interpret the typescript information of this library.
      * @param value
      */
-    static cast(value : any) : Zation {
+    static cast(value: any): Zation {
         return value as Zation;
     }
 }

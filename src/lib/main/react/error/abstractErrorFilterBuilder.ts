@@ -12,10 +12,10 @@ import {PresetErrorFilter}       from "./presetErrorFilter";
 
 export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBuilder<R>>
 {
-    protected filter : ErrorFilter[] = [];
-    protected tmpFilter : ErrorFilter = {};
+    protected filter: ErrorFilter[] = [];
+    protected tmpFilter: ErrorFilter = {};
 
-    protected abstract self() : R;
+    protected abstract self(): R;
 
     protected constructor() {
     }
@@ -27,7 +27,7 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * More names are linked with OR.
      * @param name
      */
-    nameIs(...name : string[]) : R
+    nameIs(...name: string[]): R
     {
         if(!Array.isArray(this.tmpFilter.name)) {
             this.tmpFilter.name = [];
@@ -42,7 +42,7 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * Reset the filter property name.
      * Than all names are allowed.
      */
-    resetName() : R {
+    resetName(): R {
         delete this.tmpFilter.name;
         return this.self();
     }
@@ -54,7 +54,7 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * More types are linked with OR.
      * @param type
      */
-    typeIs(...type : string[]) : R
+    typeIs(...type: string[]): R
     {
         if(!Array.isArray(this.tmpFilter.type)) {
             this.tmpFilter.type = [];
@@ -69,7 +69,7 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * Reset the filter property type.
      * Than all types are allowed.
      */
-    resetType() : R {
+    resetType(): R {
         delete this.tmpFilter.type;
         return this.self();
     }
@@ -81,7 +81,7 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * More info filters are linked with OR.
      * @param obj
      */
-    infoHas(...obj : object[]) : R
+    infoHas(...obj: object[]): R
     {
         if(!Array.isArray(this.tmpFilter.info)) {
             this.tmpFilter.info = [];
@@ -97,7 +97,7 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * Reset the filter property info.
      * Than all infos are allowed.
      */
-    resetInfo() : R {
+    resetInfo(): R {
         delete this.tmpFilter.info;
         return this.self();
     }
@@ -108,7 +108,7 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * Returns an easy builder for the filter property info.
      * Notice that the infos will be added to the tmpFilter with OR.
      */
-    infoIsBuilder() : PairOrAndBuilder<R>
+    infoIsBuilder(): PairOrAndBuilder<R>
     {
         if(!Array.isArray(this.tmpFilter.info)) {
             this.tmpFilter.info = [];
@@ -116,7 +116,7 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
         return new PairOrAndBuilder<R>
         (
             this.self(),
-            (res : object[]) => {
+            (res: object[]) => {
                 if(Array.isArray(this.tmpFilter.info)) {
                     this.tmpFilter.info.push(...res);
                 }
@@ -131,7 +131,7 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * More keys are linked with AND.
      * Every invoke will be linked with OR.
      */
-    infoKeys(...keys : string[]) : R
+    infoKeys(...keys: string[]): R
     {
         if(!Array.isArray(this.tmpFilter.infoKey)) {
             this.tmpFilter.infoKey = [];
@@ -146,7 +146,7 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * Reset the filter property infoKey.
      * Than all info keys are allowed.
      */
-    resetInfoKeys() : R {
+    resetInfoKeys(): R {
         delete this.tmpFilter.infoKey;
         return this.self();
     }
@@ -157,7 +157,7 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * Returns an easy builder for the filter property infoKey.
      * Notice that the info keys will be added to the tmpFilter with OR.
      */
-    infoKeysBuilder() : OrBuilder<R,string>
+    infoKeysBuilder(): OrBuilder<R,string>
     {
         this.tmpFilter.infoKey = [];
         return new OrBuilder<R,string>
@@ -179,7 +179,7 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * More values are linked with AND.
      * Every invoke will be linked with OR.
      */
-    infoValues(...values : string[]) : R
+    infoValues(...values: string[]): R
     {
         if(!Array.isArray(this.tmpFilter.infoValue)) {
             this.tmpFilter.infoValue = [];
@@ -194,7 +194,7 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * Reset the filter property infoValue.
      * Than all info values are allowed.
      */
-    resetInfoValues() : R {
+    resetInfoValues(): R {
         delete this.tmpFilter.infoValue;
         return this.self();
     }
@@ -205,7 +205,7 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * Returns an easy builder for the filter property infoValue.
      * Notice that the info values will be added to the tmpFilter with OR.
      */
-    infoValuesBuilder() : OrBuilder<R,string>
+    infoValuesBuilder(): OrBuilder<R,string>
     {
         this.tmpFilter.infoValue = [];
         return new OrBuilder<R,string>
@@ -229,7 +229,7 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * Undefined means it dosent matter (like a reset).
      * Notice that the filter property fromZationSystem will be reseted when you calling this method.
      */
-    fromZationSystem(fromZationSystem : boolean | undefined) : R
+    fromZationSystem(fromZationSystem: boolean | undefined): R
     {
         this.tmpFilter.fromZationSystem = fromZationSystem;
         return this.self();
@@ -242,7 +242,7 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * The filter are linked with OR so the filtered errors
      * of each filter are counted together.
      */
-    or() : R
+    or(): R
     {
         this._pushTmpFilter();
         //reset tmpFilter
@@ -261,40 +261,40 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * @example
      * -FilterExamples-
      * For errors with the name:
-     * {name : 'errorName1'}
+     * {name: 'errorName1'}
      * For errors with the names:
-     * {name : ['errorName1','errorName2']}
+     * {name: ['errorName1','errorName2']}
      * For errors with the group:
-     * {group : 'errorGroup1'}
+     * {group: 'errorGroup1'}
      * For errors with the groups:
-     * {group : ['errorGroup1','errorGroup2']}
+     * {group: ['errorGroup1','errorGroup2']}
      * For errors with the type:
-     * {type : 'errorType1'}
+     * {type: 'errorType1'}
      * For errors with the types:
-     * {type : ['errorType1','errorType2']}
+     * {type: ['errorType1','errorType2']}
      * For errors with has all keys and values in the info:
-     * {info : {inputPath : 'name', inputValue : 'value'}}
+     * {info: {inputPath: 'name', inputValue: 'value'}}
      * For errors with has at least one of all keys and values in the info:
-     * {info : [{inputPath : 'name'},{inputPath : 'firstName'}]}
+     * {info: [{inputPath: 'name'},{inputPath: 'firstName'}]}
      * For errors with the info key:
-     * {infoKey : 'inputPath'}
+     * {infoKey: 'inputPath'}
      * For errors with at least one of the info keys:
-     * {infoKey : ['inputPath','inputValue']}
+     * {infoKey: ['inputPath','inputValue']}
      * For errors with all of the info keys:
-     * {infoKey : [['inputPath','inputValue']]}
+     * {infoKey: [['inputPath','inputValue']]}
      * For errors with the info value:
-     * {infoValue : 'name'}
+     * {infoValue: 'name'}
      * For errors with at least one of the info values:
-     * {infoValue : ['name','firstName']}
+     * {infoValue: ['name','firstName']}
      * For errors with all of the info values:
-     * {infoValue : [['value1','value2']]}
+     * {infoValue: [['value1','value2']]}
      * For errors there from the zation system:
-     * {fromZationSystem : true}
+     * {fromZationSystem: true}
      * For errors there not from the zation system:
-     * {fromZationSystem : false}
+     * {fromZationSystem: false}
      * You can combine all of this properties.
      */
-    addErrorFilter(filter : ErrorFilter) : R {
+    addErrorFilter(filter: ErrorFilter): R {
         this.filter.push(filter);
         return this.self();
     }
@@ -309,40 +309,40 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * @example
      * -FilterExamples-
      * For errors with the name:
-     * {name : 'errorName1'}
+     * {name: 'errorName1'}
      * For errors with the names:
-     * {name : ['errorName1','errorName2']}
+     * {name: ['errorName1','errorName2']}
      * For errors with the group:
-     * {group : 'errorGroup1'}
+     * {group: 'errorGroup1'}
      * For errors with the groups:
-     * {group : ['errorGroup1','errorGroup2']}
+     * {group: ['errorGroup1','errorGroup2']}
      * For errors with the type:
-     * {type : 'errorType1'}
+     * {type: 'errorType1'}
      * For errors with the types:
-     * {type : ['errorType1','errorType2']}
+     * {type: ['errorType1','errorType2']}
      * For errors with has all keys and values in the info:
-     * {info : {inputPath : 'name', inputValue : 'value'}}
+     * {info: {inputPath: 'name', inputValue: 'value'}}
      * For errors with has at least one of all keys and values in the info:
-     * {info : [{inputPath : 'name'},{inputPath : 'firstName'}]}
+     * {info: [{inputPath: 'name'},{inputPath: 'firstName'}]}
      * For errors with the info key:
-     * {infoKey : 'inputPath'}
+     * {infoKey: 'inputPath'}
      * For errors with at least one of the info keys:
-     * {infoKey : ['inputPath','inputValue']}
+     * {infoKey: ['inputPath','inputValue']}
      * For errors with all of the info keys:
-     * {infoKey : [['inputPath','inputValue']]}
+     * {infoKey: [['inputPath','inputValue']]}
      * For errors with the info value:
-     * {infoValue : 'name'}
+     * {infoValue: 'name'}
      * For errors with at least one of the info values:
-     * {infoValue : ['name','firstName']}
+     * {infoValue: ['name','firstName']}
      * For errors with all of the info values:
-     * {infoValue : [['value1','value2']]}
+     * {infoValue: [['value1','value2']]}
      * For errors there from the zation system:
-     * {fromZationSystem : true}
+     * {fromZationSystem: true}
      * For errors there not from the zation system:
-     * {fromZationSystem : false}
+     * {fromZationSystem: false}
      * You can combine all of this properties.
      */
-    setTmpFilter(filter : ErrorFilter) : R {
+    setTmpFilter(filter: ErrorFilter): R {
         this.tmpFilter = filter;
         return this.self();
     }
@@ -352,7 +352,7 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * @description
      * Returns the acutally tmpFilter that you are building.
      */
-    getTmpFilter() : ErrorFilter {
+    getTmpFilter(): ErrorFilter {
         return this.tmpFilter;
     }
 
@@ -367,11 +367,11 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * Indicates if you want to push the preset error filter directly into the filters.
      * If not you can modify it later with this builder.
      */
-    presets(pushPreset : boolean = false) : PresetErrorFilter<R> {
+    presets(pushPreset: boolean = false): PresetErrorFilter<R> {
         return new PresetErrorFilter<R>(this.self(),pushPreset);
     }
 
-    protected _pushTmpFilter() : void {
+    protected _pushTmpFilter(): void {
         this.filter.push(this.tmpFilter);
     }
 }

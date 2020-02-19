@@ -9,31 +9,31 @@ export enum BackErrorInfo {
 }
 
 export interface ZationRequest {
-    s ?: string,
-    to ?: string,
-    al ?: number
-    t ?: {
-        i : object | any[]
-        c ?: string,
-        sc ?: string,
+    s?: string,
+    to?: string,
+    al?: number
+    t?: {
+        i: object | any[]
+        c?: string,
+        sc?: string,
     }
-    a ?: {
-        i : object | any[]
+    a?: {
+        i: object | any[]
     },
-    v ?: {
-        i : any[] | object,
-        c ?: string,
-        sc ?: string
+    v?: {
+        i: any[] | object,
+        c?: string,
+        sc?: string
     } | number
 }
 
 export interface ResponseBackError {
-    n : string,
-    g ?: string,
-    t : string
-    d ?: string,
-    zs : boolean,
-    i ?: object
+    n: string,
+    g?: string,
+    t: string
+    d?: string,
+    zs: boolean,
+    i?: object
 }
 
 export enum HttpGetReq {
@@ -53,28 +53,28 @@ export enum ZationHttpInfo {
 }
 
 export interface ZationResponse {
-    e : ResponseBackError[],
-    r : {
-        r ?: any,
-        s ?: string | number
+    e: ResponseBackError[],
+    r: {
+        r?: any,
+        s?: string | number
     }
-    t ?: {
-        st : string,
-        pt : object
+    t?: {
+        st: string,
+        pt: object
     },
-    zhi : string[]
+    zhi: string[]
 }
 
 export interface ZationToken {
-    authUserGroup ?: string,
-    userId ?: string | number,
+    authUserGroup?: string,
+    userId?: string | number,
     /**
      * Token id
      */
-    tid ?: string,
-    panelAccess ?: boolean,
-    exp ?: number,
-    variables ?: object
+    tid?: string,
+    panelAccess?: boolean,
+    exp?: number,
+    variables?: object
 }
 
 export enum ZationChannel {

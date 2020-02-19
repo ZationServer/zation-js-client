@@ -5,22 +5,22 @@ Copyright(c) Luca Scaringella
  */
 
 export interface FetchHistoryItem {
-    counter : number;
-    input : any;
-    data : any;
+    counter: number;
+    input: any;
+    data: any;
 }
 
 export default class DbFetchHistoryManager {
 
-    private history : FetchHistoryItem[] = [];
-    private returnedHistory : FetchHistoryItem[] = [];
+    private history: FetchHistoryItem[] = [];
+    private returnedHistory: FetchHistoryItem[] = [];
 
     constructor() {}
 
     /**
      * Resets the complete history manager.
      */
-    reset() : void {
+    reset(): void {
         this.history = [];
         this.returnedHistory = [];
     }
@@ -31,7 +31,7 @@ export default class DbFetchHistoryManager {
      * @param input
      * @param data
      */
-    pushHistory(counter : number, input : any, data : any) {
+    pushHistory(counter: number, input: any, data: any) {
         this.history.push({counter,input,data});
     }
 
@@ -39,7 +39,7 @@ export default class DbFetchHistoryManager {
      * Returns the latest history and removes it from the current history.
      * You should call done when you finished working with the history.
      */
-    getHistory() : FetchHistoryItem[] {
+    getHistory(): FetchHistoryItem[] {
         const historyTmp = this.history;
         this.history = [];
 
@@ -52,7 +52,7 @@ export default class DbFetchHistoryManager {
     /**
      * Tells the history manager that the work is done.
      */
-    done() : void {
+    done(): void {
         this.history = this.returnedHistory.concat(this.history);
     }
 }
