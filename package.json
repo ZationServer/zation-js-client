@@ -56,7 +56,6 @@
     "tools"
   ],
   "dependencies": {
-    "fs": "0.0.1-security",
     "lodash": ">=4.17.13",
     "lodash.template": ">=4.5.0",
     "minimatch": "3.0.4",
