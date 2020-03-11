@@ -947,51 +947,51 @@ export abstract class PresetErrorLib<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputEnumError.
-     * The BackError error can be thrown by input validation enum,privateEnum.
+     * Preset for inputInError.
+     * The BackError error can be thrown by input validation in,privateIn.
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputEnumError(inputPath?: string,inputValue?: any): T {
+    inputInError(inputPath?: string, inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroup.ENUM_ERROR));
+        (undefined,inputPath,inputValue,ErrorGroup.InError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotMatchWithEnum.
-     * The BackError error can be thrown by input validation enum:['red','blue'].
+     * Preset for inputIsNotMatchWithIn.
+     * The BackError error can be thrown by input validation in: ['red','blue'].
      * More info checks you need to do by yourself.
      * Possibilities are:
-     * enum (array)
+     * values (In-Values Array)
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotMatchWithEnum(inputPath?: string,inputValue?: any): T {
+    inputIsNotMatchWithIn(inputPath?: string, inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotMatchWithEnum',inputPath,inputValue,ErrorGroup.ENUM_ERROR));
+        ('inputIsNotMatchWithIn',inputPath,inputValue,ErrorGroup.InError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotMatchWithPrivateEnum.
-     * The BackError error can be thrown by input validation privateEnum:['red','blue'].
+     * Preset for inputIsNotMatchWithPrivateIn.
+     * The BackError error can be thrown by input validation privateIn: ['red','blue'].
      * @param inputPath
      * Parameter can be used to check the inputPath in the info.
      * @param inputValue
      * Parameter can be used to check the inputValue in the info.
      */
-    inputIsNotMatchWithPrivateEnum(inputPath?: string,inputValue?: any): T {
+    inputIsNotMatchWithPrivateIn(inputPath?: string, inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotMatchWithPrivateEnum',inputPath,inputValue,ErrorGroup.ENUM_ERROR));
+        ('inputIsNotMatchWithPrivateIn',inputPath,inputValue,ErrorGroup.InError));
         return this.self();
     }
 
