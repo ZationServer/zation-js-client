@@ -96,7 +96,7 @@ export class BackError
      * Returns the main info of the BackError.
      */
     getMainInfo(): string | undefined {
-        return this.getInfo()[BackErrorInfo.MAIN];
+        return this.getInfo()[BackErrorInfo.Main];
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -105,7 +105,7 @@ export class BackError
      * Returns if the BackError has main info.
      */
     hasMainInfo(): boolean {
-        return this.getInfo()[BackErrorInfo.MAIN] !== undefined;
+        return this.getInfo()[BackErrorInfo.Main] !== undefined;
     }
 
     // noinspection JSUnusedGlobalSymbols

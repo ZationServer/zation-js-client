@@ -76,7 +76,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onPubAnyCh(event: string | string[] | null, reaction: ChannelReactionOnPubAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubAnyCh>(reaction, {event: event});
-        this._mapPub.add(ChannelTarget.ANY, fullReaction);
+        this._mapPub.add(ChannelTarget.Any, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -99,7 +99,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     oncePubAnyCh(event: string | string[] | null, reaction: ChannelReactionOnPubAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubAnyCh>(reaction, {event: event},true);
-        this._mapPub.add(ChannelTarget.ANY, fullReaction);
+        this._mapPub.add(ChannelTarget.Any, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -112,7 +112,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offPubAnyCh(fullReaction?: FullReaction<any>): void {
-        this._mapPub.remove(ChannelTarget.ANY, fullReaction);
+        this._mapPub.remove(ChannelTarget.Any, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -131,7 +131,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onPubUserCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event});
-        this._mapPub.add(ChannelTarget.USER, fullReaction);
+        this._mapPub.add(ChannelTarget.User, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -154,7 +154,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     oncePubUserCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event},true);
-        this._mapPub.add(ChannelTarget.USER, fullReaction);
+        this._mapPub.add(ChannelTarget.User, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -167,7 +167,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offPubUserCh(fullReaction?: FullReaction<any>): void {
-        this._mapPub.remove(ChannelTarget.USER, fullReaction);
+        this._mapPub.remove(ChannelTarget.User, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -186,7 +186,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onPubAuthUserGroupCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event});
-        this._mapPub.add(ChannelTarget.AUG, fullReaction);
+        this._mapPub.add(ChannelTarget.Aug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -209,7 +209,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     oncePubAuthUserGroupCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event},true);
-        this._mapPub.add(ChannelTarget.AUG, fullReaction);
+        this._mapPub.add(ChannelTarget.Aug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -222,7 +222,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offPubAuthUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapPub.remove(ChannelTarget.AUG, fullReaction);
+        this._mapPub.remove(ChannelTarget.Aug, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -241,7 +241,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onPubDefaultUserGroupCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event});
-        this._mapPub.add(ChannelTarget.DUG, fullReaction);
+        this._mapPub.add(ChannelTarget.Dug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -264,7 +264,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     oncePubDefaultUserGroupCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event},true);
-        this._mapPub.add(ChannelTarget.DUG, fullReaction);
+        this._mapPub.add(ChannelTarget.Dug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -277,7 +277,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offPubDefaultUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapPub.remove(ChannelTarget.DUG, fullReaction);
+        this._mapPub.remove(ChannelTarget.Dug, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -296,7 +296,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onPubAllCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event});
-        this._mapPub.add(ChannelTarget.ALL, fullReaction);
+        this._mapPub.add(ChannelTarget.All, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -319,7 +319,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     oncePubAllCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event},true);
-        this._mapPub.add(ChannelTarget.ALL, fullReaction);
+        this._mapPub.add(ChannelTarget.All, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -332,7 +332,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offPubAllCh(fullReaction?: FullReaction<any>): void {
-        this._mapPub.remove(ChannelTarget.ALL, fullReaction);
+        this._mapPub.remove(ChannelTarget.All, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -421,7 +421,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onPubPanelOutCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event});
-        this._mapPub.add(ChannelTarget.PANEL, fullReaction);
+        this._mapPub.add(ChannelTarget.Panel, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -444,7 +444,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     oncePubPanelOutCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event},true);
-        this._mapPub.add(ChannelTarget.PANEL, fullReaction);
+        this._mapPub.add(ChannelTarget.Panel, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -457,7 +457,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offPubPanelOutCh(fullReaction?: FullReaction<any>): void {
-        this._mapPub.remove(ChannelTarget.PANEL, fullReaction);
+        this._mapPub.remove(ChannelTarget.Panel, fullReaction);
     }
 
     //OnKickOut Handler
@@ -476,7 +476,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceKickOutAnyCh(reaction: ChannelReactionOnKickOutAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutAnyCh>(reaction,{},true);
-        this._mapKick.add(ChannelTarget.ANY, fullReaction);
+        this._mapKick.add(ChannelTarget.Any, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -494,7 +494,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onKickOutAnyCh(reaction: ChannelReactionOnKickOutAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutAnyCh>(reaction);
-        this._mapKick.add(ChannelTarget.ANY, fullReaction);
+        this._mapKick.add(ChannelTarget.Any, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -507,7 +507,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offKickOutAnyCh(fullReaction?: FullReaction<any>): void {
-        this._mapKick.remove(ChannelTarget.ANY, fullReaction);
+        this._mapKick.remove(ChannelTarget.Any, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -523,7 +523,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onKickOutUserCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction);
-        this._mapKick.add(ChannelTarget.USER, fullReaction);
+        this._mapKick.add(ChannelTarget.User, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -543,7 +543,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceKickOutUserCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction,{},true);
-        this._mapKick.add(ChannelTarget.USER, fullReaction);
+        this._mapKick.add(ChannelTarget.User, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -556,7 +556,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offKickOutUserCh(fullReaction?: FullReaction<any>): void {
-        this._mapKick.remove(ChannelTarget.USER, fullReaction);
+        this._mapKick.remove(ChannelTarget.User, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -572,7 +572,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onKickOutAuthUserGroupCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction);
-        this._mapKick.add(ChannelTarget.AUG, fullReaction);
+        this._mapKick.add(ChannelTarget.Aug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -592,7 +592,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceKickOutAuthUserGroupCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction,{},true);
-        this._mapKick.add(ChannelTarget.AUG, fullReaction);
+        this._mapKick.add(ChannelTarget.Aug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -605,7 +605,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offKickOutAuthUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapKick.remove(ChannelTarget.AUG, fullReaction);
+        this._mapKick.remove(ChannelTarget.Aug, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -621,7 +621,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onKickOutDefaultUserGroupCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction);
-        this._mapKick.add(ChannelTarget.DUG, fullReaction);
+        this._mapKick.add(ChannelTarget.Dug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -641,7 +641,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceKickOutDefaultUserGroupCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction,{},true);
-        this._mapKick.add(ChannelTarget.DUG, fullReaction);
+        this._mapKick.add(ChannelTarget.Dug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -654,7 +654,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offKickOutDefaultUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapKick.remove(ChannelTarget.DUG, fullReaction);
+        this._mapKick.remove(ChannelTarget.Dug, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -670,7 +670,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onKickOutAllCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction);
-        this._mapKick.add(ChannelTarget.ALL, fullReaction);
+        this._mapKick.add(ChannelTarget.All, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -690,7 +690,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceKickOutAllCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction,{},true);
-        this._mapKick.add(ChannelTarget.ALL, fullReaction);
+        this._mapKick.add(ChannelTarget.All, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -703,7 +703,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offKickOutAllCh(fullReaction?: FullReaction<any>): void {
-        this._mapKick.remove(ChannelTarget.ALL, fullReaction);
+        this._mapKick.remove(ChannelTarget.All, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -782,7 +782,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onKickOutPanelOutCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction);
-        this._mapKick.add(ChannelTarget.PANEL, fullReaction);
+        this._mapKick.add(ChannelTarget.Panel, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -802,7 +802,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceKickOutPanelOutCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction,{},true);
-        this._mapKick.add(ChannelTarget.PANEL, fullReaction);
+        this._mapKick.add(ChannelTarget.Panel, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -815,7 +815,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offKickOutPanelOutCh(fullReaction?: FullReaction<any>): void {
-        this._mapKick.remove(ChannelTarget.PANEL, fullReaction);
+        this._mapKick.remove(ChannelTarget.Panel, fullReaction);
     }
 
     //OnSubFail Handler
@@ -832,7 +832,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onSubFailAnyCh(reaction: ChannelReactionOnSubFailAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailAnyCh>(reaction);
-        this._mapSubFail.add(ChannelTarget.ANY, fullReaction);
+        this._mapSubFail.add(ChannelTarget.Any, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -852,7 +852,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceSubFailAnyCh(reaction: ChannelReactionOnSubFailAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailAnyCh>(reaction,{},true);
-        this._mapSubFail.add(ChannelTarget.ANY, fullReaction);
+        this._mapSubFail.add(ChannelTarget.Any, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -865,7 +865,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offSubFailAnyCh(fullReaction?: FullReaction<any>): void {
-        this._mapSubFail.remove(ChannelTarget.ANY, fullReaction);
+        this._mapSubFail.remove(ChannelTarget.Any, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -881,7 +881,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onSubFailUserCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction);
-        this._mapSubFail.add(ChannelTarget.USER, fullReaction);
+        this._mapSubFail.add(ChannelTarget.User, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -901,7 +901,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceSubFailUserCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction,{},true);
-        this._mapSubFail.add(ChannelTarget.USER, fullReaction);
+        this._mapSubFail.add(ChannelTarget.User, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -914,7 +914,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offSubFailUserCh(fullReaction?: FullReaction<any>): void {
-        this._mapSubFail.remove(ChannelTarget.USER, fullReaction);
+        this._mapSubFail.remove(ChannelTarget.User, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -930,7 +930,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onSubFailAuthUserGroupCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction);
-        this._mapSubFail.add(ChannelTarget.AUG, fullReaction);
+        this._mapSubFail.add(ChannelTarget.Aug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -950,7 +950,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceSubFailAuthUserGroupCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction,{},true);
-        this._mapSubFail.add(ChannelTarget.AUG, fullReaction);
+        this._mapSubFail.add(ChannelTarget.Aug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -963,7 +963,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offSubFailAuthUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapSubFail.remove(ChannelTarget.AUG, fullReaction);
+        this._mapSubFail.remove(ChannelTarget.Aug, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -979,7 +979,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onSubFailDefaultUserGroupCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction);
-        this._mapSubFail.add(ChannelTarget.DUG, fullReaction);
+        this._mapSubFail.add(ChannelTarget.Dug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -999,7 +999,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceSubFailDefaultUserGroupCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction,{},true);
-        this._mapSubFail.add(ChannelTarget.DUG, fullReaction);
+        this._mapSubFail.add(ChannelTarget.Dug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1012,7 +1012,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offSubFailDefaultUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapSubFail.remove(ChannelTarget.DUG, fullReaction);
+        this._mapSubFail.remove(ChannelTarget.Dug, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1028,7 +1028,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onSubFailAllCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction);
-        this._mapSubFail.add(ChannelTarget.ALL, fullReaction);
+        this._mapSubFail.add(ChannelTarget.All, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1048,7 +1048,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceSubFailAllCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction,{},true);
-        this._mapSubFail.add(ChannelTarget.ALL, fullReaction);
+        this._mapSubFail.add(ChannelTarget.All, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1061,7 +1061,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offSubFailAllCh(fullReaction?: FullReaction<any>): void {
-        this._mapSubFail.remove(ChannelTarget.ALL, fullReaction);
+        this._mapSubFail.remove(ChannelTarget.All, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1140,7 +1140,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onSubFailPanelOutCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction);
-        this._mapSubFail.add(ChannelTarget.PANEL, fullReaction);
+        this._mapSubFail.add(ChannelTarget.Panel, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1160,7 +1160,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceSubFailPanelOutCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction,{},true);
-        this._mapSubFail.add(ChannelTarget.PANEL, fullReaction);
+        this._mapSubFail.add(ChannelTarget.Panel, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1173,7 +1173,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offSubFailPanelOutCh(fullReaction?: FullReaction<any>): void {
-        this._mapSubFail.remove(ChannelTarget.PANEL, fullReaction);
+        this._mapSubFail.remove(ChannelTarget.Panel, fullReaction);
     }
 
     //OnSub Handler
@@ -1190,7 +1190,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onSubAnyCh(reaction: ChannelReactionOnSubAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubAnyCh>(reaction);
-        this._mapSub.add(ChannelTarget.ANY, fullReaction);
+        this._mapSub.add(ChannelTarget.Any, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1210,7 +1210,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceSubAnyCh(reaction: ChannelReactionOnSubAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubAnyCh>(reaction,{},true);
-        this._mapSub.add(ChannelTarget.ANY, fullReaction);
+        this._mapSub.add(ChannelTarget.Any, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1223,7 +1223,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offSubAnyCh(fullReaction?: FullReaction<any>): void {
-        this._mapSub.remove(ChannelTarget.ANY, fullReaction);
+        this._mapSub.remove(ChannelTarget.Any, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1239,7 +1239,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onSubUserCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction);
-        this._mapSub.add(ChannelTarget.USER, fullReaction);
+        this._mapSub.add(ChannelTarget.User, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1259,7 +1259,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceSubUserCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction,{},true);
-        this._mapSub.add(ChannelTarget.USER, fullReaction);
+        this._mapSub.add(ChannelTarget.User, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1272,7 +1272,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offSubUserCh(fullReaction?: FullReaction<any>): void {
-        this._mapSub.remove(ChannelTarget.USER, fullReaction);
+        this._mapSub.remove(ChannelTarget.User, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1288,7 +1288,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onSubAuthUserGroupCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction);
-        this._mapSub.add(ChannelTarget.AUG, fullReaction);
+        this._mapSub.add(ChannelTarget.Aug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1308,7 +1308,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceSubAuthUserGroupCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction,{},true);
-        this._mapSub.add(ChannelTarget.AUG, fullReaction);
+        this._mapSub.add(ChannelTarget.Aug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1321,7 +1321,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offSubAuthUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapSub.remove(ChannelTarget.AUG, fullReaction);
+        this._mapSub.remove(ChannelTarget.Aug, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1337,7 +1337,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onSubDefaultUserGroupCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction);
-        this._mapSub.add(ChannelTarget.DUG, fullReaction);
+        this._mapSub.add(ChannelTarget.Dug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1357,7 +1357,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceSubDefaultUserGroupCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction,{},true);
-        this._mapSub.add(ChannelTarget.DUG, fullReaction);
+        this._mapSub.add(ChannelTarget.Dug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1370,7 +1370,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offSubDefaultUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapSub.remove(ChannelTarget.DUG, fullReaction);
+        this._mapSub.remove(ChannelTarget.Dug, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1386,7 +1386,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onSubAllCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction);
-        this._mapSub.add(ChannelTarget.ALL, fullReaction);
+        this._mapSub.add(ChannelTarget.All, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1406,7 +1406,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceSubAllCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction,{},true);
-        this._mapSub.add(ChannelTarget.ALL, fullReaction);
+        this._mapSub.add(ChannelTarget.All, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1419,7 +1419,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offSubAllCh(fullReaction?: FullReaction<any>): void {
-        this._mapSub.remove(ChannelTarget.ALL, fullReaction);
+        this._mapSub.remove(ChannelTarget.All, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1499,7 +1499,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onSubPanelOutCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction);
-        this._mapSub.add(ChannelTarget.PANEL, fullReaction);
+        this._mapSub.add(ChannelTarget.Panel, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1519,7 +1519,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceSubPanelOutCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction,{},true);
-        this._mapSub.add(ChannelTarget.PANEL, fullReaction);
+        this._mapSub.add(ChannelTarget.Panel, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1532,7 +1532,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offSubPanelOutCh(fullReaction?: FullReaction<any>): void {
-        this._mapSub.remove(ChannelTarget.PANEL, fullReaction);
+        this._mapSub.remove(ChannelTarget.Panel, fullReaction);
     }
 
     //OnClientUnsub Handler
@@ -1549,7 +1549,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onClientUnsubAnyCh(reaction: ChannelReactionOnClientUnsubAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubAnyCh>(reaction);
-        this._mapClientUnsub.add(ChannelTarget.ANY, fullReaction);
+        this._mapClientUnsub.add(ChannelTarget.Any, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1569,7 +1569,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceClientUnsubAnyCh(reaction: ChannelReactionOnClientUnsubAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubAnyCh>(reaction,{},true);
-        this._mapClientUnsub.add(ChannelTarget.ANY, fullReaction);
+        this._mapClientUnsub.add(ChannelTarget.Any, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1582,7 +1582,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offClientUnsubAnyCh(fullReaction?: FullReaction<any>): void {
-        this._mapClientUnsub.remove(ChannelTarget.ANY, fullReaction);
+        this._mapClientUnsub.remove(ChannelTarget.Any, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1598,7 +1598,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onClientUnsubUserCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction);
-        this._mapClientUnsub.add(ChannelTarget.USER, fullReaction);
+        this._mapClientUnsub.add(ChannelTarget.User, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1618,7 +1618,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceClientUnsubUserCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction,{},true);
-        this._mapClientUnsub.add(ChannelTarget.USER, fullReaction);
+        this._mapClientUnsub.add(ChannelTarget.User, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1631,7 +1631,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offClientUnsubUserCh(fullReaction?: FullReaction<any>): void {
-        this._mapClientUnsub.remove(ChannelTarget.USER, fullReaction);
+        this._mapClientUnsub.remove(ChannelTarget.User, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1647,7 +1647,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onClientUnsubAuthUserGroupCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction);
-        this._mapClientUnsub.add(ChannelTarget.AUG, fullReaction);
+        this._mapClientUnsub.add(ChannelTarget.Aug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1667,7 +1667,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceClientUnsubAuthUserGroupCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction,{},true);
-        this._mapClientUnsub.add(ChannelTarget.AUG, fullReaction);
+        this._mapClientUnsub.add(ChannelTarget.Aug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1680,7 +1680,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offClientUnsubAuthUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapClientUnsub.remove(ChannelTarget.AUG, fullReaction);
+        this._mapClientUnsub.remove(ChannelTarget.Aug, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1696,7 +1696,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onClientUnsubDefaultUserGroupCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction);
-        this._mapClientUnsub.add(ChannelTarget.DUG, fullReaction);
+        this._mapClientUnsub.add(ChannelTarget.Dug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1716,7 +1716,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceClientUnsubDefaultUserGroupCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction,{},true);
-        this._mapClientUnsub.add(ChannelTarget.DUG, fullReaction);
+        this._mapClientUnsub.add(ChannelTarget.Dug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1729,7 +1729,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offClientUnsubDefaultUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapClientUnsub.remove(ChannelTarget.DUG, fullReaction);
+        this._mapClientUnsub.remove(ChannelTarget.Dug, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1745,7 +1745,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onClientUnsubAllCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction);
-        this._mapClientUnsub.add(ChannelTarget.ALL, fullReaction);
+        this._mapClientUnsub.add(ChannelTarget.All, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1765,7 +1765,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceClientUnsubAllCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction,{},true);
-        this._mapClientUnsub.add(ChannelTarget.ALL, fullReaction);
+        this._mapClientUnsub.add(ChannelTarget.All, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1778,7 +1778,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offClientUnsubAllCh(fullReaction?: FullReaction<any>): void {
-        this._mapClientUnsub.remove(ChannelTarget.ALL, fullReaction);
+        this._mapClientUnsub.remove(ChannelTarget.All, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1858,7 +1858,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onClientUnsubPanelOutCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction);
-        this._mapClientUnsub.add(ChannelTarget.PANEL, fullReaction);
+        this._mapClientUnsub.add(ChannelTarget.Panel, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1878,7 +1878,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceClientUnsubPanelOutCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction,{},true);
-        this._mapClientUnsub.add(ChannelTarget.PANEL, fullReaction);
+        this._mapClientUnsub.add(ChannelTarget.Panel, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1891,7 +1891,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offClientUnsubPanelOutCh(fullReaction?: FullReaction<any>): void {
-        this._mapClientUnsub.remove(ChannelTarget.PANEL, fullReaction);
+        this._mapClientUnsub.remove(ChannelTarget.Panel, fullReaction);
     }
 
     //OnUnsub Handler
@@ -1908,7 +1908,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onUnsubAnyCh(reaction: ChannelReactionOnUnsubAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubAnyCh>(reaction);
-        this._mapUnsub.add(ChannelTarget.ANY, fullReaction);
+        this._mapUnsub.add(ChannelTarget.Any, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1928,7 +1928,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceUnsubAnyCh(reaction: ChannelReactionOnUnsubAnyCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubAnyCh>(reaction,{},true);
-        this._mapUnsub.add(ChannelTarget.ANY, fullReaction);
+        this._mapUnsub.add(ChannelTarget.Any, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1941,7 +1941,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offUnsubAnyCh(fullReaction?: FullReaction<any>): void {
-        this._mapUnsub.remove(ChannelTarget.ANY, fullReaction);
+        this._mapUnsub.remove(ChannelTarget.Any, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1957,7 +1957,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onUnsubUserCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction);
-        this._mapUnsub.add(ChannelTarget.USER, fullReaction);
+        this._mapUnsub.add(ChannelTarget.User, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1977,7 +1977,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceUnsubUserCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction,{},true);
-        this._mapUnsub.add(ChannelTarget.USER, fullReaction);
+        this._mapUnsub.add(ChannelTarget.User, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -1990,7 +1990,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offUnsubUserCh(fullReaction?: FullReaction<any>): void {
-        this._mapUnsub.remove(ChannelTarget.USER, fullReaction);
+        this._mapUnsub.remove(ChannelTarget.User, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -2006,7 +2006,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onUnsubAuthUserGroupCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction);
-        this._mapUnsub.add(ChannelTarget.AUG, fullReaction);
+        this._mapUnsub.add(ChannelTarget.Aug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -2026,7 +2026,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceUnsubAuthUserGroupCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction,{},true);
-        this._mapUnsub.add(ChannelTarget.AUG, fullReaction);
+        this._mapUnsub.add(ChannelTarget.Aug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -2039,7 +2039,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offUnsubAuthUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapUnsub.remove(ChannelTarget.AUG, fullReaction);
+        this._mapUnsub.remove(ChannelTarget.Aug, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -2055,7 +2055,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onUnsubDefaultUserGroupCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction);
-        this._mapUnsub.add(ChannelTarget.DUG, fullReaction);
+        this._mapUnsub.add(ChannelTarget.Dug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -2075,7 +2075,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceUnsubDefaultUserGroupCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction,{},true);
-        this._mapUnsub.add(ChannelTarget.DUG, fullReaction);
+        this._mapUnsub.add(ChannelTarget.Dug, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -2088,7 +2088,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offUnsubDefaultUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapUnsub.remove(ChannelTarget.DUG, fullReaction);
+        this._mapUnsub.remove(ChannelTarget.Dug, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -2104,7 +2104,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onUnsubAllCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction);
-        this._mapUnsub.add(ChannelTarget.ALL, fullReaction);
+        this._mapUnsub.add(ChannelTarget.All, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -2124,7 +2124,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceUnsubAllCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction,{},true);
-        this._mapUnsub.add(ChannelTarget.ALL, fullReaction);
+        this._mapUnsub.add(ChannelTarget.All, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -2137,7 +2137,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offUnsubAllCh(fullReaction?: FullReaction<any>): void {
-        this._mapUnsub.remove(ChannelTarget.ALL, fullReaction);
+        this._mapUnsub.remove(ChannelTarget.All, fullReaction);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -2216,7 +2216,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onUnsubPanelOutCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction);
-        this._mapUnsub.add(ChannelTarget.PANEL, fullReaction);
+        this._mapUnsub.add(ChannelTarget.Panel, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -2236,7 +2236,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      */
     onceUnsubPanelOutCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
         const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction,{},true);
-        this._mapUnsub.add(ChannelTarget.PANEL, fullReaction);
+        this._mapUnsub.add(ChannelTarget.Panel, fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
     }
@@ -2249,7 +2249,7 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * If it is not given away all will be removed.
      */
     offUnsubPanelOutCh(fullReaction?: FullReaction<any>): void {
-        this._mapUnsub.remove(ChannelTarget.PANEL, fullReaction);
+        this._mapUnsub.remove(ChannelTarget.Panel, fullReaction);
     }
 
     private async _triggerFilterDataEventBox(box: SBox<any> | undefined, valid: ValidChecker, ...data: any[]) {
@@ -2308,23 +2308,23 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
                     return ChannelReactionBox._multiFilter(filter.event,event);
                 };
                 switch (target) {
-                    case ChannelTarget.ANY:
-                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.ANY),sameEventFilter,data,ssid,event,chFullName);
+                    case ChannelTarget.Any:
+                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.Any),sameEventFilter,data,ssid,event,chFullName);
                         break;
-                    case ChannelTarget.USER:
-                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.USER),sameEventFilter,data,ssid,event);
+                    case ChannelTarget.User:
+                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.User),sameEventFilter,data,ssid,event);
                         break;
-                    case ChannelTarget.AUG:
-                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.AUG),sameEventFilter,data,ssid,event);
+                    case ChannelTarget.Aug:
+                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.Aug),sameEventFilter,data,ssid,event);
                         break;
-                    case ChannelTarget.DUG:
-                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.DUG),sameEventFilter,data,ssid,event);
+                    case ChannelTarget.Dug:
+                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.Dug),sameEventFilter,data,ssid,event);
                         break;
-                    case ChannelTarget.ALL:
-                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.ALL),sameEventFilter,data,ssid,event);
+                    case ChannelTarget.All:
+                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.All),sameEventFilter,data,ssid,event);
                         break;
-                    case ChannelTarget.PANEL:
-                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.PANEL),sameEventFilter,data,ssid,event);
+                    case ChannelTarget.Panel:
+                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.Panel),sameEventFilter,data,ssid,event);
                         break;
                 }
             }
@@ -2351,23 +2351,23 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
                 await this._triggerFilterDataEventBox(map.tryGet(ChannelTarget.C),sameEventAndChFilter,...arg,name,id);
             } else {
                 switch (target) {
-                    case ChannelTarget.ANY:
-                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.ANY),...arg,chFullName);
+                    case ChannelTarget.Any:
+                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.Any),...arg,chFullName);
                         break;
-                    case ChannelTarget.USER:
-                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.USER),...arg);
+                    case ChannelTarget.User:
+                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.User),...arg);
                         break;
-                    case ChannelTarget.AUG:
-                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.AUG),...arg);
+                    case ChannelTarget.Aug:
+                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.Aug),...arg);
                         break;
-                    case ChannelTarget.DUG:
-                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.DUG),...arg);
+                    case ChannelTarget.Dug:
+                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.Dug),...arg);
                         break;
-                    case ChannelTarget.ALL:
-                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.ALL),...arg);
+                    case ChannelTarget.All:
+                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.All),...arg);
                         break;
-                    case ChannelTarget.PANEL:
-                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.PANEL),...arg);
+                    case ChannelTarget.Panel:
+                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.Panel),...arg);
                         break;
                 }
             }

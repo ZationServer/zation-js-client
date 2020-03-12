@@ -5,7 +5,7 @@ Copyright(c) Luca Scaringella
  */
 
 export enum BackErrorInfo {
-    MAIN = 'main'
+    Main = 'main'
 }
 
 export interface ZationRequest {
@@ -36,20 +36,20 @@ export interface ResponseBackError {
     i?: object
 }
 
-export enum HttpGetReq {
-    VERSION = 'v',
-    SYSTEM = 's',
-    AUTH_REQ = 'a',
-    VALI_REQ = 'vr',
-    CONTROLLER = 'c',
-    SYSTEM_CONTROLLER = 'sc',
-    API_LEVEL = 'al',
-    INPUT = 'i',
-    TOKEN = 't'
+export class HttpGetReq {
+    static readonly VERSION = 'v';
+    static readonly SYSTEM = 's';
+    static readonly AUTH_REQ = 'a';
+    static readonly VALI_REQ = 'vr';
+    static readonly CONTROLLER = 'c';
+    static readonly SYSTEM_CONTROLLER = 'sc';
+    static readonly API_LEVEL = 'al';
+    static readonly INPUT = 'i';
+    static readonly TOKEN = 't';
 }
 
 export enum ZationHttpInfo {
-    DEAUTHENTICATE = 'deauthenticate'
+    Deauthenticate = 'deauthenticate'
 }
 
 export interface ZationResponse {
@@ -77,17 +77,17 @@ export interface ZationToken {
     variables?: object
 }
 
-export enum ZationChannel {
+export class ZationChannel {
     //Zation Main Channels
-    USER_CHANNEL_PREFIX = 'Z_U.',
-    AUTH_USER_GROUP_PREFIX = 'Z_AUG.',
-    DEFAULT_USER_GROUP = 'Z_DUG',
-    ALL = 'Z_ALL',
-    PANEL_IN = 'Z_PI',
-    PANEL_OUT = 'Z_PO',
+    static readonly USER_CHANNEL_PREFIX = 'Z_U.';
+    static readonly AUTH_USER_GROUP_PREFIX = 'Z_AUG.';
+    static readonly DEFAULT_USER_GROUP = 'Z_DUG';
+    static readonly ALL = 'Z_ALL';
+    static readonly PANEL_IN = 'Z_PI';
+    static readonly PANEL_OUT = 'Z_PO';
     //Custom Channels
-    CUSTOM_CHANNEL_PREFIX = 'Z_C.',
-    CUSTOM_CHANNEL_ID_SEPARATOR = '.',
+    static readonly CUSTOM_CHANNEL_PREFIX = 'Z_C.';
+    static readonly CUSTOM_CHANNEL_ID_SEPARATOR = '.';
 }
 
-export const ZationCustomEventNamespace = '>CE.';
+export const ZATION_CUSTOM_EVENT_NAMESPACE = '>CE.';

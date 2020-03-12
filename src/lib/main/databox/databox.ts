@@ -320,7 +320,7 @@ export default class Databox {
                 this.created = true;
             } catch (e) {
                 this._clearListenersAndReset();
-                if(e.name === ErrorName.INVALID_INPUT){
+                if(e.name === ErrorName.InvalidInput){
                     throw new InvalidInputError('Invalid init input. Failed to connect to the Databox.',e);
                 }
                 else {
@@ -512,7 +512,7 @@ export default class Databox {
             }
             this.newDataEvent.emit(this);
         } catch (e) {
-            if(e.name === ErrorName.INVALID_INPUT) {
+            if(e.name === ErrorName.InvalidInput) {
                 throw new InvalidInputError('Invalid fetch input.',e);
             }
             else {
@@ -560,8 +560,8 @@ export default class Databox {
                     results[fetchResult.c] = dbsHead;
                     this.tmpReloadDataSets.add(dbsHead);
                 } catch (err) {
-                    if ((err.name as ErrorName) !== ErrorName.NO_MORE_DATA_AVAILABLE &&
-                        (err.name as ErrorName) !== ErrorName.NO_DATA_AVAILABLE) {
+                    if ((err.name as ErrorName) !== ErrorName.NoMoreDataAvailable &&
+                        (err.name as ErrorName) !== ErrorName.NoDataAvailable) {
                         throw err;
                     }
                 }
@@ -585,8 +585,8 @@ export default class Databox {
                 results[fetchResult.c] = dbsHead;
                 this.tmpReloadDataSets.add(dbsHead);
             } catch (err) {
-                if ((err.name as ErrorName) !== ErrorName.NO_MORE_DATA_AVAILABLE &&
-                    (err.name as ErrorName) !== ErrorName.NO_DATA_AVAILABLE) {
+                if ((err.name as ErrorName) !== ErrorName.NoMoreDataAvailable &&
+                    (err.name as ErrorName) !== ErrorName.NoDataAvailable) {
                     throw err;
                 }
             }
@@ -668,7 +668,7 @@ export default class Databox {
                 } catch (e) {
                     this.fetchHistoryManager.done();
                     this.tmpReloadDataSets.clear();
-                    if(e.name === ErrorName.INVALID_INPUT){
+                    if(e.name === ErrorName.InvalidInput){
                         throw new InvalidInputError('Invalid fetch input in the reload process.',e);
                     }
                     else {

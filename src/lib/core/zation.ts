@@ -14,7 +14,7 @@ import {Events}                      from "../main/constants/events";
 import {ValidationCheck}             from "../main/request/main/validationRequest";
 import {ChannelTarget}               from "../main/channel/channelTarget";
 import {SystemController}            from "../main/constants/systemController";
-import {ZationCustomEventNamespace, ZationHttpInfo, ZationToken} from "../main/constants/internal";
+import {ZATION_CUSTOM_EVENT_NAMESPACE, ZationHttpInfo, ZationToken} from "../main/constants/internal";
 import ConnectionUtils, {WaitForConnectionOption}                from "../main/utils/connectionUtils";
 import {ChannelEngine}               from "../main/channel/channelEngine";
 import {ZationConfig}                from "../main/config/zationConfig";
@@ -272,7 +272,7 @@ export class Zation
      */
     async ping(waitForConnection: WaitForConnectionOption = undefined): Promise<number>
     {
-        const req = new WsRequest(SystemController.PING,{},true);
+        const req = new WsRequest(SystemController.Ping,{},true);
         req.setWaitForConnection(waitForConnection);
         const start = performance.now();
         await this.send(req);
@@ -607,7 +607,7 @@ export class Zation
             }
         }
 
-        if(response.hasZationHttpInfo(ZationHttpInfo.DEAUTHENTICATE)) {
+        if(response.hasZationHttpInfo(ZationHttpInfo.Deauthenticate)) {
             await this.authEngine.deauthenticate();
         }
     }
@@ -798,30 +798,30 @@ export class Zation
         //events for any channel
         this.socket.on('kickOut',async (msg,chName) => {
             await this._getChannelReactionMainBox().forEachAll(async (chReactionBox: ChannelReactionBox) => {
-                await chReactionBox._triggerEvent(chReactionBox.mapKick,ChannelTarget.ANY,{chFullName: chName},msg);
+                await chReactionBox._triggerEvent(chReactionBox.mapKick,ChannelTarget.Any,{chFullName: chName},msg);
             });
         });
 
         this.socket.on('subscribeFail',async (err,chName) => {
             await this._getChannelReactionMainBox().forEachAll(async (chReactionBox: ChannelReactionBox) => {
-                await chReactionBox._triggerEvent(chReactionBox.mapSubFail,ChannelTarget.ANY,{chFullName: chName},err);
+                await chReactionBox._triggerEvent(chReactionBox.mapSubFail,ChannelTarget.Any,{chFullName: chName},err);
             });
         });
 
         this.socket.on('subscribe',async (chName) => {
             await this._getChannelReactionMainBox().forEachAll(async (chReactionBox: ChannelReactionBox) => {
-                await chReactionBox._triggerEvent(chReactionBox.mapSub,ChannelTarget.ANY,{chFullName: chName});
+                await chReactionBox._triggerEvent(chReactionBox.mapSub,ChannelTarget.Any,{chFullName: chName});
             });
         });
 
         this.socket.on('unsubscribe',async (chName,fromClient) => {
             if(fromClient){
                 await this._getChannelReactionMainBox().forEachAll(async (chReactionBox: ChannelReactionBox) => {
-                    await chReactionBox._triggerEvent(chReactionBox.mapClientUnsub,ChannelTarget.ANY,{chFullName: chName});
+                    await chReactionBox._triggerEvent(chReactionBox.mapClientUnsub,ChannelTarget.Any,{chFullName: chName});
                 });
             }
             await this._getChannelReactionMainBox().forEachAll(async (chReactionBox: ChannelReactionBox) => {
-                await chReactionBox._triggerEvent(chReactionBox.mapUnsub,ChannelTarget.ANY,{chFullName: chName},fromClient);
+                await chReactionBox._triggerEvent(chReactionBox.mapUnsub,ChannelTarget.Any,{chFullName: chName},fromClient);
             });
         });
     }
@@ -1458,11 +1458,11 @@ export class Zation
         return new Promise<object>((resolve, reject) => {
             // noinspection DuplicatedCode
             if(onlyTransmit){
-                this.socket.emit(ZationCustomEventNamespace+event,data,undefined,timeout);
+                this.socket.emit(ZATION_CUSTOM_EVENT_NAMESPACE+event,data,undefined,timeout);
                 resolve();
             }
             else {
-                this.socket.emit(ZationCustomEventNamespace+event,data,(err, data) => {
+                this.socket.emit(ZATION_CUSTOM_EVENT_NAMESPACE+event,data,(err, data) => {
                     if(err){
                         if(err.name === 'TimeoutError'){
                             reject(new TimeoutError(err.message));

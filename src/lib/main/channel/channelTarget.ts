@@ -5,6 +5,6 @@ Copyright(c) Luca Scaringella
  */
 
 export enum ChannelTarget {
-    ANY,USER,AUG,DUG,ALL,C,PANEL
+    Any,User,Aug,Dug,All,C,Panel
 }
 

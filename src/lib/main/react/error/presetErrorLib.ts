@@ -21,7 +21,7 @@ export abstract class PresetErrorLib<T>
      */
     validationError(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.VALIDATION_ERROR));
+        (ErrorType.ValidationError));
         return this.self();
     }
 
@@ -37,7 +37,7 @@ export abstract class PresetErrorLib<T>
      */
     inputTypeError(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        (undefined,inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -53,7 +53,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeObject(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeObject',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeObject',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -69,7 +69,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeArray(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeArray',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeArray',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -85,7 +85,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeString(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeString',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeString',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -101,7 +101,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeChar(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeChar',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeChar',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -117,7 +117,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeNull(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeNull',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeNull',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -133,7 +133,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeInt(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeInt',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeInt',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -149,7 +149,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeFloat(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeFloat',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeFloat',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -165,7 +165,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeNumber(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeNumber',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeNumber',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -181,7 +181,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeDate(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeDate',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeDate',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -197,7 +197,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeEmail(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeEmail',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeEmail',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -213,7 +213,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeBoolean(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeBoolean',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeBoolean',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -229,7 +229,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeSha512(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeSha512',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeSha512',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -245,7 +245,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeSha256(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeSha256',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeSha256',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -261,7 +261,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeSha384(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeSha384',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeSha384',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -277,7 +277,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeSha1(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeSha1',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeSha1',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -293,7 +293,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeMd5(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeMd5',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeMd5',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -309,7 +309,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeHexColor(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeHexColor',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeHexColor',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -325,7 +325,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeHexadecimal(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeHexadecimal',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeHexadecimal',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -341,7 +341,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeIp4(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeIp4',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeIp4',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -357,7 +357,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeIp6(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeIp6',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeIp6',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -373,7 +373,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeIsbn10(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeIsbn10',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeIsbn10',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -389,7 +389,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeIsbn13(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeIsbn13',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeIsbn13',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -405,7 +405,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeJson(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeJson',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeJson',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -421,7 +421,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeUrl(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeUrl',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeUrl',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -437,7 +437,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeMimeType(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeMimeType',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeMimeType',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -453,7 +453,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeMacAddress(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeMacAddress',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeMacAddress',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -469,7 +469,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeMobileNumber(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeMobileNumber',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeMobileNumber',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -485,7 +485,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeUuid3(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeUuid3',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeUuid3',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -501,7 +501,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeUuid4(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeUuid4',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeUuid4',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -517,7 +517,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeUuid5(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeUuid5',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeUuid5',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -533,7 +533,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeBase64(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeBase64',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeBase64',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -549,7 +549,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeAscii(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypescii',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypescii',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -565,7 +565,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeUserId(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeUserId',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeUserId',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -581,7 +581,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeMongoId(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeMongoId',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeMongoId',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -597,7 +597,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotTypeLatLong(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeLatLong',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('inputIsNotTypeLatLong',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -613,7 +613,7 @@ export abstract class PresetErrorLib<T>
      */
     inputValueLengthError(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroup.VALUE_LENGTH_ERROR));
+        (undefined,inputPath,inputValue,ErrorGroup.ValueLengthError));
         return this.self();
     }
 
@@ -632,7 +632,7 @@ export abstract class PresetErrorLib<T>
      */
     inputNotMatchWithMinLength(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithMinLength',inputPath,inputValue,ErrorGroup.VALUE_LENGTH_ERROR));
+        ('inputNotMatchWithMinLength',inputPath,inputValue,ErrorGroup.ValueLengthError));
         return this.self();
     }
 
@@ -651,7 +651,7 @@ export abstract class PresetErrorLib<T>
      */
     inputNotMatchWithMaxLength(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithMaxLength',inputPath,inputValue,ErrorGroup.VALUE_LENGTH_ERROR));
+        ('inputNotMatchWithMaxLength',inputPath,inputValue,ErrorGroup.ValueLengthError));
         return this.self();
     }
 
@@ -670,7 +670,7 @@ export abstract class PresetErrorLib<T>
      */
     inputNotMatchWithLength(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithLength',inputPath,inputValue,ErrorGroup.VALUE_LENGTH_ERROR));
+        ('inputNotMatchWithLength',inputPath,inputValue,ErrorGroup.ValueLengthError));
         return this.self();
     }
 
@@ -686,7 +686,7 @@ export abstract class PresetErrorLib<T>
      */
     inputLettersFormatError(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroup.LETTERS_FORMAT_ERROR));
+        (undefined,inputPath,inputValue,ErrorGroup.LettersFormatError));
         return this.self();
     }
 
@@ -702,7 +702,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotUppercase(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotUppercase',inputPath,inputValue,ErrorGroup.LETTERS_FORMAT_ERROR));
+        ('inputIsNotUppercase',inputPath,inputValue,ErrorGroup.LettersFormatError));
         return this.self();
     }
 
@@ -718,7 +718,7 @@ export abstract class PresetErrorLib<T>
      */
     inputIsNotLowercase(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotLowercase',inputPath,inputValue,ErrorGroup.LETTERS_FORMAT_ERROR));
+        ('inputIsNotLowercase',inputPath,inputValue,ErrorGroup.LettersFormatError));
         return this.self();
     }
 
@@ -753,7 +753,7 @@ export abstract class PresetErrorLib<T>
      */
     inputDateError(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroup.DATE_ERROR));
+        (undefined,inputPath,inputValue,ErrorGroup.DateError));
         return this.self();
     }
 
@@ -772,7 +772,7 @@ export abstract class PresetErrorLib<T>
      */
     inputDateIsNotBefore(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputDateIsNotBefore',inputPath,inputValue,ErrorGroup.DATE_ERROR));
+        ('inputDateIsNotBefore',inputPath,inputValue,ErrorGroup.DateError));
         return this.self();
     }
 
@@ -791,7 +791,7 @@ export abstract class PresetErrorLib<T>
      */
     inputDateIsNotAfter(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputDateIsNotAfter',inputPath,inputValue,ErrorGroup.DATE_ERROR));
+        ('inputDateIsNotAfter',inputPath,inputValue,ErrorGroup.DateError));
         return this.self();
     }
 
@@ -846,7 +846,7 @@ export abstract class PresetErrorLib<T>
      */
     inputNumberSizeError(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroup.NUMBER_SIZE_ERROR));
+        (undefined,inputPath,inputValue,ErrorGroup.NumberSizeError));
         return this.self();
     }
 
@@ -865,7 +865,7 @@ export abstract class PresetErrorLib<T>
      */
     inputNotMatchWithMinValue(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithMinValue',inputPath,inputValue,ErrorGroup.NUMBER_SIZE_ERROR));
+        ('inputNotMatchWithMinValue',inputPath,inputValue,ErrorGroup.NumberSizeError));
         return this.self();
     }
 
@@ -884,7 +884,7 @@ export abstract class PresetErrorLib<T>
      */
     inputNotMatchWithMaxValue(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithMaxValue',inputPath,inputValue,ErrorGroup.NUMBER_SIZE_ERROR));
+        ('inputNotMatchWithMaxValue',inputPath,inputValue,ErrorGroup.NumberSizeError));
         return this.self();
     }
 
@@ -1007,7 +1007,7 @@ export abstract class PresetErrorLib<T>
      */
     inputArrayLengthError(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroup.ARRAY_LENGTH_ERROR));
+        (undefined,inputPath,inputValue,ErrorGroup.ArrayLengthError));
         return this.self();
     }
 
@@ -1026,7 +1026,7 @@ export abstract class PresetErrorLib<T>
      */
     inputArrayNotMatchWithMaxLength(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputArrayNotMatchWithMaxLength',inputPath,inputValue,ErrorGroup.ARRAY_LENGTH_ERROR));
+        ('inputArrayNotMatchWithMaxLength',inputPath,inputValue,ErrorGroup.ArrayLengthError));
         return this.self();
     }
 
@@ -1045,7 +1045,7 @@ export abstract class PresetErrorLib<T>
      */
     inputArrayNotMatchWithMinLength(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputArrayNotMatchWithMinLength',inputPath,inputValue,ErrorGroup.ARRAY_LENGTH_ERROR));
+        ('inputArrayNotMatchWithMinLength',inputPath,inputValue,ErrorGroup.ArrayLengthError));
         return this.self();
     }
 
@@ -1064,7 +1064,7 @@ export abstract class PresetErrorLib<T>
      */
     inputArrayNotMatchWithLength(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputArrayNotMatchWithLength',inputPath,inputValue,ErrorGroup.ARRAY_LENGTH_ERROR));
+        ('inputArrayNotMatchWithLength',inputPath,inputValue,ErrorGroup.ArrayLengthError));
         return this.self();
     }
 
@@ -1083,7 +1083,7 @@ export abstract class PresetErrorLib<T>
      */
     inputNotMatchWithMinByteSize(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithMinByteSize',inputPath,inputValue,ErrorGroup.BYTE_SIZE_ERROR));
+        ('inputNotMatchWithMinByteSize',inputPath,inputValue,ErrorGroup.ByteSizeError));
         return this.self();
     }
 
@@ -1102,7 +1102,7 @@ export abstract class PresetErrorLib<T>
      */
     inputNotMatchWithMaxByteSize(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithMaxByteSize',inputPath,inputValue,ErrorGroup.BYTE_SIZE_ERROR));
+        ('inputNotMatchWithMaxByteSize',inputPath,inputValue,ErrorGroup.ByteSizeError));
         return this.self();
     }
 
@@ -1118,7 +1118,7 @@ export abstract class PresetErrorLib<T>
      */
     inputByteSizeError(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroup.BYTE_SIZE_ERROR));
+        (undefined,inputPath,inputValue,ErrorGroup.ByteSizeError));
         return this.self();
     }
 
@@ -1137,7 +1137,7 @@ export abstract class PresetErrorLib<T>
      */
     inputNotMatchWithMimeType(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithMimeType',inputPath,inputValue,ErrorGroup.CONTENT_TYPE_ERROR));
+        ('inputNotMatchWithMimeType',inputPath,inputValue,ErrorGroup.ContentTypeError));
         return this.self();
     }
 
@@ -1156,7 +1156,7 @@ export abstract class PresetErrorLib<T>
      */
     inputNotMatchWithMimeSubType(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithMimeSubType',inputPath,inputValue,ErrorGroup.CONTENT_TYPE_ERROR));
+        ('inputNotMatchWithMimeSubType',inputPath,inputValue,ErrorGroup.ContentTypeError));
         return this.self();
     }
 
@@ -1172,7 +1172,7 @@ export abstract class PresetErrorLib<T>
      */
     inputContentTypeError(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroup.CONTENT_TYPE_ERROR));
+        (undefined,inputPath,inputValue,ErrorGroup.ContentTypeError));
         return this.self();
     }
 
@@ -1191,7 +1191,7 @@ export abstract class PresetErrorLib<T>
      */
     noValidTypeWasFound(inputPath?: string,inputValue?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('noValidTypeWasFound',inputPath,inputValue,ErrorGroup.TYPE_ERROR));
+        ('noValidTypeWasFound',inputPath,inputValue,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -1222,7 +1222,7 @@ export abstract class PresetErrorLib<T>
      */
     controllerNotFound(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'controllerNotFound'));
+        (ErrorType.InputError,'controllerNotFound'));
         return this.self();
     }
 
@@ -1237,7 +1237,7 @@ export abstract class PresetErrorLib<T>
      */
     systemControllerNotFound(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'systemControllerNotFound'));
+        (ErrorType.InputError,'systemControllerNotFound'));
         return this.self();
     }
 
@@ -1253,7 +1253,7 @@ export abstract class PresetErrorLib<T>
      */
     apiLevelIncompatible(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'apiLevelIncompatible'));
+        (ErrorType.InputError,'apiLevelIncompatible'));
         return this.self();
     }
 
@@ -1265,7 +1265,7 @@ export abstract class PresetErrorLib<T>
      */
     authControllerNotSet(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'authControllerNotSet'));
+        (ErrorType.InputError,'authControllerNotSet'));
         return this.self();
     }
 
@@ -1280,7 +1280,7 @@ export abstract class PresetErrorLib<T>
      */
     noAccessWithSystem(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.NO_ACCESS_ERROR,'noAccessWithSystem'));
+        (ErrorType.NoAccessError,'noAccessWithSystem'));
         return this.self();
     }
 
@@ -1295,7 +1295,7 @@ export abstract class PresetErrorLib<T>
      */
     noAccessWithVersion(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.NO_ACCESS_ERROR,'noAccessWithVersion'));
+        (ErrorType.NoAccessError,'noAccessWithVersion'));
         return this.self();
     }
 
@@ -1306,7 +1306,7 @@ export abstract class PresetErrorLib<T>
      */
     codeError(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.CODE_ERROR));
+        (ErrorType.CodeError));
         return this.self();
     }
 
@@ -1318,7 +1318,7 @@ export abstract class PresetErrorLib<T>
      */
     authenticationError(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.SYSTEM_ERROR,'authenticationError'));
+        (ErrorType.SystemError,'authenticationError'));
         return this.self();
     }
 
@@ -1329,7 +1329,7 @@ export abstract class PresetErrorLib<T>
      */
     inputError(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR));
+        (ErrorType.InputError));
         return this.self();
     }
 
@@ -1344,7 +1344,7 @@ export abstract class PresetErrorLib<T>
      */
     inputParamIsMissing(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'inputParamIsMissing'));
+        (ErrorType.InputError,'inputParamIsMissing'));
         return this.self();
     }
 
@@ -1358,7 +1358,7 @@ export abstract class PresetErrorLib<T>
      */
     unknownInputParam(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'unknownInputParam'));
+        (ErrorType.InputError,'unknownInputParam'));
         return this.self();
     }
 
@@ -1375,7 +1375,7 @@ export abstract class PresetErrorLib<T>
      */
     inputParamNotAssignable(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'inputParamNotAssignable'));
+        (ErrorType.InputError,'inputParamNotAssignable'));
         return this.self();
     }
 
@@ -1390,7 +1390,7 @@ export abstract class PresetErrorLib<T>
      */
     arrayWasExpected(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'arrayWasExpected'));
+        (ErrorType.InputError,'arrayWasExpected'));
         return this.self();
     }
 
@@ -1405,7 +1405,7 @@ export abstract class PresetErrorLib<T>
      */
     objectWasExpected(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'objectWasExpected'));
+        (ErrorType.InputError,'objectWasExpected'));
         return this.self();
     }
 
@@ -1422,7 +1422,7 @@ export abstract class PresetErrorLib<T>
      */
     objectPropertyIsMissing(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'objectPropertyIsMissing'));
+        (ErrorType.InputError,'objectPropertyIsMissing'));
         return this.self();
     }
 
@@ -1437,7 +1437,7 @@ export abstract class PresetErrorLib<T>
      */
     unknownObjectProperty(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'unknownObjectProperty'));
+        (ErrorType.InputError,'unknownObjectProperty'));
         return this.self();
     }
 
@@ -1449,7 +1449,7 @@ export abstract class PresetErrorLib<T>
      */
     wrongPanelAuthData(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.AUTH_ERROR,'wrongPanelAuthData'));
+        (ErrorType.AuthError,'wrongPanelAuthData'));
         return this.self();
     }
 
@@ -1462,7 +1462,7 @@ export abstract class PresetErrorLib<T>
      */
     panelIsNotActivated(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'panelIsNotActivated'));
+        (ErrorType.InputError,'panelIsNotActivated'));
         return this.self();
     }
 
@@ -1475,7 +1475,7 @@ export abstract class PresetErrorLib<T>
      */
     authStartActive(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.TIME_ERROR,'authStartActive'));
+        (ErrorType.TimeError,'authStartActive'));
         return this.self();
     }
 
@@ -1493,7 +1493,7 @@ export abstract class PresetErrorLib<T>
      */
     noAccessWithTokenState(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.NO_ACCESS_ERROR,'noAccessWithTokenState'));
+        (ErrorType.NoAccessError,'noAccessWithTokenState'));
         return this.self();
     }
 
@@ -1505,7 +1505,7 @@ export abstract class PresetErrorLib<T>
      */
     wrongInputDataStructure(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'wrongInputDataStructure'));
+        (ErrorType.InputError,'wrongInputDataStructure'));
         return this.self();
     }
 
@@ -1520,7 +1520,7 @@ export abstract class PresetErrorLib<T>
      */
     wrongInputTypeInParamBasedInput(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'wrongInputTypeInParamBasedInput'));
+        (ErrorType.InputError,'wrongInputTypeInParamBasedInput'));
         return this.self();
     }
 
@@ -1532,7 +1532,7 @@ export abstract class PresetErrorLib<T>
      */
     JSONParseSyntaxError(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'JSONParseSyntaxError'));
+        (ErrorType.InputError,'JSONParseSyntaxError'));
         return this.self();
     }
 
@@ -1548,7 +1548,7 @@ export abstract class PresetErrorLib<T>
      */
     wrongValidationCheckStructure(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'wrongValidationCheckStructure'));
+        (ErrorType.InputError,'wrongValidationCheckStructure'));
         return this.self();
     }
 
@@ -1565,7 +1565,7 @@ export abstract class PresetErrorLib<T>
      */
     inputPathNotResolvable(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'inputPathNotResolvable'));
+        (ErrorType.InputError,'inputPathNotResolvable'));
         return this.self();
     }
 
@@ -1582,7 +1582,7 @@ export abstract class PresetErrorLib<T>
      */
     validationCheckLimitReached(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.INPUT_ERROR,'validationCheckLimitReached'));
+        (ErrorType.InputError,'validationCheckLimitReached'));
         return this.self();
     }
 
@@ -1593,7 +1593,7 @@ export abstract class PresetErrorLib<T>
      */
     protocolError(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.PROTOCOL_ERROR));
+        (ErrorType.ProtocolError));
         return this.self();
     }
 
@@ -1610,7 +1610,7 @@ export abstract class PresetErrorLib<T>
      */
     noAccessWithProtocol(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.PROTOCOL_ERROR,'noAccessWithProtocol'));
+        (ErrorType.ProtocolError,'noAccessWithProtocol'));
         return this.self();
     }
 
@@ -1628,7 +1628,7 @@ export abstract class PresetErrorLib<T>
      */
     noAccessWithHttpMethod(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.PROTOCOL_ERROR,'noAccessWithHttpMethod'));
+        (ErrorType.ProtocolError,'noAccessWithHttpMethod'));
         return this.self();
     }
 
@@ -1639,7 +1639,7 @@ export abstract class PresetErrorLib<T>
      */
     systemError(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.SYSTEM_ERROR));
+        (ErrorType.SystemError));
         return this.self();
     }
 
@@ -1654,7 +1654,7 @@ export abstract class PresetErrorLib<T>
      */
     unknownError(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.SYSTEM_ERROR,'unknownError'));
+        (ErrorType.SystemError,'unknownError'));
         return this.self();
     }
 
@@ -1665,7 +1665,7 @@ export abstract class PresetErrorLib<T>
      */
     tokenError(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.TOKEN_ERROR));
+        (ErrorType.TokenError));
         return this.self();
     }
 
@@ -1678,7 +1678,7 @@ export abstract class PresetErrorLib<T>
      */
     unknownTokenVerifyError(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.TOKEN_ERROR,'unknownTokenVerifyError'));
+        (ErrorType.TokenError,'unknownTokenVerifyError'));
         return this.self();
     }
 
@@ -1691,7 +1691,7 @@ export abstract class PresetErrorLib<T>
      */
     unknownTokenSignError(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.TOKEN_ERROR,'unknownTokenSignError'));
+        (ErrorType.TokenError,'unknownTokenSignError'));
         return this.self();
     }
 
@@ -1706,7 +1706,7 @@ export abstract class PresetErrorLib<T>
      */
     tokenExpiredError(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.TOKEN_ERROR,'tokenExpiredError'));
+        (ErrorType.TokenError,'tokenExpiredError'));
         return this.self();
     }
 
@@ -1721,7 +1721,7 @@ export abstract class PresetErrorLib<T>
      */
     jsonWebTokenError(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.TOKEN_ERROR,'jsonWebTokenError'));
+        (ErrorType.TokenError,'jsonWebTokenError'));
         return this.self();
     }
 
@@ -1734,7 +1734,7 @@ export abstract class PresetErrorLib<T>
      */
     tokenClusterKeyIsInvalid(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.TOKEN_ERROR,'tokenClusterKeyIsInvalid'));
+        (ErrorType.TokenError,'tokenClusterKeyIsInvalid'));
         return this.self();
     }
 
@@ -1750,7 +1750,7 @@ export abstract class PresetErrorLib<T>
      */
     authenticateMiddlewareBlock(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.TOKEN_ERROR,'authenticateMiddlewareBlock'));
+        (ErrorType.TokenError,'authenticateMiddlewareBlock'));
         return this.self();
     }
 
@@ -1759,7 +1759,7 @@ export abstract class PresetErrorLib<T>
     {
         const preset: ErrorFilter = {};
         preset.fromZationSystem = true;
-        preset.type = ErrorType.VALIDATION_ERROR;
+        preset.type = ErrorType.ValidationError;
         if(name) {
             preset.name = name;
         }

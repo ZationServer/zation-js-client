@@ -14,7 +14,7 @@ export default class DbError {
      * @param err
      */
     static isNoMoreDataAvailable(err: any): boolean {
-        return err.name === ErrorName.NO_MORE_DATA_AVAILABLE;
+        return err.name === ErrorName.NoMoreDataAvailable;
     }
 
     /**
@@ -22,7 +22,7 @@ export default class DbError {
      * @param err
      */
     static isNoDataAvailable(err: any): err is {info: {code?: number | string,data?: any}} {
-        return err.name === ErrorName.NO_DATA_AVAILABLE;
+        return err.name === ErrorName.NoDataAvailable;
     }
 
     /**
@@ -30,7 +30,7 @@ export default class DbError {
      * @param err
      */
     static isAccessDenied(err: any): boolean {
-        return err.name === ErrorName.ACCESS_DENIED;
+        return err.name === ErrorName.AccessDenied;
     }
 
     /**
@@ -38,7 +38,7 @@ export default class DbError {
      * @param err
      */
     static hasNoAccessWithVersion(err: any): boolean {
-        return err.name === ErrorName.NO_ACCESS_WITH_VERSION;
+        return err.name === ErrorName.NoAccessWithVersion;
     }
 
     /**
@@ -46,7 +46,7 @@ export default class DbError {
      * @param err
      */
     static hasNoAccessWithSystem(err: any): boolean {
-        return err.name === ErrorName.NO_ACCESS_WITH_SYSTEM;
+        return err.name === ErrorName.NoAccessWithSystem;
     }
 
     /**
@@ -54,7 +54,7 @@ export default class DbError {
      * @param err
      */
     static isIdNotValid(err: any): boolean {
-        return err.name === ErrorName.ID_IS_NOT_VALID;
+        return err.name === ErrorName.IdIsNotValid;
     }
 
     /**
@@ -62,7 +62,7 @@ export default class DbError {
      * @param err
      */
     static isApiLevelIncompatible(err: any): boolean {
-        return err.name === ErrorName.API_LEVEL_INCOMPATIBLE;
+        return err.name === ErrorName.ApiLevelIncompatible;
     }
 
     /**
@@ -70,7 +70,7 @@ export default class DbError {
      * @param err
      */
     static isDataboxLimitReached(err: any): boolean {
-        return err.name === ErrorName.DATABOX_LIMIT_REACHED;
+        return err.name === ErrorName.DataboxLimitReached;
     }
 
     /**
@@ -78,7 +78,7 @@ export default class DbError {
      * @param err
      */
     static isMaxBackpressureReached(err: any): boolean {
-        return err.name === ErrorName.MAX_BACKPRESSURE_REACHED;
+        return err.name === ErrorName.MaxBackpressureReached;
     }
 
     /**
@@ -86,7 +86,7 @@ export default class DbError {
      * @param err
      */
     static isMaxInputChannelsReached(err: any): boolean {
-        return err.name === ErrorName.MAX_INPUT_CHANNELS_REACHED;
+        return err.name === ErrorName.MaxInputChannelsReached;
     }
 
     /**
@@ -94,6 +94,6 @@ export default class DbError {
      * @param err
      */
     static isInputInvalid(err: any): err is InvalidInputError {
-        return err.name === ErrorName.INVALID_INPUT;
+        return err.name === ErrorName.InvalidInput;
     }
 }
