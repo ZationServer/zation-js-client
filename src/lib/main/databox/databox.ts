@@ -15,6 +15,7 @@ import {
     DbClientInputFetchResponse,
     DbClientInputPackage,
     DBClientInputSessionTarget,
+    DbClientInputSignalPackage,
     DbClientOutputClosePackage,
     DbClientOutputCudPackage,
     DbClientOutputEvent,
@@ -33,8 +34,7 @@ import {
     PotentialUpdateOption,
     TimestampOption,
     UpdateArgs
-}
-from "./dbDefinitions";
+} from "./dbDefinitions";
 import {Socket}                                                 from "../sc/socket";
 import DbStorage, {DbStorageOptions, OnDataChange, OnDataTouch} from "./storage/dbStorage";
 import DbFetchHistoryManager, {FetchHistoryItem}                from "./dbFetchHistoryManager";
@@ -1304,6 +1304,39 @@ export default class Databox {
      */
     getData<T = any>(directAccess: boolean = false): T {
         return this.mainDbStorage.getData<T>(directAccess);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Send a signal to the Databox on the server-side.
+     * The Databox on the server-side can react to any signal.
+     * You also can send additional data with the signal.
+     * @param signal
+     * @param data
+     * @param waitForConnection
+     * With the WaitForDbConnection option, you can activate that the Databox is
+     * trying to connect (if it's not connected).
+     * You have five possible choices:
+     * Undefined: It will use the value from the default options
+     * (DataboxOptions and last fall back is ZationOptions).
+     * False: The action will fail and throw a ConnectionRequiredError,
+     * when the Databox is not connected.
+     * For the other options, it is also recommended to have activated the auto-reconnect.
+     * Null: The Databox will try to connect (if it is not connected) and
+     * waits until the connection is made, then it continues the action.
+     * Number: Same as null, but now you can specify a timeout (in ms) of
+     * maximum waiting time for the connection. If the timeout is reached,
+     * it will throw a timeout error.
+     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
+     * @throws ConnectionRequiredError,TimeoutError,AbortSignal
+     */
+    async sendSignal(signal: string,data?: any,waitForConnection: WaitForConnectionOption = false): Promise<void> {
+        await ConnectionUtils.checkDbConnection(this, this.zation, waitForConnection, 'To send a signal.');
+        this.socket.emit(this.inputChannel, {
+            a: DbClientInputAction.signal,
+            s: signal,
+            d: data
+        } as DbClientInputSignalPackage);
     }
 
     //events
