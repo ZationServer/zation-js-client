@@ -28,1151 +28,1151 @@ export abstract class PresetErrorLib<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputTypeError.
-     * The BackError error can be thrown by input validation type.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * Preset for typeError.
+     * The BackError error can be thrown by validation type.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputTypeError(inputPath?: string,inputValue?: any): T {
+    typeError(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroup.TypeError));
+        (undefined,path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeObject.
+     * Preset for valueIsNotTypeObject.
      * The BackError error can be thrown by input validation type:'object'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeObject(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeObject(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeObject',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeObject',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeArray.
+     * Preset for valueIsNotTypeArray.
      * The BackError error can be thrown by input validation type:'array'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeArray(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeArray(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeArray',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeArray',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeString.
+     * Preset for valueIsNotTypeString.
      * The BackError error can be thrown by input validation type:'string'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeString(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeString(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeString',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeString',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeChar.
+     * Preset for valueIsNotTypeChar.
      * The BackError error can be thrown by input validation type:'char'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeChar(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeChar(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeChar',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeChar',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeNull.
+     * Preset for valueIsNotTypeNull.
      * The BackError error can be thrown by input validation type:'null'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeNull(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeNull(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeNull',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeNull',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeInt.
+     * Preset for valueIsNotTypeInt.
      * The BackError error can be thrown by input validation type:'int'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeInt(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeInt(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeInt',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeInt',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeFloat.
+     * Preset for valueIsNotTypeFloat.
      * The BackError error can be thrown by input validation type:'float'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeFloat(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeFloat(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeFloat',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeFloat',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeNumber.
+     * Preset for valueIsNotTypeNumber.
      * The BackError error can be thrown by input validation type:'number'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeNumber(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeNumber(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeNumber',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeNumber',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeDate.
+     * Preset for valueIsNotTypeDate.
      * The BackError error can be thrown by input validation type:'date'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeDate(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeDate(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeDate',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeDate',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeEmail.
+     * Preset for valueIsNotTypeEmail.
      * The BackError error can be thrown by input validation type:'email'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeEmail(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeEmail(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeEmail',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeEmail',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeBoolean.
+     * Preset for valueIsNotTypeBoolean.
      * The BackError error can be thrown by input validation type:'boolean'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeBoolean(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeBoolean(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeBoolean',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeBoolean',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeSha512.
+     * Preset for valueIsNotTypeSha512.
      * The BackError error can be thrown by input validation type:'sha512'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeSha512(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeSha512(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeSha512',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeSha512',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeSha256.
+     * Preset for valueIsNotTypeSha256.
      * The BackError error can be thrown by input validation type:'sha256'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeSha256(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeSha256(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeSha256',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeSha256',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeSha384.
+     * Preset for valueIsNotTypeSha384.
      * The BackError error can be thrown by input validation type:'sha384'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeSha384(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeSha384(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeSha384',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeSha384',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeSha1.
+     * Preset for valueIsNotTypeSha1.
      * The BackError error can be thrown by input validation type:'sha1'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeSha1(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeSha1(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeSha1',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeSha1',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeMd5.
+     * Preset for valueIsNotTypeMd5.
      * The BackError error can be thrown by input validation type:'md5'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeMd5(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeMd5(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeMd5',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeMd5',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeHexColor.
+     * Preset for valueIsNotTypeHexColor.
      * The BackError error can be thrown by input validation type:'hexColor'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeHexColor(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeHexColor(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeHexColor',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeHexColor',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeHexadecimal.
+     * Preset for valueIsNotTypeHexadecimal.
      * The BackError error can be thrown by input validation type:'hexadecimal'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeHexadecimal(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeHexadecimal(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeHexadecimal',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeHexadecimal',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeIp4.
+     * Preset for valueIsNotTypeIp4.
      * The BackError error can be thrown by input validation type:'ip4'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeIp4(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeIp4(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeIp4',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeIp4',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeIp6.
+     * Preset for valueIsNotTypeIp6.
      * The BackError error can be thrown by input validation type:'ip6'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeIp6(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeIp6(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeIp6',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeIp6',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeIsbn10.
+     * Preset for valueIsNotTypeIsbn10.
      * The BackError error can be thrown by input validation type:'isbn10'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeIsbn10(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeIsbn10(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeIsbn10',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeIsbn10',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeIsbn13.
+     * Preset for valueIsNotTypeIsbn13.
      * The BackError error can be thrown by input validation type:'isbn13'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeIsbn13(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeIsbn13(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeIsbn13',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeIsbn13',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeJson.
+     * Preset for valueIsNotTypeJson.
      * The BackError error can be thrown by input validation type:'json'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeJson(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeJson(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeJson',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeJson',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeUrl.
+     * Preset for valueIsNotTypeUrl.
      * The BackError error can be thrown by input validation type:'url'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeUrl(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeUrl(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeUrl',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeUrl',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeMimeType.
+     * Preset for valueIsNotTypeMimeType.
      * The BackError error can be thrown by input validation type:'mimeType'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeMimeType(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeMimeType(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeMimeType',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeMimeType',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeMacAddress.
+     * Preset for valueIsNotTypeMacAddress.
      * The BackError error can be thrown by input validation type:'macAddress'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeMacAddress(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeMacAddress(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeMacAddress',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeMacAddress',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeMobileNumber.
+     * Preset for valueIsNotTypeMobileNumber.
      * The BackError error can be thrown by input validation type:'mobileNumber'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeMobileNumber(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeMobileNumber(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeMobileNumber',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeMobileNumber',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeUuid3.
+     * Preset for valueIsNotTypeUuid3.
      * The BackError error can be thrown by input validation type:'uuid3'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeUuid3(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeUuid3(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeUuid3',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeUuid3',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeUuid4.
+     * Preset for valueIsNotTypeUuid4.
      * The BackError error can be thrown by input validation type:'uuid4'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeUuid4(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeUuid4(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeUuid4',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeUuid4',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeUuid5.
+     * Preset for valueIsNotTypeUuid5.
      * The BackError error can be thrown by input validation type:'uuid5'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeUuid5(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeUuid5(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeUuid5',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeUuid5',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeBase64.
+     * Preset for valueIsNotTypeBase64.
      * The BackError error can be thrown by input validation type:'base64'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeBase64(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeBase64(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeBase64',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeBase64',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeAscii.
+     * Preset for valueIsNotTypeAscii.
      * The BackError error can be thrown by input validation type:'ascii'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeAscii(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeAscii(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypescii',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypescii',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeUserId.
+     * Preset for valueIsNotTypeUserId.
      * The BackError error can be thrown by input validation type:'userId'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeUserId(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeUserId(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeUserId',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeUserId',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeMongoId.
+     * Preset for valueIsNotTypeMongoId.
      * The BackError error can be thrown by input validation type:'mongoId'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeMongoId(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeMongoId(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeMongoId',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeMongoId',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotTypeLatLong.
+     * Preset for valueIsNotTypeLatLong.
      * The BackError error can be thrown by input validation type:'latLong'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotTypeLatLong(inputPath?: string,inputValue?: any): T {
+    valueIsNotTypeLatLong(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotTypeLatLong',inputPath,inputValue,ErrorGroup.TypeError));
+        ('valueIsNotTypeLatLong',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputValueLengthError.
+     * Preset for valueLengthError.
      * The BackError error can be thrown by input validation minLength,maxLength,minLength.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputValueLengthError(inputPath?: string,inputValue?: any): T {
+    valueLengthError(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroup.ValueLengthError));
+        (undefined,path,value,ErrorGroup.ValueLengthError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputNotMatchWithMinLength.
+     * Preset for valueNotMatchesWithMinLength.
      * The BackError error can be thrown by input validation minLength:4.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * minLength
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputNotMatchWithMinLength(inputPath?: string,inputValue?: any): T {
+    valueNotMatchesWithMinLength(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithMinLength',inputPath,inputValue,ErrorGroup.ValueLengthError));
+        ('valueNotMatchesWithMinLength',path,value,ErrorGroup.ValueLengthError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputNotMatchWithMaxLength.
+     * Preset for valueNotMatchesWithMaxLength.
      * The BackError error can be thrown by input validation maxLength:4.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * maxLength
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputNotMatchWithMaxLength(inputPath?: string,inputValue?: any): T {
+    valueNotMatchesWithMaxLength(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithMaxLength',inputPath,inputValue,ErrorGroup.ValueLengthError));
+        ('valueNotMatchesWithMaxLength',path,value,ErrorGroup.ValueLengthError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputNotMatchWithLength.
+     * Preset for valueNotMatchesWithLength.
      * The BackError error can be thrown by input validation length:4.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * length
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputNotMatchWithLength(inputPath?: string,inputValue?: any): T {
+    valueNotMatchesWithLength(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithLength',inputPath,inputValue,ErrorGroup.ValueLengthError));
+        ('valueNotMatchesWithLength',path,value,ErrorGroup.ValueLengthError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputLettersFormatError.
+     * Preset for lettersFormatError.
      * The BackError error can be thrown by input validation isLetters.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputLettersFormatError(inputPath?: string,inputValue?: any): T {
+    lettersFormatError(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroup.LettersFormatError));
+        (undefined,path,value,ErrorGroup.LettersFormatError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotUppercase.
+     * Preset for valueIsNotUppercase.
      * The BackError error can be thrown by input validation isLetters:'uppercase'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotUppercase(inputPath?: string,inputValue?: any): T {
+    valueIsNotUppercase(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotUppercase',inputPath,inputValue,ErrorGroup.LettersFormatError));
+        ('valueIsNotUppercase',path,value,ErrorGroup.LettersFormatError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotLowercase.
+     * Preset for valueIsNotLowercase.
      * The BackError error can be thrown by input validation isLetters:'lowercase'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotLowercase(inputPath?: string,inputValue?: any): T {
+    valueIsNotLowercase(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotLowercase',inputPath,inputValue,ErrorGroup.LettersFormatError));
+        ('valueIsNotLowercase',path,value,ErrorGroup.LettersFormatError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotMatchWithCharClass.
+     * Preset for valueNotMatchesWithCharClass.
      * The BackError error can be thrown by input validation charClass:'a-zA-Z0-9'.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * regex
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotMatchWithCharClass(inputPath?: string,inputValue?: any): T {
+    valueNotMatchesWithCharClass(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotMatchWithCharClass',inputPath,inputValue));
+        ('valueNotMatchesWithCharClass',path,value));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputDateError.
+     * Preset for dateError.
      * The BackError error can be thrown by input validation before and after.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputDateError(inputPath?: string,inputValue?: any): T {
+    dateError(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroup.DateError));
+        (undefined,path,value,ErrorGroup.DateError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputDateIsNotBefore.
+     * Preset for dateIsNotBefore.
      * The BackError error can be thrown by input validation before:Date.now().
      * More info checks you need to do by yourself.
      * Possibilities are:
      * shouldBefore
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputDateIsNotBefore(inputPath?: string,inputValue?: any): T {
+    dateIsNotBefore(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputDateIsNotBefore',inputPath,inputValue,ErrorGroup.DateError));
+        ('dateIsNotBefore',path,value,ErrorGroup.DateError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputDateIsNotAfter.
+     * Preset for dateIsNotAfter.
      * The BackError error can be thrown by input validation after:Date.now().
      * More info checks you need to do by yourself.
      * Possibilities are:
      * shouldAfter
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputDateIsNotAfter(inputPath?: string,inputValue?: any): T {
+    dateIsNotAfter(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputDateIsNotAfter',inputPath,inputValue,ErrorGroup.DateError));
+        ('dateIsNotAfter',path,value,ErrorGroup.DateError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotContains.
+     * Preset for valueNotMatchesWithContains.
      * The BackError error can be thrown by input validation contains:'hallo'.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * shouldContain
      * missing
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotContains(inputPath?: string,inputValue?: any): T {
+    valueNotMatchesWithContains(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotContains',inputPath,inputValue));
+        ('valueNotMatchesWithContains',path,value));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotEquals.
+     * Preset for valueNotMatchesWithEquals.
      * The BackError error can be thrown by input validation equals:'hallo'.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * shouldEqual
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotEquals(inputPath?: string,inputValue?: any): T {
+    valueNotMatchesWithEquals(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotEquals',inputPath,inputValue));
+        ('valueNotMatchesWithEquals',path,value));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputNumberSizeError.
+     * Preset for numberSizeError.
      * The BackError error can be thrown by input validation minValue,maxValue.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputNumberSizeError(inputPath?: string,inputValue?: any): T {
+    numberSizeError(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroup.NumberSizeError));
+        (undefined,path,value,ErrorGroup.NumberSizeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputNotMatchWithMinValue.
+     * Preset for valueNotMatchesWithMinValue.
      * The BackError error can be thrown by input validation minValue:10.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * minValue
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputNotMatchWithMinValue(inputPath?: string,inputValue?: any): T {
+    valueNotMatchesWithMinValue(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithMinValue',inputPath,inputValue,ErrorGroup.NumberSizeError));
+        ('valueNotMatchesWithMinValue',path,value,ErrorGroup.NumberSizeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputNotMatchWithMaxValue.
+     * Preset for valueNotMatchesWithMaxValue.
      * The BackError error can be thrown by input validation maxValue:10.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * maxValue
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputNotMatchWithMaxValue(inputPath?: string,inputValue?: any): T {
+    valueNotMatchesWithMaxValue(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithMaxValue',inputPath,inputValue,ErrorGroup.NumberSizeError));
+        ('valueNotMatchesWithMaxValue',path,value,ErrorGroup.NumberSizeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotMatchWithRegex.
+     * Preset for valueNotMatchesWithRegex.
      * The BackError error can be thrown by input validation regex:'/^\/user\/.+/'.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      * @param regexName
      * Parameter can be used to check the regexName in the info.
      */
-    inputIsNotMatchWithRegex(inputPath?: string,inputValue?: any,regexName?: string): T {
+    valueNotMatchesWithRegex(path?: string,value?: any,regexName?: string): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotMatchWithRegex',inputPath,inputValue,undefined,'regexName',regexName));
+        ('valueNotMatchesWithRegex',path,value,undefined,'regexName',regexName));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotStartsWith.
+     * Preset for valueNotMatchesWithStartsWith.
      * The BackError error can be thrown by input validation startsWith:'user'.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * shouldStartsWith
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotStartsWith(inputPath?: string,inputValue?: any): T {
+    valueNotMatchesWithStartsWith(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotStartsWith',inputPath,inputValue));
+        ('valueNotMatchesWithStartsWith',path,value));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotEndsWith.
+     * Preset for valueIsNotEndsWith.
      * The BackError error can be thrown by input validation endsWith:'user'.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * shouldEndsWith
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotEndsWith(inputPath?: string,inputValue?: any): T {
+    valueIsNotEndsWith(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotEndsWith',inputPath,inputValue));
+        ('valueIsNotEndsWith',path,value));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputInError.
+     * Preset for inError.
      * The BackError error can be thrown by input validation in,privateIn.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputInError(inputPath?: string, inputValue?: any): T {
+    inError(path?: string, value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroup.InError));
+        (undefined,path,value,ErrorGroup.InError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotMatchWithIn.
+     * Preset for valueNotMatchesWithIn.
      * The BackError error can be thrown by input validation in: ['red','blue'].
      * More info checks you need to do by yourself.
      * Possibilities are:
      * values (In-Values Array)
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotMatchWithIn(inputPath?: string, inputValue?: any): T {
+    valueNotMatchesWithIn(path?: string, value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotMatchWithIn',inputPath,inputValue,ErrorGroup.InError));
+        ('valueNotMatchesWithIn',path,value,ErrorGroup.InError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputIsNotMatchWithPrivateIn.
+     * Preset for valueNotMatchesWithPrivateIn.
      * The BackError error can be thrown by input validation privateIn: ['red','blue'].
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputIsNotMatchWithPrivateIn(inputPath?: string, inputValue?: any): T {
+    valueNotMatchesWithPrivateIn(path?: string, value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputIsNotMatchWithPrivateIn',inputPath,inputValue,ErrorGroup.InError));
+        ('valueNotMatchesWithPrivateIn',path,value,ErrorGroup.InError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputArrayLengthError.
+     * Preset for arrayLengthError.
      * The BackError error can be thrown by array validation length,minLength,maxLength.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputArrayLengthError(inputPath?: string,inputValue?: any): T {
+    arrayLengthError(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroup.ArrayLengthError));
+        (undefined,path,value,ErrorGroup.ArrayLengthError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputArrayNotMatchWithMaxLength.
+     * Preset for arrayNotMatchesWithMaxLength.
      * The BackError error can be thrown by array validation maxLength:10.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * maxLength
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputArrayNotMatchWithMaxLength(inputPath?: string,inputValue?: any): T {
+    arrayNotMatchesWithMaxLength(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputArrayNotMatchWithMaxLength',inputPath,inputValue,ErrorGroup.ArrayLengthError));
+        ('arrayNotMatchesWithMaxLength',path,value,ErrorGroup.ArrayLengthError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputArrayNotMatchWithMinLength.
+     * Preset for arrayNotMatchesWithMinLength.
      * The BackError error can be thrown by array validation minLength:5.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * minLength
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputArrayNotMatchWithMinLength(inputPath?: string,inputValue?: any): T {
+    arrayNotMatchesWithMinLength(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputArrayNotMatchWithMinLength',inputPath,inputValue,ErrorGroup.ArrayLengthError));
+        ('arrayNotMatchesWithMinLength',path,value,ErrorGroup.ArrayLengthError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputArrayNotMatchWithLength.
+     * Preset for arrayNotMatchesWithLength.
      * The BackError error can be thrown by array validation length:10.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * length
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputArrayNotMatchWithLength(inputPath?: string,inputValue?: any): T {
+    arrayNotMatchesWithLength(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputArrayNotMatchWithLength',inputPath,inputValue,ErrorGroup.ArrayLengthError));
+        ('arrayNotMatchesWithLength',path,value,ErrorGroup.ArrayLengthError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputNotMatchWithMinByteSize.
+     * Preset for valueNotMatchesWithMinByteSize.
      * The BackError error can be thrown by input validation minByteSize:100000.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * minByteSize
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputNotMatchWithMinByteSize(inputPath?: string,inputValue?: any): T {
+    valueNotMatchesWithMinByteSize(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithMinByteSize',inputPath,inputValue,ErrorGroup.ByteSizeError));
+        ('valueNotMatchesWithMinByteSize',path,value,ErrorGroup.ByteSizeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputNotMatchWithMaxByteSize.
+     * Preset for valueNotMatchesWithMaxByteSize.
      * The BackError error can be thrown by input validation maxByteSize:100000.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * maxByteSize
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputNotMatchWithMaxByteSize(inputPath?: string,inputValue?: any): T {
+    valueNotMatchesWithMaxByteSize(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithMaxByteSize',inputPath,inputValue,ErrorGroup.ByteSizeError));
+        ('valueNotMatchesWithMaxByteSize',path,value,ErrorGroup.ByteSizeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputByteSizeError.
+     * Preset for byteSizeError.
      * The BackError error can be thrown by input validation minByteSize,maxByteSize.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputByteSizeError(inputPath?: string,inputValue?: any): T {
+    byteSizeError(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroup.ByteSizeError));
+        (undefined,path,value,ErrorGroup.ByteSizeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputNotMatchWithMimeType.
+     * Preset for valueNotMatchesWithMimeType.
      * The BackError error can be thrown by input validation mimeType:'image'.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * mimeType
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputNotMatchWithMimeType(inputPath?: string,inputValue?: any): T {
+    valueNotMatchesWithMimeType(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithMimeType',inputPath,inputValue,ErrorGroup.ContentTypeError));
+        ('valueNotMatchesWithMimeType',path,value,ErrorGroup.ContentTypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputNotMatchWithMimeSubType.
+     * Preset for valueNotMatchesWithMimeSubType.
      * The BackError error can be thrown by input validation mimeSubType:'jpg'.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * mimeSubType
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputNotMatchWithMimeSubType(inputPath?: string,inputValue?: any): T {
+    valueNotMatchesWithMimeSubType(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotMatchWithMimeSubType',inputPath,inputValue,ErrorGroup.ContentTypeError));
+        ('valueNotMatchesWithMimeSubType',path,value,ErrorGroup.ContentTypeError));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputContentTypeError.
+     * Preset for contentTypeError.
      * The BackError error can be thrown by input validation mimeType,subType.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    inputContentTypeError(inputPath?: string,inputValue?: any): T {
+    contentTypeError(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        (undefined,inputPath,inputValue,ErrorGroup.ContentTypeError));
+        (undefined,path,value,ErrorGroup.ContentTypeError));
         return this.self();
     }
 
@@ -1184,14 +1184,14 @@ export abstract class PresetErrorLib<T>
      * More info checks you need to do by yourself.
      * Possibilities are:
      * types (array)
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    noValidTypeWasFound(inputPath?: string,inputValue?: any): T {
+    noValidTypeWasFound(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('noValidTypeWasFound',inputPath,inputValue,ErrorGroup.TypeError));
+        ('noValidTypeWasFound',path,value,ErrorGroup.TypeError));
         return this.self();
     }
 
@@ -1200,14 +1200,14 @@ export abstract class PresetErrorLib<T>
      * @description
      * Preset for noAnyOfMatch.
      * The BackError error can be thrown by input anyOf usage.
-     * @param inputPath
-     * Parameter can be used to check the inputPath in the info.
-     * @param inputValue
-     * Parameter can be used to check the inputValue in the info.
+     * @param path
+     * Parameter can be used to check the path in the info.
+     * @param value
+     * Parameter can be used to check the value in the info.
      */
-    noAnyOfMatch(inputPath?: string,inputValue?: any): T {
+    noAnyOfMatch(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('noAnyOfMatch',inputPath,inputValue));
+        ('noAnyOfMatch',path,value));
         return this.self();
     }
 
@@ -1385,8 +1385,8 @@ export abstract class PresetErrorLib<T>
      * Preset for arrayWasExpected.
      * The BackError error can be thrown if array was expected in the input.
      * Possibilities are:
-     * inputPath (full path to the value where an array was expected)
-     * inputValue (the input value that is not from type array)
+     * path (full path to the value where an array was expected)
+     * value (the input value that is not from type array)
      */
     arrayWasExpected(): T {
         this._presetAdd(this._zationErrorBuild
@@ -1400,8 +1400,8 @@ export abstract class PresetErrorLib<T>
      * Preset for objectWasExpected.
      * The BackError error can be thrown if object was expected in the input.
      * Possibilities are:
-     * inputPath (full path to the value where an object was expected)
-     * inputValue (the input value that is not from type object)
+     * path (full path to the value where an object was expected)
+     * value (the input value that is not from type object)
      */
     objectWasExpected(): T {
         this._presetAdd(this._zationErrorBuild
@@ -1418,7 +1418,7 @@ export abstract class PresetErrorLib<T>
      * Possibilities are:
      * object (the input object where the property is missing)
      * propertyName (name of missing property)
-     * inputPath (the full input path to missing property)
+     * path (the full input path to missing property)
      */
     objectPropertyIsMissing(): T {
         this._presetAdd(this._zationErrorBuild
@@ -1433,7 +1433,7 @@ export abstract class PresetErrorLib<T>
      * The BackError error can be thrown if input object has an unknow property.
      * Possibilities are:
      * propertyName (name of the unknown property)
-     * inputPath (full input path to unknown property)
+     * path (full input path to unknown property)
      */
     unknownObjectProperty(): T {
         this._presetAdd(this._zationErrorBuild
@@ -1555,17 +1555,17 @@ export abstract class PresetErrorLib<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for inputPathNotResolvable.
+     * Preset for pathNotResolvable.
      * The BackError error can be thrown if the input path is not resolvable.
      * Can only be thrown by a validation request.
      * More info checks you need to do by yourself.
      * Possibilities are:
-     * inputPath
+     * path
      * checkIndex
      */
-    inputPathNotResolvable(): T {
+    pathNotResolvable(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.InputError,'inputPathNotResolvable'));
+        (ErrorType.InputError,'pathNotResolvable'));
         return this.self();
     }
 
@@ -1755,7 +1755,7 @@ export abstract class PresetErrorLib<T>
     }
 
     // noinspection JSMethodCanBeStatic
-    private _validationErrorBuild(name?: string,inputPath?: string,inputValue?: any,group?: string,opInfoKey?: string, opInfoValue?: any): ErrorFilter
+    private _validationErrorBuild(name?: string,path?: string,value?: any,group?: string,opInfoKey?: string, opInfoValue?: any): ErrorFilter
     {
         const preset: ErrorFilter = {};
         preset.fromZationSystem = true;
@@ -1763,14 +1763,14 @@ export abstract class PresetErrorLib<T>
         if(name) {
             preset.name = name;
         }
-        if(inputPath || inputValue)
+        if(path || value)
         {
             let info = {};
-            if(inputPath){
-                info['inputPath'] = inputPath;
+            if(path){
+                info['path'] = path;
             }
-            if(inputValue){
-                info['inputValue'] = inputValue;
+            if(value){
+                info['value'] = value;
             }
             if(opInfoKey !== undefined && opInfoValue !== undefined) {
                 info[opInfoKey] = opInfoValue;

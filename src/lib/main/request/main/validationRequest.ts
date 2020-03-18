@@ -36,7 +36,7 @@ export class ValidationRequest extends ZationRequest
 }
 
 export interface ValidationCheck {
-    ip: string | string[]
+    p: string | string[]
     v: any
 }
 

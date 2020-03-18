@@ -273,15 +273,15 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * For errors with the types:
      * {type: ['errorType1','errorType2']}
      * For errors with has all keys and values in the info:
-     * {info: {inputPath: 'name', inputValue: 'value'}}
+     * {info: {path: 'name', value: 'value'}}
      * For errors with has at least one of all keys and values in the info:
-     * {info: [{inputPath: 'name'},{inputPath: 'firstName'}]}
+     * {info: [{path: 'name'},{path: 'firstName'}]}
      * For errors with the info key:
-     * {infoKey: 'inputPath'}
+     * {infoKey: 'path'}
      * For errors with at least one of the info keys:
-     * {infoKey: ['inputPath','inputValue']}
+     * {infoKey: ['path','value']}
      * For errors with all of the info keys:
-     * {infoKey: [['inputPath','inputValue']]}
+     * {infoKey: [['path','value']]}
      * For errors with the info value:
      * {infoValue: 'name'}
      * For errors with at least one of the info values:
@@ -321,15 +321,15 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * For errors with the types:
      * {type: ['errorType1','errorType2']}
      * For errors with has all keys and values in the info:
-     * {info: {inputPath: 'name', inputValue: 'value'}}
+     * {info: {path: 'name', value: 'value'}}
      * For errors with has at least one of all keys and values in the info:
-     * {info: [{inputPath: 'name'},{inputPath: 'firstName'}]}
+     * {info: [{path: 'name'},{path: 'firstName'}]}
      * For errors with the info key:
-     * {infoKey: 'inputPath'}
+     * {infoKey: 'path'}
      * For errors with at least one of the info keys:
-     * {infoKey: ['inputPath','inputValue']}
+     * {infoKey: ['path','value']}
      * For errors with all of the info keys:
-     * {infoKey: [['inputPath','inputValue']]}
+     * {infoKey: [['path','value']]}
      * For errors with the info value:
      * {infoValue: 'name'}
      * For errors with at least one of the info values:

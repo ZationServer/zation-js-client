@@ -59,11 +59,11 @@ export class ValidationRequestBuilder extends AbstractRequestBuilder<ValidationR
     /**
      * @description
      * Add validation check.
-     * @param inputPath
+     * @param path
      * @param value
      */
-    check(inputPath: string | string[],value: any): ValidationRequestBuilder {
-        this._checks.push({ip: inputPath, v: value});
+    check(path: string | string[],value: any): ValidationRequestBuilder {
+        this._checks.push({p: path, v: value});
         return this;
     }
 
