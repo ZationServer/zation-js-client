@@ -1336,11 +1336,22 @@ export abstract class PresetErrorLib<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
+     * Preset for inputIsMissing.
+     * The BackError error can be thrown if a single input is missing.
+     */
+    inputIsMissing(): T {
+        this._presetAdd(this._zationErrorBuild
+        (ErrorType.InputError,'inputIsMissing'));
+        return this.self();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
      * Preset for inputParamIsMissing.
      * The BackError error can be thrown if an input param is missing.
      * Possibilities are:
      * paramName (the name of the missing param)
-     * input (the input object where the param is missing)
      */
     inputParamIsMissing(): T {
         this._presetAdd(this._zationErrorBuild
