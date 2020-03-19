@@ -5,5 +5,8 @@ Copyright(c) Luca Scaringella
  */
 
 if(typeof window !== 'object' || window.performance === undefined){
-    global['performance'] = require('perf_hooks').performance;
+    try {
+        global['performance'] = require('perf_hooks').performance;
+    }
+    catch (e) {}
 }
