@@ -4,6 +4,8 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
+import './lib/main/utils/perfomanceNodeFix';
+
 //Api Classes
 import {ZationOptions as  Options}     from "./lib/core/zationOptions";
 import {RequestAble}                   from "./lib/main/request/helper/requestAble";
