@@ -677,48 +677,19 @@ export abstract class PresetErrorLib<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for lettersFormatError.
+     * Preset for valueNotMatchesWithLettersFormat.
      * The BackError error can be thrown by input validation isLetters.
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * format
      * @param path
      * Parameter can be used to check the path in the info.
      * @param value
      * Parameter can be used to check the value in the info.
      */
-    lettersFormatError(path?: string,value?: any): T {
+    valueNotMatchesWithLettersFormat(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        (undefined,path,value,ErrorGroup.LettersFormatError));
-        return this.self();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Preset for valueIsNotUppercase.
-     * The BackError error can be thrown by input validation isLetters:'uppercase'.
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
-     */
-    valueIsNotUppercase(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('valueIsNotUppercase',path,value,ErrorGroup.LettersFormatError));
-        return this.self();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Preset for valueIsNotLowercase.
-     * The BackError error can be thrown by input validation isLetters:'lowercase'.
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
-     */
-    valueIsNotLowercase(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('valueIsNotLowercase',path,value,ErrorGroup.LettersFormatError));
+        ('valueNotMatchesWithLettersFormat',path,value));
         return this.self();
     }
 
@@ -928,7 +899,7 @@ export abstract class PresetErrorLib<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for valueIsNotEndsWith.
+     * Preset for valueNotMatchesWithEndsWith.
      * The BackError error can be thrown by input validation endsWith:'user'.
      * More info checks you need to do by yourself.
      * Possibilities are:
@@ -938,9 +909,9 @@ export abstract class PresetErrorLib<T>
      * @param value
      * Parameter can be used to check the value in the info.
      */
-    valueIsNotEndsWith(path?: string,value?: any): T {
+    valueNotMatchesWithEndsWith(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('valueIsNotEndsWith',path,value));
+        ('valueNotMatchesWithEndsWith',path,value));
         return this.self();
     }
 
