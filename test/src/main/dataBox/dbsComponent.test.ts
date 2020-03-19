@@ -5,7 +5,7 @@ Copyright(c) Luca Scaringella
  */
 
 import DbsHead          from "../../../../src/lib/main/databox/storage/components/dbsHead";
-import {$any, $contains, $key, $matches, $notContains, $notMatches, $value, buildKeyArray} from "../../../../src";
+import {$any, $contains, $key, $matches, $not, $value, buildKeyArray} from "../../../../src";
 import {assert}         from 'chai';
 import {createSimpleModifyToken} from "../../../../src/lib/main/databox/storage/components/modifyToken";
 
@@ -378,7 +378,7 @@ describe('MAIN.Databox.Storage',() => {
 
             head.update(['name'],'luca',{timestamp : Date.now(),
                 if : [$matches({age : {$gt : 18}}),
-                    $notMatches({name : 'tom'})]},createSimpleModifyToken());
+                    $not($matches({name : 'tom'}))]},createSimpleModifyToken());
 
             assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
             assert.deepEqual(head.getData(),{name : 'tom',age : 20});
@@ -394,7 +394,7 @@ describe('MAIN.Databox.Storage',() => {
             assert.deepEqual(head.getData(),{name : 'tom',age : 20});
 
             head.update(['name'],'luca',{timestamp : Date.now(),
-                if : [$contains($key('name')),$notContains($key('age'))]},createSimpleModifyToken());
+                if : [$contains($key('name')),$not($contains($key('age')))]},createSimpleModifyToken());
 
             assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
             assert.deepEqual(head.getData(),{name : 'tom',age : 20});
@@ -410,7 +410,7 @@ describe('MAIN.Databox.Storage',() => {
             assert.deepEqual(head.getData(),{brand: 'XU',price : 300});
 
             head.update(['price'],0,{timestamp : Date.now(),
-                if : [$notContains($any)]},createSimpleModifyToken());
+                if : [$not($contains($any))]},createSimpleModifyToken());
 
             assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
             assert.deepEqual(head.getData(),{brand: 'XU',price : 300});
