@@ -40,6 +40,7 @@ import {ModifiedScClient}            from "../main/sc/modifiedScClient";
 import stringify                     from "fast-stringify";
 import {TimeoutError}                from "../main/error/timeoutError";
 import DataboxBuilder                from "../main/databox/databoxBuilder";
+import perf                          from "../main/utils/performance";
 
 export class Zation
 {
@@ -250,8 +251,7 @@ export class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Send a ping request to the server
-     * and returns the ping time in milliseconds, with microseconds in the fractional part.
+     * Send a ping request to the server and returns the ping time in milliseconds.
      * @example
      * const ping = await ping();
      * @throws ConnectionRequiredError,TimeoutError
@@ -274,9 +274,9 @@ export class Zation
     {
         const req = new WsRequest(SystemController.Ping,{},true);
         req.setWaitForConnection(waitForConnection);
-        const start = performance.now();
+        const start = perf.now();
         await this.send(req);
-        return performance.now() - start;
+        return perf.now() - start;
     }
 
     //Part Auth
