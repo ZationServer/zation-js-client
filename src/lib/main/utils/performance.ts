@@ -4,16 +4,16 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-let performance: {now(): number};
+let perf: {now(): number};
 if(typeof window === 'object' && window.performance !== undefined){
-    performance = window.performance;
+    perf = window.performance;
 }
 else {
     try {
-        performance = require('perf_hooks').performance;
+        perf = require('perf_hooks').performance;
     }
     catch (e) {
-        performance = Date;
+        perf = Date;
     }
 }
-export default performance;
+export default perf;
