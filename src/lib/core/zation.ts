@@ -40,7 +40,7 @@ import {ModifiedScClient}            from "../main/sc/modifiedScClient";
 import stringify                     from "fast-stringify";
 import {TimeoutError}                from "../main/error/timeoutError";
 import DataboxBuilder                from "../main/databox/databoxBuilder";
-import perf                          from "../main/utils/performance";
+import perf                          from "../main/utils/perf";
 
 export class Zation
 {
