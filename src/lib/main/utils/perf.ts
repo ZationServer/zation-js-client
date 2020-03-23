@@ -4,7 +4,12 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-let perf: {now(): number};
+let perf: {
+    /**
+     * Returns accurate timestamp in milliseconds to measure performance.
+     */
+    now(): number
+};
 if(typeof window === 'object' && window.performance !== undefined){
     perf = window.performance;
 }
