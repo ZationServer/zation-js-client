@@ -251,7 +251,8 @@ export class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Send a ping request to the server and returns the ping time in milliseconds.
+     * Returns the measured time between sending a request to the system ping controller
+     * on the server-side and receiving a response.
      * @example
      * const ping = await ping();
      * @throws ConnectionRequiredError,TimeoutError
