@@ -201,7 +201,7 @@ export abstract class ZationRequest extends SendAble
     private async compileObjectData(data: object): Promise<object>
     {
         let promises: Promise<void>[] = [];
-        for(let key in data)
+        for(const key in data)
         {
             if(data.hasOwnProperty(key)) {
                 promises.push(new Promise<void>(async (resolve) =>

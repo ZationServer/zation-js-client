@@ -45,7 +45,7 @@ export class FilterHandlerLib
 
     private static objectHasValue(obj: object,value: any): boolean
     {
-        for(let k in obj) {
+        for(const k in obj) {
             if(obj.hasOwnProperty(k) && obj[k] === value) {
                 return true;
             }

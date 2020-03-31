@@ -14,7 +14,7 @@ export default class ObjectUtils {
      */
     static addObToOb(mainOb: object,addOb: object,overwrite: boolean = false): void
     {
-        for(let key in addOb) {
+        for(const key in addOb) {
             if(addOb.hasOwnProperty(key)) {
                 if(overwrite || !mainOb.hasOwnProperty(key)) {
                     mainOb[key] = addOb[key];

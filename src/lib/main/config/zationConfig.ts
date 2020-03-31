@@ -31,7 +31,7 @@ export class ZationConfig
 
     addToConfig(obj: object,override: boolean = false)
     {
-        for(let k in obj) {
+        for(const k in obj) {
             if (obj.hasOwnProperty(k) && override || (!override && !this._config.hasOwnProperty(k))) {
                 this._config[k] = obj[k];
             }
