@@ -1390,7 +1390,7 @@ export default class Databox {
      * the Databox is disconnected from the server.
      * @param listener
      */
-    onceDiconnect(listener: OnDisconnect): Databox {
+    onceDisconnect(listener: OnDisconnect): Databox {
         this.disconnectEvent.once(listener);
         return this;
     }
@@ -1401,7 +1401,7 @@ export default class Databox {
      * Can be a once or normal listener.
      * @param listener
      */
-    offDisonnect(listener: OnDisconnect){
+    offDisconnect(listener: OnDisconnect){
         this.disconnectEvent.off(listener);
         return this;
     }
