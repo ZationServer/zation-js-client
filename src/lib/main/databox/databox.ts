@@ -158,7 +158,7 @@ export default class Databox {
     private readonly tmpReloadDataSets: Set<DbsHead> = new Set<DbsHead>();
     private readonly fetchHistoryManager: DbFetchHistoryManager = new DbFetchHistoryManager();
     private readonly tmpReloadStroage: DbStorage;
-    private readonly signalEmitter: TinyEmitter = new TinyEmitter();
+    private readonly receivedSignalEmitter: TinyEmitter = new TinyEmitter();
 
     private readonly initData: any;
 
@@ -833,7 +833,7 @@ export default class Databox {
                     break;
                 case DbClientOutputEvent.signal:
                     const signalPackage = (outputPackage as DbClientOutputSignalPackage);
-                    this.signalEmitter.emit(signalPackage.s, signalPackage.d);
+                    this.receivedSignalEmitter.emit(signalPackage.s, signalPackage.d);
                     break;
                 case DbClientOutputEvent.close:
                     const closePackage = (outputPackage as DbClientOutputClosePackage);
@@ -1308,8 +1308,8 @@ export default class Databox {
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Send a signal to the Databox on the server-side.
-     * The Databox on the server-side can react to any signal.
+     * Transmit a signal to the connected Databox on the server-side.
+     * The Databox on the server-side can react to any received signal.
      * You also can send additional data with the signal.
      * @param signal
      * @param data
@@ -1330,8 +1330,8 @@ export default class Databox {
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      * @throws ConnectionRequiredError,TimeoutError,AbortSignal
      */
-    async sendSignal(signal: string,data?: any,waitForConnection: WaitForConnectionOption = false): Promise<void> {
-        await ConnectionUtils.checkDbConnection(this, this.zation, waitForConnection, 'To send a signal.');
+    async transmitSignal(signal: string, data?: any, waitForConnection: WaitForConnectionOption = false): Promise<void> {
+        await ConnectionUtils.checkDbConnection(this, this.zation, waitForConnection, 'To transmit a signal.');
         this.socket.emit(this.inputChannel, {
             a: DbClientInputAction.signal,
             s: signal,
@@ -1690,36 +1690,36 @@ export default class Databox {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Adds a listener that gets triggered
-     * whenever this Databox receives a specific signal.
+     * whenever this Databox received a specific signal from the server-side connected Databox.
      * @param signal
      * @param listener
      */
-    onSignal(signal: string,listener: OnSignal): Databox {
-        this.signalEmitter.on(signal,listener);
+    onReceivedSignal(signal: string, listener: OnSignal): Databox {
+        this.receivedSignalEmitter.on(signal,listener);
         return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * Adds a once listener that gets triggered
-     * when this Databox receives a specific signal.
+     * when this Databox received a specific signal from the server-side connected Databox.
      * @param signal
      * @param listener
      */
-    onceSignal(signal: string,listener: OnSignal): Databox {
-        this.signalEmitter.once(signal,listener);
+    onceReceivedSignal(signal: string, listener: OnSignal): Databox {
+        this.receivedSignalEmitter.once(signal,listener);
         return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Removes a listener or all listeners of specific signal event.
+     * Removes a listener or all listeners of a specific received signal event.
      * Can be a once or normal listener.
      * @param signal
      * @param listener
      */
-    offSignal(signal: string,listener?: OnSignal): Databox {
-        this.signalEmitter.off(signal,listener);
+    offReceivedSignal(signal: string, listener?: OnSignal): Databox {
+        this.receivedSignalEmitter.off(signal,listener);
         return this;
     }
 
