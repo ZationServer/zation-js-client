@@ -4,40 +4,55 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
+// noinspection ES6PreferShortImport
 import {HttpRequest}                 from "../main/request/main/httpRequest";
 import {SendAble}                    from "../main/request/helper/sendAble";
+// noinspection ES6PreferShortImport
 import {ProtocolType}                from "../main/constants/protocolType";
 import {ZationOptions}               from "./zationOptions";
 import {ProgressHandler}             from "../main/request/helper/progressHandler";
 import {OnHandlerFunction, Socket}   from "../main/sc/socket";
 import {Events}                      from "../main/constants/events";
+// noinspection ES6PreferShortImport
 import {ValidationCheck}             from "../main/request/main/validationRequest";
-import {ChannelTarget}               from "../main/channel/channelTarget";
 import {SystemController}            from "../main/constants/systemController";
 import {ZATION_CUSTOM_EVENT_NAMESPACE, ZationHttpInfo, ZationToken} from "../main/constants/internal";
 import ConnectionUtils, {WaitForConnectionOption}                from "../main/utils/connectionUtils";
 import {ChannelEngine}               from "../main/channel/channelEngine";
 import {ZationConfig}                from "../main/config/zationConfig";
-import {Box}                         from "../main/box/box";
+import {MultiList}                         from "../main/container/multiList";
+// noinspection ES6PreferShortImport
 import {ResponseReactionBox}         from "../main/react/reactionBoxes/responseReactionBox";
+// noinspection ES6PreferShortImport
 import {ChannelReactionBox}          from "../main/react/reactionBoxes/channelReactionBox";
+// noinspection ES6PreferShortImport
 import {RequestBuilder}              from "../main/request/fluent/requestBuilder";
+// noinspection ES6PreferShortImport
 import {AuthRequestBuilder}          from "../main/request/fluent/authRequestBuilder";
+// noinspection ES6PreferShortImport
 import {ValidationRequestBuilder}    from "../main/request/fluent/validationRequestBuilder";
 import {ZationRequest}               from "../main/request/main/zationRequest";
 import {SendEngine}                  from "../main/send/sendEngine";
+// noinspection ES6PreferShortImport
 import {ConnectionAbortError}        from "../main/error/connectionAbortError";
 import {Logger}                      from "../main/logger/logger";
 import {ObjectPath}                  from "../main/utils/objectPath";
+// noinspection ES6PreferShortImport
 import {ConnectionRequiredError}     from "../main/error/connectionRequiredError";
+// noinspection ES6PreferShortImport
 import {AuthenticationFailedError}   from "../main/error/authenticationFailedError";
+// noinspection ES6PreferShortImport
 import {AuthRequest}                 from "../main/request/main/authRequest";
+// noinspection ES6PreferShortImport
 import {EventReactionBox}            from "../main/react/reactionBoxes/eventReactionBox";
+// noinspection ES6PreferShortImport
 import {WsRequest}                   from "../main/request/main/wsRequest";
+// noinspection ES6PreferShortImport
 import {Response}                    from "../main/response/response";
 import {AuthEngine}                  from "../main/auth/authEngine";
 import {ModifiedScClient}            from "../main/sc/modifiedScClient";
 import stringify                     from "fast-stringify";
+// noinspection ES6PreferShortImport
 import {TimeoutError}                from "../main/error/timeoutError";
 import DataboxBuilder                from "../main/databox/databoxBuilder";
 import perf                          from "../main/utils/perf";
@@ -49,9 +64,9 @@ export class Zation
     private readonly zc: ZationConfig;
 
     //Responds
-    private readonly responseReactionMainBox: Box<ResponseReactionBox>;
-    private readonly channelReactionMainBox: Box<ChannelReactionBox>;
-    private readonly eventReactionMainBox: Box<EventReactionBox>;
+    private readonly responseReactionMainBox: MultiList<ResponseReactionBox>;
+    private readonly channelReactionMainBox: MultiList<ChannelReactionBox>;
+    private readonly eventReactionMainBox: MultiList<EventReactionBox>;
 
     //User system reaction boxes
     private readonly userResponseReactionBox: ResponseReactionBox;
@@ -82,9 +97,9 @@ export class Zation
         this.authEngine = new AuthEngine(this,this.channelEngine);
 
         //Responds
-        this.responseReactionMainBox = new Box<ResponseReactionBox>();
-        this.channelReactionMainBox = new Box<ChannelReactionBox>();
-        this.eventReactionMainBox = new Box<EventReactionBox>();
+        this.responseReactionMainBox = new MultiList<ResponseReactionBox>();
+        this.channelReactionMainBox = new MultiList<ChannelReactionBox>();
+        this.eventReactionMainBox = new MultiList<EventReactionBox>();
 
         //user system reaction boxes
         this.userResponseReactionBox = new ResponseReactionBox();
@@ -436,7 +451,7 @@ export class Zation
      * await zation.request()
      * .controller('sendMessage')
      * .data({msg: 'hallo'})
-     * .buildCatchError()
+     * .catchError()
      * .presets()
      * .valueNotMatchesWithMinLength('msg')
      * .react(()=>{console.log('Message to short')})
@@ -466,7 +481,7 @@ export class Zation
      * @example
      * await zation.authRequest()
      * .authData({userName: 'luca',password: '123'})
-     * .buildOnError()
+     * .catchError()
      * .nameIs('passwordIsWrong')
      * .react(() => {console.log('The password is wrong')})
      * .catchError(()=>{console.log('Something went wrong')})
@@ -496,7 +511,7 @@ export class Zation
      * await zation.validationRequest()
      * .controller('sendMessage')
      * .check('msg','hallo')
-     * .buildCatchError()
+     * .catchError()
      * .presets()
      * .valueNotMatchesWithMinLength()
      * .react(()=>{console.log('Message to short')})
@@ -519,18 +534,17 @@ export class Zation
      * settings for connecting to the Databox on the server.
      * The builder returns a new Databox object, with this object
      * you easily can connect to a Databox on the server-side.
-     * The Databox handes mostly everything: disconnections,
-     * cud updates missing, restores.
+     * The Databox handles mostly everything: disconnections,
+     * missing cud updates, restores.
      * It will do everything that it always has the newest data.
-     * @param name
-     * The name of the Databox that is also used to register a
+     * @param identifier
+     * The identifier of the Databox that is also used to register a
      * Databox in the configuration of the server.
-     * @param id
-     * The id is only needed if you want to connect to a DataboxFamiliy.
-     * The id represents the member id of the family.
+     * @param member
+     * The member is only needed if you want to connect to a DataboxFamily.
      */
-    databox(name: string,id?: string | number): DataboxBuilder {
-        return new DataboxBuilder(this,name,id);
+    databox(identifier: string,member?: string | number): DataboxBuilder {
+        return new DataboxBuilder(this,identifier,member);
     }
 
     //Part Send
@@ -717,15 +731,15 @@ export class Zation
                 if(this.zc.isDebug()) {
                     Logger.printInfo('Client is first connected.');
                 }
-                await this._triggerEventReactions(Events.FirstConnect);
+                await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.FirstConnect));
             }
             else {
                 if(this.zc.isDebug()) {
                     Logger.printInfo('Client is reconnected.');
                 }
-                await this._triggerEventReactions(Events.Reconnect);
+                await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.Reconnect));
             }
-            await this._triggerEventReactions(Events.Connect,this.firstConnection);
+            await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.Connect,this.firstConnection));
             this.firstConnection = false;
         });
 
@@ -733,7 +747,7 @@ export class Zation
             if(this.zc.isDebug()) {
                 Logger.printError(err);
             }
-            await this._triggerEventReactions(Events.Error,err);
+            await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.Error,err));
         });
 
         this.socket.on('disconnect',async (code,data) =>
@@ -743,15 +757,15 @@ export class Zation
                 if(this.zc.isDebug()) {
                     Logger.printInfo(`Client is disconnected from client. Code:'${code}' Data:'${data}'`);
                 }
-                await this._triggerEventReactions(Events.ClientDisconnect,code,data);
+                await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.ClientDisconnect,code,data));
             }
             else{
                 if(this.zc.isDebug()) {
                     Logger.printInfo(`Client is disconnected from server. Code:'${code}' Data:'${data}'`);
                 }
-                await this._triggerEventReactions(Events.ServerDisconnect,code,data);
+                await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.ServerDisconnect,code,data));
             }
-            await this._triggerEventReactions(Events.Disconnect,!!fromClient,code,data);
+            await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.Disconnect,fromClient,code,data));
         });
 
         this.socket.on('deauthenticate',async (oldSignedJwtToken,fromClient) =>
@@ -760,70 +774,40 @@ export class Zation
                 if(this.zc.isDebug()) {
                     Logger.printInfo('Client is deauthenticated from client.');
                 }
-                await this._triggerEventReactions(Events.ClientDeauthenticate,oldSignedJwtToken);
+                await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.ClientDeauthenticate,oldSignedJwtToken));
             }
             else{
                 if(this.zc.isDebug()) {
                     Logger.printInfo('Client is deauthenticated from server.');
                 }
-                await this._triggerEventReactions(Events.ServerDeauthenticate,oldSignedJwtToken);
+                await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.ServerDeauthenticate,oldSignedJwtToken));
             }
-            await this._triggerEventReactions(Events.Deauthenticate,fromClient,oldSignedJwtToken);
+            await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.Deauthenticate,!!fromClient,oldSignedJwtToken));
         });
 
         this.socket.on('connectAbort',async (code,data) => {
             if(this.zc.isDebug()) {
                 Logger.printInfo(`Client connect aborted. Code:'${code}' Data:'${data}'`);
             }
-            await this._triggerEventReactions(Events.ConnectAbort,code,data);
+            await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.ConnectAbort,code,data));
         });
 
         this.socket.on('connecting', async () => {
             if(this.zc.isDebug()) {
                 Logger.printInfo('Client is connecting.');
             }
-            await this._triggerEventReactions(Events.Connecting);
+            await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.Connecting));
         });
 
         this.socket.on('close', async (code,data) => {
-            await this._triggerEventReactions(Events.Close,code,data);
+            await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.Close,code,data));
         });
 
         this.socket.on('authenticate', async (signedJwtToken) => {
             if(this.zc.isDebug()) {
                 Logger.printInfo('Client is authenticated.');
             }
-            await this._triggerEventReactions(Events.Authenticate,signedJwtToken);
-        });
-
-        //events for any channel
-        this.socket.on('kickOut',async (msg,chName) => {
-            await this._getChannelReactionMainBox().forEachAll(async (chReactionBox: ChannelReactionBox) => {
-                await chReactionBox._triggerEvent(chReactionBox.mapKick,ChannelTarget.Any,{chFullName: chName},msg);
-            });
-        });
-
-        this.socket.on('subscribeFail',async (err,chName) => {
-            await this._getChannelReactionMainBox().forEachAll(async (chReactionBox: ChannelReactionBox) => {
-                await chReactionBox._triggerEvent(chReactionBox.mapSubFail,ChannelTarget.Any,{chFullName: chName},err);
-            });
-        });
-
-        this.socket.on('subscribe',async (chName) => {
-            await this._getChannelReactionMainBox().forEachAll(async (chReactionBox: ChannelReactionBox) => {
-                await chReactionBox._triggerEvent(chReactionBox.mapSub,ChannelTarget.Any,{chFullName: chName});
-            });
-        });
-
-        this.socket.on('unsubscribe',async (chName,fromClient) => {
-            if(fromClient){
-                await this._getChannelReactionMainBox().forEachAll(async (chReactionBox: ChannelReactionBox) => {
-                    await chReactionBox._triggerEvent(chReactionBox.mapClientUnsub,ChannelTarget.Any,{chFullName: chName});
-                });
-            }
-            await this._getChannelReactionMainBox().forEachAll(async (chReactionBox: ChannelReactionBox) => {
-                await chReactionBox._triggerEvent(chReactionBox.mapUnsub,ChannelTarget.Any,{chFullName: chName},fromClient);
-            });
+            await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.Authenticate,signedJwtToken));
         });
     }
 
@@ -990,72 +974,71 @@ export class Zation
      * Subscribe a custom channel.
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
      * @throws SubscribeFailedError, SocketNotCreatedError
-     * @param name
-     * @param id
+     * @param identifier
+     * @param member
      * @param retrySubForever
      * This option indicates if the client should retry to sub the channel forever.
      * So if the client is kicked from this channel or the subscription fail.
      * It will automatically retry to subscribe it if the authentication token change or the client is reconnected.
      * The default value is true.
      */
-    async subCustomCh(name: string, id?: string,retrySubForever: boolean = true): Promise<void> {
-        await this.channelEngine.subCustomCh(name,id,retrySubForever);
+    async subCustomCh(identifier: string, member?: string,retrySubForever: boolean = true): Promise<void> {
+        await this.channelEngine.subCustomCh(identifier,member,retrySubForever);
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
      * Returns if the socket has subscribed the custom channel.
-     * @param name if not provided it checks
+     * @param identifier if not provided it checks
      * if the socket has subscribed any custom channel.
-     * @param id if not provided it checks
-     * if the socket has subscribed any custom channel with channel name.
+     * @param member if not provided it checks
+     * if the socket has subscribed any custom channel with identifier.
      */
-    hasSubCustomCh(name?: string, id?: string): boolean {
-        return this.channelEngine.hasSubCustomCh(name,id);
+    hasSubCustomCh(identifier?: string, member?: string): boolean {
+        return this.channelEngine.hasSubCustomCh(identifier,member);
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
      * Unsubscribes custom channel.
-     * @param name if not provided it will unsubscribe all custom channels.
-     * @param id if not provided it will unsubscribe all custom channels with name.
+     * @param identifier if not provided it will unsubscribe all custom channels.
+     * @param member if not provided it will unsubscribe all custom channels with identifier.
      * @param andDestroy
      * @return
      * An string array with all custom channels there are unsubscribed.
      */
-    unsubCustomCh(name?: string, id?: string,andDestroy: boolean = true): string[] {
-        return this.channelEngine.unsubscribeCustomCh(name,id,andDestroy);
+    unsubCustomCh(identifier?: string, member?: string,andDestroy: boolean = true): string[] {
+        return this.channelEngine.unsubscribeCustomCh(identifier,member,andDestroy);
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
      * Returns all subscribed custom channels in an string array.
-     * @param name if not provided it will return all custom channels which are subscribed.
-     * @param id if not provided it will return all custom channels which are subscribed and have the
-     * same channel name.
+     * @param identifier if not provided it will return all custom channels which are subscribed.
+     * @param member if not provided it will return all custom channels which are subscribed and have the
+     * same identifier.
      */
-    getSubscribedCustomCh(name?: string, id?: string): string[] {
-        return this.channelEngine.getSubCustomCh(name,id);
+    getSubscribedCustomCh(identifier?: string, member?: string): string[] {
+        return this.channelEngine.getSubCustomCh(identifier,member);
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Switch the custom channel subscribtion to another member id.
-     * By unsubscribe all custom channels with the name and
+     * Switch the custom channel subscription to another member.
+     * By unsubscribe all custom channels with the identifier and
      * subscribe the new one.
      * Notice if the socket is not connected the resolve of the promise will wait for connection.
      * @throws SubscribeFailedError
-     * @param name
-     * @param id
+     * @param identifier
+     * @param member
      */
-    async switchCustomCh(name: string,id: string): Promise<void>
-    {
-        this.unsubCustomCh(name);
-        await this.subCustomCh(name,id);
+    async switchCustomCh(identifier: string, member: string): Promise<void> {
+        this.unsubCustomCh(identifier);
+        await this.subCustomCh(identifier,member);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1255,7 +1238,7 @@ export class Zation
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
-    async pubCustomCh(target: {name: string,id?: string},event: string, data: any = {},waitForConnection: WaitForConnectionOption = undefined): Promise<void> {
+    async pubCustomCh(target: {identifier: string,member?: string},event: string, data: any = {},waitForConnection: WaitForConnectionOption = undefined): Promise<void> {
         return this.channelEngine.pubCustomCh(target,event,data,waitForConnection);
     }
 
@@ -1407,11 +1390,7 @@ export class Zation
      * parameters are the data and a response function that you can call to respond on the event back.
      */
     once(event: string,handler: OnHandlerFunction): void {
-        const tmpHandler: OnHandlerFunction = (data, response) => {
-            tmpHandler(data,response);
-            this.socket.off(event,tmpHandler);
-        };
-        this.socket.on(event,tmpHandler);
+        this.socket.once(event,handler);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1602,7 +1581,7 @@ export class Zation
      * Used internally.
      * Only use this method carefully.
      */
-    _getChannelReactionMainBox(): Box<ChannelReactionBox> {
+    _getChannelReactionMainBox(): MultiList<ChannelReactionBox> {
         return this.channelReactionMainBox;
     }
 
@@ -1617,20 +1596,6 @@ export class Zation
     {
         await this.responseReactionMainBox.forEach(async (responseReactionBox: ResponseReactionBox) => {
             await responseReactionBox._trigger(response);
-        });
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @internal
-     * @description
-     * Used internally.
-     * Only use this method carefully.
-     */
-    private async _triggerEventReactions(event: Events,...arg: any[]): Promise<void>
-    {
-        await this.eventReactionMainBox.forEachAll(async (eventReactionBox: EventReactionBox) => {
-            await eventReactionBox._trigger(event,...arg);
         });
     }
 

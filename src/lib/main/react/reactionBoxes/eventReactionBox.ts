@@ -19,7 +19,7 @@ import {
 } from "../reaction/reactionHandler";
 import {Events}      from "../../constants/events";
 import {ReactionBox} from "./reactionBox";
-import {SBoxMapper}  from "../../box/sBoxMapper";
+import {ListMap}  from "../../container/listMap";
 
 type EventReaction = EventReactionOnAuthenticate | EventReactionOnConnect | EventReactionOnClinetDeauthenticate |
     EventReactionOnDisconnect | EventReactionOnClientDisconnect | EventReactionOnServerDisconnect |
@@ -29,8 +29,9 @@ type EventReaction = EventReactionOnAuthenticate | EventReactionOnConnect | Even
 
 export class EventReactionBox extends ReactionBox<EventReactionBox>
 {
-    private readonly map: SBoxMapper<any> = new SBoxMapper<any>();
-    private readonly onceMap: SBoxMapper<any> = new SBoxMapper<any>();
+    private readonly map: ListMap<any> = new ListMap<any>();
+    private readonly onceMap: ListMap<any> = new ListMap<any>();
+    protected lastReactionTmp: any;
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -203,7 +204,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onClinetDisconnect(reaction: EventReactionOnClientDisconnect): EventReactionBox {
+    onClientDisconnect(reaction: EventReactionOnClientDisconnect): EventReactionBox {
         this.map.add(Events.ClientDisconnect,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -223,7 +224,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * It returns the eventReactionBox, to remove the reaction from the box
      * you can use the getLastReaction method which is return the reaction.
      */
-    onceClinetDisconnect(reaction: EventReactionOnClientDisconnect): EventReactionBox {
+    onceClientDisconnect(reaction: EventReactionOnClientDisconnect): EventReactionBox {
         this.onceMap.add(Events.ClientDisconnect,reaction);
         this.lastReactionTmp = reaction;
         return this;
@@ -757,12 +758,23 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
         this.onceMap.remove(Events.Close,reaction);
     }
 
-    private async _triggerDataEventBox(mapKey: number, ...data: any[])
-    {
-        let promises: Promise<void>[] = [];
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the last added Reaction, you can use it to remove the reaction from the box
+     * by calling the specific off method.
+     * @return
+     * It returns the last added Reaction.
+     */
+    getLastReaction(): any {
+        return this.lastReactionTmp;
+    }
+
+    private async _triggerDataEventBox(mapKey: Events, ...data: any[]) {
+        const promises: Promise<void>[] = [];
         const box = this.map.tryGet(mapKey);
         if(box) {
-            promises.push(box.forEachAll(async (reaction: Function) => {
+            promises.push(box.forEachParallel(async (reaction: Function) => {
                 await reaction(...data);
             }));
         }
@@ -778,6 +790,20 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
         await Promise.all(promises);
     }
 
+    async _trigger(event: Events.Connect,...args: Parameters<EventReactionOnConnect>);
+    async _trigger(event: Events.FirstConnect,...args: Parameters<EventReactionOnFirstConnect>);
+    async _trigger(event: Events.Reconnect,...args: Parameters<EventReactionOnReconnect>);
+    async _trigger(event: Events.ServerDisconnect,...args: Parameters<EventReactionOnServerDisconnect>);
+    async _trigger(event: Events.ClientDisconnect,...args: Parameters<EventReactionOnClientDisconnect>);
+    async _trigger(event: Events.Disconnect,...args: Parameters<EventReactionOnDisconnect>);
+    async _trigger(event: Events.Authenticate,...args: Parameters<EventReactionOnAuthenticate>);
+    async _trigger(event: Events.ClientDeauthenticate,...args: Parameters<EventReactionOnClinetDeauthenticate>);
+    async _trigger(event: Events.ServerDeauthenticate,...args: Parameters<EventReactionOnServerDeauthenticate>);
+    async _trigger(event: Events.Deauthenticate,...args: Parameters<EventReactionOnDeauthenticate>);
+    async _trigger(event: Events.ConnectAbort,...args: Parameters<EventReactionOnConnectAbort>);
+    async _trigger(event: Events.Connecting,...args: Parameters<EventReactionOnConnecting>);
+    async _trigger(event: Events.Error,...args: Parameters<EventReactionOnError>);
+    async _trigger(event: Events.Close,...args: Parameters<EventReactionOnClose>);
     // noinspection JSUnusedGlobalSymbols
     /**
      * @internal
@@ -787,11 +813,8 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      */
     async _trigger(event: Events,...arg: any[])
     {
-        if(this.active)
-        {
-            await this._triggerWillProcess();
-            switch (event)
-            {
+        if(this.active) {
+            switch (event) {
                 case Events.Connect:
                     await this._triggerDataEventBox(Events.Connect,...arg);
                     break;
@@ -835,7 +858,6 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
                     await this._triggerDataEventBox(Events.Close,...arg);
                     break;
             }
-            await this._triggerDidProcess();
         }
     }
 }

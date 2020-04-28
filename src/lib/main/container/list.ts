@@ -4,9 +4,9 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-type ForEeachFunction<T> = (item: T) => Promise<void>;
+type ForEachFunction<T> = (item: T) => Promise<void>;
 
-export class SBox<T>
+export class List<T>
 {
     protected items: T[] = [] = [];
     protected inUse: boolean = false;
@@ -19,10 +19,10 @@ export class SBox<T>
     }
 
     // noinspection JSUnusedGlobalSymbols
-    async forEach(func: ForEeachFunction<T>): Promise<void>
+    async forEach(func: ForEachFunction<T>): Promise<void>
     {
         this.inUse = true;
-        //use extra refernce
+        //use extra reference
         //the this.items can maybe changed to a new list. (by edit the list)
         const array = this.items;
         for(let i = 0; i < array.length; i++) {
@@ -31,10 +31,10 @@ export class SBox<T>
         this.inUse = false;
     }
 
-    async forEachAll(func: ForEeachFunction<T>): Promise<void>
+    async forEachParallel(func: ForEachFunction<T>): Promise<void>
     {
         this.inUse = true;
-        //use extra refernce
+        //use extra reference
         //the this.items can maybe changed to a new list. (by edit the list)
         const array = this.items;
         const promise: Promise<void>[] = [];

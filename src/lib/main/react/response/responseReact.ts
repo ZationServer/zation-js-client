@@ -12,23 +12,26 @@ import {
 } from "../reaction/reactionHandler";
 import {OnErrorBuilder}         from "../error/onErrorBuilder";
 import {CatchErrorBuilder}      from "../error/catchErrorBuilder";
+// noinspection ES6PreferShortImport
 import {Response}               from "../../response/response";
+// noinspection ES6PreferShortImport
 import {ErrorFilter}            from "../error/errorFilter";
 import {TriggerResponseEngine}  from "../respReactEngines/triggerResponseEngine";
+// noinspection ES6PreferShortImport
 import {Zation}                 from "../../../core/zation";
 import {ResponseReactAble}      from "./responseReactAble";
 import {FullReaction}           from "../reaction/fullReaction";
+// noinspection ES6PreferShortImport
 import {ResponseReactionBox}    from "../reactionBoxes/responseReactionBox";
 
 
-export class ResponseReact implements ResponseReactAble
+export class ResponseReact implements ResponseReactAble<ResponseReact,ResponseReact>
 {
     private readonly response: Response;
     private readonly client: Zation;
     private preAction: Promise<void>;
 
-    constructor(response: Response,client: Zation)
-    {
+    constructor(response: Response,client: Zation) {
         this.preAction = Promise.resolve();
         this.response = response;
         this.client = client;
@@ -46,192 +49,146 @@ export class ResponseReact implements ResponseReactAble
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * React on an error in the response.
-     * The difference to the catch error is that the filtered errors are not caught.
-     * And you always respond to all the errors of the response, no matter if they were caught before.
+     * React to errors in the response.
+     * The difference to the catch error is that the errors of this reaction will not be caught,
+     * and you always respond to all the errors of the response, not matters if they were caught before.
+     * You can filter specific errors or react to all errors.
+     * In the code examples, you can see how you can use it.
      * @example
-     * onError((filteredErrors,response) => {},{name: 'passwordError'});
-     *
-     * -FilterExamples-
-     * For errors with the name:
-     * {name: 'errorName1'}
-     * For errors with the names:
-     * {name: ['errorName1','errorName2']}
-     * For errors with the group:
-     * {group: 'errorGroup1'}
-     * For errors with the groups:
-     * {group: ['errorGroup1','errorGroup2']}
-     * For errors with the type:
-     * {type: 'errorType1'}
-     * For errors with the types:
-     * {type: ['errorType1','errorType2']}
-     * For errors with has all keys and values in the info:
-     * {info: {path: 'name', value: 'value'}}
-     * For errors with has at least one of all keys and values in the info:
-     * {info: [{path: 'name'},{path: 'firstName'}]}
-     * For errors with the info key:
-     * {infoKey: 'path'}
-     * For errors with at least one of the info keys:
-     * {infoKey: ['path','value']}
-     * For errors with all of the info keys:
-     * {infoKey: [['path','value']]}
-     * For errors with the info value:
-     * {infoValue: 'name'}
-     * For errors with at least one of the info values:
-     * {infoValue: ['name','firstName']}
-     * For errors with all of the info values:
-     * {infoValue: [['value1','value2']]}
-     * For errors there from the zation system:
-     * {fromZationSystem: true}
-     * For errors there not from the zation system:
-     * {fromZationSystem: false}
-     * You can combine all of this properties.
-     * @param reaction
-     * @param filter
-     * The purpose of this param is to filter the BackErrors errors.
-     * Look in the examples how you can use it.
-     * You also can add more than one filter.
-     * The filter are linked with OR so the filtered errors
-     * of each filter are countend together.
-     * If there is more than one error at the end,
-     * the reaction wil be triggerd with all filtered errors.
+     * //React on all errors
+     * onError((errors,response) => {});
+     * //Filter errors with raw filter
+     * onError((errors,response) => {},{name: 'myError'})
+     * //Filter errors with OnErrorBuilder
+     * onError()
+     *     .presets()
+     *     .valueNotMatchesWithMinLength('name')
+     *     .react((errors, response) => {})
      */
-    onError(reaction: ResponseReactionOnError, ...filter: ErrorFilter[]): ResponseReact
-    {
-        this.preAction = this.preAction.then(async () => {
-            await TriggerResponseEngine.onError(this.response,new FullReaction<ResponseReactionOnError>(reaction,filter));
-        });
-        return this;
-    }
-
+    onError(): OnErrorBuilder<ResponseReact,ResponseReact>;
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Catch an error in the response.
-     * It makes sense to catch specific errors first and at the end to catch all the ones left over.
+     * React to errors in the response.
+     * The difference to the catch error is that the errors of this reaction will not be caught,
+     * and you always respond to all the errors of the response, not matters if they were caught before.
+     * You can filter specific errors or react to all errors.
+     * In the code examples, you can see how you can use it.
      * @example
-     * onError((filteredErrors,response) => {},{name: 'passwordError'});
-     *
-     * -FilterExamples-
-     * For errors with the name:
-     * {name: 'errorName1'}
-     * For errors with the names:
-     * {name: ['errorName1','errorName2']}
-     * For errors with the group:
-     * {group: 'errorGroup1'}
-     * For errors with the groups:
-     * {group: ['errorGroup1','errorGroup2']}
-     * For errors with the type:
-     * {type: 'errorType1'}
-     * For errors with the types:
-     * {type: ['errorType1','errorType2']}
-     * For errors with has all keys and values in the info:
-     * {info: {path: 'name', value: 'value'}}
-     * For errors with has at least one of all keys and values in the info:
-     * {info: [{path: 'name'},{path: 'firstName'}]}
-     * For errors with the info key:
-     * {infoKey: 'path'}
-     * For errors with at least one of the info keys:
-     * {infoKey: ['path','value']}
-     * For errors with all of the info keys:
-     * {infoKey: [['path','value']]}
-     * For errors with the info value:
-     * {infoValue: 'name'}
-     * For errors with at least one of the info values:
-     * {infoValue: ['name','firstName']}
-     * For errors with all of the info values:
-     * {infoValue: [['value1','value2']]}
-     * For errors there from the zation system:
-     * {fromZationSystem: true}
-     * For errors there not from the zation system:
-     * {fromZationSystem: false}
-     * You can combine all of this properties.
-     * @param reaction
-     * @param filter
-     * The purpose of this param is to filter the BackErrors errors.
-     * Look in the examples how you can use it.
-     * You also can add more than one filter.
-     * The filter are linked with OR so the filtered errors
-     * of each filter are countend together.
-     * If there is more than one error at the end,
-     * the reaction wil be triggerd with all filtered errors.
+     * //React on all errors
+     * onError((errors,response) => {});
+     * //Filter errors with raw filter
+     * onError((errors,response) => {},{name: 'myError'})
+     * //Filter errors with OnErrorBuilder
+     * onError()
+     *     .presets()
+     *     .valueNotMatchesWithMinLength('name')
+     *     .react((errors, response) => {})
      */
-    catchError(reaction: ResponseReactionCatchError, ...filter: ErrorFilter[]): ResponseReact
+    onError(reaction: ResponseReactionOnError,...filter: ErrorFilter[]): ResponseReact;
+    onError(reaction?: ResponseReactionOnError,...filter: ErrorFilter[]): ResponseReact | OnErrorBuilder<ResponseReact,ResponseReact>
     {
-        this.preAction = this.preAction.then(async () => {
-            await TriggerResponseEngine.catchError(this.response,new FullReaction<ResponseReactionCatchError>(reaction,filter));
-        });
-        return this;
+        if(reaction) {
+            this.preAction = this.preAction.then(() =>
+                TriggerResponseEngine.onError(this.response,new FullReaction<ResponseReactionOnError>(reaction,filter)));
+            return this;
+        }
+        else {
+            return new OnErrorBuilder<ResponseReact,ResponseReact>(this);
+        }
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns an OnErrorBuilder to easy react on error.
+     * Catch errors in the response.
+     * It makes sense to catch specific errors first and catch all left errors in the end.
+     * In the code examples, you can see how you can use it.
+     * @example
+     * //Catch all errors
+     * catchError((caughtErrors,response) => {});
+     * //Catch filtered errors with raw filter
+     * catchError((caughtErrors,response) => {},{name: 'myError'})
+     * //Catch filtered errors with OnErrorBuilder
+     * catchError()
+     *     .presets()
+     *     .valueNotMatchesWithMinLength('name')
+     *     .react((caughtErrors, response) => {})
      */
-    buildOnError(): OnErrorBuilder<ResponseReact,ResponseReact>
+    catchError(): CatchErrorBuilder<ResponseReact,ResponseReact>;
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Catch errors in the response.
+     * It makes sense to catch specific errors first and catch all left errors in the end.
+     * In the code examples, you can see how you can use it.
+     * @example
+     * //Catch all errors
+     * catchError((caughtErrors,response) => {});
+     * //Catch filtered errors with raw filter
+     * catchError((caughtErrors,response) => {},{name: 'myError'})
+     * //Catch filtered errors with OnErrorBuilder
+     * catchError()
+     *     .presets()
+     *     .valueNotMatchesWithMinLength('name')
+     *     .react((caughtErrors, response) => {})
+     */
+    catchError(reaction: ResponseReactionCatchError,...filter: ErrorFilter[]): ResponseReact;
+    catchError(reaction?: ResponseReactionOnError,...filter: ErrorFilter[]): ResponseReact | CatchErrorBuilder<ResponseReact,ResponseReact>
     {
-        return new OnErrorBuilder<ResponseReact,ResponseReact>(this);
+        if(reaction) {
+            this.preAction = this.preAction.then(() =>
+                TriggerResponseEngine.catchError(this.response,new FullReaction<ResponseReactionCatchError>(reaction,filter)));
+            return this;
+        }
+        else {
+            return new CatchErrorBuilder<ResponseReact,ResponseReact>(this);
+        }
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns an CatchErrorBuilder to easy catch an error.
-     */
-    buildCatchError(): CatchErrorBuilder<ResponseReact,ResponseReact>
-    {
-        return new CatchErrorBuilder<ResponseReact,ResponseReact>(this);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on successful response
+     * React to a successful response.
+     * You also can react to specific status codes of successful responses.
      * @example
      * onSuccessful((result,response) => {});
      * onSuccessful((result,response) => {},2000);
      * @param reaction
      * @param statusCode
-     * can be provided to filter on with an status code.
      */
     onSuccessful(reaction: ResponseReactionOnSuccessful, statusCode?: number | string): ResponseReact
     {
-        this.preAction = this.preAction.then(async () => {
-            await TriggerResponseEngine.
-            onSuccessful(this.response,new FullReaction<ResponseReactionOnSuccessful>(reaction,{statusCode: statusCode}));
-        });
+        this.preAction = this.preAction.then(() =>
+            TriggerResponseEngine.onSuccessful(this.response,new FullReaction<ResponseReactionOnSuccessful>(reaction,{statusCode})));
         return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * React on response.
+     * React on a response
+     * It does not matter if the response is successful or has errors.
      * @example
      * onResponse((response) => {});
      * @param reaction
      */
     onResponse(reaction:  ResponseReactionOnResponse): ResponseReact {
-        this.preAction = this.preAction.then(async () => {
-           await reaction(this.response);
-        });
+        this.preAction = this.preAction.then(() =>
+            reaction(this.response));
         return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * React with responseReaction box/es.
+     * React with ResponseReactionBox/es.
      * @param respReactionBoxes
      */
-    reactWith(...respReactionBoxes: ResponseReactionBox[]): ResponseReact
-    {
-        this.preAction = this.preAction.then(async () => {
-            await respReactionBoxes.forEach(async (box: ResponseReactionBox) => {
-                await box._trigger(this.response);
-            });
-        });
+    reactWith(...respReactionBoxes: ResponseReactionBox[]): ResponseReact {
+        this.preAction = this.preAction.then(() =>
+            respReactionBoxes.forEach((box: ResponseReactionBox) =>
+                box._trigger(this.response)));
         return this;
     }
 
@@ -242,8 +199,7 @@ export class ResponseReact implements ResponseReactAble
      * Only makes sense if the request was sent without its own reaction boxes.
      * Because then the boxes from the zation client were not triggered.
      */
-    zationReact(): ResponseReact
-    {
+    zationReact(): ResponseReact {
         this.preAction = this.preAction.then(async () => {
             await this.client._triggerResponseReactions(this.response);
         });
@@ -253,10 +209,9 @@ export class ResponseReact implements ResponseReactAble
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Async wait for all reations are finshed and returns the ResponseReact.
+     * Async wait for all reactions are finished and returns the ResponseReact.
      */
-    async wait(): Promise<ResponseReact>
-    {
+    async wait(): Promise<ResponseReact> {
         await this.preAction;
         return this;
     }

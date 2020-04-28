@@ -4,23 +4,16 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-export class FullReaction<T extends Function>
+export class FullReaction<T extends Function,F extends object = any>
 {
     private readonly reactionHandler: T;
-    private readonly filter: object;
+    private readonly filter: F;
     private readonly once: boolean;
 
-    constructor(reactionHandler: T,filter?: object,once: boolean = false)
-    {
+    constructor(reactionHandler: T,filter: F,once: boolean = false) {
         this.once = once;
         this.reactionHandler = reactionHandler;
-
-        if(filter !== undefined) {
-            this.filter = filter;
-        }
-        else {
-            this.filter = {};
-        }
+        this.filter = filter;
     }
 
     /**
@@ -43,7 +36,7 @@ export class FullReaction<T extends Function>
      * @description
      * Returns the filter.
      */
-    getFilter(): any {
+    getFilter(): F {
         return this.filter;
     }
 

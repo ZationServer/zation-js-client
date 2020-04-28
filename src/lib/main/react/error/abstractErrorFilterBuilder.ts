@@ -362,7 +362,6 @@ export abstract class AbstractErrorFilterBuilder<R extends AbstractErrorFilterBu
      * Returns an presetErrorFilter.
      * You can use it to easy filter preset errors like
      * validation or zation main errors.
-     * Notice that you call
      * @param pushPreset
      * Indicates if you want to push the preset error filter directly into the filters.
      * If not you can modify it later with this builder.

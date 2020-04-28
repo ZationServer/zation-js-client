@@ -4,10 +4,11 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-// noinspection TypeScriptPreferShortImport
+// noinspection TypeScriptPreferShortImport,ES6PreferShortImport
 import {ProtocolType}    from "../constants/protocolType";
 import {BackError}       from "./backError";
 import {ZationResponse}  from "../constants/internal";
+// noinspection ES6PreferShortImport
 import {Zation}          from "../../core/zation";
 import {ResponseReact}   from "../react/response/responseReact";
 
@@ -19,8 +20,8 @@ export class Response
 
     private result: any;
     private statusCode: string | number | undefined;
-    private readonly erros: BackError[] = [];
-    private notCatchedErrors: BackError[] = [];
+    private readonly errors: BackError[] = [];
+    private notCaughtErrors: BackError[] = [];
 
     private zationInfo: string[] = [];
 
@@ -28,15 +29,14 @@ export class Response
     private newSignedToken: string | undefined = undefined;
     private newPlainToken: object | undefined = undefined;
 
-    constructor(data,client: Zation,type: ProtocolType)
-    {
+    constructor(data,client: Zation,type: ProtocolType) {
         this.successful = false;
-        this.erros = [];
+        this.errors = [];
         this.type = type;
         this.client = client;
 
         this._readData(data);
-        this.resetNotCatchedErrors();
+        this.resetNotCaughtErrors();
     }
 
     //Part Result Value
@@ -140,10 +140,10 @@ export class Response
     getErrors(useFiltered: boolean = true): BackError[]
     {
         if(useFiltered) {
-            return this.notCatchedErrors;
+            return this.notCaughtErrors;
         }
         else {
-            return this.erros;
+            return this.errors;
         }
     }
 
@@ -156,10 +156,10 @@ export class Response
     hasErrors(useFiltered: boolean = true): boolean
     {
         if(useFiltered) {
-            return this.notCatchedErrors.length > 0;
+            return this.notCaughtErrors.length > 0;
         }
         else {
-            return this.erros.length > 0;
+            return this.errors.length > 0;
         }
     }
 
@@ -172,10 +172,10 @@ export class Response
     errorCount(useFiltered: boolean = true): number
     {
         if(useFiltered) {
-            return this.notCatchedErrors.length;
+            return this.notCaughtErrors.length;
         }
         else {
-            return this.erros.length;
+            return this.errors.length;
         }
     }
 
@@ -184,7 +184,7 @@ export class Response
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the an response react for rect directly on the repsonse.
+     * Returns a ResponseReact to react on the response with a fluent API.
      */
     react(): ResponseReact {
         return new ResponseReact(this,this.client);
@@ -195,10 +195,9 @@ export class Response
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the protocol type of the repsonse.
+     * Returns the protocol type of the response.
      */
-    getProtocolType(): ProtocolType
-    {
+    getProtocolType(): ProtocolType {
         return this.type;
     }
 
@@ -207,8 +206,7 @@ export class Response
      * @description
      * Returns if the protocol type of the response is websocket.
      */
-    isWsProtocolType(): boolean
-    {
+    isWsProtocolType(): boolean {
         return this.type === ProtocolType.WebSocket;
     }
 
@@ -217,8 +215,7 @@ export class Response
      * @description
      * Returns if the protocol type of the response is http.
      */
-    isHttpProtocolType(): boolean
-    {
+    isHttpProtocolType(): boolean {
         return this.type === ProtocolType.Http;
     }
 
@@ -229,8 +226,7 @@ export class Response
      * This makes only sense by an http request.
      * @param key
      */
-    hasZationHttpInfo(key: string): boolean
-    {
+    hasZationHttpInfo(key: string): boolean {
         return this.zationInfo.indexOf(key) !== -1;
     }
 
@@ -240,32 +236,39 @@ export class Response
      * Returns the zation http info.
      * This makes only sense by an http request.
      */
-    getZationHttpInfo(): string[]
-    {
+    getZationHttpInfo(): string[] {
         return this.zationInfo;
     }
 
-    //Part CatchOut
+    //Part Caught errors
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Reset all catched errors.
+     * Resets all caught errors.
      */
-    resetNotCatchedErrors(): Response {
-        this.notCatchedErrors = this.erros.slice();
+    resetNotCaughtErrors(): Response {
+        this.notCaughtErrors = this.errors.slice();
         return this;
     }
 
-    _getNotCatchedErrors(): BackError[] {
-        return this.notCatchedErrors;
+    /**
+     * @internal
+     * @private
+     */
+    _getNotCaughtErrors(): BackError[] {
+        return this.notCaughtErrors;
     }
 
-    _errorsAreCatched(errors: BackError[])
-    {
+    /**
+     * @internal
+     * @param errors
+     * @private
+     */
+    _errorsAreCaught(errors: BackError[]) {
         errors.forEach((error: BackError) => {
-            const index = this.notCatchedErrors.indexOf(error);
-            if (index > -1) {this.notCatchedErrors.splice(index, 1);}
+            const index = this.notCaughtErrors.indexOf(error);
+            if (index > -1) {this.notCaughtErrors.splice(index, 1);}
         });
     }
 
@@ -295,7 +298,7 @@ export class Response
                 for(let i = 0; i < errors.length; i++)
                 {
                     if(typeof errors[i] === 'object') {
-                        this.erros.push(new BackError(errors[i]));
+                        this.errors.push(new BackError(errors[i]));
                     }
                 }
             }
@@ -329,7 +332,7 @@ export class Response
             `   Protocol: ${ProtocolType[this.getProtocolType()]}\n` +
             (this.hasNewToken() ? `   NewToken: ${this.getNewPlainToken() || 'UNKNOWN'}\n`: '')+
             (this.isSuccessful() ? `   Result: ${this.result || 'NO RESULT'}\n`: '') +
-            (!this.isSuccessful() ? `   Errors: (${this.erros.toString()})`: '');
+            (!this.isSuccessful() ? `   Errors: (${this.errors.toString()})`: '');
     }
 }
 

@@ -4,18 +4,18 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {SBox} from "./sBox";
+import {List} from "./list";
 
-type ForEeachFunction<T> = (item: T) => Promise<void>;
+type ForEachFunction<T> = (item: T) => Promise<void>;
 
-export class Box<T> extends SBox<T>
+export class MultiList<T> extends List<T>
 {
     private fixedItems: T[] = [];
 
     constructor() {super();}
 
     // noinspection JSUnusedGlobalSymbols
-    async forEach(func: ForEeachFunction<T>): Promise<void>
+    async forEach(func: ForEachFunction<T>): Promise<void>
     {
         for(let i = 0; i < this.items.length; i++) {
             await func(this.items[i]);
@@ -25,7 +25,7 @@ export class Box<T> extends SBox<T>
         }
     }
 
-    async forEachAll(func: ForEeachFunction<T>): Promise<void>
+    async forEachParallel(func: ForEachFunction<T>): Promise<void>
     {
         let promise: Promise<void>[] = [];
         for(let i = 0; i < this.items.length; i++) {

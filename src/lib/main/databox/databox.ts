@@ -147,8 +147,8 @@ type OnSignal      = (data: any) => void | Promise<void>
 
 export default class Databox {
 
-    private readonly name: string;
-    private readonly id: string | undefined;
+    private readonly identifier: string;
+    private readonly member: string | undefined;
     private readonly apiLevel: number | undefined;
     private readonly socket: Socket;
     private readonly zation: Zation;
@@ -157,7 +157,7 @@ export default class Databox {
     private readonly mainDbStorage: DbStorage;
     private readonly tmpReloadDataSets: Set<DbsHead> = new Set<DbsHead>();
     private readonly fetchHistoryManager: DbFetchHistoryManager = new DbFetchHistoryManager();
-    private readonly tmpReloadStroage: DbStorage;
+    private readonly tmpReloadStorage: DbStorage;
     private readonly receivedSignalEmitter: TinyEmitter = new TinyEmitter();
 
     private readonly initData: any;
@@ -206,13 +206,13 @@ export default class Databox {
         initData: undefined
     };
 
-    constructor(zation: Zation, options: DataboxOptions, name: string, id?: string | number) {
+    constructor(zation: Zation, options: DataboxOptions, identifier: string, member?: string | number) {
         ObjectUtils.addObToOb(this.dbOptions, options, true);
         this.socket = zation.getSocket();
         this.zation = zation;
         this.apiLevel = this.dbOptions.apiLevel;
-        this.name = name;
-        this.id = id !== undefined ? id.toString(): id;
+        this.identifier = identifier;
+        this.member = member !== undefined ? member.toString(): member;
         this.initData = this.dbOptions.initData;
 
         const tmpRestoreStorageOptions: DbStorageOptions = {
@@ -222,7 +222,7 @@ export default class Databox {
             doInsert: true
         };
         ObjectUtils.addObToOb(tmpRestoreStorageOptions, this.dbOptions.mainStorageOptions);
-        this.tmpReloadStroage = new DbStorage(tmpRestoreStorageOptions);
+        this.tmpReloadStorage = new DbStorage(tmpRestoreStorageOptions);
 
         this.mainDbStorage = new DbStorage(this.dbOptions.mainStorageOptions);
         this.dbStorages.add(this.mainDbStorage);
@@ -320,7 +320,7 @@ export default class Databox {
                 this.created = true;
             } catch (e) {
                 this._clearListenersAndReset();
-                if(e.name === ErrorName.InvalidInput){
+                if(e.identifier === ErrorName.InvalidInput){
                     throw new InvalidInputError('Invalid init input. Failed to connect to the Databox.',e);
                 }
                 else {
@@ -371,8 +371,8 @@ export default class Databox {
         return new Promise<void>((resolve, reject) => {
             this.socket.emit(DATABOX_START_INDICATOR, {
                 al: this.apiLevel,
-                d: this.name,
-                ...(this.id !== undefined ? {i: this.id}: {}),
+                d: this.identifier,
+                ...(this.member !== undefined ? {i: this.member}: {}),
                 ...(currentToken !== undefined ? {t: currentToken}: {}),
                 ...(this.initData !== undefined ? {ii: this.initData}: {})
             } as DataboxConnectReq, async (err, res: DataboxConnectRes) => {
@@ -512,7 +512,7 @@ export default class Databox {
             }
             this.newDataEvent.emit(this);
         } catch (e) {
-            if(e.name === ErrorName.InvalidInput) {
+            if(e.identifier === ErrorName.InvalidInput) {
                 throw new InvalidInputError('Invalid fetch input.',e);
             }
             else {
@@ -560,8 +560,8 @@ export default class Databox {
                     results[fetchResult.c] = dbsHead;
                     this.tmpReloadDataSets.add(dbsHead);
                 } catch (err) {
-                    if ((err.name as ErrorName) !== ErrorName.NoMoreDataAvailable &&
-                        (err.name as ErrorName) !== ErrorName.NoDataAvailable) {
+                    if ((err.identifier as ErrorName) !== ErrorName.NoMoreDataAvailable &&
+                        (err.identifier as ErrorName) !== ErrorName.NoDataAvailable) {
                         throw err;
                     }
                 }
@@ -585,8 +585,8 @@ export default class Databox {
                 results[fetchResult.c] = dbsHead;
                 this.tmpReloadDataSets.add(dbsHead);
             } catch (err) {
-                if ((err.name as ErrorName) !== ErrorName.NoMoreDataAvailable &&
-                    (err.name as ErrorName) !== ErrorName.NoDataAvailable) {
+                if ((err.identifier as ErrorName) !== ErrorName.NoMoreDataAvailable &&
+                    (err.identifier as ErrorName) !== ErrorName.NoDataAvailable) {
                     throw err;
                 }
             }
@@ -641,22 +641,22 @@ export default class Databox {
                         result.push(new DbsHead(missedHistory[i].data));
                     }
 
-                    this.tmpReloadStroage.clear();
+                    this.tmpReloadStorage.clear();
                     for (let i = 0; i < result.length; i++) {
                         if (result[i] === undefined) {
                             continue;
                         }
-                        this.tmpReloadStroage.addData(result[i]);
+                        this.tmpReloadStorage.addData(result[i]);
                     }
                     //re-execute local cud operations.
                     const localCudOperations = this.localCudOperationsMemory.getAll();
                     for(let i = 0; i < localCudOperations.length; i++){
-                        this.tmpReloadStroage._executeLocalCudOperation(localCudOperations[i],true);
+                        this.tmpReloadStorage._executeLocalCudOperation(localCudOperations[i],true);
                     }
 
                     await this.sendSessionAction(DbClientInputAction.copySession, DBClientInputSessionTarget.reloadSession);
                     this.tmpReloadDataSets.clear();
-                    this._reloadStorages(this.tmpReloadStroage);
+                    this._reloadStorages(this.tmpReloadStorage);
 
                     this.fetchHistoryManager.done();
                     this.newDataEvent.emit(this);
@@ -668,7 +668,7 @@ export default class Databox {
                 } catch (e) {
                     this.fetchHistoryManager.done();
                     this.tmpReloadDataSets.clear();
-                    if(e.name === ErrorName.InvalidInput){
+                    if(e.identifier === ErrorName.InvalidInput){
                         throw new InvalidInputError('Invalid fetch input in the reload process.',e);
                     }
                     else {

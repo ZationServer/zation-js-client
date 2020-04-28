@@ -4,9 +4,9 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {SBox} from "./sBox";
+import {List} from "./list";
 
-export class SBoxMapper<T>
+export class ListMap<T>
 {
     private map: object = {};
 
@@ -24,17 +24,17 @@ export class SBoxMapper<T>
         }
     }
 
-    get(key: PropertyKey): SBox<T> {
+    get(key: PropertyKey): List<T> {
         if(this.map.hasOwnProperty(key)) {
             return this.map[key];
         }
         else{
-            this.map[key] = new SBox<T>();
+            this.map[key] = new List<T>();
             return this.map[key];
         }
     }
 
-    tryGet(key: PropertyKey): SBox<T> | undefined {
+    tryGet(key: PropertyKey): List<T> | undefined {
         return this.map[key];
     }
 }

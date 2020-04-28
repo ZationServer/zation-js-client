@@ -8,13 +8,13 @@ import {ForintQuery} from "forint";
 
 export interface DataboxConnectReq {
     /**
-     * databox (name)
+     * databox (identifier)
      */
     d: string,
     /**
-     * id
+     * member
      */
-    i?: string,
+    m?: string,
     /**
      * apiLevel
      */
@@ -22,7 +22,7 @@ export interface DataboxConnectReq {
     /**
      * token
      */
-    t?: string
+    t?: string,
     /**
      * initInput
      */

@@ -6,22 +6,28 @@ Copyright(c) Luca Scaringella
 
 import {ProgressHandler}       from "../helper/progressHandler";
 import {
+    ResponseReactionCatchError,
     ResponseReactionOnError,
     ResponseReactionOnResponse,
     ResponseReactionOnSuccessful
-} from "../../react/reaction/reactionHandler";
+} from '../../react/reaction/reactionHandler';
 import {OnErrorBuilder}          from "../../react/error/onErrorBuilder";
 import {CatchErrorBuilder}       from "../../react/error/catchErrorBuilder";
+// noinspection ES6PreferShortImport
 import {ErrorFilter}             from "../../react/error/errorFilter";
+// noinspection ES6PreferShortImport
 import {ProtocolType}            from "../../constants/protocolType";
+// noinspection ES6PreferShortImport
 import {Zation}                  from "../../../core/zation";
+// noinspection ES6PreferShortImport
 import {ResponseReactionBox}     from "../../react/reactionBoxes/responseReactionBox";
 import {ZationRequest}           from "../main/zationRequest";
+// noinspection ES6PreferShortImport
 import {Response}                from "../../response/response";
 import {ResponseReactAble}       from "../../react/response/responseReactAble";
 import {WaitForConnectionOption} from "../../utils/connectionUtils";
 
-export abstract class AbstractRequestBuilder<T> implements ResponseReactAble
+export abstract class AbstractRequestBuilder<T> implements ResponseReactAble<AbstractRequestBuilder<T>,T>
 {
     protected readonly zation: Zation;
 
@@ -34,8 +40,7 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble
     private _reactionAdded: boolean = false;
     private _addedResponseReactionBoxes: ResponseReactionBox[] = [];
 
-    protected constructor(zation: Zation)
-    {
+    protected constructor(zation: Zation) {
         this.zation = zation;
         this._responseReactionBox = new ResponseReactionBox();
     }
@@ -167,150 +172,113 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * React on an error in the response.
-     * The difference to the catch error is that the filtered errors are not caught.
-     * And you always respond to all the errors of the response, no matter if they were caught before.
+     * React to errors in the response.
+     * The difference to the catch error is that the errors of this reaction will not be caught,
+     * and you always respond to all the errors of the response, not matters if they were caught before.
+     * You can filter specific errors or react to all errors.
+     * In the code examples, you can see how you can use it.
      * @example
-     * onError((filteredErrors,response) => {},{name: 'passwordError'});
-     *
-     * -FilterExamples-
-     * For errors with the name:
-     * {name: 'errorName1'}
-     * For errors with the names:
-     * {name: ['errorName1','errorName2']}
-     * For errors with the group:
-     * {group: 'errorGroup1'}
-     * For errors with the groups:
-     * {group: ['errorGroup1','errorGroup2']}
-     * For errors with the type:
-     * {type: 'errorType1'}
-     * For errors with the types:
-     * {type: ['errorType1','errorType2']}
-     * For errors with has all keys and values in the info:
-     * {info: {path: 'name', value: 'value'}}
-     * For errors with has at least one of all keys and values in the info:
-     * {info: [{path: 'name'},{path: 'firstName'}]}
-     * For errors with the info key:
-     * {infoKey: 'path'}
-     * For errors with at least one of the info keys:
-     * {infoKey: ['path','value']}
-     * For errors with all of the info keys:
-     * {infoKey: [['path','value']]}
-     * For errors with the info value:
-     * {infoValue: 'name'}
-     * For errors with at least one of the info values:
-     * {infoValue: ['name','firstName']}
-     * For errors with all of the info values:
-     * {infoValue: [['value1','value2']]}
-     * For errors there from the zation system:
-     * {fromZationSystem: true}
-     * For errors there not from the zation system:
-     * {fromZationSystem: false}
-     * You can combine all of this properties.
-     * @param reaction
-     * @param filter
-     * The purpose of this param is to filter the BackErrors errors.
-     * Look in the examples how you can use it.
-     * You also can add more than one filter.
-     * The filter are linked with OR so the filtered errors
-     * of each filter are countend together.
-     * If there is more than one error at the end,
-     * the reaction wil be triggerd with all filtered errors.
+     * //React on all errors
+     * onError((errors,response) => {});
+     * //Filter errors with raw filter
+     * onError((errors,response) => {},{name: 'myError'})
+     * //Filter errors with OnErrorBuilder
+     * onError()
+     *     .presets()
+     *     .valueNotMatchesWithMinLength('name')
+     *     .react((errors, response) => {})
      */
-    onError(reaction: ResponseReactionOnError, ...filter: ErrorFilter[]): T
-    {
-        this._responseReactionBox.onError(reaction,...filter);
-        this._reactionAdded = true;
-        return this.self();
-    }
-
+    onError(): OnErrorBuilder<AbstractRequestBuilder<T>,T>;
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Catch an error in the response.
-     * It makes sense to catch specific errors first and at the end to catch all the ones left over.
+     * React to errors in the response.
+     * The difference to the catch error is that the errors of this reaction will not be caught,
+     * and you always respond to all the errors of the response, not matters if they were caught before.
+     * You can filter specific errors or react to all errors.
+     * In the code examples, you can see how you can use it.
      * @example
-     * onError((filteredErrors,response) => {},{name: 'passwordError'});
-     *
-     * -FilterExamples-
-     * For errors with the name:
-     * {name: 'errorName1'}
-     * For errors with the names:
-     * {name: ['errorName1','errorName2']}
-     * For errors with the group:
-     * {group: 'errorGroup1'}
-     * For errors with the groups:
-     * {group: ['errorGroup1','errorGroup2']}
-     * For errors with the type:
-     * {type: 'errorType1'}
-     * For errors with the types:
-     * {type: ['errorType1','errorType2']}
-     * For errors with has all keys and values in the info:
-     * {info: {path: 'name', value: 'value'}}
-     * For errors with has at least one of all keys and values in the info:
-     * {info: [{path: 'name'},{path: 'firstName'}]}
-     * For errors with the info key:
-     * {infoKey: 'path'}
-     * For errors with at least one of the info keys:
-     * {infoKey: ['path','value']}
-     * For errors with all of the info keys:
-     * {infoKey: [['path','value']]}
-     * For errors with the info value:
-     * {infoValue: 'name'}
-     * For errors with at least one of the info values:
-     * {infoValue: ['name','firstName']}
-     * For errors with all of the info values:
-     * {infoValue: [['value1','value2']]}
-     * For errors there from the zation system:
-     * {fromZationSystem: true}
-     * For errors there not from the zation system:
-     * {fromZationSystem: false}
-     * You can combine all of this properties.
-     * @param reaction
-     * @param filter
-     * The purpose of this param is to filter the BackErrors errors.
-     * Look in the examples how you can use it.
-     * You also can add more than one filter.
-     * The filter are linked with OR so the filtered errors
-     * of each filter are countend together.
-     * If there is more than one error at the end,
-     * the reaction wil be triggerd with all filtered errors.
+     * //React on all errors
+     * onError((errors,response) => {});
+     * //Filter errors with raw filter
+     * onError((errors,response) => {},{name: 'myError'})
+     * //Filter errors with OnErrorBuilder
+     * onError()
+     *     .presets()
+     *     .valueNotMatchesWithMinLength('name')
+     *     .react((errors, response) => {})
      */
-    catchError(reaction: ResponseReactionOnError, ...filter: ErrorFilter[]): T
+    onError(reaction: ResponseReactionOnError,...filter: ErrorFilter[]): T;
+    onError(reaction?: ResponseReactionOnError,...filter: ErrorFilter[]): T | OnErrorBuilder<AbstractRequestBuilder<T>,T>
     {
-        this._responseReactionBox.catchError(reaction,...filter);
-        this._reactionAdded = true;
-        return this.self();
+        if(reaction) {
+            this._responseReactionBox.onError(reaction,...filter);
+            this._reactionAdded = true;
+            return this.self();
+        }
+        else {
+            return new OnErrorBuilder<AbstractRequestBuilder<T>,T>(this);
+        }
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns an OnErrorBuilder to easy react on error.
+     * Catch errors in the response.
+     * It makes sense to catch specific errors first and catch all left errors in the end.
+     * In the code examples, you can see how you can use it.
+     * @example
+     * //Catch all errors
+     * catchError((caughtErrors,response) => {});
+     * //Catch filtered errors with raw filter
+     * catchError((caughtErrors,response) => {},{name: 'myError'})
+     * //Catch filtered errors with OnErrorBuilder
+     * catchError()
+     *     .presets()
+     *     .valueNotMatchesWithMinLength('name')
+     *     .react((caughtErrors, response) => {})
      */
-    buildOnError(): OnErrorBuilder<AbstractRequestBuilder<T>,T> {
-        return new OnErrorBuilder<AbstractRequestBuilder<T>,T>(this);
-    }
-
+    catchError(): CatchErrorBuilder<AbstractRequestBuilder<T>,T>;
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns an CatchErrorBuilder to easy catch an error.
+     * Catch errors in the response.
+     * It makes sense to catch specific errors first and catch all left errors in the end.
+     * In the code examples, you can see how you can use it.
+     * @example
+     * //Catch all errors
+     * catchError((caughtErrors,response) => {});
+     * //Catch filtered errors with raw filter
+     * catchError((caughtErrors,response) => {},{name: 'myError'})
+     * //Catch filtered errors with OnErrorBuilder
+     * catchError()
+     *     .presets()
+     *     .valueNotMatchesWithMinLength('name')
+     *     .react((caughtErrors, response) => {})
      */
-    buildCatchError(): CatchErrorBuilder<AbstractRequestBuilder<T>,T> {
-        return new CatchErrorBuilder<AbstractRequestBuilder<T>,T>(this);
+    catchError(reaction: ResponseReactionCatchError,...filter: ErrorFilter[]): T;
+    catchError(reaction?: ResponseReactionOnError,...filter: ErrorFilter[]): T | CatchErrorBuilder<AbstractRequestBuilder<T>,T>
+    {
+        if(reaction) {
+            this._responseReactionBox.catchError(reaction,...filter);
+            this._reactionAdded = true;
+            return this.self();
+        }
+        else {
+            return new CatchErrorBuilder<AbstractRequestBuilder<T>,T>(this);
+        }
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * React on successful response.
+     * React to a successful response.
+     * You also can react to specific status codes of successful responses.
      * @example
      * onSuccessful((result,response) => {});
      * onSuccessful((result,response) => {},2000);
      * @param reaction
      * @param statusCode
-     * can be provided to filter on with an status code.
      */
     onSuccessful(reaction: ResponseReactionOnSuccessful, statusCode?: number | string): T {
         this._responseReactionBox.onSuccessful(reaction,statusCode);
@@ -321,7 +289,8 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * React on response.
+     * React on a response
+     * It does not matter if the response is successful or has errors.
      * @example
      * onResponse((response) => {});
      * @param reaction
@@ -338,15 +307,13 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble
      * Send the request and returns the response after trigger the reactions from the build.
      * @throws ConnectionRequiredError,TimeoutError,AbortSignal
      * @param triggerZationBoxes
-     * Specifies if the zation response boxes are triggerd.
+     * Specifies if the zation response boxes are triggered.
      * The default value is true if at least one reaction is added in the requestBuilder.
      * Otherwise you have the possibility to react with the response on specific things and
      * then trigger the zation response reaction boxes (using response.react().zationReact()).
      */
-    async send(triggerZationBoxes: boolean = this._reactionAdded || this._addedResponseReactionBoxes.length > 0): Promise<Response>
-    {
-        return await this.zation.send
-        (
+    send(triggerZationBoxes: boolean = this._reactionAdded || this._addedResponseReactionBoxes.length > 0): Promise<Response> {
+        return this.zation.send(
             this.buildRequest(),
             (...args) => {
                 this._progressHandler.forEach((handler)=>

@@ -9,7 +9,8 @@ import {AbstractErrorFilterBuilder} from "./abstractErrorFilterBuilder";
 import {ResponseReactAble}          from "../response/responseReactAble";
 import {ReactionUtil}               from "./reactionUtil";
 
-export class OnErrorBuilder<T extends ResponseReactAble,R> extends AbstractErrorFilterBuilder<OnErrorBuilder<T,R>>
+export class OnErrorBuilder<T extends ResponseReactAble<T,R>,R>
+    extends AbstractErrorFilterBuilder<OnErrorBuilder<T,R>>
 {
     private readonly target : T;
 
@@ -28,8 +29,7 @@ export class OnErrorBuilder<T extends ResponseReactAble,R> extends AbstractError
      * @param reactions
      * You also can add more than one reaction.
      */
-    react(...reactions: ResponseReactionOnError[]): R
-    {
+    react(...reactions: ResponseReactionOnError[]): R {
         //save last tmp
         this._pushTmpFilter();
         return this.target.onError(ReactionUtil.mergeReaction(reactions),...this.filter);

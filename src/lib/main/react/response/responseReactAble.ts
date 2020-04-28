@@ -5,152 +5,120 @@ Copyright(c) Luca Scaringella
  */
 
 import {
+    ResponseReactionCatchError,
     ResponseReactionOnError,
     ResponseReactionOnResponse,
     ResponseReactionOnSuccessful
-} from "../reaction/reactionHandler";
+} from '../reaction/reactionHandler';
+import {OnErrorBuilder} from '../error/onErrorBuilder';
+// noinspection ES6PreferShortImport
+import {ErrorFilter} from '../error/errorFilter';
+import {CatchErrorBuilder} from '../error/catchErrorBuilder';
 
-export interface ResponseReactAble
+export interface ResponseReactAble<T extends ResponseReactAble<T,R>,R>
 {
-    /**
-     * @description
-     * Catch an error in the response.
-     * It makes sense to catch specific errors first and at the end to catch all the ones left over.
-     * @example
-     * onError((filteredErrors,response) => {},{name: 'passwordError'});
-     *
-     * -FilterExamples-
-     * For errors with the name:
-     * {name: 'errorName1'}
-     * For errors with the names:
-     * {name: ['errorName1','errorName2']}
-     * For errors with the group:
-     * {group: 'errorGroup1'}
-     * For errors with the groups:
-     * {group: ['errorGroup1','errorGroup2']}
-     * For errors with the type:
-     * {type: 'errorType1'}
-     * For errors with the types:
-     * {type: ['errorType1','errorType2']}
-     * For errors with has all keys and values in the info:
-     * {info: {path: 'name', value: 'value'}}
-     * For errors with has at least one of all keys and values in the info:
-     * {info: [{path: 'name'},{path: 'firstName'}]}
-     * For errors with the info key:
-     * {infoKey: 'path'}
-     * For errors with at least one of the info keys:
-     * {infoKey: ['path','value']}
-     * For errors with all of the info keys:
-     * {infoKey: [['path','value']]}
-     * For errors with the info value:
-     * {infoValue: 'name'}
-     * For errors with at least one of the info values:
-     * {infoValue: ['name','firstName']}
-     * For errors with all of the info values:
-     * {infoValue: [['value1','value2']]}
-     * For errors there from the zation system:
-     * {fromZationSystem: true}
-     * For errors there not from the zation system:
-     * {fromZationSystem: false}
-     * You can combine all of this properties.
-     * @param reaction
-     * @param filter
-     * The purpose of this param is to filter the BackErrors errors.
-     * Look in the examples how you can use it.
-     * You also can add more than one filter.
-     * The filter are linked with OR so the filtered errors
-     * of each filter are countend together.
-     * If there is more than one error at the end,
-     * the reaction wil be triggerd with all filtered errors.
-     * @return
-     * It returns the responseReactionBox, to remove the CatchErrorReaction from the box
-     * you can use the getLastReaction method which is return the FullReaction.
-     */
-    catchError(reaction: ResponseReactionOnError, ...filter: object[]): any;
+
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * React on an error in the response.
-     * The difference to the catch error is that the filtered errors are not caught.
-     * And you always respond to all the errors of the response, no matter if they were caught before.
+     * React to errors in the response.
+     * The difference to the catch error is that the errors of this reaction will not be caught,
+     * and you always respond to all the errors of the response, not matters if they were caught before.
+     * You can filter specific errors or react to all errors.
+     * In the code examples, you can see how you can use it.
      * @example
-     * onError((filteredErrors,response) => {},{name: 'passwordError'});
-     *
-     * -FilterExamples-
-     * For errors with the name:
-     * {name: 'errorName1'}
-     * For errors with the names:
-     * {name: ['errorName1','errorName2']}
-     * For errors with the group:
-     * {group: 'errorGroup1'}
-     * For errors with the groups:
-     * {group: ['errorGroup1','errorGroup2']}
-     * For errors with the type:
-     * {type: 'errorType1'}
-     * For errors with the types:
-     * {type: ['errorType1','errorType2']}
-     * For errors with has all keys and values in the info:
-     * {info: {path: 'name', value: 'value'}}
-     * For errors with has at least one of all keys and values in the info:
-     * {info: [{path: 'name'},{path: 'firstName'}]}
-     * For errors with the info key:
-     * {infoKey: 'path'}
-     * For errors with at least one of the info keys:
-     * {infoKey: ['path','value']}
-     * For errors with all of the info keys:
-     * {infoKey: [['path','value']]}
-     * For errors with the info value:
-     * {infoValue: 'name'}
-     * For errors with at least one of the info values:
-     * {infoValue: ['name','firstName']}
-     * For errors with all of the info values:
-     * {infoValue: [['value1','value2']]}
-     * For errors there from the zation system:
-     * {fromZationSystem: true}
-     * For errors there not from the zation system:
-     * {fromZationSystem: false}
-     * You can combine all of this properties.
-     * @param reaction
-     * @param filter
-     * The purpose of this param is to filter the BackErrors errors.
-     * Look in the examples how you can use it.
-     * You also can add more than one filter.
-     * The filter are linked with OR so the filtered errors
-     * of each filter are countend together.
-     * If there is more than one error at the end,
-     * the reaction wil be triggerd with all filtered errors.
-     * @return
-     * It returns the responseReactionBox, to remove the on ErrorReaction from the box
-     * you can use the getLastReaction method which is return the FullReaction.
+     * //React on all errors
+     * onError((errors,response) => {});
+     * //Filter errors with raw filter
+     * onError((errors,response) => {},{name: 'myError'})
+     * //Filter errors with OnErrorBuilder
+     * onError()
+     *     .presets()
+     *     .valueNotMatchesWithMinLength('name')
+     *     .react((errors, response) => {})
      */
-    onError(reaction: ResponseReactionOnError, ...filter: object[]): any;
+    onError(): OnErrorBuilder<T,R>;
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * React on successful response
+     * React to errors in the response.
+     * The difference to the catch error is that the errors of this reaction will not be caught,
+     * and you always respond to all the errors of the response, not matters if they were caught before.
+     * You can filter specific errors or react to all errors.
+     * In the code examples, you can see how you can use it.
+     * @example
+     * //React on all errors
+     * onError((errors,response) => {});
+     * //Filter errors with raw filter
+     * onError((errors,response) => {},{name: 'myError'})
+     * //Filter errors with OnErrorBuilder
+     * onError()
+     *     .presets()
+     *     .valueNotMatchesWithMinLength('name')
+     *     .react((errors, response) => {})
+     */
+    onError(reaction: ResponseReactionOnError,...filter: ErrorFilter[]): R;
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Catch errors in the response.
+     * It makes sense to catch specific errors first and catch all left errors in the end.
+     * In the code examples, you can see how you can use it.
+     * @example
+     * //Catch all errors
+     * catchError((caughtErrors,response) => {});
+     * //Catch filtered errors with raw filter
+     * catchError((caughtErrors,response) => {},{name: 'myError'})
+     * //Catch filtered errors with OnErrorBuilder
+     * catchError()
+     *     .presets()
+     *     .valueNotMatchesWithMinLength('name')
+     *     .react((caughtErrors, response) => {})
+     */
+    catchError(): CatchErrorBuilder<T,R>;
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Catch errors in the response.
+     * It makes sense to catch specific errors first and catch all left errors in the end.
+     * In the code examples, you can see how you can use it.
+     * @example
+     * //Catch all errors
+     * catchError((caughtErrors,response) => {});
+     * //Catch filtered errors with raw filter
+     * catchError((caughtErrors,response) => {},{name: 'myError'})
+     * //Catch filtered errors with OnErrorBuilder
+     * catchError()
+     *     .presets()
+     *     .valueNotMatchesWithMinLength('name')
+     *     .react((caughtErrors, response) => {})
+     */
+    catchError(reaction: ResponseReactionCatchError,...filter: ErrorFilter[]): R;
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * React to a successful response.
+     * You also can react to specific status codes of successful responses.
      * @example
      * onSuccessful((result,response) => {});
      * onSuccessful((result,response) => {},2000);
      * @param reaction
      * @param statusCode
-     * @return
-     * It returns the responseReactionBox, to remove the on SuccessfulReaction from the box
-     * you can use the getLastReaction method which is return the FullReaction.
      */
-    onSuccessful(reaction: ResponseReactionOnSuccessful, statusCode?: any): any;
+    onSuccessful(reaction: ResponseReactionOnSuccessful, statusCode?: any): R;
+
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * React on an response
+     * React on a response
      * It does not matter if the response is successful or has errors.
      * @example
      * onResponse((response) => {});
      * @param reaction
-     * @return
-     * It returns the responseReactionBox, to remove the on ResponseReaction from the box
-     * you can use the getLastReaction method which is return the FullReaction.
      */
-    onResponse(reaction: ResponseReactionOnResponse): any
+    onResponse(reaction: ResponseReactionOnResponse): R;
 }
 
 

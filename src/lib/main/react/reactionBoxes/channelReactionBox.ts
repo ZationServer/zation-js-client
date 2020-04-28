@@ -5,48 +5,375 @@ Copyright(c) Luca Scaringella
  */
 
 import {
-    ChannelReactionOnClientUnsubAnyCh,
-    ChannelReactionOnClientUnsubCustomCh,
-    ChannelReactionOnClientUnsubZationCh,
-    ChannelReactionOnKickOutAnyCh,
-    ChannelReactionOnKickOutCustomCh,
-    ChannelReactionOnKickOutZationCh,
-    ChannelReactionOnPubAnyCh,
-    ChannelReactionOnPubCustomCh,
-    ChannelReactionOnPubZationCh,
-    ChannelReactionOnSubAnyCh,
-    ChannelReactionOnSubCustomCh,
-    ChannelReactionOnSubFailAnyCh,
-    ChannelReactionOnSubFailCustomCh,
-    ChannelReactionOnSubFailZationCh,
-    ChannelReactionOnSubZationCh,
-    ChannelReactionOnUnsubAnyCh,
-    ChannelReactionOnUnsubCustomCh,
-    ChannelReactionOnUnsubZationCh
-} from "../reaction/reactionHandler";
-import {ChannelTarget} from "../../channel/channelTarget";
-import {ReactionBox}   from "./reactionBox";
-import {SBoxMapper}    from "../../box/sBoxMapper";
-import {FullReaction}  from "../reaction/fullReaction";
-import {SBox}          from "../../box/sBox";
+    ChannelReactionOnKickOut,
+    ChannelReactionOnPublish,
+    ChannelReactionOnSubscribe,
+    ChannelReactionOnSubscribeFail,
+    ChannelReactionOnUnsubscribe
+} from '../reaction/reactionHandler';
+import {ReactionBox} from './reactionBox';
+import {ListMap} from '../../container/listMap';
+import {FullReaction} from '../reaction/fullReaction';
+import {List} from '../../container/list';
+import {ChannelEvent, ChannelTarget} from '../../channel/channelDefinitions';
 
-type ValidChecker = (filter: object) => boolean;
-
+type Filter = (filter: object) => boolean;
 interface ChFilter {
-    id?: string,
-    name?: string,
-    event?: string
+    identifier?: string | string[],
+    member?: string | string[],
+    event?: string | string[] | null
+}
+
+class ChannelReactionsBase<A = undefined> {
+
+    private readonly _channelReactionBox: ChannelReactionBox;
+    protected readonly _map: ListMap<FullReaction<any>> = new ListMap<FullReaction<any>>();
+    protected lastReactionTmp: any;
+
+    constructor(channelReactionBox: ChannelReactionBox) {
+        this._channelReactionBox = channelReactionBox;
+    }
+
+    /**
+     * @internal
+     * Used internally.
+     */
+    get map(): ListMap<FullReaction<any>> {
+        return this._map;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Removes publish reaction/s for this channel type.
+     * @param fullReaction
+     * If no specific reaction is provided, all will be removed.
+     */
+    offPublish(fullReaction?: FullReaction<ChannelReactionOnPublish<A>,ChFilter>): void {
+        this._map.remove(ChannelEvent.Publish, fullReaction);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Removes kickOut reaction/s for this channel type.
+     * @param fullReaction
+     * If no specific reaction is provided, all will be removed.
+     */
+    offKickOut(fullReaction?: FullReaction<ChannelReactionOnKickOut<A>,ChFilter>): void {
+        this._map.remove(ChannelEvent.KickOut, fullReaction);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Removes subscribe fail reaction/s for this channel type.
+     * @param fullReaction
+     * If no specific reaction is provided, all will be removed.
+     */
+    offSubscribeFail(fullReaction?: FullReaction<ChannelReactionOnSubscribeFail<A>,ChFilter>): void {
+        this._map.remove(ChannelEvent.SubscribeFail, fullReaction);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Removes subscribe reaction/s for this channel type.
+     * @param fullReaction
+     * If no specific reaction is provided, all will be removed.
+     */
+    offSubscribe(fullReaction?: FullReaction<ChannelReactionOnSubscribe<A>,ChFilter>): void {
+        this._map.remove(ChannelEvent.Subscribe, fullReaction);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Removes unsubscribe reaction/s for this channel type.
+     * @param fullReaction
+     * If no specific reaction is provided, all will be removed.
+     */
+    offUnsubscribe(fullReaction?: FullReaction<ChannelReactionOnUnsubscribe<A>,ChFilter>): void {
+        this._map.remove(ChannelEvent.Unsubscribe, fullReaction);
+    }
+
+    /**
+     * Ends the ChannelFilterReactionManager
+     * and returns the ChannelReactionBox.
+     */
+    end(): ChannelReactionBox {
+        return this._channelReactionBox;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the last added Reaction, you can use it to remove the reaction from the box
+     * by calling the specific off method.
+     * @return
+     * It returns the last added Reaction.
+     */
+    getLastReaction(): any {
+        return this.lastReactionTmp;
+    }
+}
+
+
+class ZationChannelReactions<A = undefined> extends ChannelReactionsBase<A> {
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * React on publish.
+     * To remove the reaction later, you can use the getLastReaction method which returns
+     * the last added reaction and then call the specific off method with this reaction.
+     * @example
+     * onPublish('myEvent',(data,socketSrcSid,eventName) => {});
+     * @param event
+     * You can also respond to multiple events by giving an event array.
+     * Or to all events if you pass as parameter null.
+     * @param reaction
+     * @param once
+     * Indicates if this reaction should only trigger once.
+     */
+    onPublish(event: string | string[] | null, reaction: ChannelReactionOnPublish<A>,once: boolean = false): ZationChannelReactions<A> {
+        const fullReaction = new FullReaction<ChannelReactionOnPublish<A>>(reaction, {event}, once);
+        this._map.add(ChannelEvent.Publish, fullReaction);
+        this.lastReactionTmp = fullReaction;
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * React on kickOut.
+     * To remove the reaction later, you can use the getLastReaction method which returns
+     * the last added reaction and then call the specific off method with this reaction.
+     * @example
+     * onKickOut((message) => {});
+     * @param reaction
+     * @param once
+     * Indicates if this reaction should only trigger once.
+     */
+    onKickOut(reaction: ChannelReactionOnKickOut<A>,once: boolean = false): ZationChannelReactions<A> {
+        const fullReaction = new FullReaction<ChannelReactionOnKickOut<A>>(reaction, {}, once);
+        this._map.add(ChannelEvent.KickOut, fullReaction);
+        this.lastReactionTmp = fullReaction;
+        return this;
+    }
+
+    /**
+     * @description
+     * React on subscribe fail.
+     * To remove the reaction later, you can use the getLastReaction method which returns
+     * the last added reaction and then call the specific off method with this reaction.
+     * @example
+     * onSubscribeFail((err) => {});
+     * @param reaction
+     * @param once
+     * Indicates if this reaction should only trigger once.
+     */
+    onSubscribeFail(reaction: ChannelReactionOnSubscribeFail<A>,once: boolean = false): ZationChannelReactions<A> {
+        const fullReaction = new FullReaction<ChannelReactionOnSubscribeFail<A>>(reaction, {}, once);
+        this._map.add(ChannelEvent.SubscribeFail, fullReaction);
+        this.lastReactionTmp = fullReaction;
+        return this;
+    }
+
+    /**
+     * @description
+     * React on subscribe.
+     * To remove the reaction later, you can use the getLastReaction method which returns
+     * the last added reaction and then call the specific off method with this reaction.
+     * @example
+     * onSubscribe(() => {});
+     * @param reaction
+     * @param once
+     * Indicates if this reaction should only trigger once.
+     */
+    onSubscribe(reaction: ChannelReactionOnSubscribe<A>,once: boolean = false): ZationChannelReactions<A> {
+        const fullReaction = new FullReaction<ChannelReactionOnSubscribe<A>>(reaction, {}, once);
+        this._map.add(ChannelEvent.Subscribe, fullReaction);
+        this.lastReactionTmp = fullReaction;
+        return this;
+    }
+
+    /**
+     * @description
+     * React on unsubscribe.
+     * To remove the reaction later, you can use the getLastReaction method which returns
+     * the last added reaction and then call the specific off method with this reaction.
+     * @example
+     * onUnsubscribe((fromClient) => {});
+     * @param reaction
+     * @param once
+     * Indicates if this reaction should only trigger once.
+     */
+    onUnsubscribe(reaction: ChannelReactionOnUnsubscribe<A>,once: boolean = false): ZationChannelReactions<A> {
+        const fullReaction = new FullReaction<ChannelReactionOnUnsubscribe<A>>(reaction, {}, once);
+        this._map.add(ChannelEvent.Unsubscribe, fullReaction);
+        this.lastReactionTmp = fullReaction;
+        return this;
+    }
+}
+
+class CustomChannelReactions<A = {identifier: string,member: string}> extends ChannelReactionsBase<A> {
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * React on publish.
+     * To remove the reaction later, you can use the getLastReaction method which returns
+     * the last added reaction and then call the specific off method with this reaction.
+     * @example
+     * onPublish({identifier: 'publicChat',member: '342'},'myEvent',(data,socketSrcSid,eventName,chInfo) => {});
+     * onPublish({identifier: 'publicChat'},'myEvent',(data,socketSrcSid,eventName,chInfo) => {});
+     * @param identifier
+     * You can also respond to multiple custom channel identifiers by passing an array of identifiers.
+     * Or to all custom channels by providing no specific value.
+     * @param member
+     * You can also respond to multiple members by passing an array of members.
+     * Or to all members by providing no specific value.
+     * @param event
+     * You can also respond to multiple events by giving an event array.
+     * Or to all events if you pass as parameter null.
+     * @param reaction
+     * @param once
+     * Indicates if this reaction should only trigger once.
+     */
+    onPublish({identifier,member}: {identifier?: string | string[], member?: string | string[]},
+              event: string | string[] | null,
+              reaction: ChannelReactionOnPublish<A>,
+              once: boolean = false): CustomChannelReactions<A>
+    {
+        const fullReaction = new FullReaction<ChannelReactionOnPublish<A>>(reaction, {identifier,member,event},once);
+        this._map.add(ChannelEvent.Publish, fullReaction);
+        this.lastReactionTmp = fullReaction;
+        return this;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * React on kickOut.
+     * To remove the reaction later, you can use the getLastReaction method which returns
+     * the last added reaction and then call the specific off method with this reaction.
+     * @example
+     * onKickOut({identifier: 'publicChat',member: '342'},(message,chInfo) => {});
+     * onKickOut({identifier: 'publicChat'},(message,chInfo) => {});
+     * @param identifier
+     * You can also respond to multiple custom channel identifiers by passing an array of identifiers.
+     * Or to all custom channels by providing no specific value.
+     * @param member
+     * You can also respond to multiple members by passing an array of members.
+     * Or to all members by providing no specific value.
+     * @param reaction
+     * @param once
+     * Indicates if this reaction should only trigger once.
+     */
+    onKickOut({identifier,member}: {identifier?: string | string[], member?: string | string[]},
+              reaction: ChannelReactionOnKickOut<A>,
+              once: boolean = false): CustomChannelReactions<A>
+    {
+        const fullReaction = new FullReaction<ChannelReactionOnKickOut<A>>(reaction, {identifier,member}, once);
+        this._map.add(ChannelEvent.KickOut, fullReaction);
+        this.lastReactionTmp = fullReaction;
+        return this;
+    }
+
+    /**
+     * @description
+     * React on subscribe fail.
+     * To remove the reaction later, you can use the getLastReaction method which returns
+     * the last added reaction and then call the specific off method with this reaction.
+     * @example
+     * onSubscribeFail({identifier: 'publicChat',member: '342'},(err,chInfo) => {});
+     * onSubscribeFail({identifier: 'publicChat'},(err,chInfo) => {});
+     * @param identifier
+     * You can also respond to multiple custom channel identifiers by passing an array of identifiers.
+     * Or to all custom channels by providing no specific value.
+     * @param member
+     * You can also respond to multiple members by passing an array of members.
+     * Or to all members by providing no specific value.
+     * @param reaction
+     * @param once
+     * Indicates if this reaction should only trigger once.
+     */
+    onSubscribeFail({identifier,member}: {identifier?: string | string[], member?: string | string[]},
+                    reaction: ChannelReactionOnSubscribeFail<A>,
+                    once: boolean = false): CustomChannelReactions<A>
+    {
+        const fullReaction = new FullReaction<ChannelReactionOnSubscribeFail<A>>(reaction, {identifier,member}, once);
+        this._map.add(ChannelEvent.SubscribeFail, fullReaction);
+        this.lastReactionTmp = fullReaction;
+        return this;
+    }
+
+    /**
+     * @description
+     * React on subscribe.
+     * To remove the reaction later, you can use the getLastReaction method which returns
+     * the last added reaction and then call the specific off method with this reaction.
+     * @example
+     * onSubscribe({identifier: 'publicChat',member: '342'},(chInfo) => {});
+     * onSubscribe({identifier: 'publicChat'},(chInfo) => {});
+     * @param identifier
+     * You can also respond to multiple custom channel identifiers by passing an array of identifiers.
+     * Or to all custom channels by providing no specific value.
+     * @param member
+     * You can also respond to multiple members by passing an array of members.
+     * Or to all members by providing no specific value.
+     * @param reaction
+     * @param once
+     * Indicates if this reaction should only trigger once.
+     */
+    onSubscribe({identifier,member}: {identifier?: string | string[], member?: string | string[]},
+                reaction: ChannelReactionOnSubscribe<A>,
+                once: boolean = false): CustomChannelReactions<A>
+    {
+        const fullReaction = new FullReaction<ChannelReactionOnSubscribe<A>>(reaction, {identifier,member}, once);
+        this._map.add(ChannelEvent.Subscribe, fullReaction);
+        this.lastReactionTmp = fullReaction;
+        return this;
+    }
+
+    /**
+     * @description
+     * React on unsubscribe.
+     * To remove the reaction later, you can use the getLastReaction method which returns
+     * the last added reaction and then call the specific off method with this reaction.
+     * @example
+     * onUnsubscribe({identifier: 'publicChat',member: '342'},(fromClient,chInfo) => {});
+     * onUnsubscribe({identifier: 'publicChat'},(fromClient,chInfo) => {});
+     * @param identifier
+     * You can also respond to multiple custom channel identifiers by passing an array of identifiers.
+     * Or to all custom channels by providing no specific value.
+     * @param member
+     * You can also respond to multiple members by passing an array of members.
+     * Or to all members by providing no specific value.
+     * @param reaction
+     * @param once
+     * Indicates if this reaction should only trigger once.
+     */
+    onUnsubscribe({identifier,member}: {identifier?: string | string[], member?: string | string[]},
+                  reaction: ChannelReactionOnUnsubscribe<A>,
+                  once: boolean = false): CustomChannelReactions<A>
+    {
+        const fullReaction = new FullReaction<ChannelReactionOnUnsubscribe<A>>(reaction, {identifier,member}, once);
+        this._map.add(ChannelEvent.Unsubscribe, fullReaction);
+        this.lastReactionTmp = fullReaction;
+        return this;
+    }
 }
 
 export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
 {
-
-    private readonly _mapPub: SBoxMapper<FullReaction<any>> = new SBoxMapper<FullReaction<any>>();
-    private readonly _mapKick: SBoxMapper<FullReaction<any>> = new SBoxMapper<FullReaction<any>>();
-    private readonly _mapSubFail: SBoxMapper<FullReaction<any>> = new SBoxMapper<FullReaction<any>>();
-    private readonly _mapSub: SBoxMapper<FullReaction<any>> = new SBoxMapper<FullReaction<any>>();
-    private readonly _mapClientUnsub: SBoxMapper<FullReaction<any>> = new SBoxMapper<FullReaction<any>>();
-    private readonly _mapUnsub: SBoxMapper<FullReaction<any>> = new SBoxMapper<FullReaction<any>>();
+    private readonly _userChReactions: ZationChannelReactions = new ZationChannelReactions(this);
+    private readonly _authUserGroupChReactions: ZationChannelReactions = new ZationChannelReactions(this);
+    private readonly _defaultUserGroupChReactions: ZationChannelReactions = new ZationChannelReactions(this);
+    private readonly _allChReactions: ZationChannelReactions = new ZationChannelReactions(this);
+    private readonly _panelChReactions: ZationChannelReactions = new ZationChannelReactions(this);
+    private readonly _customChReactions: CustomChannelReactions = new CustomChannelReactions(this);
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -59,2230 +386,75 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
         this.self = this;
     }
 
-    //OnPub Handler
-    // noinspection JSUnusedGlobalSymbols
     /**
-     * @description
-     * React on publish for any channel.
-     * @example
-     * onPubAnyCh('myEvent',(data,socketSrcSid,eventName,fullChName) => {});
-     * @param event
-     * You can also respond to multiple events by giving an event array.
-     * Or to all events if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
+     * Add reactions to user channel.
      */
-    onPubAnyCh(event: string | string[] | null, reaction: ChannelReactionOnPubAnyCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnPubAnyCh>(reaction, {event: event});
-        this._mapPub.add(ChannelTarget.Any, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
+    get userCh(): ZationChannelReactions {
+        return this._userChReactions;
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
-     * @description
-     * React on publish for any channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * oncePubAnyCh('myEvent',(data,socketSrcSid,eventName,fullChName) => {});
-     * @param event
-     * You can also respond to multiple events by giving an event array.
-     * Or to all events if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
+     * Add reactions to auth user group channel.
      */
-    oncePubAnyCh(event: string | string[] | null, reaction: ChannelReactionOnPubAnyCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnPubAnyCh>(reaction, {event: event},true);
-        this._mapPub.add(ChannelTarget.Any, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
+    get authUserGroupCh(): ZationChannelReactions {
+        return this._authUserGroupChReactions;
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
-     * @description
-     * Remove on publish reaction for any channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
+     * Add reactions to default user group channel.
      */
-    offPubAnyCh(fullReaction?: FullReaction<any>): void {
-        this._mapPub.remove(ChannelTarget.Any, fullReaction);
+    get defaultUserGroupCh(): ZationChannelReactions {
+        return this._defaultUserGroupChReactions;
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
-     * @description
-     * React on publish for the user channel.
-     * @example
-     * onPubUserCh('myEvent',(data,socketSrcSid,event) => {});
-     * @param event
-     * You can also respond to multiple events by giving an event array.
-     * Or to all events if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
+     * Add reactions to all channel.
      */
-    onPubUserCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event});
-        this._mapPub.add(ChannelTarget.User, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
+    get allCh(): ZationChannelReactions {
+        return this._allChReactions;
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
-     * @description
-     * React on publish for the user channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * oncePubUserCh('myEvent',(data,socketSrcSid,event) => {});
-     * @param event
-     * You can also respond to multiple events by giving an event array.
-     * Or to all events if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
+     * Add reactions to panel channel.
      */
-    oncePubUserCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event},true);
-        this._mapPub.add(ChannelTarget.User, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
+    get panelCh(): ZationChannelReactions {
+        return this._panelChReactions;
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
-     * @description
-     * Remove on publish reaction for user channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
+     * Add reactions to a custom channel/s.
      */
-    offPubUserCh(fullReaction?: FullReaction<any>): void {
-        this._mapPub.remove(ChannelTarget.User, fullReaction);
+    get customCh(): CustomChannelReactions {
+        return this._customChReactions;
     }
 
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on publish for the auth user group channel.
-     * @example
-     * onPubAuthUserGroupCh('myEvent',(data,socketSrcSid,event) => {});
-     * @param event
-     * You can also respond to multiple events by giving an event array.
-     * Or to all events if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onPubAuthUserGroupCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event});
-        this._mapPub.add(ChannelTarget.Aug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on publish for the auth user group channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * oncePubAuthUserGroupCh('myEvent',(data,socketSrcSid,event) => {});
-     * @param event
-     * You can also respond to multiple events by giving an event array.
-     * Or to all events if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    oncePubAuthUserGroupCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event},true);
-        this._mapPub.add(ChannelTarget.Aug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on publish reaction for auth user group channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offPubAuthUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapPub.remove(ChannelTarget.Aug, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on publish for the default user group channel.
-     * @example
-     * onPubDefaultUserGroupCh('myEvent',(data,socketSrcSid,event) => {});
-     * @param event
-     * You can also respond to multiple events by giving an event array.
-     * Or to all events if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onPubDefaultUserGroupCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event});
-        this._mapPub.add(ChannelTarget.Dug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on publish for the default user group channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * oncePubDefaultUserGroupCh('myEvent',(data,socketSrcSid,event) => {});
-     * @param event
-     * You can also respond to multiple events by giving an event array.
-     * Or to all events if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    oncePubDefaultUserGroupCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event},true);
-        this._mapPub.add(ChannelTarget.Dug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on publish reaction for default user group channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offPubDefaultUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapPub.remove(ChannelTarget.Dug, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on publish for the all channel.
-     * @example
-     * onPubAllCh('myEvent',(data,socketSrcSid,event) => {});
-     * @param event
-     * You can also respond to multiple events by giving an event array.
-     * Or to all events if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onPubAllCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event});
-        this._mapPub.add(ChannelTarget.All, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on publish for the all channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * oncePubAllCh('myEvent',(data,socketSrcSid,event) => {});
-     * @param event
-     * You can also respond to multiple events by giving an event array.
-     * Or to all events if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    oncePubAllCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event},true);
-        this._mapPub.add(ChannelTarget.All, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on publish reaction for all channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offPubAllCh(fullReaction?: FullReaction<any>): void {
-        this._mapPub.remove(ChannelTarget.All, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on publish for an custom channel.
-     * @example
-     * onPubCustomCh({name: 'name',id: 'id'},'myEvent',(data,socketSrcSid,event,name,id) => {});
-     * onPubCustomCh({name: 'name'},'myEvent',(data,socketSrcSid,event,name,id) => {});
-     * @param name
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names by providing no specific name.
-     * @param id
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids by providing no specific id.
-     * @param event
-     * You can also respond to multiple events by giving an event array.
-     * Or to all events if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onPubCustomCh({name,id}: {name?: string | string[], id?: string | string[]},event: string | string[] | null,reaction: ChannelReactionOnPubCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnPubCustomCh>(reaction, {name, event, id});
-        this._mapPub.add(ChannelTarget.C, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on publish for an custom channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * oncePubCustomCh({name: 'name',id: 'id'},'myEvent',(data,socketSrcSid,event,name,id) => {});
-     * oncePubCustomCh({name: 'name'},'myEvent',(data,socketSrcSid,event,name,id) => {});
-     * @param name
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names by providing no specific name.
-     * @param id
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids by providing no specific id.
-     * @param event
-     * You can also respond to multiple events by giving an event array.
-     * Or to all events if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    oncePubCustomCh({name,id}: {name?: string | string[], id?: string | string[]},event: string | string[] | null,reaction: ChannelReactionOnPubCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnPubCustomCh>(reaction, {name, event, id},true);
-        this._mapPub.add(ChannelTarget.C, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on publish reaction for an custom channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offPubCustomCh(fullReaction?: FullReaction<any>): void {
-        this._mapPub.remove(ChannelTarget.C, fullReaction);
-    }
-
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on publish for the panel out channel.
-     * @example
-     * onPubPanelOutCh('myEvent',(data,socketSrcSid,event) => {});
-     * @param event
-     * You can also respond to multiple events by giving an event array.
-     * Or to all events if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onPubPanelOutCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event});
-        this._mapPub.add(ChannelTarget.Panel, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on publish for the panel out channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * oncePubPanelOutCh('myEvent',(data,socketSrcSid,event) => {});
-     * @param event
-     * You can also respond to multiple events by giving an event array.
-     * Or to all events if you pass as parameter null.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    oncePubPanelOutCh(event: string | string[] | null, reaction: ChannelReactionOnPubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnPubZationCh>(reaction, {event: event},true);
-        this._mapPub.add(ChannelTarget.Panel, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on publish reaction for panel out channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offPubPanelOutCh(fullReaction?: FullReaction<any>): void {
-        this._mapPub.remove(ChannelTarget.Panel, fullReaction);
-    }
-
-    //OnKickOut Handler
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on kick out for any channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceKickOutAnyCh((message,fullChName) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceKickOutAnyCh(reaction: ChannelReactionOnKickOutAnyCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnKickOutAnyCh>(reaction,{},true);
-        this._mapKick.add(ChannelTarget.Any, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on kick out for any channel.
-     * @example
-     * onKickOutAnyCh((message,fullChName) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onKickOutAnyCh(reaction: ChannelReactionOnKickOutAnyCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnKickOutAnyCh>(reaction);
-        this._mapKick.add(ChannelTarget.Any, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on kick out reaction for any channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offKickOutAnyCh(fullReaction?: FullReaction<any>): void {
-        this._mapKick.remove(ChannelTarget.Any, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on kick out for the user channel.
-     * @example
-     * onKickOutUserCh((message) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onKickOutUserCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction);
-        this._mapKick.add(ChannelTarget.User, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on kick out for the user channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceKickOutUserCh((message) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceKickOutUserCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction,{},true);
-        this._mapKick.add(ChannelTarget.User, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on kick out reaction for user channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offKickOutUserCh(fullReaction?: FullReaction<any>): void {
-        this._mapKick.remove(ChannelTarget.User, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on kick out for the auth user group channel.
-     * @example
-     * onKickOutAuthUserGroupCh((message) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onKickOutAuthUserGroupCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction);
-        this._mapKick.add(ChannelTarget.Aug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on kick out for the auth user group channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceKickOutAuthUserGroupCh((message) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceKickOutAuthUserGroupCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction,{},true);
-        this._mapKick.add(ChannelTarget.Aug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on kick out reaction for auth user group channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offKickOutAuthUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapKick.remove(ChannelTarget.Aug, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on kick out for the default user group channel.
-     * @example
-     * onKickOutDefaultUserGroupCh((message) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onKickOutDefaultUserGroupCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction);
-        this._mapKick.add(ChannelTarget.Dug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on kick out for the default user group channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceKickOutDefaultUserGroupCh((message) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceKickOutDefaultUserGroupCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction,{},true);
-        this._mapKick.add(ChannelTarget.Dug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on kick out reaction for default user group channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offKickOutDefaultUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapKick.remove(ChannelTarget.Dug, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on kick out for the all channel.
-     * @example
-     * onKickOutAllCh((message) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onKickOutAllCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction);
-        this._mapKick.add(ChannelTarget.All, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on kick out for the all channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceKickOutAllCh((message) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceKickOutAllCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction,{},true);
-        this._mapKick.add(ChannelTarget.All, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on kick out reaction for all channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offKickOutAllCh(fullReaction?: FullReaction<any>): void {
-        this._mapKick.remove(ChannelTarget.All, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on kick out for an custom channel.
-     * @example
-     * onKickOutCustomCh({name: 'name',id: 'id'},(message,name,id) => {});
-     * onKickOutCustomCh({name: 'name'},(message,name,id) => {});
-     * @param name
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names by providing no specific name.
-     * @param id
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids by providing no specific id.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onKickOutCustomCh({name,id}: {name?: string | string[], id?: string | string[]},reaction: ChannelReactionOnKickOutCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnKickOutCustomCh>(reaction, {name,id});
-        this._mapKick.add(ChannelTarget.C, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on kick out for an custom channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceKickOutCustomCh({name: 'name',id: 'id'},(message,name,id) => {});
-     * onceKickOutCustomCh({name: 'name'},(message,name,id) => {});
-     * @param name
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names by providing no specific name.
-     * @param id
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids by providing no specific id.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceKickOutCustomCh({name,id}: {name?: string | string[], id?: string | string[]},reaction: ChannelReactionOnKickOutCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnKickOutCustomCh>(reaction, {name,id},true);
-        this._mapKick.add(ChannelTarget.C, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on kick out reaction for an custom channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offKickOutCustomCh(fullReaction?: FullReaction<any>): void {
-        this._mapKick.remove(ChannelTarget.C, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on kick out for the panel out channel.
-     * @example
-     * onKickOutPanelOutCh((message) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onKickOutPanelOutCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction);
-        this._mapKick.add(ChannelTarget.Panel, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on kick out for the panel out channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceKickOutPanelOutCh((message) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceKickOutPanelOutCh(reaction: ChannelReactionOnKickOutZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnKickOutZationCh>(reaction,{},true);
-        this._mapKick.add(ChannelTarget.Panel, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on kick out reaction for panel out channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offKickOutPanelOutCh(fullReaction?: FullReaction<any>): void {
-        this._mapKick.remove(ChannelTarget.Panel, fullReaction);
-    }
-
-    //OnSubFail Handler
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub fail for any channel.
-     * @example
-     * onSubFailAnyCh((error,fullChName) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onSubFailAnyCh(reaction: ChannelReactionOnSubFailAnyCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubFailAnyCh>(reaction);
-        this._mapSubFail.add(ChannelTarget.Any, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub fail for any channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceSubFailAnyCh((error,fullChName) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceSubFailAnyCh(reaction: ChannelReactionOnSubFailAnyCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubFailAnyCh>(reaction,{},true);
-        this._mapSubFail.add(ChannelTarget.Any, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on sub fail reaction for any channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offSubFailAnyCh(fullReaction?: FullReaction<any>): void {
-        this._mapSubFail.remove(ChannelTarget.Any, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub fail for the user channel.
-     * @example
-     * onSubFailUserCh((error) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onSubFailUserCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction);
-        this._mapSubFail.add(ChannelTarget.User, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub fail for the user channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceSubFailUserCh((error) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceSubFailUserCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction,{},true);
-        this._mapSubFail.add(ChannelTarget.User, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on sub fail reaction for user channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offSubFailUserCh(fullReaction?: FullReaction<any>): void {
-        this._mapSubFail.remove(ChannelTarget.User, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub fail for the auth user group channel.
-     * @example
-     * onSubFailAuthUserGroupCh((error) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onSubFailAuthUserGroupCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction);
-        this._mapSubFail.add(ChannelTarget.Aug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub fail for the auth user group channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceSubFailAuthUserGroupCh((error) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceSubFailAuthUserGroupCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction,{},true);
-        this._mapSubFail.add(ChannelTarget.Aug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on sub fail reaction for auth user group channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offSubFailAuthUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapSubFail.remove(ChannelTarget.Aug, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub fail for the default user group channel.
-     * @example
-     * onSubFailDefaultUserGroupCh((error) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onSubFailDefaultUserGroupCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction);
-        this._mapSubFail.add(ChannelTarget.Dug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub fail for the default user group channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceSubFailDefaultUserGroupCh((error) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceSubFailDefaultUserGroupCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction,{},true);
-        this._mapSubFail.add(ChannelTarget.Dug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on sub fail reaction for default user group channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offSubFailDefaultUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapSubFail.remove(ChannelTarget.Dug, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub fail for the all channel.
-     * @example
-     * onSubFailAllCh((error) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onSubFailAllCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction);
-        this._mapSubFail.add(ChannelTarget.All, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub fail for the all channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceSubFailAllCh((error) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceSubFailAllCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction,{},true);
-        this._mapSubFail.add(ChannelTarget.All, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on sub fail reaction for all channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offSubFailAllCh(fullReaction?: FullReaction<any>): void {
-        this._mapSubFail.remove(ChannelTarget.All, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub fail for an custom channel.
-     * @example
-     * onSubFailCustomCh({name: 'name',id: 'id'},(error,name,id) => {});
-     * onSubFailCustomCh({name: 'name'},(error,name,id) => {});
-     * @param name
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names by providing no specific name.
-     * @param id
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids by providing no specific id.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onSubFailCustomCh({name,id}: {name?: string | string[], id?: string | string[]}, reaction: ChannelReactionOnSubFailCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubFailCustomCh>(reaction, {name,id});
-        this._mapSubFail.add(ChannelTarget.C, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub fail for an custom channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceSubFailCustomCh({name: 'name',id: 'id'},(error,name,id) => {});
-     * onceSubFailCustomCh({name: 'name'},(error,name,id) => {});
-     * @param name
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names by providing no specific name.
-     * @param id
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids by providing no specific id.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceSubFailCustomCh({name,id}: {name?: string | string[], id?: string | string[]}, reaction: ChannelReactionOnSubFailCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubFailCustomCh>(reaction, {name,id},true);
-        this._mapSubFail.add(ChannelTarget.C, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on sub fail reaction for an custom channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offSubFailCustomCh(fullReaction?: FullReaction<any>): void {
-        this._mapSubFail.remove(ChannelTarget.C, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub fail for the panel out channel.
-     * @example
-     * onSubFailPanelOutCh((error) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onSubFailPanelOutCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction);
-        this._mapSubFail.add(ChannelTarget.Panel, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub fail for the panel out channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceSubFailPanelOutCh((error) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceSubFailPanelOutCh(reaction: ChannelReactionOnSubFailZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubFailZationCh>(reaction,{},true);
-        this._mapSubFail.add(ChannelTarget.Panel, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on sub fail reaction for panel out channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offSubFailPanelOutCh(fullReaction?: FullReaction<any>): void {
-        this._mapSubFail.remove(ChannelTarget.Panel, fullReaction);
-    }
-
-    //OnSub Handler
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub for any channel.
-     * @example
-     * onSubAnyCh((fullChName) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onSubAnyCh(reaction: ChannelReactionOnSubAnyCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubAnyCh>(reaction);
-        this._mapSub.add(ChannelTarget.Any, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub for any channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceSubAnyCh((fullChName) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceSubAnyCh(reaction: ChannelReactionOnSubAnyCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubAnyCh>(reaction,{},true);
-        this._mapSub.add(ChannelTarget.Any, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on sub reaction for any channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offSubAnyCh(fullReaction?: FullReaction<any>): void {
-        this._mapSub.remove(ChannelTarget.Any, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub for the user channel.
-     * @example
-     * onSubUserCh(() => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onSubUserCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction);
-        this._mapSub.add(ChannelTarget.User, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub for the user channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceSubUserCh(() => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceSubUserCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction,{},true);
-        this._mapSub.add(ChannelTarget.User, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on sub reaction for user channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offSubUserCh(fullReaction?: FullReaction<any>): void {
-        this._mapSub.remove(ChannelTarget.User, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub for the auth user group channel.
-     * @example
-     * onSubAuthUserGroupCh(() => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onSubAuthUserGroupCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction);
-        this._mapSub.add(ChannelTarget.Aug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub for the auth user group channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceSubAuthUserGroupCh(() => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceSubAuthUserGroupCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction,{},true);
-        this._mapSub.add(ChannelTarget.Aug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on sub reaction for auth user group channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offSubAuthUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapSub.remove(ChannelTarget.Aug, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub for the default user group channel.
-     * @example
-     * onSubDefaultUserGroupCh(() => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onSubDefaultUserGroupCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction);
-        this._mapSub.add(ChannelTarget.Dug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub for the default user group channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceSubDefaultUserGroupCh(() => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceSubDefaultUserGroupCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction,{},true);
-        this._mapSub.add(ChannelTarget.Dug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on sub reaction for default user group channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offSubDefaultUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapSub.remove(ChannelTarget.Dug, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub for the all channel.
-     * @example
-     * onSubAllCh(() => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onSubAllCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction);
-        this._mapSub.add(ChannelTarget.All, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub for the all channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceSubAllCh(() => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceSubAllCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction,{},true);
-        this._mapSub.add(ChannelTarget.All, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on sub reaction for all channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offSubAllCh(fullReaction?: FullReaction<any>): void {
-        this._mapSub.remove(ChannelTarget.All, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub for an custom channel.
-     * @example
-     * onSubCustomCh({name: 'name',id: 'id'},(name,id) => {});
-     * onSubCustomCh({name: 'name'},(name,id) => {});
-     * @param name
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names by providing no specific name.
-     * @param id
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids by providing no specific id.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onSubCustomCh({name,id}: {name?: string | string[], id?: string | string[]},reaction: ChannelReactionOnSubCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubCustomCh>(reaction, {name,id});
-        this._mapSub.add(ChannelTarget.C, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub for an custom channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceSubCustomCh({name: 'name',id: 'id'},(name,id) => {});
-     * onceSubCustomCh({name: 'name'},(name,id) => {});
-     * @param name
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names by providing no specific name.
-     * @param id
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids by providing no specific id.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceSubCustomCh({name,id}: {name?: string | string[], id?: string | string[]},reaction: ChannelReactionOnSubCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubCustomCh>(reaction, {name,id},true);
-        this._mapSub.add(ChannelTarget.C, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on sub reaction for an custom channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offSubCustomCh(fullReaction?: FullReaction<any>): void {
-        this._mapSub.remove(ChannelTarget.C, fullReaction);
-    }
-
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub for the panel out channel.
-     * @example
-     * onSubPanelOutCh(() => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onSubPanelOutCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction);
-        this._mapSub.add(ChannelTarget.Panel, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on sub for the panel out channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceSubPanelOutCh(() => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceSubPanelOutCh(reaction: ChannelReactionOnSubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnSubZationCh>(reaction,{},true);
-        this._mapSub.add(ChannelTarget.Panel, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on sub reaction for panel out channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offSubPanelOutCh(fullReaction?: FullReaction<any>): void {
-        this._mapSub.remove(ChannelTarget.Panel, fullReaction);
-    }
-
-    //OnClientUnsub Handler
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on client unsub for any channel.
-     * @example
-     * onClientUnsubAnyCh((fullChName) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onClientUnsubAnyCh(reaction: ChannelReactionOnClientUnsubAnyCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnClientUnsubAnyCh>(reaction);
-        this._mapClientUnsub.add(ChannelTarget.Any, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on client unsub for any channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceClientUnsubAnyCh((fullChName) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceClientUnsubAnyCh(reaction: ChannelReactionOnClientUnsubAnyCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnClientUnsubAnyCh>(reaction,{},true);
-        this._mapClientUnsub.add(ChannelTarget.Any, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on client unsub reaction for any channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offClientUnsubAnyCh(fullReaction?: FullReaction<any>): void {
-        this._mapClientUnsub.remove(ChannelTarget.Any, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on client unsub for the user channel.
-     * @example
-     * onClientUnsubUserCh(() => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onClientUnsubUserCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction);
-        this._mapClientUnsub.add(ChannelTarget.User, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on client unsub for the user channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceClientUnsubUserCh(() => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceClientUnsubUserCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction,{},true);
-        this._mapClientUnsub.add(ChannelTarget.User, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on client unsub reaction for user channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offClientUnsubUserCh(fullReaction?: FullReaction<any>): void {
-        this._mapClientUnsub.remove(ChannelTarget.User, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on client unsub for the auth user group channel.
-     * @example
-     * onClientUnsubAuthUserGroupCh(() => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onClientUnsubAuthUserGroupCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction);
-        this._mapClientUnsub.add(ChannelTarget.Aug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on client unsub for the auth user group channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceClientUnsubAuthUserGroupCh(() => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceClientUnsubAuthUserGroupCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction,{},true);
-        this._mapClientUnsub.add(ChannelTarget.Aug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on client unsub reaction for auth user group channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offClientUnsubAuthUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapClientUnsub.remove(ChannelTarget.Aug, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on client unsub for the default user group channel.
-     * @example
-     * onClientUnsubDefaultUserGroupCh(() => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onClientUnsubDefaultUserGroupCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction);
-        this._mapClientUnsub.add(ChannelTarget.Dug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on client unsub for the default user group channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceClientUnsubDefaultUserGroupCh(() => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceClientUnsubDefaultUserGroupCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction,{},true);
-        this._mapClientUnsub.add(ChannelTarget.Dug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on client unsub reaction for default user group channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offClientUnsubDefaultUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapClientUnsub.remove(ChannelTarget.Dug, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on client unsub for the all channel.
-     * @example
-     * onClientUnsubAllCh(() => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onClientUnsubAllCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction);
-        this._mapClientUnsub.add(ChannelTarget.All, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on client unsub for the all channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceClientUnsubAllCh(() => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceClientUnsubAllCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction,{},true);
-        this._mapClientUnsub.add(ChannelTarget.All, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on client unsub reaction for all channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offClientUnsubAllCh(fullReaction?: FullReaction<any>): void {
-        this._mapClientUnsub.remove(ChannelTarget.All, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on client unsub for an custom channel.
-     * @example
-     * onClientUnsubCustomCh({name: 'name',id: 'id'},(name,id) => {});
-     * onClientUnsubCustomCh({name: 'name'},(name,id) => {});
-     * @param name
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names by providing no specific name.
-     * @param id
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids by providing no specific id.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onClientUnsubCustomCh({name,id}: {name?: string | string[], id?: string | string[]},reaction: ChannelReactionOnClientUnsubCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnClientUnsubCustomCh>(reaction, {name,id});
-        this._mapClientUnsub.add(ChannelTarget.C, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on client unsub for an custom channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceClientUnsubCustomCh({name: 'name',id: 'id'},(name,id) => {});
-     * onceClientUnsubCustomCh({name: 'name'},(name,id) => {});
-     * @param name
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names by providing no specific name.
-     * @param id
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids by providing no specific id.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceClientUnsubCustomCh({name,id}: {name?: string | string[], id?: string | string[]},reaction: ChannelReactionOnClientUnsubCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnClientUnsubCustomCh>(reaction, {name,id},true);
-        this._mapClientUnsub.add(ChannelTarget.C, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on client unsub reaction for an custom channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offClientUnsubCustomCh(fullReaction?: FullReaction<any>): void {
-        this._mapClientUnsub.remove(ChannelTarget.C, fullReaction);
-    }
-
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on client unsub for the panel out channel.
-     * @example
-     * onClientUnsubPanelOutCh(() => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onClientUnsubPanelOutCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction);
-        this._mapClientUnsub.add(ChannelTarget.Panel, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on client unsub for the panel out channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceClientUnsubPanelOutCh(() => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceClientUnsubPanelOutCh(reaction: ChannelReactionOnClientUnsubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnClientUnsubZationCh>(reaction,{},true);
-        this._mapClientUnsub.add(ChannelTarget.Panel, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on client unsub reaction for panel out channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offClientUnsubPanelOutCh(fullReaction?: FullReaction<any>): void {
-        this._mapClientUnsub.remove(ChannelTarget.Panel, fullReaction);
-    }
-
-    //OnUnsub Handler
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on unsub for any channel.
-     * @example
-     * onUnsubAnyCh((fromClient,fullChName) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onUnsubAnyCh(reaction: ChannelReactionOnUnsubAnyCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnUnsubAnyCh>(reaction);
-        this._mapUnsub.add(ChannelTarget.Any, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on unsub for any channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceUnsubAnyCh((fromClient,fullChName) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceUnsubAnyCh(reaction: ChannelReactionOnUnsubAnyCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnUnsubAnyCh>(reaction,{},true);
-        this._mapUnsub.add(ChannelTarget.Any, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on unsub reaction for any channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offUnsubAnyCh(fullReaction?: FullReaction<any>): void {
-        this._mapUnsub.remove(ChannelTarget.Any, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on unsub for the user channel.
-     * @example
-     * onUnsubUserCh((fromClient) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onUnsubUserCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction);
-        this._mapUnsub.add(ChannelTarget.User, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on unsub for the user channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceUnsubUserCh((fromClient) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceUnsubUserCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction,{},true);
-        this._mapUnsub.add(ChannelTarget.User, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on unsub reaction for user channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offUnsubUserCh(fullReaction?: FullReaction<any>): void {
-        this._mapUnsub.remove(ChannelTarget.User, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on unsub for the auth user group channel.
-     * @example
-     * onUnsubAuthUserGroupCh((fromClient) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onUnsubAuthUserGroupCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction);
-        this._mapUnsub.add(ChannelTarget.Aug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on unsub for the auth user group channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceUnsubAuthUserGroupCh((fromClient) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceUnsubAuthUserGroupCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction,{},true);
-        this._mapUnsub.add(ChannelTarget.Aug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on unsub reaction for auth user group channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offUnsubAuthUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapUnsub.remove(ChannelTarget.Aug, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on unsub for the default user group channel.
-     * @example
-     * onUnsubDefaultUserGroupCh((fromClient) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onUnsubDefaultUserGroupCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction);
-        this._mapUnsub.add(ChannelTarget.Dug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on unsub for the default user group channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceUnsubDefaultUserGroupCh((fromClient) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceUnsubDefaultUserGroupCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction,{},true);
-        this._mapUnsub.add(ChannelTarget.Dug, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on unsub reaction for default user group channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offUnsubDefaultUserGroupCh(fullReaction?: FullReaction<any>): void {
-        this._mapUnsub.remove(ChannelTarget.Dug, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on unsub for the all channel.
-     * @example
-     * onUnsubAllCh((fromClient) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onUnsubAllCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction);
-        this._mapUnsub.add(ChannelTarget.All, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on unsub for the all channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceUnsubAllCh((fromClient) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceUnsubAllCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction,{},true);
-        this._mapUnsub.add(ChannelTarget.All, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on unsub reaction for all channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offUnsubAllCh(fullReaction?: FullReaction<any>): void {
-        this._mapUnsub.remove(ChannelTarget.All, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on unsub for an custom channel.
-     * @example
-     * onUnsubCustomCh({name: 'name',id: 'id'},(fromClient,name,id) => {});
-     * onUnsubCustomCh({name: 'name'},(fromClient,name,id) => {});
-     * @param name
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names by providing no specific name.
-     * @param id
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids by providing no specific id.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onUnsubCustomCh({name,id}: {name?: string | string[], id?: string | string[]},reaction: ChannelReactionOnUnsubCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnUnsubCustomCh>(reaction, {name,id});
-        this._mapUnsub.add(ChannelTarget.C, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on unsub for an custom channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceUnsubCustomCh({name: 'name',id: 'id'},(fromClient,name,id) => {});
-     * onceUnsubCustomCh({name: 'name'},(fromClient,name,id) => {});
-     * @param name
-     * You can also respond to multiple channel names by giving an channel name array.
-     * Or to all channel names by providing no specific name.
-     * @param id
-     * You can also respond to multiple channel ids by giving an channel id array.
-     * Or to all channel ids by providing no specific id.
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceUnsubCustomCh({name,id}: {name?: string | string[], id?: string | string[]},reaction: ChannelReactionOnUnsubCustomCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnUnsubCustomCh>(reaction, {name,id},true);
-        this._mapUnsub.add(ChannelTarget.C, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on unsub reaction for an custom channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offUnsubCustomCh(fullReaction?: FullReaction<any>): void {
-        this._mapUnsub.remove(ChannelTarget.C, fullReaction);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on unsub for the panel out channel.
-     * @example
-     * onUnsubPanelOutCh((fromClient) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onUnsubPanelOutCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction);
-        this._mapUnsub.add(ChannelTarget.Panel, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * React on unsub for the panel out channel.
-     * The reaction will trigger only one time.
-     * It will automatically be removed from the reactions after invocation.
-     * @example
-     * onceUnsubPanelOutCh((fromClient) => {});
-     * @param reaction
-     * @return
-     * It returns the channelReactionBox, to remove the reaction from the box
-     * you can use the getLastReaction method which is return the reaction.
-     */
-    onceUnsubPanelOutCh(reaction: ChannelReactionOnUnsubZationCh): ChannelReactionBox {
-        const fullReaction = new FullReaction<ChannelReactionOnUnsubZationCh>(reaction,{},true);
-        this._mapUnsub.add(ChannelTarget.Panel, fullReaction);
-        this.lastReactionTmp = fullReaction;
-        return this;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Remove on unsub reaction for panel out channel.
-     * @param fullReaction
-     * If it is not given away all will be removed.
-     */
-    offUnsubPanelOutCh(fullReaction?: FullReaction<any>): void {
-        this._mapUnsub.remove(ChannelTarget.Panel, fullReaction);
-    }
-
-    private async _triggerFilterDataEventBox(box: SBox<any> | undefined, valid: ValidChecker, ...data: any[]) {
-        if (box) {
-            await box.forEachAll(async (reaction: FullReaction<any>) => {
-                if (valid(reaction.getFilter())) {
-                    if(reaction.isOnce()){
-                        box.removeItem(reaction);
-                    }
-                    await reaction.getReactionHandler()(...data);
-                }
-            });
-        }
-    }
-
-    private async _triggerDataEventBox(box: SBox<any> | undefined, ...data: any[]) {
-        if (box) {
-            await box.forEachAll(async (reaction: FullReaction<any>) => {
+    private async _triggerReactions(list: List<any>, filter: Filter, ...data: any[]) {
+        await list.forEachParallel(async (reaction: FullReaction<any>) => {
+            if (filter(reaction.getFilter())) {
                 if(reaction.isOnce()){
-                    box.removeItem(reaction);
+                    list.removeItem(reaction);
                 }
                 await reaction.getReactionHandler()(...data);
-            });
-        }
+            }
+        });
     }
 
-    private static _multiFilter(value, check): boolean {
-        if (value === undefined || value === null) {
+    private async _triggerAllReactions(box: List<any>, ...data: any[]) {
+        await box.forEachParallel(async (reaction: FullReaction<any>) => {
+            if(reaction.isOnce()){
+                box.removeItem(reaction);
+            }
+            await reaction.getReactionHandler()(...data);
+        });
+    }
+
+    private static _multiFilter(definition, value): boolean {
+        if (definition == undefined) {
             return true;
-        } else if (Array.isArray(value)) {
-            return value.indexOf(check) !== -1;
+        } else if (Array.isArray(definition)) {
+            return definition.indexOf(value) !== -1;
         } else {
-            return value === check;
+            return definition === value;
         }
     }
 
@@ -2293,42 +465,23 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * Used internally.
      * Only use this method carefully.
      */
-    async _triggerPub(target: ChannelTarget, event: string, data: any, {name,id,chFullName}: any, ssid?: string): Promise<void>
+    async _triggerPub(target: ChannelTarget, event: string, data: any,
+                      {identifier,member,chName}: {identifier?: string,member?: string,chName?: string},
+                      sSid?: string): Promise<void>
     {
         if(this.active) {
-            await this._triggerWillProcess();
-            if (target === ChannelTarget.C) {
-                const sameEventAndChFilter: ValidChecker = (filter: ChFilter): boolean => {
-                    return ChannelReactionBox._multiFilter(filter.event,event) &&
-                        ChannelReactionBox._multiFilter(filter.name,name) &&
-                        ChannelReactionBox._multiFilter(filter.id,id);};
-                await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.C),sameEventAndChFilter,data,ssid,event,name,id);
-            } else {
-                const sameEventFilter: ValidChecker = (filter: ChFilter): boolean => {
-                    return ChannelReactionBox._multiFilter(filter.event,event);
-                };
-                switch (target) {
-                    case ChannelTarget.Any:
-                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.Any),sameEventFilter,data,ssid,event,chFullName);
-                        break;
-                    case ChannelTarget.User:
-                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.User),sameEventFilter,data,ssid,event);
-                        break;
-                    case ChannelTarget.Aug:
-                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.Aug),sameEventFilter,data,ssid,event);
-                        break;
-                    case ChannelTarget.Dug:
-                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.Dug),sameEventFilter,data,ssid,event);
-                        break;
-                    case ChannelTarget.All:
-                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.All),sameEventFilter,data,ssid,event);
-                        break;
-                    case ChannelTarget.Panel:
-                        await this._triggerFilterDataEventBox(this._mapPub.tryGet(ChannelTarget.Panel),sameEventFilter,data,ssid,event);
-                        break;
+            const list = this._tryGetReactionList(target,ChannelEvent.Publish);
+            if(list) {
+                if (target === ChannelTarget.Custom) {
+                    const filter: Filter = (filter: ChFilter): boolean => ChannelReactionBox._multiFilter(filter.event,event) &&
+                        ChannelReactionBox._multiFilter(filter.identifier,identifier) && ChannelReactionBox._multiFilter(filter.member,member);
+                    await this._triggerReactions(list,filter,data,sSid,event,{identifier,member});
+                } else {
+                    const filter: Filter = (filter: ChFilter): boolean =>
+                        ChannelReactionBox._multiFilter(filter.event,event);
+                    await this._triggerAllReactions(list,filter,data,sSid,event);
                 }
             }
-            await this._triggerDidProcess();
         }
     }
 
@@ -2339,99 +492,40 @@ export class ChannelReactionBox extends ReactionBox<ChannelReactionBox>
      * Used internally.
      * Only use this method carefully.
      */
-    async _triggerEvent(map: SBoxMapper<FullReaction<any>>, target: ChannelTarget, {name,id,chFullName}: any, ...arg: any[]): Promise<void>
+    async _triggerEvent(target: ChannelTarget, event: ChannelEvent,
+                        {identifier,member,chName}: {identifier?: string,member?: string,chName?: string},
+                        ...args: any[]): Promise<void>
     {
         if(this.active) {
-            await this._triggerWillProcess();
-            if (target === ChannelTarget.C) {
-                const sameEventAndChFilter: ValidChecker = (filter: object): boolean => {
-                    return ChannelReactionBox._multiFilter(filter['name'],name) &&
-                        ChannelReactionBox._multiFilter(filter['id'],id);
-                };
-                await this._triggerFilterDataEventBox(map.tryGet(ChannelTarget.C),sameEventAndChFilter,...arg,name,id);
-            } else {
-                switch (target) {
-                    case ChannelTarget.Any:
-                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.Any),...arg,chFullName);
-                        break;
-                    case ChannelTarget.User:
-                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.User),...arg);
-                        break;
-                    case ChannelTarget.Aug:
-                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.Aug),...arg);
-                        break;
-                    case ChannelTarget.Dug:
-                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.Dug),...arg);
-                        break;
-                    case ChannelTarget.All:
-                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.All),...arg);
-                        break;
-                    case ChannelTarget.Panel:
-                        await this._triggerDataEventBox(map.tryGet(ChannelTarget.Panel),...arg);
-                        break;
+            const list = this._tryGetReactionList(target,event);
+            if(list) {
+                if (target === ChannelTarget.Custom) {
+                    const filter: Filter = (filter: ChFilter): boolean => {
+                        return ChannelReactionBox._multiFilter(filter.identifier,identifier) &&
+                            ChannelReactionBox._multiFilter(filter.member,member);
+                    };
+                    await this._triggerReactions(list,filter,...args,{identifier,member});
+                } else {
+                    await this._triggerAllReactions(list,...args);
                 }
             }
-            await this._triggerDidProcess();
         }
     }
 
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Used internally.
-     * Only use this method carefully.
-     */
-    get mapPub(): SBoxMapper<FullReaction<any>> {
-        return this._mapPub;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Used internally.
-     * Only use this method carefully.
-     */
-    get mapKick(): SBoxMapper<FullReaction<any>> {
-        return this._mapKick;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Used internally.
-     * Only use this method carefully.
-     */
-    get mapSubFail(): SBoxMapper<FullReaction<any>> {
-        return this._mapSubFail;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Used internally.
-     * Only use this method carefully.
-     */
-    get mapSub(): SBoxMapper<FullReaction<any>> {
-        return this._mapSub;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Used internally.
-     * Only use this method carefully.
-     */
-    get mapClientUnsub(): SBoxMapper<FullReaction<any>> {
-        return this._mapClientUnsub;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Used internally.
-     * Only use this method carefully.
-     */
-    get mapUnsub(): SBoxMapper<FullReaction<any>> {
-        return this._mapUnsub;
+    private _tryGetReactionList(target: ChannelTarget, event: ChannelEvent): List<FullReaction<any>> | undefined {
+        switch (target) {
+            case ChannelTarget.Custom:
+                return this._customChReactions.map.tryGet(event);
+            case ChannelTarget.User:
+                return this._userChReactions.map.tryGet(event);
+            case ChannelTarget.Aug:
+                return this._authUserGroupChReactions.map.tryGet(event);
+            case ChannelTarget.Dug:
+                return this._defaultUserGroupChReactions.map.tryGet(event);
+            case ChannelTarget.All:
+                return this._allChReactions.map.tryGet(event);
+            case ChannelTarget.Panel:
+                return this._panelChReactions.map.tryGet(event);
+        }
     }
 }

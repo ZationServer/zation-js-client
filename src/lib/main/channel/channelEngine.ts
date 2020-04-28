@@ -4,21 +4,24 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {ChannelTarget}         from "./channelTarget";
-import {ZationChannel}         from "../constants/internal";
-import {Zation}                from "../../core/zation";
-import {SubscribeFailedError}  from "../error/subscribeFailedError";
-import {ChannelReactionBox}    from "../react/reactionBoxes/channelReactionBox";
-import {PublishFailedError}    from "../error/publishFailedError";
-import {TimeoutError}          from "../error/timeoutError";
-import ConnectionUtils, {WaitForConnectionOption} from "../utils/connectionUtils";
+// noinspection ES6PreferShortImport
+import {Zation} from '../../core/zation';
+// noinspection ES6PreferShortImport
+import {SubscribeFailedError} from '../error/subscribeFailedError';
+// noinspection ES6PreferShortImport
+import {ChannelReactionBox} from '../react/reactionBoxes/channelReactionBox';
+// noinspection ES6PreferShortImport
+import {PublishFailedError} from '../error/publishFailedError';
+// noinspection ES6PreferShortImport
+import {TimeoutError} from '../error/timeoutError';
+import ConnectionUtils, {WaitForConnectionOption} from '../utils/connectionUtils';
+import PubData, {ChannelEvent, ChannelTarget, ZationChannel} from './channelDefinitions';
 
 export class ChannelEngine
 {
     private readonly zation: Zation;
 
-    constructor(zation: Zation)
-    {
+    constructor(zation: Zation) {
         this.zation = zation;
     }
 
@@ -97,9 +100,8 @@ export class ChannelEngine
         this.unsubChannel(ZationChannel.PANEL_OUT,andDestroy);
     }
 
-    async subChannel(channel: string,chTarget: ChannelTarget,chInfoObj, watcher: Function,retrySubForever: boolean, subOptions?: object): Promise<void>
-    {
-        await new Promise<void>(((resolve, reject) => {
+    subChannel(channel: string,chTarget: ChannelTarget,chInfoObj, watcher: Function,retrySubForever: boolean, subOptions?: object): Promise<void> {
+        return new Promise<void>(((resolve, reject) => {
             const ch = this.zation.getSocket().channel(channel);
 
             if(retrySubForever){
@@ -107,51 +109,31 @@ export class ChannelEngine
             }
 
             //register
-            ch.on('subscribe',() => {
+            ch.once('subscribe',() => {
                 //watcher
                 ch.watch(watcher);
                 resolve();
             });
 
-            ch.on('subscribeFail',async (err) => {
+            ch.once('subscribeFail',async (err) => {
                 reject(new SubscribeFailedError(err));
             });
 
-            ch.on('kickOut',async (msg) => {
-                await this.zation._getChannelReactionMainBox().forEachAll(async (chReactionBox: ChannelReactionBox) => {
-                    await chReactionBox._triggerEvent(chReactionBox.mapKick,chTarget,chInfoObj,msg);
-                });
-            });
+            ch.on('kickOut',(msg) =>
+                this.zation._getChannelReactionMainBox().forEachParallel((chReactionBox: ChannelReactionBox) =>
+                    chReactionBox._triggerEvent(chTarget,ChannelEvent.KickOut,chInfoObj,msg)));
 
-            ch.on('subscribeFail',async (err) => {
-                await this.zation._getChannelReactionMainBox().forEachAll(async (chReactionBox: ChannelReactionBox) => {
-                    await chReactionBox._triggerEvent(chReactionBox.mapSubFail,chTarget,chInfoObj,err);
-                });
-            });
+            ch.on('subscribeFail',(err) =>
+                this.zation._getChannelReactionMainBox().forEachParallel((chReactionBox: ChannelReactionBox) =>
+                    chReactionBox._triggerEvent(chTarget,ChannelEvent.SubscribeFail,chInfoObj,err)));
 
-            ch.on('subscribe',async () => {
-                await this.zation._getChannelReactionMainBox().forEachAll(async (chReactionBox: ChannelReactionBox) => {
-                    await chReactionBox._triggerEvent(chReactionBox.mapSub,chTarget,chInfoObj);
-                });
-            });
+            ch.on('subscribe',() =>
+                this.zation._getChannelReactionMainBox().forEachParallel((chReactionBox: ChannelReactionBox) =>
+                    chReactionBox._triggerEvent(chTarget,ChannelEvent.Subscribe,chInfoObj)));
 
-            ch.on('subscribe',async () => {
-                await this.zation._getChannelReactionMainBox().forEachAll(async (chReactionBox: ChannelReactionBox) => {
-                    await chReactionBox._triggerEvent(chReactionBox.mapSub,chTarget,chInfoObj);
-                });
-            });
-
-            ch.on('unsubscribe',async (name,fromClient) => {
-                if(fromClient) {
-                    await this.zation._getChannelReactionMainBox().forEachAll(async (chReactionBox: ChannelReactionBox) => {
-                        await chReactionBox._triggerEvent(chReactionBox.mapClientUnsub,chTarget,chInfoObj);
-                    });
-                }
-
-                await this.zation._getChannelReactionMainBox().forEachAll(async (chReactionBox: ChannelReactionBox) => {
-                    await chReactionBox._triggerEvent(chReactionBox.mapUnsub,chTarget,chInfoObj,fromClient);
-                });
-            });
+            ch.on('unsubscribe',(name,fromClient) =>
+                this.zation._getChannelReactionMainBox().forEachParallel((chReactionBox: ChannelReactionBox) =>
+                    chReactionBox._triggerEvent(chTarget,ChannelEvent.Unsubscribe,chInfoObj,fromClient)));
 
             //sub
             ch.subscribe(subOptions);
@@ -159,26 +141,17 @@ export class ChannelEngine
     }
 
 
-    async subZationChannel(channel: string, target: ChannelTarget,retrySubForever : boolean): Promise<void>
-    {
+    async subZationChannel(channel: string, target: ChannelTarget,retrySubForever : boolean): Promise<void> {
        const infoObj = {};
-       await this.subChannel(channel,target,infoObj,async (input: any) =>
-       {
+       await this.subChannel(channel,target,infoObj,async (input: PubData) => {
            if(typeof input === 'object') {
+               const event = input.e;
+               const data = input.d;
+               const sSid = input.sSid;
 
-               const event: string = input['e'];
-               const data: any = input['d'];
-               const ssid: string | undefined = input['ssi'];
-
-               const promises: Promise<void>[] = [];
-               promises.push(this.zation._getChannelReactionMainBox().forEachAll(async (channelReactionBox: ChannelReactionBox) => {
-                   await channelReactionBox._triggerPub(target,event,data,infoObj,ssid);
-               }));
-
-               promises.push(this.zation._getChannelReactionMainBox().forEachAll(async (channelReactionBox: ChannelReactionBox) => {
-                   await channelReactionBox._triggerPub(ChannelTarget.Any,event,data,{chFullName: channel},ssid);
-               }));
-               await Promise.all(promises);
+               await this.zation._getChannelReactionMainBox().forEachParallel(async (channelReactionBox: ChannelReactionBox) => {
+                   await channelReactionBox._triggerPub(target,event,data,infoObj,sSid);
+               })
            }
        },retrySubForever);
     }
@@ -197,59 +170,51 @@ export class ChannelEngine
         }
     }
 
-    hasSubChannel(channel): boolean
-    {
+    hasSubChannel(channel): boolean {
         const socket: any = this.zation.getSocket();
-        return !!(!!socket && socket.isSubscribed(channel));
+        return (!!socket && socket.isSubscribed(channel));
     }
 
     //Part Custom Channel
     // noinspection JSUnusedGlobalSymbols
-    async subCustomCh(name: string, id?: string,retrySubForever : boolean = true): Promise<void>
+    async subCustomCh(identifier: string, member?: string, retrySubForever : boolean = true): Promise<void>
     {
-        let chFullName = ZationChannel.CUSTOM_CHANNEL_PREFIX + name;
-        if(id !== undefined){
-            chFullName +=  ZationChannel.CUSTOM_CHANNEL_ID_SEPARATOR + id
+        let chName = ZationChannel.CUSTOM_CHANNEL_PREFIX + identifier;
+        if(member !== undefined){
+            chName += (ZationChannel.CUSTOM_CHANNEL_MEMBER_SEPARATOR + member);
         }
 
-        const infoObj = {name,id};
+        const infoObj = {identifier,member};
         await this.subChannel
-        (
-            chFullName, ChannelTarget.C, infoObj,
-            async (input: any) => {
+        (chName, ChannelTarget.Custom, infoObj,
+            async (input: PubData) => {
                 if(typeof input === 'object') {
+                    const event = input.e;
+                    const data = input.d;
+                    const sSid = input.sSid;
 
-                    const event: string = input['e'];
-                    const data: any = input['d'];
-                    const ssid: string | undefined = input['ssi'];
-
-                    await this.zation._getChannelReactionMainBox().forEachAll(async (channelReactionBox: ChannelReactionBox) => {
-                        await channelReactionBox._triggerPub
-                        (
-                            ChannelTarget.C,
+                    await this.zation._getChannelReactionMainBox().forEachParallel(async (channelReactionBox: ChannelReactionBox) => {
+                        await channelReactionBox._triggerPub(
+                            ChannelTarget.Custom,
                             event,
                             data,
                             infoObj,
-                            ssid
+                            sSid
                         );
-                    });
-
-                    await this.zation._getChannelReactionMainBox().forEachAll(async (channelReactionBox: ChannelReactionBox) => {
-                        await channelReactionBox._triggerPub(ChannelTarget.Any,event,data,{chFullName: chFullName},ssid);
                     });
                 }
         },retrySubForever);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    static getCustomChName(name?: string, id?: string): string {
-        if(name !== undefined) {
-            if(id !== undefined){
-                return ZationChannel.CUSTOM_CHANNEL_PREFIX + name +
-                    ZationChannel.CUSTOM_CHANNEL_ID_SEPARATOR + id;
+    static getCustomChName(identifier?: string, member?: string): string {
+        if(identifier !== undefined) {
+            if(member !== undefined){
+                return ZationChannel.CUSTOM_CHANNEL_PREFIX + identifier +
+                    ZationChannel.CUSTOM_CHANNEL_MEMBER_SEPARATOR + member;
             }
             else {
-                return ZationChannel.CUSTOM_CHANNEL_PREFIX + name;
+                return ZationChannel.CUSTOM_CHANNEL_PREFIX + identifier;
             }
         }
         else {
@@ -258,17 +223,17 @@ export class ChannelEngine
     }
 
     // noinspection JSUnusedGlobalSymbols
-    unsubscribeCustomCh(name?: string,id?: string,andDestroy: boolean = true): string[] {
-        return this.unsubscribeWithIndex(ChannelEngine.getCustomChName(name,id),andDestroy);
+    unsubscribeCustomCh(identifier?: string,member?: string,andDestroy: boolean = true): string[] {
+        return this.unsubscribeWithIndex(ChannelEngine.getCustomChName(identifier,member),andDestroy);
     }
 
-    getSubCustomCh(name?: string,id?: string): string[] {
-        return this.getSubsWithIndex(ChannelEngine.getCustomChName(name,id));
+    getSubCustomCh(identifier?: string,member?: string): string[] {
+        return this.getSubsWithIndex(ChannelEngine.getCustomChName(identifier,member));
     }
 
     // noinspection JSUnusedGlobalSymbols
-    hasSubCustomCh(name?: string,id?: string): boolean {
-        return this.getSubCustomCh(name,id).length > 0;
+    hasSubCustomCh(identifier?: string,member?: string): boolean {
+        return this.getSubCustomCh(identifier,member).length > 0;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -303,7 +268,7 @@ export class ChannelEngine
         return foundSubs;
     }
 
-    static buildPubData(eventName: string,data: any): object
+    static buildPubData(eventName: string,data: any): PubData
     {
         return {
             e: eventName,
@@ -311,14 +276,13 @@ export class ChannelEngine
         };
     }
 
-    async publish(channelName: string,eventName: string,data: any,waitForConnection: WaitForConnectionOption): Promise<void>
+    private async publish(channelName: string,eventName: string,data: any,waitForConnection: WaitForConnectionOption): Promise<void>
     {
         await ConnectionUtils.checkConnection
         (this.zation,waitForConnection,'To publish data.');
 
         return new Promise<void>(async (resolve, reject) => {
-            this.zation.getSocket().publish(channelName,ChannelEngine.buildPubData(eventName,data),(err) =>
-            {
+            this.zation.getSocket().publish(channelName,ChannelEngine.buildPubData(eventName,data),(err) => {
                 if(err){
                     if(err.name === 'TimeoutError'){
                         reject(new TimeoutError(err.message));
@@ -354,9 +318,8 @@ export class ChannelEngine
         return this.publish(ZationChannel.PANEL_IN,event,data,waitForConnection);
     }
 
-    pubCustomCh({name,id}: {name: string,id?: string},event: string, data: any,
-                      waitForConnection: WaitForConnectionOption): Promise<void>
-    {
-        return this.publish(ChannelEngine.getCustomChName(name,id),event,data,waitForConnection);
+    pubCustomCh({identifier,member}: {identifier: string,member?: string},event: string, data: any,
+                      waitForConnection: WaitForConnectionOption): Promise<void> {
+        return this.publish(ChannelEngine.getCustomChName(identifier,member),event,data,waitForConnection);
     }
 }

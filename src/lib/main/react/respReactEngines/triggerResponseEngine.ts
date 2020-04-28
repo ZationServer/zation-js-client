@@ -24,7 +24,7 @@ export class TriggerResponseEngine
 
     static async onError(response: Response,fullReaction: FullReaction<ResponseReactionOnError>)
     {
-        const fErrors: BackError[] = ErrorFilterEngine.filterErrors(response.getErrors(false),fullReaction.getFilter());
+        const fErrors: BackError[] = ErrorFilterEngine.filterErrors(response.getErrors(false),fullReaction.getFilter() || []);
         if(fErrors.length > 0) {
             await fullReaction.getReactionHandler()(fErrors,response);
         }
@@ -32,9 +32,9 @@ export class TriggerResponseEngine
 
     static async catchError(response: Response,fullReaction: FullReaction<ResponseReactionCatchError>)
     {
-        const fErrors: BackError[] = ErrorFilterEngine.filterErrors(response._getNotCatchedErrors(),fullReaction.getFilter());
+        const fErrors: BackError[] = ErrorFilterEngine.filterErrors(response._getNotCaughtErrors(),fullReaction.getFilter() || []);
         if(fErrors.length > 0) {
-            response._errorsAreCatched(fErrors);
+            response._errorsAreCaught(fErrors);
             await fullReaction.getReactionHandler()(fErrors,response);
         }
     }

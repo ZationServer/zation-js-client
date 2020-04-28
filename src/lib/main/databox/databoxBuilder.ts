@@ -12,14 +12,14 @@ import {WaitForConnectionOption}  from "../utils/connectionUtils";
 export default class DataboxBuilder {
 
     private readonly zation: Zation;
-    private readonly name: string;
-    private readonly id?: string | number;
+    private readonly identifier: string;
+    private readonly member?: string | number;
     private readonly dbOptions: DataboxOptions;
 
-    constructor(zation: Zation,name: string,id?: string | number){
+    constructor(zation: Zation,identifier: string,member?: string | number){
         this.zation = zation;
-        this.name = name;
-        this.id = id;
+        this.identifier = identifier;
+        this.member = member;
         this.dbOptions = {};
     }
 
@@ -156,7 +156,7 @@ export default class DataboxBuilder {
      */
     get(autoConnect: false): Databox
     get(autoConnect: boolean = false): Databox | Promise<Databox> {
-        const databox = new Databox(this.zation,this.dbOptions,this.name,this.id);
+        const databox = new Databox(this.zation,this.dbOptions,this.identifier,this.member);
         if(autoConnect){
             return new Promise<Databox>(async (resolve, reject) => {
                 try{
