@@ -66,11 +66,6 @@ export interface ZationOptions {
      */
     rejectUnauthorized?: boolean;
     /**
-     * Specifies in what key the zation data is located in an HTTP post request.
-     * @default If the server settings are available it will use the post key from it otherwise it is 'zation'.
-     */
-    postKey?: string;
-    /**
      * Multiplexing allows you to reuse a socket instead of creating a new socket to the same address.
      * @default true.
      */
@@ -204,7 +199,6 @@ export interface ZationOptionsInternal extends ZationOptions{
     port: number;
     secure: boolean;
     rejectUnauthorized: boolean;
-    postKey: string;
     multiplex: boolean;
     autoAllChSub: boolean;
     autoUserChSub: boolean;

@@ -4,35 +4,25 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-// noinspection ES6PreferShortImport
-import {HttpRequest}                 from "../main/request/main/httpRequest";
-import {SendAble}                    from "../main/request/helper/sendAble";
-// noinspection ES6PreferShortImport
-import {ProtocolType}                from "../main/constants/protocolType";
 import {ZationOptions}               from "./zationOptions";
-import {ProgressHandler}             from "../main/request/helper/progressHandler";
 import {OnHandlerFunction, Socket}   from "../main/sc/socket";
 import {Events}                      from "../main/constants/events";
-// noinspection ES6PreferShortImport
-import {ValidationCheck}             from "../main/request/main/validationRequest";
 import {SystemController}            from "../main/constants/systemController";
-import {ZATION_CUSTOM_EVENT_NAMESPACE, ZationHttpInfo, ZationToken} from "../main/constants/internal";
+import {ZATION_CUSTOM_EVENT_NAMESPACE, ZationToken} from "../main/constants/internal";
 import ConnectionUtils, {WaitForConnectionOption}                from "../main/utils/connectionUtils";
 import {ChannelEngine}               from "../main/channel/channelEngine";
 import {ZationConfig}                from "../main/config/zationConfig";
 import {MultiList}                         from "../main/container/multiList";
 // noinspection ES6PreferShortImport
-import {ResponseReactionBox}         from "../main/react/reactionBoxes/responseReactionBox";
+import {ResponseReactionBox}         from "../main/controller/response/responseReactionBox";
 // noinspection ES6PreferShortImport
-import {ChannelReactionBox}          from "../main/react/reactionBoxes/channelReactionBox";
+import {ChannelReactionBox}          from "../main/channel/channelReactionBox";
 // noinspection ES6PreferShortImport
-import {RequestBuilder}              from "../main/request/fluent/requestBuilder";
+import {RequestBuilder}              from "../main/controller/request/fluent/requestBuilder";
 // noinspection ES6PreferShortImport
-import {AuthRequestBuilder}          from "../main/request/fluent/authRequestBuilder";
+import {AuthRequestBuilder}          from "../main/controller/request/fluent/authRequestBuilder";
 // noinspection ES6PreferShortImport
-import {ValidationRequestBuilder}    from "../main/request/fluent/validationRequestBuilder";
-import {ZationRequest}               from "../main/request/main/zationRequest";
-import {SendEngine}                  from "../main/send/sendEngine";
+import {ValidationRequestBuilder}    from "../main/controller/request/fluent/validationRequestBuilder";
 // noinspection ES6PreferShortImport
 import {ConnectionAbortError}        from "../main/error/connectionAbortError";
 import {Logger}                      from "../main/logger/logger";
@@ -42,13 +32,11 @@ import {ConnectionRequiredError}     from "../main/error/connectionRequiredError
 // noinspection ES6PreferShortImport
 import {AuthenticationFailedError}   from "../main/error/authenticationFailedError";
 // noinspection ES6PreferShortImport
-import {AuthRequest}                 from "../main/request/main/authRequest";
+import {EventReactionBox}            from "../main/event/eventReactionBox";
 // noinspection ES6PreferShortImport
-import {EventReactionBox}            from "../main/react/reactionBoxes/eventReactionBox";
+import {StandardRequest}                   from "../main/controller/request/main/standardRequest";
 // noinspection ES6PreferShortImport
-import {WsRequest}                   from "../main/request/main/wsRequest";
-// noinspection ES6PreferShortImport
-import {Response}                    from "../main/response/response";
+import {Response}                    from "../main/controller/response/response";
 import {AuthEngine}                  from "../main/auth/authEngine";
 import {ModifiedScClient}            from "../main/sc/modifiedScClient";
 import stringify                     from "fast-stringify";
@@ -56,6 +44,10 @@ import stringify                     from "fast-stringify";
 import {TimeoutError}                from "../main/error/timeoutError";
 import DataboxBuilder                from "../main/databox/databoxBuilder";
 import perf                          from "../main/utils/perf";
+import {BaseRequest} from "../main/controller/request/main/baseRequest";
+import {AuthRequest} from "../main/controller/request/main/authRequest";
+import {ValidationCheckPair} from "../main/controller/controllerDefinitions";
+import {wsSend} from "../main/controller/sendUtils";
 
 export class Zation
 {
@@ -284,11 +276,10 @@ export class Zation
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
-     * This options is only used in the WebSocket protocol.
      */
     async ping(waitForConnection: WaitForConnectionOption = undefined): Promise<number>
     {
-        const req = new WsRequest(SystemController.Ping,{},true);
+        const req = new StandardRequest(SystemController.Ping,{},true);
         req.setWaitForConnection(waitForConnection);
         const start = perf.now();
         await this.send(req);
@@ -327,11 +318,10 @@ export class Zation
      *   const response = e.getResponse();
      * }
      * @throws
-     * ConnectionRequiredError (if using protocol type webSocket)
+     * ConnectionRequiredError
      * AuthenticationFailedError
      * TimeoutError
      * @param authData
-     * @param protocolType
      * @param waitForConnection
      * With the WaitForConnection option, you can activate that the socket is
      * trying to connect when it is not connected. You have five possible choices:
@@ -345,13 +335,12 @@ export class Zation
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
-     * This options is only used in the WebSocket protocol.
      */
-    async authenticate(authData: object = {}, protocolType: ProtocolType = ProtocolType.WebSocket,waitForConnection: WaitForConnectionOption = undefined): Promise<Response>
+    async authenticate(authData: object = {},waitForConnection: WaitForConnectionOption = undefined): Promise<Response>
     {
-        const req = new AuthRequest(authData,protocolType);
+        const req = new AuthRequest(authData);
         req.setWaitForConnection(waitForConnection);
-        const resp = await this.send(req,undefined,false);
+        const resp = await this.send(req,false);
         if(resp.isSuccessful()) {
             if(!this.isAuthenticated()) {
                 throw new AuthenticationFailedError
@@ -439,14 +428,12 @@ export class Zation
     /**
      * @description
      * Returns an request helper.
-     * Where you can easy build an request with reactions and send it.
+     * Where you can easily build a standard
+     * request with reactions and send it.
      * The default values are:
-     * Protocol: WebSocket
      * Controller: ''
      * Data: undefined
      * SystemController: false
-     * UseAuth: true
-     * AttachedHttpContent: []
      * @example
      * await zation.request()
      * .controller('sendMessage')
@@ -472,12 +459,10 @@ export class Zation
     /**
      * @description
      * Returns an auth request helper.
-     * Where you can easy build an auth request with reactions and send it.
+     * Where you can easily build an auth request with reactions and send it.
      * This is another way to authenticate this client.
      * The default values are:
-     * Protocol: WebSocket
      * AuthData: undefined
-     * AttachedHttpContent: []
      * @example
      * await zation.authRequest()
      * .authData({userName: 'luca',password: '123'})
@@ -488,11 +473,9 @@ export class Zation
      * .onSuccessful(() => {console.log('Successfully authenticated')})
      * .send();
      * @param authData
-     * @param protocolType
      */
-    authRequest(authData: any = undefined, protocolType: ProtocolType = ProtocolType.WebSocket): AuthRequestBuilder {
+    authRequest(authData: any = undefined): AuthRequestBuilder {
         const helper = new AuthRequestBuilder(this);
-        helper.protocol(protocolType);
         helper.authData(authData);
         return helper;
     }
@@ -501,10 +484,9 @@ export class Zation
     /**
      * @description
      * Returns an validation request helper.
-     * Where you can easy build an validation request with reactions and send it.
+     * Where you can easily build a validation check request with reactions and send it.
      * This is useful to validate individual controller data.
      * The default values are:
-     * Protocol: WebSocket
      * Controller: ''
      * Checks: []
      * @example
@@ -521,7 +503,7 @@ export class Zation
      * @param controller
      * @param checks
      */
-    validationRequest(controller: string = '',...checks: ValidationCheck[]): ValidationRequestBuilder {
+    validationRequest(controller: string = '',...checks: ValidationCheckPair[]): ValidationRequestBuilder {
         const helper = new ValidationRequestBuilder(this);
         helper.controller(controller);
         helper.checks(...checks);
@@ -551,81 +533,31 @@ export class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Send a sendAble object.
-     * Should be used for sending AuthRequests,HttpRequests,ValidationRequests,WsRequests and ZationRequests.
-     * Optional you can add a progressHandler and responseReactionBox/es.
-     * Notice that the response boxes that are passed in are triggerd before the zation boxes.
-     * But the zationBoxes are only triggerd if the triggerZationBoxes param is true.
+     * Sends a BaseRequest.
+     * Should be used for sending AuthRequests, ValidationCheckRequests and StandardRequests.
+     * Optional you can pass in ResponseReactionBox/es and specify if the
+     * client attached ResponseReactionBoxes should be triggered.
+     * Notice that if you want to trigger the client attached boxes,
+     * the ResponseReactionBoxes that are passed in will be triggered before.
      * @throws ConnectionRequiredError,TimeoutError,AbortSignal
      * @return Response
-     * @param sendAble
-     * @param progressHandler
-     * @param triggerZationBoxes
+     * @param baseRequest
+     * @param triggerClientBoxes
      * @param responseReactionBox
      */
-    async send(sendAble: SendAble, progressHandler?: ProgressHandler,triggerZationBoxes: boolean = false,...responseReactionBox: ResponseReactionBox[]): Promise<Response>
-    {
-        let ph: undefined | ProgressHandler = undefined;
-        if(!!progressHandler) {
-            ph = progressHandler;
-        }
-        else if(sendAble instanceof ZationRequest) {
-            ph = sendAble.getPogressHandler();
-        }
-
-        const jsonObj = await sendAble.getSendData(this);
-
-        let response: Response;
-        if(sendAble.getProtocol() === ProtocolType.WebSocket) {
-            response = await SendEngine.wsSend(this,jsonObj,sendAble.getTimeout(),ph,sendAble.getWaitForConnection());
-        }
-        else {
-            let attachedHttpContent: undefined | {key: string, data: Blob | string}[] = undefined;
-
-            if(sendAble instanceof HttpRequest || sendAble instanceof AuthRequest) {
-                attachedHttpContent = sendAble.getAttachedHttpContent();
-            }
-
-            response = await SendEngine.httpSend(this,jsonObj,sendAble.getTimeout(),attachedHttpContent,ph);
-        }
-
-        await this._respondsActions(response);
+    async send(baseRequest: BaseRequest, triggerClientBoxes: boolean = false, ...responseReactionBox: ResponseReactionBox[]): Promise<Response> {
+        const response = await wsSend(this,baseRequest.build(),baseRequest.getTimeout(),
+            baseRequest.getWaitForConnection());
 
         for(let i = 0; i < responseReactionBox.length; i++) {
             await responseReactionBox[i]._trigger(response);
         }
 
-        if(triggerZationBoxes) {
+        if(triggerClientBoxes) {
             await this._triggerResponseReactions(response);
         }
-
         return response;
     };
-
-    private async _respondsActions(response: Response)
-    {
-        //response for update new token by http req
-        if(response.hasNewToken())
-        {
-            const signToken = response.getNewSignedToken();
-            const plainToken = response.getNewPlainToken();
-            if(!!signToken && !!plainToken) {
-                if(this.isConnected()) {
-                    try{
-                        await this.signAuthenticate(signToken);
-                    }
-                    catch(e){}
-                }
-                else{
-                    await this.authEngine.refreshToken(plainToken,signToken);
-                }
-            }
-        }
-
-        if(response.hasZationHttpInfo(ZationHttpInfo.Deauthenticate)) {
-            await this.authEngine.deauthenticate();
-        }
-    }
 
     // Part Connection
 
@@ -1544,11 +1476,6 @@ export class Zation
     };
 
     // noinspection JSUnusedGlobalSymbols
-    getPostKey(): string {
-        return this.zc.config.postKey;
-    };
-
-    // noinspection JSUnusedGlobalSymbols
     getSecure(): boolean {
         return this.zc.config.secure;
     };
@@ -1563,8 +1490,7 @@ export class Zation
      * @description
      * Returns the full server address with protocol (http/https), hostname, port and path.
      */
-    getServerAddress(): string
-    {
+    getServerAddress(): string {
         const path = this.zc.config.path;
         const hostname = this.zc.config.hostname;
         const port = this.zc.config.port;
@@ -1592,11 +1518,9 @@ export class Zation
      * Used internally.
      * Only use this method carefully.
      */
-    async _triggerResponseReactions(response: Response): Promise<void>
-    {
-        await this.responseReactionMainBox.forEach(async (responseReactionBox: ResponseReactionBox) => {
-            await responseReactionBox._trigger(response);
-        });
+    _triggerResponseReactions(response: Response): Promise<void> {
+        return this.responseReactionMainBox.forEach((responseReactionBox) =>
+            responseReactionBox._trigger(response));
     }
 
     // noinspection JSUnusedGlobalSymbols

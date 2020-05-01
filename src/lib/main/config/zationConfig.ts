@@ -64,7 +64,6 @@ export class ZationConfig
             port: defaultPort,
             secure: defaultSecure,
             rejectUnauthorized: false,
-            postKey: 'zation',
             multiplex: true,
             autoAllChSub: true,
             autoUserChSub: true,
@@ -100,9 +99,6 @@ export class ZationConfig
             }
             if(!!zss['PATH']) {
                 this._config.path = zss['PATH'];
-            }
-            if(!!zss['POST_KEY']) {
-                this._config.postKey = zss['POST_KEY'];
             }
         }
     }

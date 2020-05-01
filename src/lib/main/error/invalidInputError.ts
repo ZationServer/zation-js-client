@@ -4,9 +4,9 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {BackError}         from "../../main/response/backError";
-import {ErrorFilterEngine} from "../../main/react/respReactEngines/errorFilterEngine";
-import {ErrorFilter}       from "../../main/react/error/errorFilter";
+import {BackError}         from "../backError/backError";
+import {ErrorFilterEngine} from "../backError/errorFilterEngine";
+import {BackErrorFilter}       from "../backError/backErrorFilter";
 
 export class InvalidInputError extends Error
 {
@@ -94,7 +94,7 @@ export class InvalidInputError extends Error
      * The filter are linked with OR so the filtered errors
      * of each filter are countend together.
      */
-    filterBackErrors(filter: ErrorFilter[]): BackError[] {
+    filterBackErrors(filter: BackErrorFilter[]): BackError[] {
         return ErrorFilterEngine.filterErrors(this.getBackErrors(),filter);
     }
 }

@@ -4,7 +4,7 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {Response} from "../response/response";
+import {Response} from "../controller/response/response";
 
 export class AuthenticationFailedError extends Error
 {

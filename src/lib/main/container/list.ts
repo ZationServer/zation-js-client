@@ -4,7 +4,7 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-type ForEachFunction<T> = (item: T) => Promise<void>;
+type ForEachFunction<T> = (item: T) => Promise<void> | void;
 
 export class List<T>
 {
@@ -37,7 +37,7 @@ export class List<T>
         //use extra reference
         //the this.items can maybe changed to a new list. (by edit the list)
         const array = this.items;
-        const promise: Promise<void>[] = [];
+        const promise: (Promise<void> | void)[] = [];
         for(let i = 0; i < array.length; i++) {
             promise.push(func(array[i]));
         }

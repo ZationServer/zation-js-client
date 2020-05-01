@@ -9,7 +9,7 @@ import {Zation} from '../../core/zation';
 // noinspection ES6PreferShortImport
 import {SubscribeFailedError} from '../error/subscribeFailedError';
 // noinspection ES6PreferShortImport
-import {ChannelReactionBox} from '../react/reactionBoxes/channelReactionBox';
+import {ChannelReactionBox} from './channelReactionBox';
 // noinspection ES6PreferShortImport
 import {PublishFailedError} from '../error/publishFailedError';
 // noinspection ES6PreferShortImport
