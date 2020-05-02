@@ -34,12 +34,13 @@ import {AuthenticationFailedError}   from "../main/error/authenticationFailedErr
 // noinspection ES6PreferShortImport
 import {EventReactionBox}            from "../main/event/eventReactionBox";
 // noinspection ES6PreferShortImport
-import {StandardRequest}                   from "../main/controller/request/main/standardRequest";
+import {StandardRequest}             from "../main/controller/request/main/standardRequest";
 // noinspection ES6PreferShortImport
 import {Response}                    from "../main/controller/response/response";
 import {AuthEngine}                  from "../main/auth/authEngine";
 import {ModifiedScClient}            from "../main/sc/modifiedScClient";
-import stringify                     from "fast-stringify";
+const stringify                     = require("fast-stringify");
+
 // noinspection ES6PreferShortImport
 import {TimeoutError}                from "../main/error/timeoutError";
 import DataboxBuilder                from "../main/databox/databoxBuilder";
