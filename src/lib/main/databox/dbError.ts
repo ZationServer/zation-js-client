@@ -50,11 +50,11 @@ export default class DbError {
     }
 
     /**
-     * Returns if the member is not valid.
+     * Returns if the member is invalid.
      * @param err
      */
-    static isMemberNotValid(err: any): boolean {
-        return err.name === ErrorName.MemberIsNotValid;
+    static isInvalidMember(err: any): boolean {
+        return err.name === ErrorName.InvalidMember;
     }
 
     /**

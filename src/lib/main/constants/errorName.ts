@@ -12,7 +12,7 @@ export enum ErrorName {
     NoAccessWithVersion          = 'NoAccessWithVersion',
     NoAccessWithSystem           = 'NoAccessWithSystem',
     AccessDenied                 = 'AccessDenied',
-    MemberIsNotValid             = 'MemberIsNotValid',
+    InvalidMember                = 'InvalidMember',
 
     InvalidRequest               = 'InvalidRequest',
     ApiLevelIncompatible         = 'ApiLevelIncompatible',
