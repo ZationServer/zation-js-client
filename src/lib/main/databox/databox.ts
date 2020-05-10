@@ -178,7 +178,7 @@ export default class Databox {
 
     private reloadProcessPromise: Promise<void> = Promise.resolve();
     private historyFetch: (history: FetchHistoryItem[]) => Promise<DbsHead[]>
-        = this._normalHistoryFetch;
+        = this._normalHistoryFetch.bind(this);
 
     private inputChannel: string;
     private outputChannel: string;
@@ -354,9 +354,9 @@ export default class Databox {
      */
     private _updateHistoryFetch() {
         if (this.parallelFetch) {
-            this.historyFetch = this._parallelHistoryFetch;
+            this.historyFetch = this._parallelHistoryFetch.bind(this);
         } else {
-            this.historyFetch = this._normalHistoryFetch;
+            this.historyFetch = this._normalHistoryFetch.bind(this);
         }
     }
 
