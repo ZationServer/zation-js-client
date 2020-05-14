@@ -865,11 +865,11 @@ export class Zation
     /**
      * @description
      * Returns the current sign token.
-     * @throws AuthenticationRequiredError
+     * Is null if socket has no token.
      */
-    getSignToken(): string
+    getSignToken(): string | null
     {
-        return this.authEngine.getSecureSignToken();
+        return this.authEngine.getSignToken();
     }
 
     // noinspection JSUnusedGlobalSymbols

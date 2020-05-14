@@ -131,15 +131,6 @@ export class AuthEngine
         return this.plainToken;
     }
 
-    getSecureSignToken(): string {
-        if(this.signToken !== null) {
-            return this.signToken;
-        }
-        else {
-            throw new AuthenticationRequiredError('To get access to the token');
-        }
-    }
-
     getSecurePlainToken(): ZationToken {
         if(this.plainToken !== null) {
             return this.plainToken;
