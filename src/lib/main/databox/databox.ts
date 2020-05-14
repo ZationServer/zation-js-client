@@ -369,9 +369,9 @@ export default class Databox {
             this.socket.emit(DATABOX_START_INDICATOR, {
                 a: this.apiLevel,
                 d: this.identifier,
-                ...(this.member !== undefined ? {i: this.member}: {}),
+                ...(this.member !== undefined ? {m: this.member}: {}),
                 ...(sendToken ? ({t: currentToken}) :
-                    (this.initData !== undefined ? {ii: this.initData}: {}))
+                    (this.initData !== undefined ? {i: this.initData}: {}))
             } as DataboxConnectReq, async (err, res: DataboxConnectRes) => {
 
                 if (err) {
