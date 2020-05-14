@@ -53,7 +53,7 @@ import {InvalidInputError}              from "./lib/main/error/invalidInputError
 import DbError                          from "./lib/main/databox/dbError";
 import {AbortSignal, AbortTrigger}      from "./lib/main/utils/connectionUtils";
 import {AuthRequest}                    from "./lib/main/controller/request/main/authRequest";
-import {ValidationCheckPair}            from "./lib/main/controller/controllerDefinitions";
+import {SpecialController, ValidationCheckPair} from "./lib/main/controller/controllerDefinitions";
 import Package                          from "./lib/main/receiver/package/main/package";
 import PackageBuilder                   from "./lib/main/receiver/package/fluent/packageBuilder";
 import Channel, {UnsubscribeReason}     from "./lib/main/channel/channel";
@@ -93,6 +93,7 @@ export {
     UnsubscribeReason,
     ResponseReactionBox,
     EventReactionBox,
+    SpecialController,
     Response,
     AuthenticationFailedError,
     AuthenticationRequiredError,
