@@ -6,56 +6,44 @@ Copyright(c) Luca Scaringella
 
 import {DryBackError} from "../backError/backError";
 
-export const enum ControllerRequestType {
-    Standard,
-    ValidationCheck,
-    Auth
+export const enum SpecialController {
+    AuthController
 }
 
-export interface ControllerReq {
-    /**
-     * ApiLevel
-     */
-    al?: number,
+export interface ControllerBaseReq {
     /**
      * Controller
      */
-    c?: string,
+    c: string | SpecialController,
     /**
-     * SystemController
+     * ApiLevel
      */
-    sc?: string,
-    /**
-     * RequestType
-     * @default 0
-     */
-    t?: ControllerRequestType,
-    /**
-     * Input
-     */
-    i?: any
+    a?: number
 }
 
-export interface ControllerValidationCheckReq extends ControllerReq {
+export interface ControllerStandardReq extends ControllerBaseReq {
     /**
-     * RequestType
+     * Data
      */
-    t: ControllerRequestType.ValidationCheck,
+    d?: any
+}
+
+export interface ControllerValidationCheckReq extends ControllerBaseReq {
     /**
-     * Input
+     * Validation checks
      */
-    i: ValidationCheckPair[]
+    v: ValidationCheckPair[]
 }
 
 export interface ValidationCheckPair {
     /**
      * Path
      */
-    p: string | string[],
+    0: string | string[],
     /**
      * Value
      */
-    v: any
+    1: any
 }
 
 /**
@@ -71,3 +59,5 @@ export type ControllerRes = {
      */
     1?: any
 } | undefined;
+
+export const CONTROLLER_EVENT = '>';

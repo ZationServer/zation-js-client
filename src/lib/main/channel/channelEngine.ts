@@ -4,322 +4,137 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-// noinspection ES6PreferShortImport
-import {Zation} from '../../core/zation';
-// noinspection ES6PreferShortImport
-import {SubscribeFailedError} from '../error/subscribeFailedError';
-// noinspection ES6PreferShortImport
-import {ChannelReactionBox} from './channelReactionBox';
-// noinspection ES6PreferShortImport
-import {PublishFailedError} from '../error/publishFailedError';
-// noinspection ES6PreferShortImport
-import {TimeoutError} from '../error/timeoutError';
-import ConnectionUtils, {WaitForConnectionOption} from '../utils/connectionUtils';
-import PubData, {ChannelEvent, ChannelTarget, ZationChannel} from './channelDefinitions';
+import Channel  from "./channel";
+import {
+    CH_CLIENT_OUTPUT_KICK_OUT,
+    CH_CLIENT_OUTPUT_PUBLISH, CHANNEL_START_INDICATOR, ChannelSubscribeRequest,
+    ChClientInputAction,
+    ChClientInputPackage, ChClientOutputKickOutPackage,
+    ChClientOutputPublishPackage
+} from "./channelDefinitions";
+import {buildFullChId} from "./channelUtils";
+import {RawError}      from "../../..";
+import {Socket}        from "../sc/socket";
 
 export class ChannelEngine
 {
-    private readonly zation: Zation;
+    private readonly _channels: Map<string,Set<Channel>> = new Map();
+    private _socket: Socket;
 
-    constructor(zation: Zation) {
-        this.zation = zation;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    async subUserChannel(userId: string | number,retrySubForever : boolean = true) {
-        await this.subZationChannel(ZationChannel.USER_CHANNEL_PREFIX + userId,ChannelTarget.User,retrySubForever);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    hasSubUserChannel(userId: string | number): boolean  {
-        return this.hasSubChannel(ZationChannel.USER_CHANNEL_PREFIX + userId);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    unsubUserChannel(userId: string | number,andDestroy: boolean = true) {
-       this.unsubChannel(ZationChannel.USER_CHANNEL_PREFIX + userId,andDestroy);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    async subAuthUserGroupChannel(authGroup: string,retrySubForever : boolean = true) {
-        await this.subZationChannel(ZationChannel.AUTH_USER_GROUP_PREFIX + authGroup,ChannelTarget.Aug,retrySubForever);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    hasSubAuthUserGroupChannel(authGroup: string): boolean  {
-        return this.hasSubChannel(ZationChannel.AUTH_USER_GROUP_PREFIX + authGroup);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    unsubAuthUserGroupChannel(authGroup: string,andDestroy: boolean = true) {
-        this.unsubChannel(ZationChannel.AUTH_USER_GROUP_PREFIX + authGroup,andDestroy);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    async subDefaultUserGroupChannel(retrySubForever : boolean = true) {
-        await this.subZationChannel(ZationChannel.DEFAULT_USER_GROUP,ChannelTarget.Dug,retrySubForever);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    hasSubDefaultUserGroupChannel(): boolean {
-        return this.hasSubChannel(ZationChannel.DEFAULT_USER_GROUP);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    unsubDefaultUserGroupChannel(andDestroy: boolean = true) {
-        this.unsubChannel(ZationChannel.DEFAULT_USER_GROUP,andDestroy);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    async subAllChannel(retrySubForever : boolean = true) {
-        await this.subZationChannel(ZationChannel.ALL,ChannelTarget.All,retrySubForever);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    hasSubAllChannel(): boolean {
-        return this.hasSubChannel(ZationChannel.ALL);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    unsubAllChannel(andDestroy: boolean = true) {
-        this.unsubChannel(ZationChannel.ALL,andDestroy);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    async subPanelOutChannel(retrySubForever : boolean =  true) {
-        await this.subZationChannel(ZationChannel.PANEL_OUT,ChannelTarget.Panel,retrySubForever);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    hasSubPanelOutChannel(): boolean {
-        return this.hasSubChannel(ZationChannel.PANEL_OUT);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    unsubPanelOutChannel(andDestroy: boolean = true) {
-        this.unsubChannel(ZationChannel.PANEL_OUT,andDestroy);
-    }
-
-    subChannel(channel: string,chTarget: ChannelTarget,chInfoObj, watcher: Function,retrySubForever: boolean, subOptions?: object): Promise<void> {
-        return new Promise<void>(((resolve, reject) => {
-            const ch = this.zation.getSocket().channel(channel);
-
-            if(retrySubForever){
-                ch['retrySubForever'] = true;
-            }
-
-            //register
-            ch.once('subscribe',() => {
-                //watcher
-                ch.watch(watcher);
-                resolve();
-            });
-
-            ch.once('subscribeFail',async (err) => {
-                reject(new SubscribeFailedError(err));
-            });
-
-            ch.on('kickOut',(msg) =>
-                this.zation._getChannelReactionMainBox().forEachParallel((chReactionBox: ChannelReactionBox) =>
-                    chReactionBox._triggerEvent(chTarget,ChannelEvent.KickOut,chInfoObj,msg)));
-
-            ch.on('subscribeFail',(err) =>
-                this.zation._getChannelReactionMainBox().forEachParallel((chReactionBox: ChannelReactionBox) =>
-                    chReactionBox._triggerEvent(chTarget,ChannelEvent.SubscribeFail,chInfoObj,err)));
-
-            ch.on('subscribe',() =>
-                this.zation._getChannelReactionMainBox().forEachParallel((chReactionBox: ChannelReactionBox) =>
-                    chReactionBox._triggerEvent(chTarget,ChannelEvent.Subscribe,chInfoObj)));
-
-            ch.on('unsubscribe',(name,fromClient) =>
-                this.zation._getChannelReactionMainBox().forEachParallel((chReactionBox: ChannelReactionBox) =>
-                    chReactionBox._triggerEvent(chTarget,ChannelEvent.Unsubscribe,chInfoObj,fromClient)));
-
-            //sub
-            ch.subscribe(subOptions);
-        }));
-    }
-
-
-    async subZationChannel(channel: string, target: ChannelTarget,retrySubForever : boolean): Promise<void> {
-       const infoObj = {};
-       await this.subChannel(channel,target,infoObj,async (input: PubData) => {
-           if(typeof input === 'object') {
-               const event = input.e;
-               const data = input.d;
-               const sSid = input.sSid;
-
-               await this.zation._getChannelReactionMainBox().forEachParallel(async (channelReactionBox: ChannelReactionBox) => {
-                   await channelReactionBox._triggerPub(target,event,data,infoObj,sSid);
-               })
-           }
-       },retrySubForever);
-    }
-
-    unsubChannel(channel: string,andDestroy: boolean = true): void
+    connectToSocket(socket: Socket)
     {
-        const socket = this.zation.getSocket();
-        if(!!socket) {
-            if(andDestroy) {
-                socket.destroyChannel(channel);
-            }
-            else {
-                socket.unsubscribe(channel);
-                socket.unwatch(channel);
-            }
-        }
-    }
-
-    hasSubChannel(channel): boolean {
-        const socket: any = this.zation.getSocket();
-        return (!!socket && socket.isSubscribed(channel));
-    }
-
-    //Part Custom Channel
-    // noinspection JSUnusedGlobalSymbols
-    async subCustomCh(identifier: string, member?: string, retrySubForever : boolean = true): Promise<void>
-    {
-        let chName = ZationChannel.CUSTOM_CHANNEL_PREFIX + identifier;
-        if(member !== undefined){
-            chName += (ZationChannel.CUSTOM_CHANNEL_MEMBER_SEPARATOR + member);
-        }
-
-        const infoObj = {identifier,member};
-        await this.subChannel
-        (chName, ChannelTarget.Custom, infoObj,
-            async (input: PubData) => {
-                if(typeof input === 'object') {
-                    const event = input.e;
-                    const data = input.d;
-                    const sSid = input.sSid;
-
-                    await this.zation._getChannelReactionMainBox().forEachParallel(async (channelReactionBox: ChannelReactionBox) => {
-                        await channelReactionBox._triggerPub(
-                            ChannelTarget.Custom,
-                            event,
-                            data,
-                            infoObj,
-                            sSid
-                        );
-                    });
-                }
-        },retrySubForever);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    static getCustomChName(identifier?: string, member?: string): string {
-        if(identifier !== undefined) {
-            if(member !== undefined){
-                return ZationChannel.CUSTOM_CHANNEL_PREFIX + identifier +
-                    ZationChannel.CUSTOM_CHANNEL_MEMBER_SEPARATOR + member;
-            }
-            else {
-                return ZationChannel.CUSTOM_CHANNEL_PREFIX + identifier;
-            }
-        }
-        else {
-            return ZationChannel.CUSTOM_CHANNEL_PREFIX;
-        }
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    unsubscribeCustomCh(identifier?: string,member?: string,andDestroy: boolean = true): string[] {
-        return this.unsubscribeWithIndex(ChannelEngine.getCustomChName(identifier,member),andDestroy);
-    }
-
-    getSubCustomCh(identifier?: string,member?: string): string[] {
-        return this.getSubsWithIndex(ChannelEngine.getCustomChName(identifier,member));
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    hasSubCustomCh(identifier?: string,member?: string): boolean {
-        return this.getSubCustomCh(identifier,member).length > 0;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    unsubscribeWithIndex(channelName: string, andDestroy: boolean): string[]
-    {
-        const socket = this.zation.getSocket();
-        let unsubscribedChannels: string[] = [];
-        if(!!socket) {
-            const subs = socket.subscriptions(false);
-            for(let i = 0; i < subs.length; i++) {
-                if(subs[i].indexOf(channelName) !== -1) {
-                    this.unsubChannel(subs[i],andDestroy);
-                    unsubscribedChannels.push(subs[i]);
+        this._socket = socket;
+        this._socket.on(CH_CLIENT_OUTPUT_PUBLISH,(data: ChClientOutputPublishPackage) => {
+            const channelSet = this._channels.get(data.i);
+            if(channelSet) {
+                for(const channel of channelSet) {
+                    channel._triggerPublish(data.m,data.e,data.d);
                 }
             }
-        }
-        return unsubscribedChannels;
-    }
+        });
 
-    getSubsWithIndex(channelName: string): string[]
-    {
-        const socket = this.zation.getSocket();
-        let foundSubs: string[] = [];
-        if(!!socket) {
-            const subs = socket.subscriptions(false);
-            for(let i = 0; i < subs.length; i++) {
-                if(subs[i].indexOf(channelName) !== -1) {
-                    foundSubs.push(subs[i]);
+        this._socket.on(CH_CLIENT_OUTPUT_KICK_OUT,(data: ChClientOutputKickOutPackage) => {
+            const channelSet = this._channels.get(data.i);
+            if(channelSet) {
+                for(const channel of channelSet) {
+                    channel._triggerKickOut(data.m,data.c,data.d);
                 }
             }
-        }
-        return foundSubs;
-    }
+        });
 
-    static buildPubData(eventName: string,data: any): PubData
-    {
-        return {
-            e: eventName,
-            d: data
+        this._socket.on('disconnect',() => {
+            for(const channelSet of this._channels.values()) {
+                for(const channel of channelSet){
+                    channel._triggerConnectionLost();
+                }
+            }
+        });
+
+        const trySubscribePendingHandler = async () => {
+            const promises: Promise<void>[] = [];
+            const checkedChs = new Set<string>();
+            for(const channelSet of this._channels.values()) {
+                for(const channel of channelSet){
+                    promises.push(channel._resubscribe(checkedChs));
+                }
+            }
+            await Promise.all(promises);
         };
+        this._socket.on('connect', trySubscribePendingHandler);
+        this._socket.on('authenticate', trySubscribePendingHandler);
     }
 
-    private async publish(channelName: string,eventName: string,data: any,waitForConnection: WaitForConnectionOption): Promise<void>
-    {
-        await ConnectionUtils.checkConnection
-        (this.zation,waitForConnection,'To publish data.');
-
-        return new Promise<void>(async (resolve, reject) => {
-            this.zation.getSocket().publish(channelName,ChannelEngine.buildPubData(eventName,data),(err) => {
+    /**
+     * Tries to subscribe to a channel.
+     * If the subscription is successful it returns the chId and fullChId.
+     * @param identifier
+     * @param apiLevel
+     * @param member
+     * @param notTriggerChannel
+     */
+    trySubscribe(identifier: string,apiLevel?: number,member?: string,notTriggerChannel?: Channel): Promise<{chId: string, fullChId: string}> {
+        return new Promise((resolve, reject) => {
+            this._socket.emit(CHANNEL_START_INDICATOR,{
+                c: identifier,
+                ...(member !== undefined ? {m: member} : {}),
+                ...(apiLevel !== undefined ? {a: apiLevel} : {}),
+            } as ChannelSubscribeRequest,(err,chId: string) => {
                 if(err){
-                    if(err.name === 'TimeoutError'){
-                        reject(new TimeoutError(err.message));
-                    }
-                    else {
-                        reject(new PublishFailedError(err));
-                    }
+                    reject(new RawError('Subscription failed.', err));
                 }
-                else{
-                    resolve();
+                else {
+                    //tell others.
+                    const fullChId = buildFullChId(chId,member);
+                    const channelSet = this._channels.get(chId);
+                    if(channelSet){
+                        for(const channel of channelSet){
+                            if(channel === notTriggerChannel) continue;
+                            channel._triggerSubscribtion(fullChId);
+                        }
+                    }
+                    resolve({chId,fullChId});
                 }
-            });
+            })
         });
     }
 
-    pubUserCh(userId: string | number,event: string, data: any,waitForConnection: WaitForConnectionOption): Promise<void> {
-        return this.publish(ZationChannel.USER_CHANNEL_PREFIX + userId,event,data,waitForConnection);
+    register(chId: string,channel: Channel) {
+        let channelSet = this._channels.get(chId);
+        if(!channelSet) {
+            channelSet = new Set<Channel>();
+            this._channels.set(chId,channelSet);
+        }
+        channelSet.add(channel);
     }
 
-    pubAuthUserGroupCh(authUserGroup: string,event: string, data: any,waitForConnection: WaitForConnectionOption): Promise<void> {
-        return this.publish(ZationChannel.AUTH_USER_GROUP_PREFIX + authUserGroup,event,data,waitForConnection);
+    unregister(chId: string,channel: Channel) {
+        const channelSet = this._channels.get(chId);
+        if(channelSet){
+            channelSet.delete(channel);
+            if(channelSet.size === 0) {
+                this._channels.delete(chId);
+            }
+        }
     }
 
-    pubDefaultUserGroupCh(event: string, data: any,waitForConnection: WaitForConnectionOption): Promise<void> {
-        return this.publish(ZationChannel.DEFAULT_USER_GROUP,event,data,waitForConnection);
+    unsubsribe(fullChId: string, sourceChannel: Channel)
+    {
+        for(const channelSet of this._channels.values()) {
+            for(const channel of channelSet){
+                if(channel !== sourceChannel && channel._hasSub(fullChId)) return;
+            }
+        }
+        this._socket.emit(fullChId,[ChClientInputAction.Unsubscribe] as ChClientInputPackage);
     }
 
-    pubAllCh(event: string, data: any,waitForConnection: WaitForConnectionOption): Promise<void> {
-        return this.publish(ZationChannel.ALL,event,data,waitForConnection);
-    }
-
-    pubPanelInCh(event: string, data: any,waitForConnection: WaitForConnectionOption): Promise<void> {
-        return this.publish(ZationChannel.PANEL_IN,event,data,waitForConnection);
-    }
-
-    pubCustomCh({identifier,member}: {identifier: string,member?: string},event: string, data: any,
-                      waitForConnection: WaitForConnectionOption): Promise<void> {
-        return this.publish(ChannelEngine.getCustomChName(identifier,member),event,data,waitForConnection);
+    /**
+     * Unsubscribes all channels.
+     */
+    unsubscribeAllChannels() {
+        for(const channelSet of this._channels.values()) {
+            for(const channel of channelSet){
+                channel.unsubscribe();
+            }
+        }
     }
 }

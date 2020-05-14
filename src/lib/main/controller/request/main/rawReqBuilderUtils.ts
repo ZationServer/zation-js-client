@@ -4,40 +4,35 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {ControllerReq, ControllerRequestType} from "../../controllerDefinitions";
+import {
+    ControllerStandardReq,
+    ControllerValidationCheckReq,
+    SpecialController,
+    ValidationCheckPair
+} from "../../controllerDefinitions";
 
 export function buildNormalControllerReq
 (
+    controller: string | SpecialController,
     data: any,
-    controller: string,
-    isSystemController: boolean,
-    apiLevel: number | undefined
-): ControllerReq
+    apiLevel: number | undefined): ControllerStandardReq
 {
     return {
-        ...(apiLevel ? {al: apiLevel}: {}),
-        [isSystemController ? 'sc': 'c']: controller,
-        ...(data !== undefined ? {i: data} : {})
+        c: controller,
+        ...(apiLevel ? {a: apiLevel}: {}),
+        ...(data !== undefined ? {d: data} : {})
     };
 }
 
-export function buildAuthControllerReq(data: any, apiLevel: number | undefined): ControllerReq
+export function buildValidationCheckControllerReq
+(
+    controller: string | SpecialController,
+    checks: ValidationCheckPair[],
+    apiLevel: number | undefined): ControllerValidationCheckReq
 {
     return {
-        t: ControllerRequestType.Auth,
-        ...(apiLevel ? {al: apiLevel}: {}),
-        ...(data !== undefined ? {i: data} : {})
-    };
-}
-
-export function buildValidationCheckControllerReq(input: object | any[], controller: string,
-    isSystemController: boolean,
-    apiLevel: number | undefined): ControllerReq
-{
-    return {
-        t: ControllerRequestType.ValidationCheck,
-        ...(apiLevel ? {al: apiLevel}: {}),
-        [isSystemController ? 'sc': 'c']: controller,
-        i: input
+        c: controller,
+        ...(apiLevel ? {a: apiLevel}: {}),
+        v: checks
     };
 }

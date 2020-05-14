@@ -65,17 +65,13 @@ export class ZationConfig
             secure: defaultSecure,
             rejectUnauthorized: false,
             multiplex: true,
-            autoAllChSub: true,
-            autoUserChSub: true,
-            autoDefaultUserGroupChSub: true,
-            autoAuthUserGroupChSub: true,
             handshakeVariables: {},
             useAllServerSettings: false,
             autoReconnect: true,
             autoReconnectOptions: {},
-            requestTimeout: 10000,
-            waitForConnection: false,
-            waitForDbConnection: false
+            responseTimeout: 10000,
+            connectTimeout: 3000,
+            databoxConnectTimeout: 3000
         };
     }
 
@@ -113,16 +109,11 @@ export class ZationConfig
         return this.config.debug;
     }
 
-    setConfig(key: any,value: any): void
-    {
+    setConfig(key: any,value: any): void {
         this._config[key] = value;
     }
 
-    isConfig(key: any): boolean
-    {
+    isConfig(key: any): boolean {
         return this._config[key] !== undefined;
     }
-
 }
-
-

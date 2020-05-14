@@ -9,7 +9,6 @@ import {Zation}                         from "./lib/core/zation";
 import {Zation as Client}               from "./lib/core/zation";
 import {Zation as ZationClient}         from "./lib/core/zation";
 import {ResponseReactionBox}            from "./lib/main/controller/response/responseReactionBox";
-import {ChannelReactionBox}             from "./lib/main/channel/channelReactionBox";
 import {EventReactionBox}               from "./lib/main/event/eventReactionBox";
 import {StandardRequest}                from "./lib/main/controller/request/main/standardRequest";
 import { ValidationCheckRequest}        from "./lib/main/controller/request/main/validationCheckRequest";
@@ -28,20 +27,15 @@ import {AuthenticationRequiredError}    from "./lib/main/error/authenticationReq
 import {ConnectionAbortError}           from "./lib/main/error/connectionAbortError";
 import {ConnectionRequiredError}        from "./lib/main/error/connectionRequiredError";
 import {DeauthenticationFailedError}    from "./lib/main/error/deauthenticationFailedError";
-import {DeauthenticationRequiredError}  from "./lib/main/error/deauthenticationRequiredError";
-import {AuthUserGroupRequiredError}     from "./lib/main/error/authUserGroupRequiredError";
-import {UserIdRequiredError}            from "./lib/main/error/userIdRequiredError";
-import {PublishFailedError}             from "./lib/main/error/publishFailedError";
-import {TimeoutError}                   from "./lib/main/error/timeoutError";
+import {TimeoutError, TimeoutType}      from "./lib/main/error/timeoutError";
 import {SignAuthenticationFailedError}  from "./lib/main/error/signAuthenticationFailedError";
-import {SubscribeFailedError}           from "./lib/main/error/subscribeFailedError";
 import {Response}                       from "./lib/main/controller/response/response";
 import {ZationSaver}                    from "./lib/core/zationSaver";
 import {ZationClientNotFoundError}      from "./lib/main/error/zationClientNotFoundError";
 import {AbstractRequestBuilder}         from "./lib/main/controller/request/fluent/abstractRequestBuilder";
 import {AuthRequestBuilder}             from "./lib/main/controller/request/fluent/authRequestBuilder";
-import {RequestBuilder}                 from "./lib/main/controller/request/fluent/requestBuilder";
-import {ValidationRequestBuilder}       from "./lib/main/controller/request/fluent/validationRequestBuilder";
+import {StandardRequestBuilder}         from "./lib/main/controller/request/fluent/standardRequestBuilder";
+import {ValidationCheckRequestBuilder}  from "./lib/main/controller/request/fluent/validationCheckRequestBuilder";
 import {ErrorFilterEngine}              from "./lib/main/backError/errorFilterEngine";
 import {PresetBackErrorLib}             from "./lib/main/backError/presetBackErrorLib";
 import {BackErrorFilter}                from "./lib/main/backError/backErrorFilter";
@@ -60,6 +54,9 @@ import DbError                          from "./lib/main/databox/dbError";
 import {AbortSignal, AbortTrigger}      from "./lib/main/utils/connectionUtils";
 import {AuthRequest}                    from "./lib/main/controller/request/main/authRequest";
 import {ValidationCheckPair}            from "./lib/main/controller/controllerDefinitions";
+import Package                          from "./lib/main/receiver/package/main/package";
+import PackageBuilder                   from "./lib/main/receiver/package/fluent/packageBuilder";
+import Channel, {UnsubscribeReason}     from "./lib/main/channel/channel";
 
 // noinspection JSUnusedGlobalSymbols
 /**
@@ -68,7 +65,7 @@ import {ValidationCheckPair}            from "./lib/main/controller/controllerDe
  * @param options
  * @param reactionBox
  */
-const create = (options?: Options,...reactionBox: (ResponseReactionBox | ChannelReactionBox | EventReactionBox)[]): Zation => {
+const create = (options?: Options,...reactionBox: (ResponseReactionBox | EventReactionBox)[]): Zation => {
     return new ZationClient(options,...reactionBox);
 };
 
@@ -88,10 +85,12 @@ export {
     save,
     load,
     Options,
+    Package,
     StandardRequest,
     AuthRequest,
     ValidationCheckRequest,
-    ChannelReactionBox,
+    Channel,
+    UnsubscribeReason,
     ResponseReactionBox,
     EventReactionBox,
     Response,
@@ -100,18 +99,15 @@ export {
     ConnectionAbortError,
     ConnectionRequiredError,
     DeauthenticationFailedError,
-    DeauthenticationRequiredError,
-    AuthUserGroupRequiredError,
-    UserIdRequiredError,
-    PublishFailedError,
     TimeoutError,
+    TimeoutType,
     SignAuthenticationFailedError,
-    SubscribeFailedError,
     ZationClientNotFoundError,
+    PackageBuilder,
     AbstractRequestBuilder,
     AuthRequestBuilder,
-    RequestBuilder,
-    ValidationRequestBuilder,
+    StandardRequestBuilder,
+    ValidationCheckRequestBuilder,
     ErrorFilterEngine,
     PresetBackErrorLib,
     BackErrorFilter,

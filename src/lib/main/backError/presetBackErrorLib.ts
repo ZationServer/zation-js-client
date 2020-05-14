@@ -1185,30 +1185,15 @@ export abstract class PresetBackErrorLib<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for controllerNotFound.
+     * Preset for unknownController.
      * The BackError error can be thrown when the controller is not found.
      * More info checks you need to do by yourself.
      * Possibilities are:
-     * controller
+     * identifier
      */
-    controllerNotFound(): T {
+    unknownController(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.InputError,'controllerNotFound'));
-        return this.self();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Preset for systemControllerNotFound.
-     * The BackError error can be thrown when the system controller is not found.
-     * More info checks you need to do by yourself.
-     * Possibilities are:
-     * controller
-     */
-    systemControllerNotFound(): T {
-        this._presetAdd(this._zationErrorBuild
-        (ErrorType.InputError,'systemControllerNotFound'));
+        (ErrorType.InputError,'unknownController'));
         return this.self();
     }
 
@@ -1426,12 +1411,12 @@ export abstract class PresetBackErrorLib<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for wrongPanelAuthData.
-     * The BackError error can be thrown if the panel authData is wrong.
+     * Preset for invalidPanelAuthData.
+     * The BackError error can be thrown if the panel authData is invalid.
      */
-    wrongPanelAuthData(): T {
+    invalidPanelAuthData(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.AuthError,'wrongPanelAuthData'));
+        (ErrorType.AuthError,'invalidPanelAuthData'));
         return this.self();
     }
 
@@ -1445,19 +1430,6 @@ export abstract class PresetBackErrorLib<T>
     panelIsNotActivated(): T {
         this._presetAdd(this._zationErrorBuild
         (ErrorType.InputError,'panelIsNotActivated'));
-        return this.self();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Preset for authStartActive.
-     * The BackError error can be thrown if the server is in auth start mode
-     * and you send an normal request.
-     */
-    authStartActive(): T {
-        this._presetAdd(this._zationErrorBuild
-        (ErrorType.TimeError,'authStartActive'));
         return this.self();
     }
 
@@ -1482,27 +1454,27 @@ export abstract class PresetBackErrorLib<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for wrongInputDataStructure.
-     * The BackError error can be thrown if the request has a wrong structure.
+     * Preset for invalidRequest.
+     * The BackError error can be thrown if the request is invalid.
      */
-    wrongInputDataStructure(): T {
+    invalidRequest(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.InputError,'wrongInputDataStructure'));
+        (ErrorType.InputError,'invalidRequest'));
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for wrongInputTypeInParamBasedInput.
+     * Preset for invalidInputTypeInParamBasedInput.
      * The BackError error can be thrown if the input in a param based input configuration is not an array or object.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * inputType
      */
-    wrongInputTypeInParamBasedInput(): T {
+    invalidInputTypeInParamBasedInput(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.InputError,'wrongInputTypeInParamBasedInput'));
+        (ErrorType.InputError,'invalidInputTypeInParamBasedInput'));
         return this.self();
     }
 
@@ -1521,16 +1493,16 @@ export abstract class PresetBackErrorLib<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for wrongValidationCheckStructure.
-     * The BackError error can be thrown if the input validation check has a wrong structure.
-     * Can only thrown by an validation request.
+     * Preset for invalidValidationCheckStructure.
+     * The BackError error can be thrown if the input validation check has a invalid structure.
+     * Can only thrown by an validation check request.
      * More info checks you need to do by yourself.
      * Possibilities are:
      * checkIndex
      */
-    wrongValidationCheckStructure(): T {
+    invalidValidationCheckStructure(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.InputError,'wrongValidationCheckStructure'));
+        (ErrorType.InputError,'invalidValidationCheckStructure'));
         return this.self();
     }
 

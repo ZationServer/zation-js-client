@@ -4,8 +4,9 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {BaseRequest}            from "./baseRequest";
-import {buildAuthControllerReq} from "./rawReqBuilderUtils";
+import {BaseRequest}              from "./baseRequest";
+import {buildNormalControllerReq} from "./rawReqBuilderUtils";
+import {SpecialController}        from "../../controllerDefinitions";
 
 export class AuthRequest extends BaseRequest
 {
@@ -14,6 +15,6 @@ export class AuthRequest extends BaseRequest
     }
 
     build(): any {
-        return buildAuthControllerReq(this.data,this.apiLevel);
+        return buildNormalControllerReq(SpecialController.AuthController,this.data,this.apiLevel);
     }
 }

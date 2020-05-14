@@ -18,38 +18,36 @@ export interface DataboxConnectReq {
     /**
      * apiLevel
      */
-    al?: number,
+    a?: number,
     /**
      * token
+     * If defined will be used instead of
+     * creating a new token with initData.
      */
     t?: string,
     /**
      * initInput
      */
-    ii?: any
+    i?: any
 }
 
 export interface DataboxConnectRes {
     /**
-     * Last cud id
-     */
-    ci: string,
-    /**
-     * Used the token
-     */
-    ut: boolean,
-    /**
      * Input key
      */
-    i: string,
+    0: string,
     /**
      * Output key
      */
-    o: string,
+    1: string,
+    /**
+     * Last cud id
+     */
+    2: string,
     /**
      * Parallel fetching
      */
-    pf: boolean
+    3: boolean
 }
 
 export const DATABOX_START_INDICATOR = 'D>';

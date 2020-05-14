@@ -4,51 +4,52 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {ZationOptions}               from "./zationOptions";
-import {OnHandlerFunction, Socket}   from "../main/sc/socket";
-import {Events}                      from "../main/constants/events";
-import {SystemController}            from "../main/constants/systemController";
+import {ZationOptions}                              from "./zationOptions";
+import {OnHandlerFunction, Socket}                  from "../main/sc/socket";
+import {Events}                                     from "../main/constants/events";
+import {SystemController}                           from "../main/constants/systemController";
 import {ZATION_CUSTOM_EVENT_NAMESPACE, ZationToken} from "../main/constants/internal";
-import ConnectionUtils, {WaitForConnectionOption}                from "../main/utils/connectionUtils";
-import {ChannelEngine}               from "../main/channel/channelEngine";
-import {ZationConfig}                from "../main/config/zationConfig";
-import {MultiList}                         from "../main/container/multiList";
+import ConnectionUtils, {ConnectTimeoutOption}      from "../main/utils/connectionUtils";
+import {ChannelEngine}                              from "../main/channel/channelEngine";
+import {ZationConfig}                               from "../main/config/zationConfig";
+import {MultiList}                                  from "../main/container/multiList";
 // noinspection ES6PreferShortImport
-import {ResponseReactionBox}         from "../main/controller/response/responseReactionBox";
+import {ResponseReactionBox}           from "../main/controller/response/responseReactionBox";
 // noinspection ES6PreferShortImport
-import {ChannelReactionBox}          from "../main/channel/channelReactionBox";
+import {StandardRequestBuilder}        from "../main/controller/request/fluent/standardRequestBuilder";
 // noinspection ES6PreferShortImport
-import {RequestBuilder}              from "../main/controller/request/fluent/requestBuilder";
+import {AuthRequestBuilder}            from "../main/controller/request/fluent/authRequestBuilder";
 // noinspection ES6PreferShortImport
-import {AuthRequestBuilder}          from "../main/controller/request/fluent/authRequestBuilder";
+import {ValidationCheckRequestBuilder} from "../main/controller/request/fluent/validationCheckRequestBuilder";
 // noinspection ES6PreferShortImport
-import {ValidationRequestBuilder}    from "../main/controller/request/fluent/validationRequestBuilder";
+import {ConnectionAbortError}       from "../main/error/connectionAbortError";
+import {Logger}                     from "../main/logger/logger";
+import {ObjectPath}                 from "../main/utils/objectPath";
 // noinspection ES6PreferShortImport
-import {ConnectionAbortError}        from "../main/error/connectionAbortError";
-import {Logger}                      from "../main/logger/logger";
-import {ObjectPath}                  from "../main/utils/objectPath";
+import {AuthenticationFailedError}  from "../main/error/authenticationFailedError";
 // noinspection ES6PreferShortImport
-import {ConnectionRequiredError}     from "../main/error/connectionRequiredError";
+import {EventReactionBox}           from "../main/event/eventReactionBox";
 // noinspection ES6PreferShortImport
-import {AuthenticationFailedError}   from "../main/error/authenticationFailedError";
+import {StandardRequest}            from "../main/controller/request/main/standardRequest";
 // noinspection ES6PreferShortImport
-import {EventReactionBox}            from "../main/event/eventReactionBox";
+import {Response}                   from "../main/controller/response/response";
+import {AuthEngine}                 from "../main/auth/authEngine";
+import {ModifiedScClient}           from "../main/sc/modifiedScClient";
 // noinspection ES6PreferShortImport
-import {StandardRequest}             from "../main/controller/request/main/standardRequest";
+import {TimeoutError, TimeoutType}  from "../main/error/timeoutError";
+import DataboxBuilder               from "../main/databox/databoxBuilder";
+import perf                         from "../main/utils/perf";
+import {BaseRequest}                from "../main/controller/request/main/baseRequest";
 // noinspection ES6PreferShortImport
-import {Response}                    from "../main/controller/response/response";
-import {AuthEngine}                  from "../main/auth/authEngine";
-import {ModifiedScClient}            from "../main/sc/modifiedScClient";
-const stringify                     = require("fast-stringify");
+import {AuthRequest}                            from "../main/controller/request/main/authRequest";
+import {SpecialController, ValidationCheckPair} from "../main/controller/controllerDefinitions";
+import {controllerRequestSend}                  from "../main/controller/controllerSendUtils";
+import Package, {isPackage}                     from "../main/receiver/package/main/package";
+import {receiverPackageSend}                    from "../main/receiver/receiverSendeUtils";
+import PackageBuilder                           from "../main/receiver/package/fluent/packageBuilder";
+import Channel                                  from "../main/channel/channel";
 
-// noinspection ES6PreferShortImport
-import {TimeoutError}                from "../main/error/timeoutError";
-import DataboxBuilder                from "../main/databox/databoxBuilder";
-import perf                          from "../main/utils/perf";
-import {BaseRequest} from "../main/controller/request/main/baseRequest";
-import {AuthRequest} from "../main/controller/request/main/authRequest";
-import {ValidationCheckPair} from "../main/controller/controllerDefinitions";
-import {wsSend} from "../main/controller/sendUtils";
+const stringify                     = require("fast-stringify");
 
 export class Zation
 {
@@ -58,16 +59,14 @@ export class Zation
 
     //Responds
     private readonly responseReactionMainBox: MultiList<ResponseReactionBox>;
-    private readonly channelReactionMainBox: MultiList<ChannelReactionBox>;
     private readonly eventReactionMainBox: MultiList<EventReactionBox>;
 
     //User system reaction boxes
     private readonly userResponseReactionBox: ResponseReactionBox;
-    private readonly userChannelReactionBox: ChannelReactionBox;
     private readonly userEventReactionBox: EventReactionBox;
 
     //webSockets
-    private socket: Socket;
+    private _socket: Socket;
 
     /**
      * Indicates if the current connection is the first connection of the socket.
@@ -81,35 +80,32 @@ export class Zation
      * @param settings
      * @param reactionBox
      */
-    constructor(settings?: ZationOptions,...reactionBox: (ResponseReactionBox | ChannelReactionBox | EventReactionBox)[])
+    constructor(settings?: ZationOptions,...reactionBox: (ResponseReactionBox | EventReactionBox)[])
     {
         //config
         this.zc = new ZationConfig(settings);
 
-        this.channelEngine = new ChannelEngine(this);
-        this.authEngine = new AuthEngine(this,this.channelEngine);
+        this.channelEngine = new ChannelEngine();
+        this.authEngine = new AuthEngine(this);
 
         //Responds
         this.responseReactionMainBox = new MultiList<ResponseReactionBox>();
-        this.channelReactionMainBox = new MultiList<ChannelReactionBox>();
         this.eventReactionMainBox = new MultiList<EventReactionBox>();
 
         //user system reaction boxes
         this.userResponseReactionBox = new ResponseReactionBox();
         this.userResponseReactionBox._link(this);
-        this.userChannelReactionBox = new ChannelReactionBox();
-        this.userChannelReactionBox._link(this);
         this.userEventReactionBox = new EventReactionBox();
         this.userEventReactionBox._link(this);
 
         this.responseReactionMainBox.addFixedItem(this.userResponseReactionBox);
-        this.channelReactionMainBox.addFixedItem(this.userChannelReactionBox);
         this.eventReactionMainBox.addFixedItem(this.userEventReactionBox);
         this.addReactionBox(...reactionBox);
 
         this._buildWsSocket();
         this._registerSocketEvents();
-        this.authEngine.connectToSocket(this.socket);
+        this.authEngine.connectToSocket(this._socket);
+        this.channelEngine.connectToSocket(this._socket);
     }
 
     //Part Responds
@@ -121,7 +117,6 @@ export class Zation
     removeAllReactionBoxes(): void
     {
         this.responseReactionMainBox.removeAllItems();
-        this.channelReactionMainBox.removeAllItems();
         this.eventReactionMainBox.removeAllItems();
     }
 
@@ -133,19 +128,16 @@ export class Zation
      * The system response reaction box is the box that is returned by the method zation.responseReact().
      * The system response reaction box should be used to catch the remaining errors.
      * @example
-     * addReactionBox(myResponseReactionBox,myChannelReactionBox,myEventReactionBox);
+     * addReactionBox(myResponseReactionBox,myEventReactionBox);
      * @param reactionBox
      */
-    addReactionBox(...reactionBox: (ResponseReactionBox | ChannelReactionBox | EventReactionBox)[]): void
+    addReactionBox(...reactionBox: (ResponseReactionBox| EventReactionBox)[]): void
     {
         for(let i = 0; i < reactionBox.length; i++) {
             const box = reactionBox[i];
             box._link(this);
             if(box instanceof ResponseReactionBox) {
                 this.responseReactionMainBox.addItem(box);
-            }
-            else if(box instanceof ChannelReactionBox) {
-                this.channelReactionMainBox.addItem(box);
             }
             else {
                 this.eventReactionMainBox.addItem(box);
@@ -158,21 +150,15 @@ export class Zation
      * @description
      * Remove a reactionBox or more reactionBoxes.
      * @example
-     * removeReactionBox(myResponseReactionBox,myChannelReactionBox,myEventReactionBox);
+     * removeReactionBox(myResponseReactionBox,myEventReactionBox);
      * @param reactionBox
      */
-    removeReactionBox(...reactionBox: (ResponseReactionBox | ChannelReactionBox | EventReactionBox)[]): void
+    removeReactionBox(...reactionBox: (ResponseReactionBox | EventReactionBox)[]): void
     {
         for(let i = 0; i < reactionBox.length; i++) {
             const box = reactionBox[i];
             if(box instanceof ResponseReactionBox) {
                 if(this.responseReactionMainBox.removeItem(box)){
-                    box._unlink();
-                }
-            }
-
-            else if(box instanceof ChannelReactionBox) {
-                if(this.channelReactionMainBox.removeItem(box)){
                     box._unlink();
                 }
             }
@@ -188,15 +174,6 @@ export class Zation
     }
 
     //Part Reaction Add
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns the system fixed user channel reaction box.
-     */
-    channelReact(): ChannelReactionBox {
-        return this.userChannelReactionBox;
-    }
-
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
@@ -217,19 +194,6 @@ export class Zation
     }
 
     //Part Reaction Boxes
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns a new channel reaction box
-     * and add this box to the client.
-     */
-    newChannelReactionBox(addReactionBoxToClient: boolean = true): ChannelReactionBox {
-        const box = new ChannelReactionBox();
-        if(addReactionBoxToClient){this.addReactionBox(box);}
-        return box;
-    }
-
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
@@ -264,13 +228,12 @@ export class Zation
      * @example
      * const ping = await ping();
      * @throws ConnectionRequiredError,TimeoutError
-     * @param waitForConnection
-     * With the WaitForConnection option, you can activate that the socket is
+     * @param connectTimeout
+     * With the ConnectTimeout option, you can activate that the socket is
      * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options.
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
-     * For the other options, it is also recommended to have activated the auto-reconnect.
      * Null: The socket will try to connect (if it is not connected) and
      * waits until the connection is made, then it continues the action.
      * Number: Same as null, but now you can specify a timeout (in ms) of
@@ -278,10 +241,10 @@ export class Zation
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
-    async ping(waitForConnection: WaitForConnectionOption = undefined): Promise<number>
+    async ping(connectTimeout: ConnectTimeoutOption = undefined): Promise<number>
     {
-        const req = new StandardRequest(SystemController.Ping,{},true);
-        req.setWaitForConnection(waitForConnection);
+        const req = new StandardRequest(SystemController.Ping);
+        req.setConnectTimeout(connectTimeout);
         const start = perf.now();
         await this.send(req);
         return perf.now() - start;
@@ -323,13 +286,12 @@ export class Zation
      * AuthenticationFailedError
      * TimeoutError
      * @param authData
-     * @param waitForConnection
-     * With the WaitForConnection option, you can activate that the socket is
+     * @param connectTimeout
+     * With the ConnectTimeout option, you can activate that the socket is
      * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options.
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
-     * For the other options, it is also recommended to have activated the auto-reconnect.
      * Null: The socket will try to connect (if it is not connected) and
      * waits until the connection is made, then it continues the action.
      * Number: Same as null, but now you can specify a timeout (in ms) of
@@ -337,10 +299,10 @@ export class Zation
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
-    async authenticate(authData: object = {},waitForConnection: WaitForConnectionOption = undefined): Promise<Response>
+    async authenticate(authData: object = {},connectTimeout: ConnectTimeoutOption = undefined): Promise<Response>
     {
         const req = new AuthRequest(authData);
-        req.setWaitForConnection(waitForConnection);
+        req.setConnectTimeout(connectTimeout);
         const resp = await this.send(req,false);
         if(resp.isSuccessful()) {
             if(!this.isAuthenticated()) {
@@ -362,13 +324,12 @@ export class Zation
      * Authenticate this connection by using an signed token.
      * @throws ConnectionRequiredError, SignAuthenticationFailedError, TimeoutError,AbortSignal
      * @param signToken
-     * @param waitForConnection
-     * With the WaitForConnection option, you can activate that the socket is
+     * @param connectTimeout
+     * With the ConnectTimeout option, you can activate that the socket is
      * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options.
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
-     * For the other options, it is also recommended to have activated the auto-reconnect.
      * Null: The socket will try to connect (if it is not connected) and
      * waits until the connection is made, then it continues the action.
      * Number: Same as null, but now you can specify a timeout (in ms) of
@@ -376,8 +337,8 @@ export class Zation
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
-    async signAuthenticate(signToken: string,waitForConnection: WaitForConnectionOption = undefined): Promise<void> {
-        await this.authEngine.signAuthenticate(signToken,waitForConnection);
+    async signAuthenticate(signToken: string,connectTimeout: ConnectTimeoutOption = undefined): Promise<void> {
+        await this.authEngine.signAuthenticate(signToken,connectTimeout);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -428,16 +389,13 @@ export class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns an request helper.
-     * Where you can easily build a standard
-     * request with reactions and send it.
+     * Returns an StandardRequestBuilder.
+     * The StandardRequestBuilder can be used to easily build
+     * a standard request with reactions and send it.
      * The default values are:
-     * Controller: ''
      * Data: undefined
-     * SystemController: false
      * @example
-     * await zation.request()
-     * .controller('sendMessage')
+     * await zation.request('sendMessage')
      * .data({msg: 'hallo'})
      * .catchError()
      * .presets()
@@ -449,18 +407,16 @@ export class Zation
      * @param controller
      * @param data
      */
-    request(controller: string = '',data: any = undefined): RequestBuilder {
-        const helper = new RequestBuilder(this);
-        helper.controller(controller);
-        helper.data(data);
-        return helper;
+    request(controller: string | SpecialController, data: any = undefined): StandardRequestBuilder {
+        return new StandardRequestBuilder(this,controller,data);
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns an auth request helper.
-     * Where you can easily build an auth request with reactions and send it.
+     * Returns an AuthRequestBuilder.
+     * The AuthRequestBuilder can be used to easily build
+     * an auth request with reactions and send it.
      * This is another way to authenticate this client.
      * The default values are:
      * AuthData: undefined
@@ -484,15 +440,14 @@ export class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns an validation request helper.
-     * Where you can easily build a validation check request with reactions and send it.
+     * Returns an ValidationCheckRequestBuilder.
+     * The ValidationCheckRequestBuilder can be used to easily build
+     * a validation check request with reactions and send it.
      * This is useful to validate individual controller data.
      * The default values are:
-     * Controller: ''
      * Checks: []
      * @example
      * await zation.validationRequest()
-     * .controller('sendMessage')
      * .check('msg','hallo')
      * .catchError()
      * .presets()
@@ -504,11 +459,26 @@ export class Zation
      * @param controller
      * @param checks
      */
-    validationRequest(controller: string = '',...checks: ValidationCheckPair[]): ValidationRequestBuilder {
-        const helper = new ValidationRequestBuilder(this);
-        helper.controller(controller);
+    validationRequest(controller: string | SpecialController,...checks: ValidationCheckPair[]): ValidationCheckRequestBuilder {
+        const helper = new ValidationCheckRequestBuilder(this,controller);
         helper.checks(...checks);
         return helper;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns a PackageBuilder.
+     * The PackageBuilder can be used to easily build a package send it to a receiver.
+     * @example
+     * await transmit('movement')
+     * .data('up')
+     * .send()
+     * @param receiver
+     * @param data
+     */
+    transmit(receiver: string,data: any = undefined): PackageBuilder {
+       return new PackageBuilder(this,receiver,data);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -530,7 +500,38 @@ export class Zation
         return new DataboxBuilder(this,identifier,member);
     }
 
+    /**
+     * Returns a new Channel for the specific identifier with an API level.
+     * The Channel can be used to subscribe to it or to subscribe to specific
+     * members in case of a ChannelFamily and listen to publishes.
+     * @param identifier
+     * @param apiLevel
+     * The API level of this client for the Channel subscription request.
+     * If you don't provide one, the server will use the connection API
+     * level or the default API level.
+     */
+    channel(identifier: string,apiLevel?: number): Channel {
+        return new Channel(this,identifier,apiLevel);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Unsubscribe all channels.
+     * Can be used to securely clear all resources.
+     */
+    unsubscribeAllChannels() {
+       this.channelEngine.unsubscribeAllChannels();
+    }
+
     //Part Send
+    /**
+     * @description
+     * Sends a Package.
+     * @throws ConnectionRequiredError,TimeoutError,AbortSignal
+     * @return Response
+     * @param pack
+     */
+    send(pack: Package): Promise<void>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
@@ -542,23 +543,29 @@ export class Zation
      * the ResponseReactionBoxes that are passed in will be triggered before.
      * @throws ConnectionRequiredError,TimeoutError,AbortSignal
      * @return Response
-     * @param baseRequest
+     * @param request
      * @param triggerClientBoxes
-     * @param responseReactionBox
+     * @param responseReactionBoxes
      */
-    async send(baseRequest: BaseRequest, triggerClientBoxes: boolean = false, ...responseReactionBox: ResponseReactionBox[]): Promise<Response> {
-        const response = await wsSend(this,baseRequest.build(),baseRequest.getTimeout(),
-            baseRequest.getWaitForConnection());
-
-        for(let i = 0; i < responseReactionBox.length; i++) {
-            await responseReactionBox[i]._trigger(response);
+    async send(request: BaseRequest,triggerClientBoxes?: boolean,responseReactionBoxes?: ResponseReactionBox[]): Promise<Response>
+    async send(value: BaseRequest | Package,triggerClientBoxes: boolean = false,responseReactionBoxes: ResponseReactionBox[] = []): Promise<Response | void> {
+        if(isPackage(value)) {
+            return receiverPackageSend(this,value.build(),value.getConnectTimeout());
         }
+        else {
+            const response = await controllerRequestSend(this,value.build(),value.getResponseTimeout(),
+                value.getConnectTimeout());
 
-        if(triggerClientBoxes) {
-            await this._triggerResponseReactions(response);
+            for(let i = 0; i < responseReactionBoxes.length; i++) {
+                await responseReactionBoxes[i]._trigger(response);
+            }
+
+            if(triggerClientBoxes) {
+                await this._triggerResponseReactions(response);
+            }
+            return response;
         }
-        return response;
-    };
+    }
 
     // Part Connection
 
@@ -567,8 +574,8 @@ export class Zation
      * @description
      * Returns the current socket.
      */
-    getSocket(): Socket {
-        return this.socket;
+    get socket(): Socket {
+        return this._socket;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -577,7 +584,7 @@ export class Zation
      * Returns if the socket is connected to the server.
      */
     isConnected(): boolean {
-        return this.socket.state === this.socket.OPEN;
+        return this._socket.state === this._socket.OPEN;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -603,29 +610,29 @@ export class Zation
 
             if(timeout !== null){
                 timeoutHandler = setTimeout(() => {
-                    this.socket.off('connect',connectListener);
-                    this.socket.off('connectAbort',connectAbortListener);
-                    reject(new TimeoutError('To connect to the server.',true));
+                    this._socket.off('connect',connectListener);
+                    this._socket.off('connectAbort',connectAbortListener);
+                    reject(new TimeoutError(TimeoutType.connectTiemeout));
                 },timeout);
             }
 
             connectListener = () => {
-                this.socket.off('connect',connectListener);
-                this.socket.off('connectAbort',connectAbortListener);
+                this._socket.off('connect',connectListener);
+                this._socket.off('connectAbort',connectAbortListener);
                 clearInterval(timeoutHandler);
                 resolve();
             };
             connectAbortListener = (err) => {
-                this.socket.off('connect',connectListener);
-                this.socket.off('connectAbort',connectAbortListener);
+                this._socket.off('connect',connectListener);
+                this._socket.off('connectAbort',connectAbortListener);
                 clearTimeout(timeoutHandler);
                 reject(new ConnectionAbortError(err));
             };
 
-            this.socket.on('connect',connectListener);
-            this.socket.on('connectAbort',connectAbortListener);
+            this._socket.on('connect',connectListener);
+            this._socket.on('connectAbort',connectAbortListener);
 
-            this.socket.connect();
+            this._socket.connect();
         });
     }
 
@@ -641,7 +648,7 @@ export class Zation
      */
     disconnect(code?: number, data: object = {}): void {
         data['#internal-fromZationClient'] = true;
-        this.socket.disconnect(code,data);
+        this._socket.disconnect(code,data);
         this.firstConnection = true;
     }
 
@@ -659,7 +666,7 @@ export class Zation
 
     private _registerSocketEvents()
     {
-        this.socket.on('connect',async () => {
+        this._socket.on('connect',async () => {
             if(this.firstConnection) {
                 if(this.zc.isDebug()) {
                     Logger.printInfo('Client is first connected.');
@@ -676,14 +683,14 @@ export class Zation
             this.firstConnection = false;
         });
 
-        this.socket.on('error', async (err) => {
+        this._socket.on('error', async (err) => {
             if(this.zc.isDebug()) {
                 Logger.printError(err);
             }
             await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.Error,err));
         });
 
-        this.socket.on('disconnect',async (code,data) =>
+        this._socket.on('disconnect',async (code,data) =>
         {
             const fromClient: any = data ? data['#internal-fromZationClient']: false;
             if(typeof fromClient === "boolean" && fromClient){
@@ -701,7 +708,7 @@ export class Zation
             await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.Disconnect,fromClient,code,data));
         });
 
-        this.socket.on('deauthenticate',async (oldSignedJwtToken,fromClient) =>
+        this._socket.on('deauthenticate',async (oldSignedJwtToken,fromClient) =>
         {
             if(fromClient){
                 if(this.zc.isDebug()) {
@@ -718,25 +725,25 @@ export class Zation
             await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.Deauthenticate,!!fromClient,oldSignedJwtToken));
         });
 
-        this.socket.on('connectAbort',async (code,data) => {
+        this._socket.on('connectAbort',async (code,data) => {
             if(this.zc.isDebug()) {
                 Logger.printInfo(`Client connect aborted. Code:'${code}' Data:'${data}'`);
             }
             await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.ConnectAbort,code,data));
         });
 
-        this.socket.on('connecting', async () => {
+        this._socket.on('connecting', async () => {
             if(this.zc.isDebug()) {
                 Logger.printInfo('Client is connecting.');
             }
             await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.Connecting));
         });
 
-        this.socket.on('close', async (code,data) => {
+        this._socket.on('close', async (code,data) => {
             await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.Close,code,data));
         });
 
-        this.socket.on('authenticate', async (signedJwtToken) => {
+        this._socket.on('authenticate', async (signedJwtToken) => {
             if(this.zc.isDebug()) {
                 Logger.printInfo('Client is authenticated.');
             }
@@ -757,7 +764,7 @@ export class Zation
             autoConnect: false,
             multiplex: this.zc.config.multiplex,
             timestampRequests: this.zc.config.timestampRequests,
-            ackTimeout: this.zc.config.requestTimeout,
+            ackTimeout: this.zc.config.responseTimeout,
             query: {
                 system: this.zc.config.system,
                 version: this.zc.config.version,
@@ -769,410 +776,7 @@ export class Zation
 
     private _buildWsSocket() {
         // noinspection JSUnresolvedVariable
-        this.socket = ModifiedScClient.create(this._buildScOptions());
-    }
-
-    //Part Channel Subscribtion
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Subscribe the user channel.
-     * Can be useful if auto sub is disabled.
-     * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws UserIdRequiredError, SubscribeFailError, SocketNotCreatedError
-     */
-    async subUserCh(): Promise<void> {
-        await this.authEngine.subUserCh();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns if the socket has subscribed the user channel.
-     * @throws UserIdRequiredError
-     */
-    hasSubUserCh(): boolean {
-       return this.authEngine.hasSubUserCh();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Unsubscribes the user channel.
-     * @throws UserIdRequiredError
-     * @param andDestroy
-     */
-    unsubUserCh(andDestroy: boolean = true): void {
-        this.authEngine.unsubUserCh(andDestroy);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Subscribe the auth user group channel.
-     * Can be useful if auto sub is disabled.
-     * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws AuthUserGroupRequiredError, SubscribeFailError, SocketNotCreatedError
-     */
-    async subAuthUserGroupCh(): Promise<void> {
-        await this.authEngine.subAuthUserGroupCh();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns if the socket has subscribed the auth user group channel.
-     * @throws AuthUserGroupRequiredError
-     */
-    hasSubAuthUserGroupCh(): boolean {
-        return this.authEngine.hasSubAuthUserGroupCh();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Unsubscribes the auth user group channel.
-     * @throws AuthUserGroupRequiredError
-     * @param andDestroy
-     */
-    unsubAuthUserGroupCh(andDestroy: boolean = true): void {
-        this.authEngine.unsubAuthUserGroupCh(andDestroy);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Subscribe the default user group channel.
-     * Can be useful if auto sub is disabled.
-     * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws SubscribeFailedError, DeauthenticationNeededError, SocketNotCreatedError
-     */
-    async subDefaultUserGroupCh(): Promise<void> {
-        await this.authEngine.subDefaultUserGroupCh();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns if the socket has subscribed the default user group channel.
-     */
-    hasSubDefaultUserGroupCh(): boolean {
-        return this.channelEngine.hasSubDefaultUserGroupChannel();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Unsubscribes the default user group channel.
-     * @param andDestroy
-     */
-    unsubDefaultUserGroupCh(andDestroy: boolean = true): void {
-        this.authEngine.unsubDefaultUserGroupCh(andDestroy);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Subscribe the all channel.
-     * Can be useful if auto sub is disabled.
-     * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws SubscribeFailedError, SocketNotCreatedError
-     */
-    async subAllCh(): Promise<void> {
-        await this.channelEngine.subAllChannel();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns if the socket has subscribed the all channel.
-     */
-    hasSubAllCh(): boolean {
-        return this.channelEngine.hasSubAllChannel();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Unsubscribes the all channel.
-     * @param andDestroy
-     */
-    unsubAllCh(andDestroy: boolean = true): void {
-        this.channelEngine.unsubAllChannel(andDestroy);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Subscribe a custom channel.
-     * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws SubscribeFailedError, SocketNotCreatedError
-     * @param identifier
-     * @param member
-     * @param retrySubForever
-     * This option indicates if the client should retry to sub the channel forever.
-     * So if the client is kicked from this channel or the subscription fail.
-     * It will automatically retry to subscribe it if the authentication token change or the client is reconnected.
-     * The default value is true.
-     */
-    async subCustomCh(identifier: string, member?: string,retrySubForever: boolean = true): Promise<void> {
-        await this.channelEngine.subCustomCh(identifier,member,retrySubForever);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns if the socket has subscribed the custom channel.
-     * @param identifier if not provided it checks
-     * if the socket has subscribed any custom channel.
-     * @param member if not provided it checks
-     * if the socket has subscribed any custom channel with identifier.
-     */
-    hasSubCustomCh(identifier?: string, member?: string): boolean {
-        return this.channelEngine.hasSubCustomCh(identifier,member);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Unsubscribes custom channel.
-     * @param identifier if not provided it will unsubscribe all custom channels.
-     * @param member if not provided it will unsubscribe all custom channels with identifier.
-     * @param andDestroy
-     * @return
-     * An string array with all custom channels there are unsubscribed.
-     */
-    unsubCustomCh(identifier?: string, member?: string,andDestroy: boolean = true): string[] {
-        return this.channelEngine.unsubscribeCustomCh(identifier,member,andDestroy);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns all subscribed custom channels in an string array.
-     * @param identifier if not provided it will return all custom channels which are subscribed.
-     * @param member if not provided it will return all custom channels which are subscribed and have the
-     * same identifier.
-     */
-    getSubscribedCustomCh(identifier?: string, member?: string): string[] {
-        return this.channelEngine.getSubCustomCh(identifier,member);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Switch the custom channel subscription to another member.
-     * By unsubscribe all custom channels with the identifier and
-     * subscribe the new one.
-     * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws SubscribeFailedError
-     * @param identifier
-     * @param member
-     */
-    async switchCustomCh(identifier: string, member: string): Promise<void> {
-        this.unsubCustomCh(identifier);
-        await this.subCustomCh(identifier,member);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Subscribe the panel out channel.
-     * Notice if the socket is not connected the resolve of the promise will wait for connection.
-     * @throws SubscribeFailedError, SocketNotCreatedError
-     */
-    async subPanelOutCh(): Promise<void> {
-        await this.channelEngine.subPanelOutChannel();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns if the socket has subscribed the panel out channel.
-     */
-    hasSubPanelOutCh(): boolean {
-        return this.channelEngine.hasSubPanelOutChannel();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Unsubscribes panel out channel.
-     * @param andDestroy
-     */
-    unsubPanelOutCh(andDestroy: boolean = true): void {
-        this.channelEngine.unsubPanelOutChannel(andDestroy);
-    }
-
-    //Part ClientPublish
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Publish in a user channel with this client.
-     * Notice that the channel needs to allow client publish.
-     * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
-     * This gives you better control over validation.
-     * @throws ConnectionRequiredError, PublishFailError, TimeoutError,AbortSignal
-     * @param userId
-     * @param event
-     * @param data
-     * @param waitForConnection
-     * With the WaitForConnection option, you can activate that the socket is
-     * trying to connect when it is not connected. You have five possible choices:
-     * Undefined: It will use the value from the default options.
-     * False: The action will fail and throw a ConnectionRequiredError,
-     * when the socket is not connected.
-     * For the other options, it is also recommended to have activated the auto-reconnect.
-     * Null: The socket will try to connect (if it is not connected) and
-     * waits until the connection is made, then it continues the action.
-     * Number: Same as null, but now you can specify a timeout (in ms) of
-     * maximum waiting time for the connection. If the timeout is reached,
-     * it will throw a timeout error.
-     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
-     */
-    async pubUserCh(userId: string | number,event: string, data: any = {},waitForConnection: WaitForConnectionOption = undefined): Promise<void> {
-        return this.channelEngine.pubUserCh(userId,event,data,waitForConnection);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Publish in a auth user group channel with this client.
-     * Notice that the channel needs to allow client publish.
-     * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
-     * This gives you better control over validation.
-     * @throws ConnectionRequiredError, PublishFailError, TimeoutError,AbortSignal
-     * @param authUserGroup
-     * @param event
-     * @param data
-     * @param waitForConnection
-     * With the WaitForConnection option, you can activate that the socket is
-     * trying to connect when it is not connected. You have five possible choices:
-     * Undefined: It will use the value from the default options.
-     * False: The action will fail and throw a ConnectionRequiredError,
-     * when the socket is not connected.
-     * For the other options, it is also recommended to have activated the auto-reconnect.
-     * Null: The socket will try to connect (if it is not connected) and
-     * waits until the connection is made, then it continues the action.
-     * Number: Same as null, but now you can specify a timeout (in ms) of
-     * maximum waiting time for the connection. If the timeout is reached,
-     * it will throw a timeout error.
-     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
-     */
-    async pubAuthUserGroupCh(authUserGroup: string,event: string, data: any = {},waitForConnection: WaitForConnectionOption = undefined): Promise<void> {
-        return this.channelEngine.pubAuthUserGroupCh(authUserGroup,event,data,waitForConnection);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Publish in default user group channel with this client.
-     * Notice that the channel needs to allow client publish.
-     * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
-     * This gives you better control over validation.
-     * @throws ConnectionRequiredError, PublishFailError, TimeoutError,AbortSignal
-     * @param event
-     * @param data
-     * @param waitForConnection
-     * With the WaitForConnection option, you can activate that the socket is
-     * trying to connect when it is not connected. You have five possible choices:
-     * Undefined: It will use the value from the default options.
-     * False: The action will fail and throw a ConnectionRequiredError,
-     * when the socket is not connected.
-     * For the other options, it is also recommended to have activated the auto-reconnect.
-     * Null: The socket will try to connect (if it is not connected) and
-     * waits until the connection is made, then it continues the action.
-     * Number: Same as null, but now you can specify a timeout (in ms) of
-     * maximum waiting time for the connection. If the timeout is reached,
-     * it will throw a timeout error.
-     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
-     */
-    async pubDefaultUserGroupCh(event: string, data: any = {},waitForConnection: WaitForConnectionOption = undefined): Promise<void> {
-        return this.channelEngine.pubDefaultUserGroupCh(event,data,waitForConnection);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Publish in all channel with this client.
-     * Notice that the channel needs to allow client publish.
-     * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
-     * This gives you better control over validation.
-     * @throws ConnectionRequiredError, PublishFailError, TimeoutError,AbortSignal
-     * @param event
-     * @param data
-     * @param waitForConnection
-     * With the WaitForConnection option, you can activate that the socket is
-     * trying to connect when it is not connected. You have five possible choices:
-     * Undefined: It will use the value from the default options.
-     * False: The action will fail and throw a ConnectionRequiredError,
-     * when the socket is not connected.
-     * For the other options, it is also recommended to have activated the auto-reconnect.
-     * Null: The socket will try to connect (if it is not connected) and
-     * waits until the connection is made, then it continues the action.
-     * Number: Same as null, but now you can specify a timeout (in ms) of
-     * maximum waiting time for the connection. If the timeout is reached,
-     * it will throw a timeout error.
-     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
-     */
-    async pubAllCh(event: string, data: any = {},waitForConnection: WaitForConnectionOption = undefined): Promise<void> {
-        return this.channelEngine.pubAllCh(event,data,waitForConnection);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Publish in the panel in channel with this client.
-     * Notice the publish in middleware is used on server side.
-     * @throws ConnectionRequiredError, PublishFailError, TimeoutError,AbortSignal
-     * @param event
-     * @param data
-     * @param waitForConnection
-     * With the WaitForConnection option, you can activate that the socket is
-     * trying to connect when it is not connected. You have five possible choices:
-     * Undefined: It will use the value from the default options.
-     * False: The action will fail and throw a ConnectionRequiredError,
-     * when the socket is not connected.
-     * For the other options, it is also recommended to have activated the auto-reconnect.
-     * Null: The socket will try to connect (if it is not connected) and
-     * waits until the connection is made, then it continues the action.
-     * Number: Same as null, but now you can specify a timeout (in ms) of
-     * maximum waiting time for the connection. If the timeout is reached,
-     * it will throw a timeout error.
-     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
-     */
-    async pubPanelInCh(event: string, data: any = {},waitForConnection: WaitForConnectionOption = undefined): Promise<void> {
-        return this.channelEngine.pubPanelInCh(event,data,waitForConnection);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Publish in a custom channel with this client.
-     * Notice that the socket needs to have access for clientPublish.
-     * Keep in mind that it is recommended to use a controller and then let the server publish in the channel.
-     * This gives you better control over validation.
-     * @throws ConnectionRequiredError, PublishFailError, TimeoutError,AbortSignal
-     * @param target
-     * @param event
-     * @param data
-     * @param waitForConnection
-     * With the WaitForConnection option, you can activate that the socket is
-     * trying to connect when it is not connected. You have five possible choices:
-     * Undefined: It will use the value from the default options.
-     * False: The action will fail and throw a ConnectionRequiredError,
-     * when the socket is not connected.
-     * For the other options, it is also recommended to have activated the auto-reconnect.
-     * Null: The socket will try to connect (if it is not connected) and
-     * waits until the connection is made, then it continues the action.
-     * Number: Same as null, but now you can specify a timeout (in ms) of
-     * maximum waiting time for the connection. If the timeout is reached,
-     * it will throw a timeout error.
-     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
-     */
-    async pubCustomCh(target: {identifier: string,member?: string},event: string, data: any = {},waitForConnection: WaitForConnectionOption = undefined): Promise<void> {
-        return this.channelEngine.pubCustomCh(target,event,data,waitForConnection);
+        this._socket = ModifiedScClient.create(this._buildScOptions());
     }
 
     //Part TokenVar
@@ -1310,7 +914,7 @@ export class Zation
      * parameters are the data and a response function that you can call to respond on the event back.
      */
     on(event: string,handler: OnHandlerFunction): void {
-        this.socket.on(event,handler);
+        this._socket.on(ZATION_CUSTOM_EVENT_NAMESPACE+event,handler);
     }
 
     /**
@@ -1323,13 +927,13 @@ export class Zation
      * parameters are the data and a response function that you can call to respond on the event back.
      */
     once(event: string,handler: OnHandlerFunction): void {
-        this.socket.once(event,handler);
+        this._socket.once(ZATION_CUSTOM_EVENT_NAMESPACE+event,handler);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    async emit(eventName: string,data: any,onlyTransmit: true,options: {waitForConnection?: WaitForConnectionOption,timeout?: number | null}): Promise<void>
+    async emit(eventName: string,data: any,onlyTransmit: true,options: {connectTimeout?: ConnectTimeoutOption,responseTimeout?: number | null}): Promise<void>
     // noinspection JSUnusedGlobalSymbols
-    async emit(eventName: string,data: any,onlyTransmit: false,options: {waitForConnection?: WaitForConnectionOption,timeout?: number | null}): Promise<any>
+    async emit(eventName: string,data: any,onlyTransmit: false,options: {connectTimeout?: ConnectTimeoutOption,responseTimeout?: number | null}): Promise<any>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
@@ -1344,38 +948,37 @@ export class Zation
      * @param onlyTransmit
      * Indicates if you only want to transmit data.
      * If not than the promise will be resolved with the result when the server responded on the emit.
-     * @param waitForConnection
-     * With the WaitForConnection option, you can activate that the socket is
+     * @param connectTimeout
+     * With the ConnectTimeout option, you can activate that the socket is
      * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options.
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
-     * For the other options, it is also recommended to have activated the auto-reconnect.
      * Null: The socket will try to connect (if it is not connected) and
      * waits until the connection is made, then it continues the action.
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
-     * @param timeout
-     * Set the timeout of the emit.
+     * @param responseTimeout
+     * Set the response timeout of the emit.
      * Value can be null which means the timeout is disabled or
-     * undefined then it will use the default timeout of the zation config,
+     * undefined then it will use the default response timeout of the zation config,
      * or it can be a number that indicates the milliseconds.
      */
     async emit(event: string,data: any,onlyTransmit: boolean = true,
-               {waitForConnection,timeout}: {waitForConnection?: WaitForConnectionOption,timeout?: number | null} = {}): Promise<object | void>
+               {connectTimeout,responseTimeout}: {connectTimeout?: ConnectTimeoutOption,responseTimeout?: number | null} = {}): Promise<object | void>
     {
-        await ConnectionUtils.checkConnection(this,waitForConnection,'To emit an event.');
+        await ConnectionUtils.checkConnection(this,connectTimeout);
 
         return new Promise<object>((resolve, reject) => {
             // noinspection DuplicatedCode
             if(onlyTransmit){
-                this.socket.emit(ZATION_CUSTOM_EVENT_NAMESPACE+event,data,undefined,timeout);
+                this._socket.emit(ZATION_CUSTOM_EVENT_NAMESPACE+event,data,undefined);
                 resolve();
             }
             else {
-                this.socket.emit(ZATION_CUSTOM_EVENT_NAMESPACE+event,data,(err, data) => {
+                this._socket.emit(ZATION_CUSTOM_EVENT_NAMESPACE+event,data,(err, data) => {
                     if(err){
                         if(err.name === 'TimeoutError'){
                             reject(new TimeoutError(err.message));
@@ -1387,70 +990,12 @@ export class Zation
                     else {
                         resolve(data);
                     }
-                },timeout);
+                },responseTimeout);
             }
         });
     }
 
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Send some raw data to the server.
-     * This will trigger the socketRaw event on the zation server
-     * which will carry the provided data.
-     * @throws ConnectionRequiredError
-     */
-    sendRaw(data: any): void
-    {
-        if(this.isConnected()) {
-            this.socket.send(data);
-        }
-        else {
-            throw new ConnectionRequiredError('To send raw data.');
-
-        }
-    }
-
     //Part Getter/Setter
-    // noinspection JSUnusedGlobalSymbols
-    isAutoAllChSub(): boolean {
-        return this.zc.config.autoAllChSub
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    setAutoAllChSub(value: boolean): void {
-        this.zc.config.autoAllChSub = value;
-    }
-
-    isAutoUserChSub(): boolean {
-        return this.zc.config.autoUserChSub;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    setAutoUserChSub(value: boolean): void {
-        this.zc.config.autoUserChSub = value;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    isAutoDefaultUserGroupChSub(): boolean {
-        return this.zc.config.autoDefaultUserGroupChSub;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    setAutoDefaultUserGroupChSub(value: boolean): void {
-        this.zc.config.autoDefaultUserGroupChSub = value;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    isAutoAuthUserGroupChSub(): boolean {
-        return this.zc.config.autoAuthUserGroupChSub;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    setAutoAuthUserGroupChSub(value: boolean): void {
-        this.zc.config.autoAuthUserGroupChSub = value;
-    }
-
     // noinspection JSUnusedGlobalSymbols
     getRejectUnauthorized(): boolean{
         return this.zc.config.rejectUnauthorized;
@@ -1500,18 +1045,6 @@ export class Zation
     };
 
     //Part trigger
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @internal
-     * @description
-     * Used internally.
-     * Only use this method carefully.
-     */
-    _getChannelReactionMainBox(): MultiList<ChannelReactionBox> {
-        return this.channelReactionMainBox;
-    }
-
     // noinspection JSUnusedGlobalSymbols
     /**
      * @internal
@@ -1522,6 +1055,15 @@ export class Zation
     _triggerResponseReactions(response: Response): Promise<void> {
         return this.responseReactionMainBox.forEach((responseReactionBox) =>
             responseReactionBox._trigger(response));
+    }
+
+    /**
+     * @internal
+     * Used internally.
+     * @private
+     */
+    _getChannelEngine(): ChannelEngine {
+        return this.channelEngine;
     }
 
     // noinspection JSUnusedGlobalSymbols

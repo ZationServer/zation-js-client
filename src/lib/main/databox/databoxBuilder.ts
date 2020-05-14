@@ -7,7 +7,7 @@ Copyright(c) Luca Scaringella
 import Databox, {DataboxOptions}  from "./databox";
 import {Zation}                   from "../../core/zation";
 import {DbStorageOptions}         from "./storage/dbStorage";
-import {WaitForConnectionOption}  from "../utils/connectionUtils";
+import {ConnectTimeoutOption}  from "../utils/connectionUtils";
 
 export default class DataboxBuilder {
 
@@ -72,8 +72,9 @@ export default class DataboxBuilder {
         return this;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
-     * With the WaitForConnection option, you can activate that the socket is
+     * With the ConnectTimeout option, you can activate that the socket is
      * trying to connect when it is not connected.
      * This option will be used when you try to connect to the Databox.
      * Because then the socket needs to be connected.
@@ -81,7 +82,6 @@ export default class DataboxBuilder {
      * Undefined: It will use the value from the default options.
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
-     * For the other options, it is also recommended to have activated the auto-reconnect.
      * Null: The socket will try to connect (if it is not connected) and
      * waits until the connection is made, then it continues the action.
      * Number: Same as null, but now you can specify a timeout (in ms) of
@@ -89,23 +89,22 @@ export default class DataboxBuilder {
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      * @default undefined
-     * @param option
+     * @param timeout
      */
-    waitForConnection(option: WaitForConnectionOption): DataboxBuilder {
-        this.dbOptions.waitForConnection = option;
+    connectTimeout(timeout: ConnectTimeoutOption): DataboxBuilder {
+        this.dbOptions.connectTimeout = timeout;
         return this;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * With the WaitForDbConnection option, you can activate that the Databox is
+     * With the DataboxConnectTimeout option, you can activate that the Databox is
      * trying to connect (if it's not connected) whenever you want
      * to fetchData.
      * You have five possible choices:
      * Undefined: It will use the value from the default options (ZationOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the Databox is not connected.
-     * For the other options, it is also recommended to have activated the auto-reconnect.
      * Null: The Databox will try to connect (if it is not connected) and
      * waits until the connection is made, then it continues the action.
      * Number: Same as null, but now you can specify a timeout (in ms) of
@@ -114,8 +113,8 @@ export default class DataboxBuilder {
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      * @default undefined
      */
-    waitForDbConnection(option: WaitForConnectionOption): DataboxBuilder {
-        this.dbOptions.waitForDbConnection = option;
+    databoxConnectTimeout(timeout: ConnectTimeoutOption): DataboxBuilder {
+        this.dbOptions.databoxConnectTimeout = timeout;
         return this;
     }
 

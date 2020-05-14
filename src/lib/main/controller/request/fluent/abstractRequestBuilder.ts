@@ -21,7 +21,7 @@ import {ResponseReactionBox}         from "../../response/responseReactionBox";
 // noinspection ES6PreferShortImport
 import {Response}                from "../../response/response";
 import {ResponseReactAble}       from "../../response/responseReactAble";
-import {WaitForConnectionOption} from "../../../utils/connectionUtils";
+import {ConnectTimeoutOption} from "../../../utils/connectionUtils";
 import {BaseRequest}             from "../main/baseRequest";
 
 export abstract class AbstractRequestBuilder<T> implements ResponseReactAble<AbstractRequestBuilder<T>,T>
@@ -29,8 +29,8 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble<Abs
     protected readonly zation: Zation;
 
     protected _apiLevel: number | undefined = undefined;
-    protected _timeout: null | number | undefined = undefined;
-    protected _waitForConnection: WaitForConnectionOption = undefined;
+    protected _responseTimeout: null | number | undefined = undefined;
+    protected _connectTimeout: ConnectTimeoutOption = undefined;
     private _responseReactionBox: ResponseReactionBox;
     private _reactionAdded: boolean = false;
     private _addedResponseReactionBoxes: ResponseReactionBox[] = [];
@@ -61,30 +61,29 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble<Abs
      * or it can be a number that indicates the milliseconds.
      * @param timeout
      */
-    timeout(timeout: null | undefined | number): T {
-        this._timeout = timeout;
+    responseTimeout(timeout: null | undefined | number): T {
+        this._responseTimeout = timeout;
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * With the WaitForConnection option, you can activate that the socket is
+     * With the ConnectTimeout option, you can activate that the socket is
      * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options.
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
-     * For the other options, it is also recommended to have activated the auto-reconnect.
      * Null: The socket will try to connect (if it is not connected) and
      * waits until the connection is made, then it continues the action.
      * Number: Same as null, but now you can specify a timeout (in ms) of
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
-     * @param waitForConnection
+     * @param timeout
      * @default undefined
      */
-    waitForConnection(waitForConnection: WaitForConnectionOption): T {
-        this._waitForConnection = waitForConnection;
+    connectTimeout(timeout: ConnectTimeoutOption): T {
+        this._connectTimeout = timeout;
         return this.self();
     }
 
@@ -251,8 +250,7 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble<Abs
         return this.zation.send(
             this.buildRequest(),
             triggerClientBoxes,
-            this._responseReactionBox,
-            ...this._addedResponseReactionBoxes
+            [this._responseReactionBox,...this._addedResponseReactionBoxes]
         );
     }
 

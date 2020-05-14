@@ -4,21 +4,22 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
+export enum TimeoutType {
+    responseTimeout,
+    connectTiemeout
+}
+
 export class TimeoutError extends Error {
 
-    private readonly waitForConnectionTimeout: boolean;
+    private readonly _type: TimeoutType;
 
-    constructor(msg: string,waitForConnectionTimeout: boolean = false) {
+    constructor(type: TimeoutType,msg: string = 'Timeout exceeded') {
         super(msg);
-        this.waitForConnectionTimeout = waitForConnectionTimeout;
+        this._type = type;
     }
 
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * Returns if this is a wait for connection timeout.
-     */
-    isWaitForConnecitonTimeout(): boolean {
-        return this.waitForConnectionTimeout;
+    get type(): TimeoutType {
+        return this._type;
     }
 }
 

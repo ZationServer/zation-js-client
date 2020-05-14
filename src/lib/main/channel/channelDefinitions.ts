@@ -4,42 +4,82 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-export class ZationChannel {
-    //Zation Main Channels
-    static readonly USER_CHANNEL_PREFIX = 'Z_U.';
-    static readonly AUTH_USER_GROUP_PREFIX = 'Z_AUG.';
-    static readonly DEFAULT_USER_GROUP = 'Z_DUG';
-    static readonly ALL = 'Z_ALL';
-    static readonly PANEL_IN = 'Z_PI';
-    static readonly PANEL_OUT = 'Z_PO';
-    //Custom Channels
-    static readonly CUSTOM_CHANNEL_PREFIX = 'Z_C.';
-    static readonly CUSTOM_CHANNEL_MEMBER_SEPARATOR = '.';
+/**
+ * Channel subscribe request element.
+ */
+export interface ChannelSubscribeRequest {
+    /**
+     * channel identifier
+     */
+    c: string;
+    /**
+     * member
+     */
+    m?: string;
+    /**
+     * apiLevel
+     */
+    a?: number;
 }
 
-export enum ChannelTarget {
-    User,Aug,Dug,All,Custom,Panel
+/**
+ * Actions that a client can send to the server.
+ */
+export const enum ChClientInputAction {
+    Unsubscribe
 }
 
-export enum ChannelEvent {
-    Publish,
-    KickOut,
-    SubscribeFail,
-    Subscribe,
-    Unsubscribe,
+/**
+ * The package that the client can send to the server to invoke an action.
+ */
+export interface ChClientInputPackage {
+    /**
+     * Action
+     */
+    0: ChClientInputAction,
 }
 
-export default interface PubData {
+export const CH_CLIENT_OUTPUT_PUBLISH = 'C>P';
+
+export interface ChClientOutputPublishPackage {
     /**
-     * The event name.
+     * Channel id
      */
-    e: string,
+    i: string;
     /**
-     * Published data.
+     * Member
      */
-    d: any,
+    m?: string;
     /**
-     * Source socket sid.
+     * Event
      */
-    sSid?: string
+    e: string;
+    /**
+     * Data
+     */
+    d?: any;
 }
+
+export const CH_CLIENT_OUTPUT_KICK_OUT = 'C>K';
+
+export interface ChClientOutputKickOutPackage {
+    /**
+     * Channel id
+     */
+    i: string;
+    /**
+     * Member
+     */
+    m?: string;
+    /**
+     * code
+     */
+    c?: number | string;
+    /**
+     * data
+     */
+    d?: any;
+}
+
+export const CHANNEL_START_INDICATOR = 'C>';
+export const CHANNEL_MEMBER_SPLIT = '.';

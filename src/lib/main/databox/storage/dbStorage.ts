@@ -88,14 +88,14 @@ export interface DbStorageOptions {
 }
 
 export const enum DataEventReason {
-    INSERTED,
-    UPDATED,
-    DELETED,
-    SORTED,
-    RELOADED,
-    ADDED,
-    CLEARED,
-    COPIED
+    Inserted,
+    Updated,
+    Deleted,
+    Sorted,
+    Reloaded,
+    Added,
+    Cleared,
+    Copied
 }
 
 export type OnDataChange = (reasons: DataEventReason[],storage: DbStorage) => void | Promise<void>;
@@ -222,9 +222,9 @@ export default class DbStorage {
         }
 
         if(triggerDataEvents && dataChanged){
-            this.dataTouchEvent.emit([DataEventReason.SORTED],this);
-            this.dataChangeEvent.emit([DataEventReason.SORTED],this);
-            this.dataChangeCombineSeqEvent.emit([DataEventReason.SORTED],this);
+            this.dataTouchEvent.emit([DataEventReason.Sorted],this);
+            this.dataChangeEvent.emit([DataEventReason.Sorted],this);
+            this.dataChangeCombineSeqEvent.emit([DataEventReason.Sorted],this);
         }
     }
 
@@ -337,10 +337,10 @@ export default class DbStorage {
         const tmpOldHead = this.dbsHead;
         this.dbsHead = new DbsHead();
         this.updateCompOptions();
-        this.dataTouchEvent.emit([DataEventReason.CLEARED],this);
+        this.dataTouchEvent.emit([DataEventReason.Cleared],this);
         if(this.hasDataChangeListener && !deepEqual(tmpOldHead.getData(),this.dbsHead.getData())){
-            this.dataChangeEvent.emit([DataEventReason.CLEARED],this);
-            this.dataChangeCombineSeqEvent.emit([DataEventReason.CLEARED],this);
+            this.dataChangeEvent.emit([DataEventReason.Cleared],this);
+            this.dataChangeCombineSeqEvent.emit([DataEventReason.Cleared],this);
         }
         return this;
     }
@@ -367,9 +367,9 @@ export default class DbStorage {
         this.dbsHead = mergedValue;
         if(dataChanged){
             this.updateCompOptions();
-            this.dataTouchEvent.emit([DataEventReason.ADDED],this);
-            this.dataChangeEvent.emit([DataEventReason.ADDED],this);
-            this.dataChangeCombineSeqEvent.emit([DataEventReason.ADDED],this);
+            this.dataTouchEvent.emit([DataEventReason.Added],this);
+            this.dataChangeEvent.emit([DataEventReason.Added],this);
+            this.dataChangeCombineSeqEvent.emit([DataEventReason.Added],this);
         }
     }
 
@@ -393,7 +393,7 @@ export default class DbStorage {
         }
 
         const reason: DataEventReason = isReload ?
-            DataEventReason.RELOADED: DataEventReason.COPIED;
+            DataEventReason.Reloaded: DataEventReason.Copied;
 
         this.dataTouchEvent.emit([reason],this);
         if(this.hasDataChangeListener && !deepEqual(tmpOldHead.getData(),this.dbsHead.getData())){
@@ -542,7 +542,7 @@ export default class DbStorage {
                 let reasons;
                 if(mt.level > 0){
                     this.updateCompOptions();
-                    reasons = getModifyTokenReaons(mt,DataEventReason.INSERTED,DataEventReason.UPDATED);
+                    reasons = getModifyTokenReaons(mt,DataEventReason.Inserted,DataEventReason.Updated);
                     this.dataTouchEvent.emit([...reasons],this);
                 }
                 if(mt.level === ModifyLevel.DATA_CHANGED){
@@ -641,7 +641,7 @@ export default class DbStorage {
                 let reasons;
                 if(mt.level > 0){
                     this.updateCompOptions();
-                    reasons = getModifyTokenReaons(mt,DataEventReason.UPDATED,DataEventReason.INSERTED);
+                    reasons = getModifyTokenReaons(mt,DataEventReason.Updated,DataEventReason.Inserted);
                     this.dataTouchEvent.emit([...reasons],this);
                 }
                 // noinspection DuplicatedCode
@@ -735,8 +735,8 @@ export default class DbStorage {
                 this.updateCompOptions();
                 this.tmpCudDeleted = true;
                 this.deleteEvent.emit(selector,options);
-                this.dataTouchEvent.emit([DataEventReason.DELETED],this);
-                this._triggerChangeEvents([DataEventReason.DELETED]);
+                this.dataTouchEvent.emit([DataEventReason.Deleted],this);
+                this._triggerChangeEvents([DataEventReason.Deleted]);
             }
         }
     }
@@ -793,9 +793,9 @@ export default class DbStorage {
      */
     endCudSeq() {
         const reasons: DataEventReason[] = [];
-        if(this.tmpCudInserted){reasons.push(DataEventReason.INSERTED);}
-        if(this.tmpCudUpdated){reasons.push(DataEventReason.UPDATED);}
-        if(this.tmpCudDeleted){reasons.push(DataEventReason.DELETED);}
+        if(this.tmpCudInserted){reasons.push(DataEventReason.Inserted);}
+        if(this.tmpCudUpdated){reasons.push(DataEventReason.Updated);}
+        if(this.tmpCudDeleted){reasons.push(DataEventReason.Deleted);}
 
         if(reasons.length > 0){
             this.dataChangeCombineSeqEvent.emit(reasons,this);

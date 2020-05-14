@@ -147,7 +147,7 @@ export class Response
 
     private _readRawResponse(rawRes: ControllerRes) {
         if(typeof rawRes === 'object'){
-            const rawErrors = rawRes["0"];
+            const rawErrors = rawRes[0];
             if (Array.isArray(rawErrors)) {
                 this.successful = rawErrors.length === 0;
                 let tmpRawError;
@@ -158,7 +158,7 @@ export class Response
                     }
                 }
             }
-            this.result = rawRes["1"];
+            this.result = rawRes[1];
         }
         else {
             this.successful = true;

@@ -7,25 +7,41 @@ Copyright(c) Luca Scaringella
 // noinspection TypeScriptPreferShortImport
 import {BaseRequest}              from "./baseRequest";
 import {buildNormalControllerReq} from "./rawReqBuilderUtils";
+import {SpecialController}        from "../../controllerDefinitions";
 // noinspection ES6PreferShortImport
 
 export class StandardRequest extends BaseRequest
 {
-    private readonly controller: string;
-    private readonly isSystemController: boolean;
+    private controller: string | SpecialController;
 
-    constructor(controller: string,data: any = undefined,isSystemController: boolean = false) {
+    constructor(controller: string | SpecialController,data: any = undefined) {
         super(data);
         this.controller = controller;
-        this.isSystemController = isSystemController;
     }
 
     build(): any {
         return buildNormalControllerReq(
-            this.data,
             this.controller,
-            this.isSystemController,
+            this.data,
             this.apiLevel
         );
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Sets the controller identifier.
+     */
+    setController(controller: string | SpecialController): void {
+        this.controller = controller;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the controller identifier.
+     */
+    getController(): string | SpecialController {
+        return this.controller;
     }
 }

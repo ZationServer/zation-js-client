@@ -4,43 +4,37 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {Socket}                                        from "../sc/socket";
-import {Zation}                                        from "../../core/zation";
-import {ConnectionRequiredError}                       from "../error/connectionRequiredError";
-import {TimeoutError}                                  from "../error/timeoutError";
-import Databox                                         from "../databox/databox";
+import {Zation}                    from "../../core/zation";
+import {ConnectionRequiredError}   from "../error/connectionRequiredError";
+import {TimeoutError, TimeoutType} from "../error/timeoutError";
+import Databox                     from "../databox/databox";
+import {Socket}                    from "../sc/socket";
 
-export type WaitForConnectionDefaultOption = false | null | number;
-export type WaitForConnectionOption        = undefined | null | number | false | AbortTrigger;
+export type ConnectTimeoutDefaultOption = false | null | number;
+export type ConnectTimeoutOption = undefined | null | number | false | AbortTrigger;
 
 export default class ConnectionUtils {
-
-    private constructor(){}
-
     /**
      * Check the socket connection.
      * @param zation
-     * @param waitForConnection
-     * @param errorMsg
+     * @param connectTimeout
      */
-    static async checkConnection(zation: Zation,waitForConnection: WaitForConnectionOption,errorMsg: string): Promise<void> {
+    static async checkConnection(zation: Zation, connectTimeout: ConnectTimeoutOption): Promise<void> {
 
         if(!zation.isConnected()){
+            connectTimeout = connectTimeout === undefined ? zation.getZc().config.connectTimeout : connectTimeout;
 
-            waitForConnection = waitForConnection === undefined ?
-                zation.getZc().config.waitForConnection: waitForConnection;
-
-            if(typeof waitForConnection !== 'boolean') {
-                await ConnectionUtils.waitForConnection(zation.getSocket(),waitForConnection);
+            if(typeof connectTimeout !== 'boolean') {
+                await ConnectionUtils.waitForConnection(zation.socket,connectTimeout);
             }
             else {
-                throw new ConnectionRequiredError(errorMsg);
+                throw new ConnectionRequiredError();
             }
         }
     }
 
     /**
-     * Wait for the socket connection.
+     * Wait for the connection.
      * @param socket
      * @param option
      */
@@ -54,7 +48,7 @@ export default class ConnectionUtils {
             if(typeof option === 'number'){
                 timeoutHandler = setTimeout(() => {
                     socket.off('connect',connectListener);
-                    reject(new TimeoutError('To connect to the server.',true));
+                    reject(new TimeoutError(TimeoutType.connectTiemeout));
                 },option);
             }
             else if(option){
@@ -85,20 +79,18 @@ export default class ConnectionUtils {
      * Check the Databox connection.
      * @param databox
      * @param zation
-     * @param waitForDbConnection
-     * @param errorMsg
+     * @param connectTimeout
      */
-    static async checkDbConnection(databox: Databox,zation: Zation,waitForDbConnection: WaitForConnectionOption,errorMsg: string){
+    static async checkDbConnection(databox: Databox, zation: Zation, connectTimeout: ConnectTimeoutOption){
 
         if(!databox.isConnected()){
-            waitForDbConnection = waitForDbConnection === undefined ?
-                zation.getZc().config.waitForDbConnection: waitForDbConnection;
+            connectTimeout = connectTimeout === undefined ? zation.getZc().config.databoxConnectTimeout: connectTimeout;
 
-            if(typeof waitForDbConnection !== 'boolean') {
-                await ConnectionUtils.waitForDbConnection(databox,zation,waitForDbConnection);
+            if(typeof connectTimeout !== 'boolean') {
+                await ConnectionUtils.waitForDbConnection(databox,zation,connectTimeout);
             }
             else {
-                throw new ConnectionRequiredError(errorMsg);
+                throw new ConnectionRequiredError();
             }
         }
     }
@@ -117,13 +109,13 @@ export default class ConnectionUtils {
             let timeoutHandler;
             let connected = false;
 
-            const socket = zaiton.getSocket();
+            const socket = zaiton.socket;
 
             if(typeof option === 'number'){
                 timeoutHandler = setTimeout(() => {
                     databox.offConnect(dbConnectListener);
                     socket.off('connect',socketConnectListener);
-                    reject(new TimeoutError('To connect to the Databox.',true));
+                    reject(new TimeoutError(TimeoutType.connectTiemeout));
                 },option);
             }
             else if(option){
@@ -158,7 +150,6 @@ export default class ConnectionUtils {
                     socket.on('connect',socketConnectListener);
                 }
                 socket.connect();
-
             }
             else if(!databox.isCreated()){
                 try {
@@ -185,7 +176,7 @@ export class AbortTrigger {
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Abort the waitForConnect.
+     * Abort the ConnectTimeout.
      * Returns a boolean if it was successful.
      * Notice that the target promise will reject an AbortSignal.
      */

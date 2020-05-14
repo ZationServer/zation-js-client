@@ -40,7 +40,7 @@ import DbStorage, {DbStorageOptions, OnDataChange, OnDataTouch} from "./storage/
 import DbFetchHistoryManager, {FetchHistoryItem}                from "./dbFetchHistoryManager";
 import ObjectUtils                                              from "../utils/objectUtils";
 import {Zation}                                                 from "../../core/zation";
-import ConnectionUtils, {WaitForConnectionOption}               from "../utils/connectionUtils";
+import ConnectionUtils, {ConnectTimeoutOption}                  from "../utils/connectionUtils";
 import EventManager                                             from "../utils/eventManager";
 import {RawError}                                               from "../error/rawError";
 import {ErrorName}                                              from "../constants/errorName";
@@ -82,7 +82,7 @@ export interface DataboxOptions {
      */
     mainStorageOptions?: DbStorageOptions;
     /**
-     * With the WaitForConnection option, you can activate that the socket is
+     * With the ConnectTimeout option, you can activate that the socket is
      * trying to connect when it is not connected.
      * This option will be used when you try to connect to the Databox.
      * Because then the socket needs to be connected.
@@ -90,7 +90,6 @@ export interface DataboxOptions {
      * Undefined: It will use the value from the default options.
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
-     * For the other options, it is also recommended to have activated the auto-reconnect.
      * Null: The socket will try to connect (if it is not connected) and
      * waits until the connection is made, then it continues the action.
      * Number: Same as null, but now you can specify a timeout (in ms) of
@@ -99,7 +98,7 @@ export interface DataboxOptions {
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      * @default undefined
      */
-    waitForConnection?: WaitForConnectionOption;
+    connectTimeout?: ConnectTimeoutOption;
     /**
      * With the WaitForDbConnection option, you can activate that the Databox is
      * trying to connect (if it's not connected) whenever you want
@@ -117,7 +116,7 @@ export interface DataboxOptions {
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      * @default undefined
      */
-    waitForDbConnection?: WaitForConnectionOption;
+    databoxConnectTimeout?: ConnectTimeoutOption;
     /**
      * The init data that the Databox is sent to the server
      * when it's creating a connection.
@@ -131,8 +130,8 @@ interface RequiredDbOptions extends DataboxOptions {
     autoFetchData: any;
     apiLevel: number | undefined;
     mainStorageOptions: DbStorageOptions;
-    waitForConnection: WaitForConnectionOption;
-    waitForDbConnection: WaitForConnectionOption;
+    connectTimeout: ConnectTimeoutOption;
+    databoxConnectTimeout: ConnectTimeoutOption;
     initData: any;
 }
 
@@ -148,7 +147,7 @@ type OnSignal      = (data: any) => void | Promise<void>
 export default class Databox {
 
     private readonly identifier: string;
-    private readonly member: string | undefined;
+    private member: string | undefined;
     private readonly apiLevel: number | undefined;
     private readonly socket: Socket;
     private readonly zation: Zation;
@@ -201,14 +200,14 @@ export default class Databox {
         autoFetchData: undefined,
         mainStorageOptions: {},
         apiLevel: undefined,
-        waitForConnection: undefined,
-        waitForDbConnection: undefined,
+        connectTimeout: undefined,
+        databoxConnectTimeout: undefined,
         initData: undefined
     };
 
     constructor(zation: Zation, options: DataboxOptions, identifier: string, member?: string | number) {
         ObjectUtils.addObToOb(this.dbOptions, options, true);
-        this.socket = zation.getSocket();
+        this.socket = zation.socket;
         this.zation = zation;
         this.apiLevel = this.dbOptions.apiLevel;
         this.identifier = identifier;
@@ -245,7 +244,7 @@ export default class Databox {
             disconnectResp = new Promise<void>((res) => {
                 this.socket.emit(this.inputChannel, {
                     a: DbClientInputAction.disconnect
-                } as DbClientInputPackage, res);
+                } as DbClientInputPackage, () => res());
             });
         }
         this._clearListenersAndReset();
@@ -289,14 +288,13 @@ export default class Databox {
      * Whenever the connection is lost, you don't need to call that method.
      * The Databox will reconnect automatically as fast as possible.
      * @throws RawError,TimeoutError,ConnectionRequiredError,InvalidInputError,AbortSignal
-     * @param waitForConnection
-     * With the WaitForConnection option, you can activate that the socket is
+     * @param connectTimeout
+     * With the ConnectTimeout option, you can activate that the socket is
      * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options
      * (DataboxOptions and last fall back is ZationOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
-     * For the other options, it is also recommended to have activated the auto-reconnect.
      * Null: The socket will try to connect (if it is not connected) and
      * waits until the connection is made, then it continues the action.
      * Number: Same as null, but now you can specify a timeout (in ms) of
@@ -304,12 +302,9 @@ export default class Databox {
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
-    async connect(waitForConnection: WaitForConnectionOption = undefined): Promise<void> {
-        waitForConnection = waitForConnection === undefined ?
-            this.dbOptions.waitForConnection: waitForConnection;
-
-        await ConnectionUtils.checkConnection
-        (this.zation, waitForConnection, 'To create a Databox.');
+    async connect(connectTimeout: ConnectTimeoutOption = undefined): Promise<void> {
+        await ConnectionUtils.checkConnection(this.zation,
+            (connectTimeout === undefined ? this.dbOptions.connectTimeout: connectTimeout));
 
         if (!this.created) {
             try {
@@ -320,7 +315,7 @@ export default class Databox {
                 this.created = true;
             } catch (e) {
                 this._clearListenersAndReset();
-                if(e.identifier === ErrorName.InvalidInput){
+                if(e.name === ErrorName.InvalidInput){
                     throw new InvalidInputError('Invalid init input. Failed to connect to the Databox.',e);
                 }
                 else {
@@ -364,36 +359,47 @@ export default class Databox {
      * Sends a connect request to the Databox on the server-side.
      * @private
      */
-    private async _connect() {
+    private async _connect(withToken: boolean = true) {
 
         const currentToken = this.token;
+        const tokenExists = currentToken !== undefined;
+        const sendToken = withToken && tokenExists;
 
         return new Promise<void>((resolve, reject) => {
             this.socket.emit(DATABOX_START_INDICATOR, {
-                al: this.apiLevel,
+                a: this.apiLevel,
                 d: this.identifier,
                 ...(this.member !== undefined ? {i: this.member}: {}),
-                ...(currentToken !== undefined ? {t: currentToken}: {}),
-                ...(this.initData !== undefined ? {ii: this.initData}: {})
+                ...(sendToken ? ({t: currentToken}) :
+                    (this.initData !== undefined ? {ii: this.initData}: {}))
             } as DataboxConnectReq, async (err, res: DataboxConnectRes) => {
 
-                if (err) {return reject(err);}
+                if (err) {
+                    if(err.name === ErrorName.InvalidToken && sendToken) {
+                        try {
+                            return await this._connect(false);
+                        }
+                        catch (innerErr) {err = innerErr;}
+                    }
+                    return reject(err);
+                }
 
                 this.connected = true;
 
-                this.serverSideCudId = res.ci;
+                this.serverSideCudId = res[2];
                 if (this.cudId === undefined) {
                     //first register
-                    this.cudId = res.ci;
+                    this.cudId = res[2];
                 }
 
-                this.inputChannel = res.i;
-                this.parallelFetch = res.pf;
-                this.outputChannel = res.o;
+                this.inputChannel = res[0];
+                this.outputChannel = res[1];
+                this.parallelFetch = res[3];
 
                 this.connectEvent.emit();
 
-                if (!res.ut && currentToken !== undefined) {
+                if (!withToken && tokenExists) {
+                    // noinspection ES6MissingAwait
                     (async () => {
                         this.tokenReloadActive = true;
                         await this._tryReload();
@@ -462,15 +468,14 @@ export default class Databox {
      * Fetch new data from the server.
      * You can pass in the fetch input as a parameter.
      * @param data
-     * @param waitForDbConnection
-     * With the WaitForDbConnection option, you can activate that the Databox is
+     * @param databoxConnectTimeout
+     * With the DataboxConnectTimeout option, you can activate that the Databox is
      * trying to connect (if it's not connected).
      * You have five possible choices:
      * Undefined: It will use the value from the default options
      * (DataboxOptions and last fall back is ZationOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the Databox is not connected.
-     * For the other options, it is also recommended to have activated the auto-reconnect.
      * Null: The Databox will try to connect (if it is not connected) and
      * waits until the connection is made, then it continues the action.
      * Number: Same as null, but now you can specify a timeout (in ms) of
@@ -486,13 +491,9 @@ export default class Databox {
      * @throws ConnectionRequiredError,TimeoutError,RawError,InvalidInputError,AbortSignal
      * To react to the error, you can use the DbError class.
      */
-    async fetch(data?: any, waitForDbConnection: WaitForConnectionOption = undefined, addToHistory: boolean = true): Promise<void> {
-
-        waitForDbConnection = waitForDbConnection === undefined ?
-            this.dbOptions.waitForDbConnection: waitForDbConnection;
-
+    async fetch(data?: any, databoxConnectTimeout: ConnectTimeoutOption = undefined, addToHistory: boolean = true): Promise<void> {
         await ConnectionUtils.checkDbConnection
-        (this, this.zation, waitForDbConnection, 'To fetch new data.');
+        (this, this.zation, (databoxConnectTimeout === undefined ? this.dbOptions.databoxConnectTimeout: databoxConnectTimeout));
 
         try {
             const resp = await this._fetch(data, DBClientInputSessionTarget.mainSession);
@@ -512,7 +513,7 @@ export default class Databox {
             }
             this.newDataEvent.emit(this);
         } catch (e) {
-            if(e.identifier === ErrorName.InvalidInput) {
+            if(e.name === ErrorName.InvalidInput) {
                 throw new InvalidInputError('Invalid fetch input.',e);
             }
             else {
@@ -560,8 +561,8 @@ export default class Databox {
                     results[fetchResult.c] = dbsHead;
                     this.tmpReloadDataSets.add(dbsHead);
                 } catch (err) {
-                    if ((err.identifier as ErrorName) !== ErrorName.NoMoreDataAvailable &&
-                        (err.identifier as ErrorName) !== ErrorName.NoDataAvailable) {
+                    if ((err.name as ErrorName) !== ErrorName.NoMoreDataAvailable &&
+                        (err.name as ErrorName) !== ErrorName.NoDataAvailable) {
                         throw err;
                     }
                 }
@@ -585,8 +586,8 @@ export default class Databox {
                 results[fetchResult.c] = dbsHead;
                 this.tmpReloadDataSets.add(dbsHead);
             } catch (err) {
-                if ((err.identifier as ErrorName) !== ErrorName.NoMoreDataAvailable &&
-                    (err.identifier as ErrorName) !== ErrorName.NoDataAvailable) {
+                if ((err.name as ErrorName) !== ErrorName.NoMoreDataAvailable &&
+                    (err.name as ErrorName) !== ErrorName.NoDataAvailable) {
                     throw err;
                 }
             }
@@ -599,24 +600,35 @@ export default class Databox {
      * @throws RawError,TimeoutError,ConnectionRequiredError
      * @param clearLocalCudOperations
      * Indicates if the local cud operations in memory should be cleared.
-     *
      */
     async reset(clearLocalCudOperations: boolean = true) {
         await this.disconnect(true,clearLocalCudOperations);
         await this.connect();
     }
 
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Clears everything disconnects the databox
+     * and connect the databox with a new member.
+     * @throws RawError,TimeoutError,ConnectionRequiredError
+     * @param newMember
+     */
+    async switchMember(newMember: string | undefined) {
+        await this.disconnect(true,true);
+        this.member = newMember;
+        await this.connect();
+    }
+
     /**
      * Reload the fetched data.
-     * @param waitForConnection
-     * With the WaitForDbConnection option, you can activate that the Databox is
+     * @param databoxConnectTimeout
+     * With the DataboxConnectTimeout option, you can activate that the Databox is
      * trying to connect (if it's not connected).
      * You have five possible choices:
      * Undefined: It will use the value from the default options
      * (DataboxOptions and last fall back is ZationOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the Databox is not connected.
-     * For the other options, it is also recommended to have activated the auto-reconnect.
      * Null: The Databox will try to connect (if it is not connected) and
      * waits until the connection is made, then it continues the action.
      * Number: Same as null, but now you can specify a timeout (in ms) of
@@ -625,9 +637,9 @@ export default class Databox {
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      * @throws ConnectionRequiredError,TimeoutError,RawError,InvalidInputError,AbortSignal
      */
-    async reload(waitForConnection: WaitForConnectionOption = false) {
+    async reload(databoxConnectTimeout: ConnectTimeoutOption = false) {
         const tmpCudId = this.cudId;
-        await ConnectionUtils.checkDbConnection(this, this.zation, waitForConnection, 'To reload Databox');
+        await ConnectionUtils.checkDbConnection(this, this.zation, databoxConnectTimeout);
         const reloadPromise: Promise<void> =
             afterPromise(this.reloadProcessPromise, async () => {
             const history = this.fetchHistoryManager.getHistory();
@@ -668,7 +680,7 @@ export default class Databox {
                 } catch (e) {
                     this.fetchHistoryManager.done();
                     this.tmpReloadDataSets.clear();
-                    if(e.identifier === ErrorName.InvalidInput){
+                    if(e.name === ErrorName.InvalidInput){
                         throw new InvalidInputError('Invalid fetch input in the reload process.',e);
                     }
                     else {
@@ -1313,15 +1325,14 @@ export default class Databox {
      * You also can send additional data with the signal.
      * @param signal
      * @param data
-     * @param waitForConnection
-     * With the WaitForDbConnection option, you can activate that the Databox is
+     * @param databoxConnectTimeout
+     * With the DataboxConnectTimeout option, you can activate that the Databox is
      * trying to connect (if it's not connected).
      * You have five possible choices:
      * Undefined: It will use the value from the default options
      * (DataboxOptions and last fall back is ZationOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the Databox is not connected.
-     * For the other options, it is also recommended to have activated the auto-reconnect.
      * Null: The Databox will try to connect (if it is not connected) and
      * waits until the connection is made, then it continues the action.
      * Number: Same as null, but now you can specify a timeout (in ms) of
@@ -1330,8 +1341,8 @@ export default class Databox {
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      * @throws ConnectionRequiredError,TimeoutError,AbortSignal
      */
-    async transmitSignal(signal: string, data?: any, waitForConnection: WaitForConnectionOption = false): Promise<void> {
-        await ConnectionUtils.checkDbConnection(this, this.zation, waitForConnection, 'To transmit a signal.');
+    async transmitSignal(signal: string, data?: any, databoxConnectTimeout: ConnectTimeoutOption = false): Promise<void> {
+        await ConnectionUtils.checkDbConnection(this, this.zation, databoxConnectTimeout);
         this.socket.emit(this.inputChannel, {
             a: DbClientInputAction.signal,
             s: signal,
