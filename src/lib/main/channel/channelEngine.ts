@@ -12,21 +12,14 @@ import {
     ChClientInputPackage, ChClientOutputKickOutPackage,
     ChClientOutputPublishPackage
 } from "./channelDefinitions";
-import {buildFullChId}    from "./channelUtils";
-import {Socket}           from "../sc/socket";
-import {Logger}           from "../logger/logger";
-import {RawError}         from "../../main/error/rawError";
-import {ZationConfig}     from "../config/zationConfig";
+import {buildFullChId} from "./channelUtils";
+import {RawError}      from "../../..";
+import {Socket}        from "../sc/socket";
 
 export class ChannelEngine
 {
     private readonly _channels: Map<string,Set<Channel>> = new Map();
-    private readonly _zc: ZationConfig;
     private _socket: Socket;
-
-    constructor(zc: ZationConfig) {
-        this._zc = zc;
-    }
 
     connectToSocket(socket: Socket)
     {
@@ -98,10 +91,6 @@ export class ChannelEngine
                             if(channel === notTriggerChannel) continue;
                             channel._triggerSubscribtion(fullChId);
                         }
-                    }
-                    if(this._zc.isDebug()) {
-                        Logger.printInfo(`Client subscribed to channel: '${identifier}'${
-                            member !== undefined ? ` with member: '${member}'` : ''}.`);
                     }
                     resolve({chId,fullChId});
                 }
