@@ -85,7 +85,7 @@ export class Zation
         //config
         this.zc = new ZationConfig(settings);
 
-        this.channelEngine = new ChannelEngine();
+        this.channelEngine = new ChannelEngine(this.zc);
         this.authEngine = new AuthEngine(this);
 
         //Responds
