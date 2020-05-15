@@ -613,9 +613,9 @@ export default class Databox {
      * @throws RawError,TimeoutError,ConnectionRequiredError
      * @param newMember
      */
-    async switchMember(newMember: string | undefined) {
+    async switchMember(newMember: string | number | undefined) {
         await this.disconnect(true,true);
-        this.member = newMember;
+        this.member = newMember !== undefined ? newMember.toString(): newMember;
         await this.connect();
     }
 
