@@ -4,8 +4,10 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-const  Emitter                 = require('component-emitter');
-const  SocketClusterClient     = require('socketcluster-client');
+const Emitter                  = require('component-emitter');
+//socketcluster-client/lib/sctransport.js:7
+if(typeof window === 'object'){(window as any).global = window;}
+const SocketClusterClient      = require('socketcluster-client');
 const clone                    = require('clone');
 const LinkedList               = require('linked-list');
 const scErrors                 = require('sc-errors');
