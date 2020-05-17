@@ -5,7 +5,7 @@ Copyright(c) Luca Scaringella
  */
 
 import {ZationToken}                   from "../constants/internal";
-import {Zation}                        from "../../core/zation";
+import {ZationClient}                  from "../../core/zationClient";
 import {SignAuthenticationFailedError} from "../error/signAuthenticationFailedError";
 import {DeauthenticationFailedError}   from "../error/deauthenticationFailedError";
 import {Logger}                        from "../logger/logger";
@@ -22,11 +22,11 @@ export class AuthEngine
     private signToken: string | null = null;
     private plainToken: ZationToken | null = null;
 
-    private readonly zation: Zation;
+    private readonly client: ZationClient;
 
-    constructor(zation: Zation)
+    constructor(client: ZationClient)
     {
-        this.zation = zation;
+        this.client = client;
 
         this.currentUserId = undefined;
         this.currentUserAuthGroup = undefined;
@@ -54,7 +54,7 @@ export class AuthEngine
         socket.on('connect',async (state) =>{
             if(!state.isAuthenticated && socket.getSignedAuthToken() !== this.signToken &&
             this.signToken !== null) {
-                try{await this.zation.signAuthenticate(this.signToken);}
+                try{await this.client.signAuthenticate(this.signToken);}
                 catch (e) {}
             }
         });
@@ -75,10 +75,10 @@ export class AuthEngine
 
     async signAuthenticate(signToken: string,connectTimeout: ConnectTimeoutOption): Promise<void>
     {
-        await ConnectionUtils.checkConnection(this.zation,connectTimeout);
+        await ConnectionUtils.checkConnection(this.client,connectTimeout);
 
         return new Promise<void>(async (resolve, reject) => {
-            this.zation.socket.authenticate(signToken,(err,authState)=>
+            this.client.socket.authenticate(signToken,(err,authState)=>
             {
                 if(err){
                     if(err.name === 'TimeoutError'){
@@ -101,7 +101,7 @@ export class AuthEngine
     deauthenticate(): Promise<void> {
         return new Promise<void>(async (resolve, reject) =>
         {
-            this.zation.socket.deauthenticate((e => {
+            this.client.socket.deauthenticate((e => {
                 if(e){
                     reject(new DeauthenticationFailedError(e));
                 } else {
@@ -116,7 +116,7 @@ export class AuthEngine
         this.currentUserId = token.userId;
 
         //id and group is allready set
-        if(this.zation.isDebug() && this.isAuthenticated()) {
+        if(this.client.isDebug() && this.isAuthenticated()) {
             Logger.printInfo
             (`User is authenticated with userId: '${this.currentUserId}' and auth user group: '${this.currentUserAuthGroup}'.`)
         }

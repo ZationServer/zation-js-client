@@ -560,7 +560,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * React on connect abort.
      * Triggers when a new connection is aborted for whatever reason.
      * This could be caused by a failure during the connection phase or
-     * it may be triggered intentionally by calling zation.disconnect() while the socket is connecting.
+     * it may be triggered intentionally by calling client.disconnect() while the socket is connecting.
      * @example
      * onConnectAbort((code,data) => {});
      * @param reaction
@@ -580,7 +580,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
      * React on connect abort.
      * Triggers when a new connection is aborted for whatever reason.
      * This could be caused by a failure during the connection phase or
-     * it may be triggered intentionally by calling zation.disconnect() while the socket is connecting.
+     * it may be triggered intentionally by calling client.disconnect() while the socket is connecting.
      * The reaction will trigger only one time.
      * It will automatically be removed from the reactions after invocation.
      * @example

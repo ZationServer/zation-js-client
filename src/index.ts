@@ -4,10 +4,9 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {ZationOptions as  Options}      from "./lib/core/zationOptions";
-import {Zation}                         from "./lib/core/zation";
-import {Zation as Client}               from "./lib/core/zation";
-import {Zation as ZationClient}         from "./lib/core/zation";
+import {ZationClientOptions as  Options}      from "./lib/core/zationClientOptions";
+import {ZationClient}                         from "./lib/core/zationClient";
+import {ZationClient as Client}               from "./lib/core/zationClient";
 import {ResponseReactionBox}            from "./lib/main/controller/response/responseReactionBox";
 import {EventReactionBox}               from "./lib/main/event/eventReactionBox";
 import {StandardRequest}                from "./lib/main/controller/request/main/standardRequest";
@@ -30,7 +29,7 @@ import {DeauthenticationFailedError}    from "./lib/main/error/deauthenticationF
 import {TimeoutError, TimeoutType}      from "./lib/main/error/timeoutError";
 import {SignAuthenticationFailedError}  from "./lib/main/error/signAuthenticationFailedError";
 import {Response}                       from "./lib/main/controller/response/response";
-import {ZationSaver}                    from "./lib/core/zationSaver";
+import {ZationClientFactory}            from "./lib/core/zationClientFactory";
 import {ZationClientNotFoundError}      from "./lib/main/error/zationClientNotFoundError";
 import {AbstractRequestBuilder}         from "./lib/main/controller/request/fluent/abstractRequestBuilder";
 import {AuthRequestBuilder}             from "./lib/main/controller/request/fluent/authRequestBuilder";
@@ -63,22 +62,20 @@ import Channel, {UnsubscribeReason}     from "./lib/main/channel/channel";
  * @description
  * Creates a Zation client.
  * @param options
- * @param reactionBox
  */
-const create = (options?: Options,...reactionBox: (ResponseReactionBox | EventReactionBox)[]): Zation => {
-    return new ZationClient(options,...reactionBox);
+const create = (options?: Options): ZationClient => {
+    return new ZationClient(options);
 };
 
 const save = (client: ZationClient, key: string = 'default') => {
-    ZationSaver.save(client,key);
+    ZationClientFactory.save(client,key);
 };
 
 const load = (key: string = 'default'): ZationClient => {
-    return ZationSaver.load(key);
+    return ZationClientFactory.load(key);
 };
 
 export {
-    Zation,
     Client,
     ZationClient,
     create,

@@ -6,7 +6,7 @@ Copyright(c) Luca Scaringella
 
 import {ConnectTimeoutDefaultOption} from "../main/utils/connectionUtils";
 
-export interface ZationOptions {
+export interface ZationClientOptions {
 
     /**
      * Boolean that indicates if the debug mode is active.
@@ -65,11 +65,6 @@ export interface ZationOptions {
      * @default false
      */
     rejectUnauthorized?: boolean;
-    /**
-     * Multiplexing allows you to reuse a socket instead of creating a new socket to the same address.
-     * @default true.
-     */
-    multiplex?: boolean;
     /**
      * If the client should add a timestamp to the WebSocket handshake request.
      * @default false
@@ -163,7 +158,7 @@ export interface ZationOptions {
     databoxConnectTimeout?: ConnectTimeoutDefaultOption;
 }
 
-export interface ZationOptionsInternal extends ZationOptions{
+export interface ZationClientOptionsInternal extends ZationClientOptions{
 
     debug: boolean;
     system: string;
@@ -173,7 +168,6 @@ export interface ZationOptionsInternal extends ZationOptions{
     port: number;
     secure: boolean;
     rejectUnauthorized: boolean;
-    multiplex: boolean;
     handshakeVariables: object;
     useAllServerSettings: boolean;
     autoReconnect: boolean;

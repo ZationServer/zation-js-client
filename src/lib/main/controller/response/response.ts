@@ -7,20 +7,20 @@ Copyright(c) Luca Scaringella
 // noinspection TypeScriptPreferShortImport,ES6PreferShortImport
 import {BackError}       from "../../backError/backError";
 // noinspection ES6PreferShortImport
-import {Zation}          from "../../../core/zation";
+import {ZationClient}    from "../../../core/zationClient";
 import {ResponseReact}   from "./responseReact";
 import {ControllerRes}   from "../controllerDefinitions";
 
 export class Response
 {
     private successful = false;
-    protected readonly client: Zation;
+    protected readonly client: ZationClient;
 
     private result: any = undefined;
     private readonly errors: BackError[] = [];
     private notCaughtErrors: BackError[] = [];
 
-    constructor(rawResponse: ControllerRes,client: Zation) {
+    constructor(rawResponse: ControllerRes,client: ZationClient) {
         this.successful = false;
         this.errors = [];
         this.client = client;

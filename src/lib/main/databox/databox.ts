@@ -39,7 +39,7 @@ import {Socket}                                                 from "../sc/sock
 import DbStorage, {DbStorageOptions, OnDataChange, OnDataTouch} from "./storage/dbStorage";
 import DbFetchHistoryManager, {FetchHistoryItem}                from "./dbFetchHistoryManager";
 import ObjectUtils                                              from "../utils/objectUtils";
-import {Zation}                                                 from "../../core/zation";
+import {ZationClient}                                           from "../../core/zationClient";
 import ConnectionUtils, {ConnectTimeoutOption}                  from "../utils/connectionUtils";
 import EventManager                                             from "../utils/eventManager";
 import {RawError}                                               from "../error/rawError";
@@ -104,7 +104,7 @@ export interface DataboxOptions {
      * trying to connect (if it's not connected) whenever you want
      * to fetchData.
      * You have five possible choices:
-     * Undefined: It will use the value from the default options (ZationOptions).
+     * Undefined: It will use the value from the default options (ZationClientOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the Databox is not connected.
      * For the other options, it is also recommended to have activated the auto-reconnect.
@@ -150,7 +150,7 @@ export default class Databox {
     private member: string | undefined;
     private readonly apiLevel: number | undefined;
     private readonly socket: Socket;
-    private readonly zation: Zation;
+    private readonly client: ZationClient;
 
     private readonly dbStorages: Set<DbStorage> = new Set<DbStorage>();
     private readonly mainDbStorage: DbStorage;
@@ -205,10 +205,10 @@ export default class Databox {
         initData: undefined
     };
 
-    constructor(zation: Zation, options: DataboxOptions, identifier: string, member?: string | number) {
+    constructor(client: ZationClient, options: DataboxOptions, identifier: string, member?: string | number) {
         ObjectUtils.addObToOb(this.dbOptions, options, true);
-        this.socket = zation.socket;
-        this.zation = zation;
+        this.socket = client.socket;
+        this.client = client;
         this.apiLevel = this.dbOptions.apiLevel;
         this.identifier = identifier;
         this.member = member !== undefined ? member.toString(): member;
@@ -283,7 +283,7 @@ export default class Databox {
 
     /**
      * This method is used to connect to the Databox on the server-side.
-     * Zation will automatically call that method for the first time.
+     * Zation client will automatically call that method for the first time.
      * You can use the method if you had disconnected the Databox and want to use it again.
      * Whenever the connection is lost, you don't need to call that method.
      * The Databox will reconnect automatically as fast as possible.
@@ -292,7 +292,7 @@ export default class Databox {
      * With the ConnectTimeout option, you can activate that the socket is
      * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options
-     * (DataboxOptions and last fall back is ZationOptions).
+     * (DataboxOptions and last fall back is ZationClientOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
      * Null: The socket will try to connect (if it is not connected) and
@@ -303,7 +303,7 @@ export default class Databox {
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
     async connect(connectTimeout: ConnectTimeoutOption = undefined): Promise<void> {
-        await ConnectionUtils.checkConnection(this.zation,
+        await ConnectionUtils.checkConnection(this.client,
             (connectTimeout === undefined ? this.dbOptions.connectTimeout: connectTimeout));
 
         if (!this.created) {
@@ -473,7 +473,7 @@ export default class Databox {
      * trying to connect (if it's not connected).
      * You have five possible choices:
      * Undefined: It will use the value from the default options
-     * (DataboxOptions and last fall back is ZationOptions).
+     * (DataboxOptions and last fall back is ZationClientOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the Databox is not connected.
      * Null: The Databox will try to connect (if it is not connected) and
@@ -493,7 +493,7 @@ export default class Databox {
      */
     async fetch(data?: any, databoxConnectTimeout: ConnectTimeoutOption = undefined, addToHistory: boolean = true): Promise<void> {
         await ConnectionUtils.checkDbConnection
-        (this, this.zation, (databoxConnectTimeout === undefined ? this.dbOptions.databoxConnectTimeout: databoxConnectTimeout));
+        (this, this.client, (databoxConnectTimeout === undefined ? this.dbOptions.databoxConnectTimeout: databoxConnectTimeout));
 
         try {
             const resp = await this._fetch(data, DBClientInputSessionTarget.mainSession);
@@ -626,7 +626,7 @@ export default class Databox {
      * trying to connect (if it's not connected).
      * You have five possible choices:
      * Undefined: It will use the value from the default options
-     * (DataboxOptions and last fall back is ZationOptions).
+     * (DataboxOptions and last fall back is ZationClientOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the Databox is not connected.
      * Null: The Databox will try to connect (if it is not connected) and
@@ -639,7 +639,7 @@ export default class Databox {
      */
     async reload(databoxConnectTimeout: ConnectTimeoutOption = false) {
         const tmpCudId = this.cudId;
-        await ConnectionUtils.checkDbConnection(this, this.zation, databoxConnectTimeout);
+        await ConnectionUtils.checkDbConnection(this, this.client, databoxConnectTimeout);
         const reloadPromise: Promise<void> =
             afterPromise(this.reloadProcessPromise, async () => {
             const history = this.fetchHistoryManager.getHistory();
@@ -1330,7 +1330,7 @@ export default class Databox {
      * trying to connect (if it's not connected).
      * You have five possible choices:
      * Undefined: It will use the value from the default options
-     * (DataboxOptions and last fall back is ZationOptions).
+     * (DataboxOptions and last fall back is ZationClientOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the Databox is not connected.
      * Null: The Databox will try to connect (if it is not connected) and
@@ -1342,7 +1342,7 @@ export default class Databox {
      * @throws ConnectionRequiredError,TimeoutError,AbortSignal
      */
     async transmitSignal(signal: string, data?: any, databoxConnectTimeout: ConnectTimeoutOption = false): Promise<void> {
-        await ConnectionUtils.checkDbConnection(this, this.zation, databoxConnectTimeout);
+        await ConnectionUtils.checkDbConnection(this, this.client, databoxConnectTimeout);
         this.socket.emit(this.inputChannel, {
             a: DbClientInputAction.signal,
             s: signal,

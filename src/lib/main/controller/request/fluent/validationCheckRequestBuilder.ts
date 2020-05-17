@@ -8,7 +8,7 @@ Copyright(c) Luca Scaringella
 import {ValidationCheckRequest}              from "../main/validationCheckRequest";
 import {AbstractRequestBuilder}              from "./abstractRequestBuilder";
 // noinspection ES6PreferShortImport
-import {Zation}                                 from "../../../../core/zation";
+import {ZationClient}                           from "../../../../core/zationClient";
 import {SpecialController, ValidationCheckPair} from "../../controllerDefinitions";
 
 export class ValidationCheckRequestBuilder extends AbstractRequestBuilder<ValidationCheckRequestBuilder>
@@ -16,8 +16,8 @@ export class ValidationCheckRequestBuilder extends AbstractRequestBuilder<Valida
     private readonly _controller: string | SpecialController = '';
     private _checks: ValidationCheckPair[] = [];
 
-    constructor(zation: Zation,controller: string | SpecialController) {
-        super(zation);
+    constructor(client: ZationClient, controller: string | SpecialController) {
+        super(client);
         this._controller = controller;
     }
 

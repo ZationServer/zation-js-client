@@ -5,19 +5,19 @@ Copyright(c) Luca Scaringella
  */
 
 import Databox, {DataboxOptions}  from "./databox";
-import {Zation}                   from "../../core/zation";
+import {ZationClient}             from "../../core/zationClient";
 import {DbStorageOptions}         from "./storage/dbStorage";
-import {ConnectTimeoutOption}  from "../utils/connectionUtils";
+import {ConnectTimeoutOption}     from "../utils/connectionUtils";
 
 export default class DataboxBuilder {
 
-    private readonly zation: Zation;
+    private readonly client: ZationClient;
     private readonly identifier: string;
     private readonly member?: string | number;
     private readonly dbOptions: DataboxOptions;
 
-    constructor(zation: Zation,identifier: string,member?: string | number){
-        this.zation = zation;
+    constructor(client: ZationClient, identifier: string, member?: string | number){
+        this.client = client;
         this.identifier = identifier;
         this.member = member;
         this.dbOptions = {};
@@ -102,7 +102,7 @@ export default class DataboxBuilder {
      * trying to connect (if it's not connected) whenever you want
      * to fetchData.
      * You have five possible choices:
-     * Undefined: It will use the value from the default options (ZationOptions).
+     * Undefined: It will use the value from the default options (ZationClientOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the Databox is not connected.
      * Null: The Databox will try to connect (if it is not connected) and
@@ -155,7 +155,7 @@ export default class DataboxBuilder {
      */
     get(autoConnect: false): Databox
     get(autoConnect: boolean = false): Databox | Promise<Databox> {
-        const databox = new Databox(this.zation,this.dbOptions,this.identifier,this.member);
+        const databox = new Databox(this.client,this.dbOptions,this.identifier,this.member);
         if(autoConnect){
             return new Promise<Databox>(async (resolve, reject) => {
                 try{

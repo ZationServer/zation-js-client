@@ -4,18 +4,18 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {Zation}                    from "./zation";
+import {ZationClient}              from "./zationClient";
 import {ZationClientNotFoundError} from "../main/error/zationClientNotFoundError";
 
-export class ZationSaver {
+export class ZationClientFactory {
 
-    private static client: Record<string,Zation> = {};
+    private static client: Record<string,ZationClient> = {};
 
-    static save(client: Zation,key: string) {
+    static save(client: ZationClient, key: string) {
         this.client[key] = client;
     }
 
-    static load(key): Zation {
+    static load(key): ZationClient {
         if(!this.client.hasOwnProperty(key)) {
             throw new ZationClientNotFoundError(key);
         }

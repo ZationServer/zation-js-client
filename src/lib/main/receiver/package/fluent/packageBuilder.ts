@@ -5,21 +5,21 @@ Copyright(c) Luca Scaringella
  */
 
 // noinspection ES6PreferShortImport
-import {Zation}                      from "../../../../core/zation";
+import {ZationClient}                from "../../../../core/zationClient";
 import {ConnectTimeoutOption}        from "../../../utils/connectionUtils";
 import Package                       from "../main/package";
 
 export default class PackageBuilder
 {
-    protected readonly zation: Zation;
+    protected readonly client: ZationClient;
 
     private readonly _receiver: string = '';
     private _data: any = undefined;
     private _apiLevel: number | undefined = undefined;
     private _connectTimeout: ConnectTimeoutOption = undefined;
 
-    constructor(zation: Zation,receiver: string,data?: any) {
-        this.zation = zation;
+    constructor(client: ZationClient, receiver: string, data?: any) {
+        this.client = client;
         this._receiver = receiver;
         this._data = data;
     }
@@ -88,6 +88,6 @@ export default class PackageBuilder
      * @throws ConnectionRequiredError,TimeoutError,AbortSignal
      */
     send(): Promise<void> {
-        return this.zation.send(this.buildPackage());
+        return this.client.send(this.buildPackage());
     }
 }

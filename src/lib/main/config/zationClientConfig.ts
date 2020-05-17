@@ -4,25 +4,25 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {ZationOptions, ZationOptionsInternal} from "../../core/zationOptions";
+import {ZationClientOptions, ZationClientOptionsInternal} from "../../core/zationClientOptions";
 
 const windowDefined = typeof window === 'object';
 
-export class ZationConfig
+export class ZationClientConfig
 {
-    private _config: ZationOptionsInternal;
+    private _config: ZationClientOptionsInternal;
 
-    constructor(config?: ZationOptions)
+    constructor(config?: ZationClientOptions)
     {
         this.loadDefaults(config);
         this.loadSettingsFromClientPrepare();
         if(config) {
             this.addToConfig(config,true);
         }
-        ZationConfig._preBuildConfig(this._config);
+        ZationClientConfig._preBuildConfig(this._config);
     }
 
-    static _preBuildConfig(config: ZationOptionsInternal) {
+    static _preBuildConfig(config: ZationClientOptionsInternal) {
         //path slash
         if(!config.path.startsWith('/')) {
             config.path = ('/'+config.path);
@@ -51,10 +51,10 @@ export class ZationConfig
             (window.location.protocol === 'https:'): false;
     }
 
-    loadDefaults(customOptions?: ZationOptions)
+    loadDefaults(customOptions?: ZationClientOptions)
     {
-        const defaultSecure = ZationConfig.getDefaultSecure();
-        const defaultPort = ZationConfig.getDefaultPort(customOptions,defaultSecure);
+        const defaultSecure = ZationClientConfig.getDefaultSecure();
+        const defaultPort = ZationClientConfig.getDefaultPort(customOptions,defaultSecure);
         this._config = {
             debug: false,
             system: 'Default',
@@ -64,7 +64,6 @@ export class ZationConfig
             port: defaultPort,
             secure: defaultSecure,
             rejectUnauthorized: false,
-            multiplex: true,
             handshakeVariables: {},
             useAllServerSettings: false,
             autoReconnect: true,
@@ -100,7 +99,7 @@ export class ZationConfig
     }
 
 
-    get config(): ZationOptionsInternal {
+    get config(): ZationClientOptionsInternal {
         return this._config;
     }
 

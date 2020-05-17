@@ -4,18 +4,18 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {Zation} from "../../core/zation";
+import {ZationClient} from "../../core/zationClient";
 
 export class ReactionBox<S>
 {
     protected self: S;
 
     protected active: boolean;
-    private zation: Zation | undefined;
+    private client: ZationClient | undefined;
 
     constructor() {
         this.active = true;
-        this.zation = undefined;
+        this.client = undefined;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -24,8 +24,8 @@ export class ReactionBox<S>
      * @description
      * This method is used internal!
      */
-    _link(zation: Zation) {
-        this.zation = zation;
+    _link(client: ZationClient) {
+        this.client = client;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -35,7 +35,7 @@ export class ReactionBox<S>
      * This method is used internal!
      */
     _unlink() {
-        this.zation = undefined;
+        this.client = undefined;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -44,8 +44,8 @@ export class ReactionBox<S>
      * Returns the linked client.
      * Notice that it can be undefined if no client is linked.
      */
-    getLinkedClient(): Zation | undefined {
-        return this.zation;
+    getLinkedClient(): ZationClient | undefined {
+        return this.client;
     }
 
     // noinspection JSUnusedGlobalSymbols

@@ -6,7 +6,7 @@ Copyright(c) Luca Scaringella
 
 
 // noinspection ES6PreferShortImport
-import {Zation}                                from "../../core/zation";
+import {ZationClient}                          from "../../core/zationClient";
 import {Response}                              from "./response/response";
 // noinspection ES6PreferShortImport
 import {TimeoutError, TimeoutType}             from "../error/timeoutError";
@@ -19,7 +19,7 @@ import {
 } from "./controllerDefinitions";
 
 export function controllerRequestSend(
-    zation: Zation,
+    client: ZationClient,
     cRequest: ControllerBaseReq | ControllerStandardReq | ControllerValidationCheckReq,
     responseTimeout: null | number | undefined,
     connectTimeout: ConnectTimeoutOption = undefined
@@ -27,15 +27,15 @@ export function controllerRequestSend(
 {
     return new Promise(async (resolve, reject) => {
         try {
-            await ConnectionUtils.checkConnection(zation,connectTimeout);
+            await ConnectionUtils.checkConnection(client,connectTimeout);
         }
         catch (err) {reject(err);}
 
         if(responseTimeout !== null){
-            responseTimeout = responseTimeout === undefined ? zation.getZc().config.responseTimeout: responseTimeout;
+            responseTimeout = responseTimeout === undefined ? client.getZc().config.responseTimeout: responseTimeout;
         }
 
-        zation.socket.emit(CONTROLLER_EVENT,cRequest,(err,res) => {
+        client.socket.emit(CONTROLLER_EVENT,cRequest,(err,res) => {
             if(err) {
                 if(err.name === 'TimeoutError'){
                     reject(new TimeoutError(TimeoutType.responseTimeout,err.message));
@@ -45,7 +45,7 @@ export function controllerRequestSend(
                 }
             }
             else {
-                resolve((new Response(res,zation)));
+                resolve((new Response(res,client)));
             }
         },responseTimeout);
     });

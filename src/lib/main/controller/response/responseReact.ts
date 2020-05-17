@@ -18,7 +18,7 @@ import {Response}               from "./response";
 import {BackErrorFilter}        from "../../backError/backErrorFilter";
 import {TriggerResponseHelper}  from "./triggerResponseHelper";
 // noinspection ES6PreferShortImport
-import {Zation}                 from "../../../core/zation";
+import {ZationClient}           from "../../../core/zationClient";
 import {ResponseReactAble}      from "./responseReactAble";
 import {FullReaction}           from "../../react/fullReaction";
 // noinspection ES6PreferShortImport
@@ -28,10 +28,10 @@ import {ResponseReactionBox}    from "./responseReactionBox";
 export class ResponseReact implements ResponseReactAble<ResponseReact,ResponseReact>
 {
     private readonly response: Response;
-    private readonly client: Zation;
+    private readonly client: ZationClient;
     private preAction: Promise<void>;
 
-    constructor(response: Response,client: Zation) {
+    constructor(response: Response,client: ZationClient) {
         this.preAction = Promise.resolve();
         this.response = response;
         this.client = client;

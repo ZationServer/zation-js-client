@@ -6,15 +6,15 @@ Copyright(c) Luca Scaringella
 
 import {AbstractRequestBuilder} from "./abstractRequestBuilder";
 // noinspection ES6PreferShortImport
-import {Zation}                 from "../../../../core/zation";
+import {ZationClient}           from "../../../../core/zationClient";
 import {AuthRequest}            from "../main/authRequest";
 
 export class AuthRequestBuilder extends AbstractRequestBuilder<AuthRequestBuilder>
 {
     private _authData: any = undefined;
 
-    constructor(zation: Zation) {
-        super(zation);
+    constructor(client: ZationClient) {
+        super(client);
     }
 
     // noinspection JSUnusedGlobalSymbols

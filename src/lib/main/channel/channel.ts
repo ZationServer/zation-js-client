@@ -6,7 +6,7 @@ Copyright(c) Luca Scaringella
 
 import {ChannelEngine}                         from "./channelEngine";
 import ConnectionUtils, {ConnectTimeoutOption} from "../utils/connectionUtils";
-import {Zation}                                from "../../core/zation";
+import {ZationClient}                          from "../../core/zationClient";
 import {buildFullChId}                         from "./channelUtils";
 import {FullReaction}                          from "../react/fullReaction";
 import {ListMap}                               from "../container/listMap";
@@ -46,7 +46,7 @@ export enum UnsubscribeReason {
 
 export default class Channel {
 
-    private readonly _zation: Zation;
+    private readonly _client: ZationClient;
     private readonly _channelEngine: ChannelEngine;
 
     private _chId?: string = undefined;
@@ -56,8 +56,8 @@ export default class Channel {
     private readonly _identifier: string;
     private readonly _apiLevel: number | undefined;
 
-    constructor(zation: Zation,identifier: string, apiLevel?: number) {
-        this._zation = zation;
+    constructor(zation: ZationClient, identifier: string, apiLevel?: number) {
+        this._client = zation;
         this._channelEngine = zation._getChannelEngine();
         this._identifier = identifier;
         this._apiLevel = apiLevel;
@@ -88,7 +88,7 @@ export default class Channel {
      */
     async subscribe(member?: string | number,connectTimeout: ConnectTimeoutOption = undefined): Promise<void> {
         if(member !== undefined) member = member.toString();
-        await ConnectionUtils.checkConnection(this._zation,connectTimeout);
+        await ConnectionUtils.checkConnection(this._client,connectTimeout);
         const {chId,fullChId} = await this._channelEngine.trySubscribe(this._identifier,this._apiLevel,member,this);
         const newSub = this.hasSubscribed(member);
         this._states.set(fullChId,{member,state: ChannelSubscribeState.Subscribed});

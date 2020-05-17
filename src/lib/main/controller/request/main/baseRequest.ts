@@ -48,7 +48,7 @@ export abstract class BaseRequest
      * @description
      * Set the timeout for the response of the request.
      * Value can be null which means the timeout is disabled or
-     * undefined then it will use the default timeout of the zation config,
+     * undefined then it will use the default timeout of the zation client config,
      * or it can be a number that indicates the milliseconds.
      * @param timeout
      */
@@ -61,7 +61,7 @@ export abstract class BaseRequest
      * @description
      * Returns the timeout for the response of the request.
      * Value can be null which means the timeout is disabled or
-     * undefined then it will use the default timeout of the zation config,
+     * undefined then it will use the default timeout of the zation client config,
      * or it can be a number that indicates the milliseconds.
      */
     getResponseTimeout(): number | null | undefined {

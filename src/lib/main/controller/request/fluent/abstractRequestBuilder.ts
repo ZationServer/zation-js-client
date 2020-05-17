@@ -15,7 +15,7 @@ import {CatchBackErrorBuilder}       from "../../response/error/catchBackErrorBu
 // noinspection ES6PreferShortImport
 import {BackErrorFilter}             from "../../../backError/backErrorFilter";
 // noinspection ES6PreferShortImport
-import {Zation}                      from "../../../../core/zation";
+import {ZationClient}                from "../../../../core/zationClient";
 // noinspection ES6PreferShortImport
 import {ResponseReactionBox}         from "../../response/responseReactionBox";
 // noinspection ES6PreferShortImport
@@ -26,7 +26,7 @@ import {BaseRequest}             from "../main/baseRequest";
 
 export abstract class AbstractRequestBuilder<T> implements ResponseReactAble<AbstractRequestBuilder<T>,T>
 {
-    protected readonly zation: Zation;
+    protected readonly client: ZationClient;
 
     protected _apiLevel: number | undefined = undefined;
     protected _responseTimeout: null | number | undefined = undefined;
@@ -35,8 +35,8 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble<Abs
     private _reactionAdded: boolean = false;
     private _addedResponseReactionBoxes: ResponseReactionBox[] = [];
 
-    protected constructor(zation: Zation) {
-        this.zation = zation;
+    protected constructor(zation: ZationClient) {
+        this.client = zation;
         this._responseReactionBox = new ResponseReactionBox();
     }
 
@@ -57,7 +57,7 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble<Abs
      * @description
      * Set the timeout for the response of the request.
      * Value can be null which means the timeout is disabled or
-     * undefined then it will use the default timeout of the zation config,
+     * undefined then it will use the default timeout of the zation client config,
      * or it can be a number that indicates the milliseconds.
      * @param timeout
      */
@@ -247,7 +247,7 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble<Abs
      * then trigger the client boxes by using response.react().triggerClientBoxes().
      */
     send(triggerClientBoxes: boolean = this._reactionAdded || this._addedResponseReactionBoxes.length > 0): Promise<Response> {
-        return this.zation.send(
+        return this.client.send(
             this.buildRequest(),
             triggerClientBoxes,
             [this._responseReactionBox,...this._addedResponseReactionBoxes]

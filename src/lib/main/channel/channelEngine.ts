@@ -12,19 +12,19 @@ import {
     ChClientInputPackage, ChClientOutputKickOutPackage,
     ChClientOutputPublishPackage
 } from "./channelDefinitions";
-import {buildFullChId}    from "./channelUtils";
-import {Socket}           from "../sc/socket";
-import {Logger}           from "../logger/logger";
-import {RawError}         from "../../main/error/rawError";
-import {ZationConfig}     from "../config/zationConfig";
+import {buildFullChId}      from "./channelUtils";
+import {Socket}             from "../sc/socket";
+import {Logger}             from "../logger/logger";
+import {RawError}           from "../../main/error/rawError";
+import {ZationClientConfig} from "../config/zationClientConfig";
 
 export class ChannelEngine
 {
     private readonly _channels: Map<string,Set<Channel>> = new Map();
-    private readonly _zc: ZationConfig;
+    private readonly _zc: ZationClientConfig;
     private _socket: Socket;
 
-    constructor(zc: ZationConfig) {
+    constructor(zc: ZationClientConfig) {
         this._zc = zc;
     }
 

@@ -4,14 +4,14 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {ZationOptions}                              from "./zationOptions";
+import {ZationClientOptions}                        from "./zationClientOptions";
 import {OnHandlerFunction, Socket}                  from "../main/sc/socket";
 import {Events}                                     from "../main/constants/events";
 import {SystemController}                           from "../main/constants/systemController";
 import {ZATION_CUSTOM_EVENT_NAMESPACE, ZationToken} from "../main/constants/internal";
 import ConnectionUtils, {ConnectTimeoutOption}      from "../main/utils/connectionUtils";
 import {ChannelEngine}                              from "../main/channel/channelEngine";
-import {ZationConfig}                               from "../main/config/zationConfig";
+import {ZationClientConfig}                         from "../main/config/zationClientConfig";
 import {MultiList}                                  from "../main/container/multiList";
 // noinspection ES6PreferShortImport
 import {ResponseReactionBox}           from "../main/controller/response/responseReactionBox";
@@ -51,11 +51,11 @@ import Channel                                  from "../main/channel/channel";
 
 const stringify                     = require("fast-stringify");
 
-export class Zation
+export class ZationClient
 {
     private readonly authEngine: AuthEngine;
     private readonly channelEngine: ChannelEngine;
-    private readonly zc: ZationConfig;
+    private readonly zc: ZationClientConfig;
 
     //Responds
     private readonly responseReactionMainBox: MultiList<ResponseReactionBox>;
@@ -78,12 +78,11 @@ export class Zation
      * @description
      * Creates a zation client.
      * @param settings
-     * @param reactionBox
      */
-    constructor(settings?: ZationOptions,...reactionBox: (ResponseReactionBox | EventReactionBox)[])
+    constructor(settings?: ZationClientOptions)
     {
         //config
-        this.zc = new ZationConfig(settings);
+        this.zc = new ZationClientConfig(settings);
 
         this.channelEngine = new ChannelEngine(this.zc);
         this.authEngine = new AuthEngine(this);
@@ -100,7 +99,6 @@ export class Zation
 
         this.responseReactionMainBox.addFixedItem(this.userResponseReactionBox);
         this.eventReactionMainBox.addFixedItem(this.userEventReactionBox);
-        this.addReactionBox(...reactionBox);
 
         this._buildWsSocket();
         this._registerSocketEvents();
@@ -125,7 +123,7 @@ export class Zation
      * @description
      * Add a reactionBox or more reactionBoxes.
      * Notice that the response reaction boxes are triggerd before the system response reaction box.
-     * The system response reaction box is the box that is returned by the method zation.responseReact().
+     * The system response reaction box is the box that is returned by the method client.responseReact().
      * The system response reaction box should be used to catch the remaining errors.
      * @example
      * addReactionBox(myResponseReactionBox,myEventReactionBox);
@@ -271,9 +269,9 @@ export class Zation
      * if the response was successful and the client is not authenticated or the response has errors.
      * At the AuthenticationFailedError you have the possibility to react exactly to the response.
      * If you prefer to do it by yourself or for advanced use cases, you should use the other method authRequest.
-     * Also notice that the zation response reaction boxes are not triggerd.
+     * Also notice that the zation client response reaction boxes are not triggerd.
      * Because then you have the opportunity to react with the response on specific things
-     * then trigger the zation response reaction boxes (using zationReact()).
+     * then trigger the zation client response reaction boxes (using triggerClientBoxes()).
      * @example
      * try{
      *  await client.authenticate({userName: 'Tim', password: 'opqdjß2jdp1d'});
@@ -357,9 +355,9 @@ export class Zation
      * @description
      * Connect and authenticate the client
      * and returns the Response from the authentication.
-     * Notice that the zation response reaction boxes are not triggerd.
+     * Notice that the zation client response reaction boxes are not triggerd.
      * Because then you have the opportunity to react with the response on specific things
-     * then trigger the zation response reaction boxes (using response.react().zationReact()).
+     * then trigger the zation client response reaction boxes (using response.react().triggerClientBoxes()).
      * @example
      * await conAndAuth({userName: 'Tim', password: 'opqdjß2jdp1d'});
      * @param authData The authentication credentials for the client.
@@ -395,7 +393,7 @@ export class Zation
      * The default values are:
      * Data: undefined
      * @example
-     * await zation.request('sendMessage')
+     * await client.request('sendMessage')
      * .data({msg: 'hallo'})
      * .catchError()
      * .presets()
@@ -421,7 +419,7 @@ export class Zation
      * The default values are:
      * AuthData: undefined
      * @example
-     * await zation.authRequest()
+     * await client.authRequest()
      * .authData({userName: 'luca',password: '123'})
      * .catchError()
      * .nameIs('passwordIsWrong')
@@ -447,7 +445,7 @@ export class Zation
      * The default values are:
      * Checks: []
      * @example
-     * await zation.validationRequest()
+     * await client.validationRequest()
      * .check('msg','hallo')
      * .catchError()
      * .presets()
@@ -762,7 +760,7 @@ export class Zation
             autoReconnect: this.zc.config.autoReconnect,
             autoReconnectOptions: this.zc.config.autoReconnectOptions,
             autoConnect: false,
-            multiplex: this.zc.config.multiplex,
+            multiplex: false,
             timestampRequests: this.zc.config.timestampRequests,
             ackTimeout: this.zc.config.responseTimeout,
             query: {
@@ -963,7 +961,7 @@ export class Zation
      * @param responseTimeout
      * Set the response timeout of the emit.
      * Value can be null which means the timeout is disabled or
-     * undefined then it will use the default response timeout of the zation config,
+     * undefined then it will use the default response timeout of the zation client config,
      * or it can be a number that indicates the milliseconds.
      */
     async emit(event: string,data: any,onlyTransmit: boolean = true,
@@ -1069,11 +1067,11 @@ export class Zation
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the zation config.
+     * Returns the zation client config.
      * Used internally.
      * Only use this method carefully.
      */
-    getZc(): ZationConfig {
+    getZc(): ZationClientConfig {
         return this.zc;
     }
 
@@ -1083,7 +1081,7 @@ export class Zation
      * but the IDE can interpret the typescript information of this library.
      * @param value
      */
-    static cast(value: any): Zation {
-        return value as Zation;
+    static cast(value: any): ZationClient {
+        return value as ZationClient;
     }
 }

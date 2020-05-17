@@ -6,7 +6,7 @@ Copyright(c) Luca Scaringella
 
 import {AbstractRequestBuilder}      from "./abstractRequestBuilder";
 // noinspection ES6PreferShortImport
-import {Zation}                      from "../../../../core/zation";
+import {ZationClient}                from "../../../../core/zationClient";
 // noinspection ES6PreferShortImport
 import {StandardRequest}             from "../main/standardRequest";
 import {SpecialController}           from "../../controllerDefinitions";
@@ -16,8 +16,8 @@ export class StandardRequestBuilder extends AbstractRequestBuilder<StandardReque
     private readonly _controller: string | SpecialController;
     private _data: any = undefined;
 
-    constructor(zation: Zation,controller: string | SpecialController,data?: any) {
-        super(zation);
+    constructor(client: ZationClient, controller: string | SpecialController, data?: any) {
+        super(client);
         this._controller = controller;
         this._data = data;
     }
