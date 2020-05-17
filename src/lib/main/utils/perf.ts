@@ -4,7 +4,6 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-const nodePerfHooksModule = 'perf_hooks';
 let perf: {
     /**
      * Returns accurate timestamp in milliseconds to measure performance.
@@ -16,7 +15,7 @@ if(typeof window === 'object' && window.performance !== undefined){
 }
 else {
     try {
-        perf = require(nodePerfHooksModule).performance;
+        perf = require('perf_hooks').performance;
     }
     catch (e) {
         perf = Date;
