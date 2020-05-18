@@ -60,9 +60,10 @@ export default abstract class DbsSimplePathCoordinator {
                     func(tmpKey);
                 }
             }
-            return;
         }
-        for(let i = 0; i < keysLegth; i++){func(keysTmp[i]);}
+        else {
+            for(let i = 0; i < keysLegth; i++){func(keysTmp[i]);}
+        }
     }
 
     checkIfConditions(ifOption: IfOptionProcessArgsValue): boolean {
