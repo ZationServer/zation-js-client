@@ -189,8 +189,9 @@ export default class DbsHead implements DbsComponent {
      * @param mt
      */
     insert(selector: DbProcessedSelector, value: any, args: InsertProcessArgs, mt: ModifyToken): void {
-        //clone args (more storages don't conflict with if condition result prepare)
+        //clone args (if condition result prepare) and selector (shift) (more storages don't conflict with refernces)
         args = {...args};
+        selector = [...selector];
         if (selector.length === 0) {
             this._insert(value,args,mt);
         } else if (isDbsComponent(this.componentValue)) {
@@ -230,8 +231,9 @@ export default class DbsHead implements DbsComponent {
      * @param mt
      */
     update(selector: DbProcessedSelector, value: any, args: UpdateProcessArgs, mt: ModifyToken): void {
-        //clone args (more storages don't conflict with if condition result prepare)
+        //clone args (if condition result prepare) and selector (shift) (more storages don't conflict with refernces)
         args = {...args};
+        selector = [...selector];
         if (selector.length === 0) {
             this._update(value,args,mt);
         } else if (isDbsComponent(this.componentValue)) {
@@ -274,8 +276,9 @@ export default class DbsHead implements DbsComponent {
      * @param mt
      */
     delete(selector: DbProcessedSelector, args: DeleteProcessArgs, mt: ModifyToken): void {
-        //clone args (more storages don't conflict with if condition result prepare)
+        //clone args (if condition result prepare) and selector (shift) (more storages don't conflict with refernces)
         args = {...args};
+        selector = [...selector];
         if (selector.length === 0) {
             this._delete(args,mt);
         } else if (isDbsComponent(this.componentValue)) {

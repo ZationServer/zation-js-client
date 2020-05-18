@@ -170,7 +170,9 @@ export default abstract class DbsSimplePathCoordinator {
             selector.shift();
             const res: DbsComponent[] = [];
             const len = nextComponents.length;
-            for(let i = 0; i < len; i++) res.push(...(nextComponents[i] as DbsComponent).getDbsComponents(selector));
+            const cloneSelector = len > 1;
+            for(let i = 0; i < len; i++) res.push(...(nextComponents[i] as DbsComponent)
+                .getDbsComponents(cloneSelector ? [...selector] : selector));
             return res;
         }
         return [];
@@ -211,10 +213,12 @@ export default abstract class DbsSimplePathCoordinator {
             const nextComponents = this._getDbsComponents(selector[0]);
             selector.shift();
             const len = nextComponents.length;
+            const cloneSelector = len > 1;
             //Clone args because if conditions result can only be prepared for one element.
-            const cloneArgs = (len > 1) && args.if !== undefined;
+            const cloneArgs = cloneSelector && args.if !== undefined;
             for(let i = 0; i < len; i++) {
-                (nextComponents[i] as DbsComponent).insert(selector,value,cloneArgs ? {...args}: args,mt);
+                (nextComponents[i] as DbsComponent).insert(cloneSelector ? [...selector] : selector,
+                    value,cloneArgs ? {...args}: args,mt);
             }
         }
     }
@@ -253,10 +257,12 @@ export default abstract class DbsSimplePathCoordinator {
             const nextComponents = this._getDbsComponents(selector[0]);
             selector.shift();
             const len = nextComponents.length;
+            const cloneSelector = len > 1;
             //Clone args because if conditions result can only be prepared for one element.
-            const cloneArgs = (len > 1) && args.if !== undefined;
+            const cloneArgs = cloneSelector && args.if !== undefined;
             for(let i = 0; i < len; i++) {
-                (nextComponents[i] as DbsComponent).update(selector,value,cloneArgs ? {...args}: args,mt);
+                (nextComponents[i] as DbsComponent).update(cloneSelector ? [...selector] : selector,
+                    value,cloneArgs ? {...args}: args,mt);
             }
         }
     }
@@ -292,10 +298,12 @@ export default abstract class DbsSimplePathCoordinator {
             const nextComponents = this._getDbsComponents(selector[0]);
             selector.shift();
             const len = nextComponents.length;
+            const cloneSelector = len > 1;
             //Clone args because if conditions result can only be prepared for one element.
-            const cloneArgs = (len > 1) && args.if !== undefined;
+            const cloneArgs = cloneSelector && args.if !== undefined;
             for(let i = 0; i < len; i++){
-                (nextComponents[i] as DbsComponent).delete(selector,cloneArgs ? {...args}: args,mt);
+                (nextComponents[i] as DbsComponent).delete(cloneSelector ? [...selector] : selector,
+                    cloneArgs ? {...args}: args,mt);
             }
         }
     }
