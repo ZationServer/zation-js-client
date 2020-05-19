@@ -4,7 +4,7 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {ZationClientOptions as  Options}      from "./lib/core/zationClientOptions";
+import {ZationClientOptions}                  from "./lib/core/zationClientOptions";
 import {ZationClient}                         from "./lib/core/zationClient";
 import {ZationClient as Client}               from "./lib/core/zationClient";
 import {ResponseReactionBox}            from "./lib/main/controller/response/responseReactionBox";
@@ -21,6 +21,12 @@ import {
     $pair,
     $value
 } from "./lib/main/databox/dbApiUtils";
+import {
+    setMainClient,
+    clearMainClient,
+    mainClient,
+    ZationMainClientManager
+} from "./lib/core/zationMainClientManager";
 import {AuthenticationFailedError}      from "./lib/main/error/authenticationFailedError";
 import {AuthenticationRequiredError}    from "./lib/main/error/authenticationRequiredError";
 import {ConnectionAbortError}           from "./lib/main/error/connectionAbortError";
@@ -29,8 +35,6 @@ import {DeauthenticationFailedError}    from "./lib/main/error/deauthenticationF
 import {TimeoutError, TimeoutType}      from "./lib/main/error/timeoutError";
 import {SignAuthenticationFailedError}  from "./lib/main/error/signAuthenticationFailedError";
 import {Response}                       from "./lib/main/controller/response/response";
-import {ZationClientFactory}            from "./lib/core/zationClientFactory";
-import {ZationClientNotFoundError}      from "./lib/main/error/zationClientNotFoundError";
 import {AbstractRequestBuilder}         from "./lib/main/controller/request/fluent/abstractRequestBuilder";
 import {AuthRequestBuilder}             from "./lib/main/controller/request/fluent/authRequestBuilder";
 import {StandardRequestBuilder}         from "./lib/main/controller/request/fluent/standardRequestBuilder";
@@ -57,31 +61,35 @@ import Package                          from "./lib/main/receiver/package/main/p
 import PackageBuilder                   from "./lib/main/receiver/package/fluent/packageBuilder";
 import Channel, {UnsubscribeReason}     from "./lib/main/channel/channel";
 
+let client = mainClient;
+ZationMainClientManager.onMainClientChange(mainClient => client = mainClient);
+
 // noinspection JSUnusedGlobalSymbols
 /**
  * @description
  * Creates a Zation client.
  * @param options
+ * @param main
+ * Indicates if the created client is the main client.
+ * The main client can be easily accessed in any file
+ * by importing: client from this module.
+ * To clear the main client later you can
+ * use the function: clearMainClient.
  */
-const create = (options?: Options): ZationClient => {
-    return new ZationClient(options);
-};
-
-const save = (client: ZationClient, key: string = 'default') => {
-    ZationClientFactory.save(client,key);
-};
-
-const load = (key: string = 'default'): ZationClient => {
-    return ZationClientFactory.load(key);
+const create = (options?: ZationClientOptions,main: boolean = false): ZationClient => {
+    const client = new ZationClient(options);
+    if(main) setMainClient(client);
+    return client;
 };
 
 export {
+    create,
+    client,
+    setMainClient,
+    clearMainClient,
     Client,
     ZationClient,
-    create,
-    save,
-    load,
-    Options,
+    ZationClientOptions,
     Package,
     StandardRequest,
     AuthRequest,
@@ -100,7 +108,6 @@ export {
     TimeoutError,
     TimeoutType,
     SignAuthenticationFailedError,
-    ZationClientNotFoundError,
     PackageBuilder,
     AbstractRequestBuilder,
     AuthRequestBuilder,
