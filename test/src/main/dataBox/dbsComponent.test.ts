@@ -104,6 +104,16 @@ describe('MAIN.Databox.Storage',() => {
                 assert.deepEqual(head.getData(),[{id : 1},{id : 2},{id : 3},{id : 4}]);
             });
 
+            it('KeyArray - deep normal', () => {
+                const head = new DbsHead(buildKeyArray([{id : 1}],'id'));
+
+                head.insert(['1','name'],'Test',{timestamp : Date.now()},createSimpleModifyToken());
+
+                assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
+
+                assert.deepEqual(head.getData(),[{id : 1, name: 'Test'}]);
+            });
+
             it('KeyArray - normal (With if condition)', () => {
                 const head = new DbsHead(buildKeyArray([{id : 1},{id : 2},{id : 4},{id : 5}],'id'));
 
@@ -197,6 +207,16 @@ describe('MAIN.Databox.Storage',() => {
                 assert.deepEqual(head.getData(),{name : 'tom',age : 20});
             });
 
+            it('Object deep', () => {
+                const head = new DbsHead({name : 'luca',age : 20,car: {model: 'VW'}});
+
+                head.update(['car','model'],'Porsche',{timestamp : Date.now()},createSimpleModifyToken());
+
+                assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
+
+                assert.deepEqual(head.getData(),{name : 'luca',age : 20,car: {model: 'Porsche'}});
+            });
+
             it('Object (Missing key)', () => {
                 const head = new DbsHead({name : 'luca',age : 20});
 
@@ -216,6 +236,40 @@ describe('MAIN.Databox.Storage',() => {
 
                 assert.deepEqual(head.getData(),['a','c','c']);
             });
+        });
+
+        describe('Complex Update',() => {
+
+            it('Deep with key filter query', () => {
+                const head = new DbsHead(buildKeyArray([{id : 1,v : {v: ''}},{id : 3,v : {v: ''}},{id : 4,v : {v: ''}}],'id'));
+
+                head.update([$key({$gt: 2}),'v','v'],'t',{timestamp : Date.now()},createSimpleModifyToken());
+
+                assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
+
+                assert.deepEqual(head.getData(),[{id : 1,v : {v: ''}},{id : 3,v : {v: 't'}},{id : 4,v : {v: 't'}}]);
+            });
+
+            it('Deep with value filter query', () => {
+                const head = new DbsHead(buildKeyArray([{id : 1,v : {v: ''}},{id : 3,v : {v: ''}},{id : 4,v : {v: ''}}],'id'));
+
+                head.update([$value({id: {$gt: 2}}),'v','v'],'t',{timestamp : Date.now()},createSimpleModifyToken());
+
+                assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
+
+                assert.deepEqual(head.getData(),[{id : 1,v : {v: ''}},{id : 3,v : {v: 't'}},{id : 4,v : {v: 't'}}]);
+            });
+
+            it('Deep with all filter query', () => {
+                const head = new DbsHead(buildKeyArray([{id : 1,v : {v: ''}},{id : 3,v : {v: ''}},{id : 4,v : {v: ''}}],'id'));
+
+                head.update([$value({}),'v','v'],'t',{timestamp : Date.now()},createSimpleModifyToken());
+
+                assert.deepEqual(head.getData(),head.getDataCopy(),'Copy should be deep equal');
+
+                assert.deepEqual(head.getData(),[{id : 1,v : {v: 't'}},{id : 3,v : {v: 't'}},{id : 4,v : {v: 't'}}]);
+            });
+
         });
 
         describe('Delete',() => {
