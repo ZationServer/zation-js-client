@@ -37,7 +37,6 @@ import {AuthEngine}                 from "../main/auth/authEngine";
 import {ModifiedScClient}           from "../main/sc/modifiedScClient";
 // noinspection ES6PreferShortImport
 import {TimeoutError, TimeoutType}  from "../main/error/timeoutError";
-import DataboxBuilder               from "../main/databox/databoxBuilder";
 import perf                         from "../main/utils/perf";
 import {BaseRequest}                from "../main/controller/request/main/baseRequest";
 // noinspection ES6PreferShortImport
@@ -48,6 +47,8 @@ import Package, {isPackage}                     from "../main/receiver/package/m
 import {receiverPackageSend}                    from "../main/receiver/receiverSendeUtils";
 import PackageBuilder                           from "../main/receiver/package/fluent/packageBuilder";
 import Channel                                  from "../main/channel/channel";
+import Databox, {DataboxOptions}                from "../main/databox/databox";
+import DataboxManager                           from "../main/databox/databoxManager";
 
 const stringify                     = require("fast-stringify");
 
@@ -55,6 +56,7 @@ export class ZationClient
 {
     private readonly authEngine: AuthEngine;
     private readonly channelEngine: ChannelEngine;
+    private readonly databoxManager: DataboxManager;
     private readonly zc: ZationClientConfig;
 
     //Responds
@@ -85,6 +87,7 @@ export class ZationClient
         this.zc = new ZationClientConfig(settings);
 
         this.channelEngine = new ChannelEngine(this.zc);
+        this.databoxManager = new DataboxManager();
         this.authEngine = new AuthEngine(this);
 
         //Responds
@@ -481,21 +484,29 @@ export class ZationClient
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Returns a Databox builder, which helps you to build the
-     * settings for connecting to the Databox on the server.
-     * The builder returns a new Databox object, with this object
-     * you easily can connect to a Databox on the server-side.
-     * The Databox handles mostly everything: disconnections,
-     * missing cud updates, restores.
-     * It will do everything that it always has the newest data.
+     * Returns a new Databox.
+     * With the Databox you can keep data in a current state in real-time.
+     * The client-side Databox will connect to the server-side
+     * Databox and handles mostly everything: disconnections, missing cud updates, restores.
+     * It will do everything, that it always has the newest data.
+     * To process data changes extremely fast the client Databox has
+     * internally optimized storage instances.
      * @param identifier
      * The identifier of the Databox that is also used to register a
      * Databox in the configuration of the server.
-     * @param member
-     * The member is only needed if you want to connect to a DataboxFamily.
+     * @param options
      */
-    databox(identifier: string,member?: string | number): DataboxBuilder {
-        return new DataboxBuilder(this,identifier,member);
+    databox(identifier: string,options: DataboxOptions = {}): Databox {
+        return new Databox(this,identifier,options);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Disconnects all Databoxes.
+     * Can be used to securely clear all resources.
+     */
+    async disconnectAllDataboxes(): Promise<void> {
+        return this.databoxManager.disconnectAll();
     }
 
     /**
@@ -1062,6 +1073,15 @@ export class ZationClient
      */
     _getChannelEngine(): ChannelEngine {
         return this.channelEngine;
+    }
+
+    /**
+     * @internal
+     * Used internally.
+     * @private
+     */
+    _getDataboxManager(): DataboxManager {
+        return this.databoxManager;
     }
 
     // noinspection JSUnusedGlobalSymbols

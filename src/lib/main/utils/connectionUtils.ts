@@ -139,10 +139,10 @@ export default class ConnectionUtils {
             databox.onceConnect(dbConnectListener);
 
             if(!client.isConnected()){
-                if(!databox.isCreated()){
+                if(!databox.isInitialized()){
                     socketConnectListener = async () => {
                         try {
-                            await databox.connect(false);
+                            await databox._connect();
                         }
                         catch (e) {}
                         socket.off('connect',socketConnectListener);
@@ -151,9 +151,9 @@ export default class ConnectionUtils {
                 }
                 socket.connect();
             }
-            else if(!databox.isCreated()){
+            else if(!databox.isInitialized()){
                 try {
-                    await databox.connect(false);
+                    await databox._connect();
                 }
                 catch (e) {}
             }

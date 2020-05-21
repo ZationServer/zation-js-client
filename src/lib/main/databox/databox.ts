@@ -161,7 +161,7 @@ export default class Databox {
 
     private readonly initData: any;
 
-    private created: boolean = false;
+    private initialized: boolean = false;
     private token: string | undefined = undefined;
 
     private readonly localCudOperationsMemory: LocalCudOperationsMemory = new LocalCudOperationsMemory();
@@ -205,13 +205,12 @@ export default class Databox {
         initData: undefined
     };
 
-    constructor(client: ZationClient, options: DataboxOptions, identifier: string, member?: string | number) {
+    constructor(client: ZationClient, identifier: string, options: DataboxOptions) {
         ObjectUtils.addObToOb(this.dbOptions, options, true);
         this.socket = client.socket;
         this.client = client;
         this.apiLevel = this.dbOptions.apiLevel;
         this.identifier = identifier;
-        this.member = member !== undefined ? member.toString(): member;
         this.initData = this.dbOptions.initData;
 
         const tmpRestoreStorageOptions: DbStorageOptions = {
@@ -272,7 +271,8 @@ export default class Databox {
      * @private
      */
     private _resetStateData() {
-        this.created = false;
+        this.initialized = false;
+        this.client._getDataboxManager().delete(this);
         this.connected = false;
         this.token = undefined;
         this.cudId = undefined;
@@ -282,12 +282,18 @@ export default class Databox {
     }
 
     /**
-     * This method is used to connect to the Databox on the server-side.
-     * Zation client will automatically call that method for the first time.
-     * You can use the method if you had disconnected the Databox and want to use it again.
+     * This method must be called to connect to the Databox on the server-side.
+     * A member can be provided to connect to a specific member in case of a DataboxFamily.
+     * If you had disconnected the Databox and want to use it again you
+     * can use this method to connect it again.
+     * You also can use this method to switch the member of the Databox.
+     * If the Databox is already connected to another member the Databox will
+     * be disconnect firstly and will then connect to the new member.
      * Whenever the connection is lost, you don't need to call that method.
      * The Databox will reconnect automatically as fast as possible.
      * @throws RawError,TimeoutError,ConnectionRequiredError,InvalidInputError,AbortSignal
+     * @param member
+     * The member can only be provided if you want to connect to a Databox Family.
      * @param connectTimeout
      * With the ConnectTimeout option, you can activate that the socket is
      * trying to connect when it is not connected. You have five possible choices:
@@ -302,17 +308,34 @@ export default class Databox {
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
-    async connect(connectTimeout: ConnectTimeoutOption = undefined): Promise<void> {
+    async connect(member?: string | number,connectTimeout: ConnectTimeoutOption = undefined): Promise<void> {
         await ConnectionUtils.checkConnection(this.client,
             (connectTimeout === undefined ? this.dbOptions.connectTimeout: connectTimeout));
 
-        if (!this.created) {
+        member = member !== undefined ? member.toString() : member;
+        if(this.initialized && member !== this.member) {
+            await this.disconnect(true,true);
+        }
+        this.member = member;
+
+        await this._connect();
+    }
+
+    /**
+     * Internal connect.
+     * If the databox is not initialized it also initializes the databox.
+     * @internal
+     * @private
+     */
+    async _connect() {
+        if (!this.initialized) {
             try {
                 this._registerSocketStateHandler();
-                await this._connect();
+                await this._sendConnect();
                 this._registerOutputChannel();
                 this._updateHistoryFetch();
-                this.created = true;
+                this.initialized = true;
+                this.client._getDataboxManager().add(this);
             } catch (e) {
                 this._clearListenersAndReset();
                 if(e.name === ErrorName.InvalidInput){
@@ -339,7 +362,7 @@ export default class Databox {
      * @throws
      */
     private async _reconnect() {
-        await this._connect();
+        await this._sendConnect();
         await this._checkCudUpToDate();
     }
 
@@ -359,7 +382,7 @@ export default class Databox {
      * Sends a connect request to the Databox on the server-side.
      * @private
      */
-    private async _connect(withToken: boolean = true) {
+    private async _sendConnect(withToken: boolean = true) {
 
         const currentToken = this.token;
         const tokenExists = currentToken !== undefined;
@@ -377,7 +400,7 @@ export default class Databox {
                 if (err) {
                     if(err.name === ErrorName.InvalidToken && sendToken) {
                         try {
-                            return await this._connect(false);
+                            return await this._sendConnect(false);
                         }
                         catch (innerErr) {err = innerErr;}
                     }
@@ -603,20 +626,7 @@ export default class Databox {
      */
     async reset(clearLocalCudOperations: boolean = true) {
         await this.disconnect(true,clearLocalCudOperations);
-        await this.connect();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * Clears everything disconnects the databox
-     * and connect the databox with a new member.
-     * @throws RawError,TimeoutError,ConnectionRequiredError
-     * @param newMember
-     */
-    async switchMember(newMember: string | number | undefined) {
-        await this.disconnect(true,true);
-        this.member = newMember !== undefined ? newMember.toString(): newMember;
-        await this.connect();
+        await this.connect(this.member);
     }
 
     /**
@@ -1269,10 +1279,13 @@ export default class Databox {
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Returns if the Databox is created.
+     * Databox will be internally initialized if you connect it for the first time.
+     * When you disconnect it manually the internal initialization will be
+     * deleted to free resources.
+     * This function returns if the databox is initialized.
      */
-    isCreated(): boolean {
-        return this.created;
+    isInitialized(): boolean {
+        return this.initialized;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1281,6 +1294,13 @@ export default class Databox {
      */
     getCurrentCudId(): string | undefined {
         return this.cudId;
+    }
+
+    /**
+     * Returns the current member.
+     */
+    getCurrentMember(): string | undefined {
+        return this.member;
     }
 
     // noinspection JSUnusedGlobalSymbols
