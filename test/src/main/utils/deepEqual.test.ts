@@ -18,6 +18,8 @@ describe('MAIN.Utils.DeepEqual', () => {
         {value1: 3, value2: 3, expected: true},
         {value1: 'a', value2: 'b', expected: false},
         {value1: 'a', value2: 'a', expected: true},
+        {value1: {a: ''}, value2: {a: '',b: ''}, expected: false},
+        {value1: {a: ''}, value2: {b: ''}, expected: false},
         {value1: {a: [], f: {c: '12',d: 12}}, value2: {a: [], f: {c: '12',d: 12}}, expected: true},
         {value1: {a: [], f: {c: '12',d: 13}}, value2: {a: [], f: {c: '12',d: 12}}, expected: false},
         {value1: {a: [], f: {c: '14',d: 12}}, value2: {a: [], f: {c: '12',d: 12}}, expected: false},
