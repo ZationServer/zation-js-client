@@ -1,3 +1,9 @@
+/*
+Author: Luca Scaringella
+GitHub: LucaCode
+Copyright(c) Luca Scaringella
+ */
+
 import {deepEqual} from '../../../../src/lib/main/utils/deepEqual';
 const assert            = require("chai").assert;
 
