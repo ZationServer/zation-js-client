@@ -68,7 +68,7 @@
     "fast-stringify": "2.0.0",
     "component-emitter": "1.2.1",
     "tiny-emitter": "2.1.0",
-    "forint": "0.1.7"
+    "forint": "0.1.8"
   },
   "devDependencies": {
     "@babel/core": "7.1.0",
