@@ -54,5 +54,6 @@ export default class DbFetchHistoryManager {
      */
     done(): void {
         this.history = this.returnedHistory.concat(this.history);
+        this.returnedHistory = [];
     }
 }
