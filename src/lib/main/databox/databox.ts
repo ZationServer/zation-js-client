@@ -648,10 +648,9 @@ export default class Databox {
      * @throws ConnectionRequiredError,TimeoutError,RawError,InvalidInputError,AbortSignal
      */
     async reload(databoxConnectTimeout: ConnectTimeoutOption = false) {
-        const tmpCudId = this.cudId;
         await ConnectionUtils.checkDbConnection(this, this.client, databoxConnectTimeout);
-        const reloadPromise: Promise<void> =
-            afterPromise(this.reloadProcessPromise, async () => {
+        const reloadPromise: Promise<void> = afterPromise(this.reloadProcessPromise, async () => {
+            const tmpCudId = this.cudId;
             const history = this.fetchHistoryManager.getHistory();
             if (history.length > 0) {
                 await this.sendSessionAction(DbClientInputAction.resetSession, DBClientInputSessionTarget.reloadSession);
