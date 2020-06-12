@@ -53,6 +53,7 @@ import {TinyEmitter}                                            from "tiny-emitt
 import {createSimpleModifyToken}                                from "./storage/components/modifyToken";
 import {deepCloneInstance}                                      from "../utils/cloneUtils";
 import LocalCudOperationsMemory                                 from "./localCudOperationsMemory";
+import {Logger}                                                 from "../logger/logger";
 
 export interface DataboxOptions {
     /**
@@ -727,6 +728,8 @@ export default class Databox {
         try {
             await this.reload();
         } catch (e) {
+            if(this.client.isDebug())
+                Logger.printError('Failed to reload databox: ',e);
         }
     }
 
