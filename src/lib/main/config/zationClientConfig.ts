@@ -64,7 +64,7 @@ export class ZationClientConfig
             port: defaultPort,
             secure: defaultSecure,
             rejectUnauthorized: false,
-            handshakeVariables: {},
+            handshakeAttachment: {},
             useAllServerSettings: false,
             autoReconnect: true,
             autoReconnectOptions: {},

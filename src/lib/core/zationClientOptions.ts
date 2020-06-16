@@ -72,10 +72,12 @@ export interface ZationClientOptions {
     timestampRequests?: boolean;
 
     /**
-     * These variables will be sent to the server when the client is creating his connection.
+     * This attachment will be sent to the server when
+     * the client is creating his connection and
+     * can be accessed from the server-side.
      * @default {}
      */
-    handshakeVariables?: object;
+    handshakeAttachment?: object;
 
     /**
      * Specifies if the client should overwrite the default options (hostname, port, secure, path and postKey)
@@ -168,7 +170,7 @@ export interface ZationClientOptionsInternal extends ZationClientOptions{
     port: number;
     secure: boolean;
     rejectUnauthorized: boolean;
-    handshakeVariables: object;
+    handshakeAttachment: object;
     useAllServerSettings: boolean;
     autoReconnect: boolean;
     autoReconnectOptions: {

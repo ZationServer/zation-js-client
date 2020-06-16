@@ -778,7 +778,7 @@ export class ZationClient
                 system: this.zc.config.system,
                 version: this.zc.config.version,
                 apiLevel: this.zc.config.apiLevel,
-                variables: stringify(this.zc.config.handshakeVariables)
+                attachment: stringify(this.zc.config.handshakeAttachment)
             }
         };
     }
