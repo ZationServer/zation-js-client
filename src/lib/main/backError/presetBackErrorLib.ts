@@ -1269,18 +1269,6 @@ export abstract class PresetBackErrorLib<T>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Preset for authenticationError.
-     * The BackError error can be thrown by trying to authenticate an sc.
-     */
-    authenticationError(): T {
-        this._presetAdd(this._zationErrorBuild
-        (ErrorType.SystemError,'authenticationError'));
-        return this.self();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
      * Preset for any input error.
      */
     inputError(): T {

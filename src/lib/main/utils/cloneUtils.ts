@@ -51,6 +51,6 @@ export function deepClone<T extends any = any>(v: T): T {
     }
     // handle case: object
     newO = {};
-    for (i in v) if (v.hasOwnProperty(i)) newO[i] = deepClone(v[i]);
+    for (i in v) if ((v as object).hasOwnProperty(i)) newO[i] = deepClone(v[i]);
     return newO;
 }

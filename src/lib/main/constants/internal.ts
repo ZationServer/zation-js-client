@@ -13,7 +13,7 @@ export interface ZationToken {
     tid?: string,
     panelAccess?: boolean,
     exp?: number,
-    variables?: object
+    payload?: object
 }
 
 export const ZATION_CUSTOM_EVENT_NAMESPACE = '>CE.';

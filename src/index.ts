@@ -28,6 +28,8 @@ import {
     ZationMainClientManager
 } from "./lib/core/zationMainClientManager";
 import {AuthenticationFailedError}      from "./lib/main/error/authenticationFailedError";
+import {UndefinedUserIdError}           from "./lib/main/error/undefinedUserIdError";
+import {UndefinedAuthUserGroupError}    from "./lib/main/error/undefinedAuthUserGroupError";
 import {AuthenticationRequiredError}    from "./lib/main/error/authenticationRequiredError";
 import {ConnectionAbortError}           from "./lib/main/error/connectionAbortError";
 import {ConnectionRequiredError}        from "./lib/main/error/connectionRequiredError";
@@ -100,6 +102,8 @@ export {
     EventReactionBox,
     SpecialController,
     Response,
+    UndefinedUserIdError,
+    UndefinedAuthUserGroupError,
     AuthenticationFailedError,
     AuthenticationRequiredError,
     ConnectionAbortError,

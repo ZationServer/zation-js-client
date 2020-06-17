@@ -24,7 +24,6 @@ import {ValidationCheckRequestBuilder} from "../main/controller/request/fluent/v
 // noinspection ES6PreferShortImport
 import {ConnectionAbortError}       from "../main/error/connectionAbortError";
 import {Logger}                     from "../main/logger/logger";
-import {ObjectPath}                 from "../main/utils/objectPath";
 // noinspection ES6PreferShortImport
 import {AuthenticationFailedError}  from "../main/error/authenticationFailedError";
 // noinspection ES6PreferShortImport
@@ -33,7 +32,6 @@ import {EventReactionBox}           from "../main/event/eventReactionBox";
 import {StandardRequest}            from "../main/controller/request/main/standardRequest";
 // noinspection ES6PreferShortImport
 import {Response}                   from "../main/controller/response/response";
-import {AuthEngine}                 from "../main/auth/authEngine";
 import {ModifiedScClient}           from "../main/sc/modifiedScClient";
 // noinspection ES6PreferShortImport
 import {TimeoutError, TimeoutType}  from "../main/error/timeoutError";
@@ -41,6 +39,17 @@ import perf                         from "../main/utils/perf";
 import {BaseRequest}                from "../main/controller/request/main/baseRequest";
 // noinspection ES6PreferShortImport
 import {AuthRequest}                            from "../main/controller/request/main/authRequest";
+// noinspection ES6PreferShortImport
+import {AuthenticationRequiredError}            from "../main/error/authenticationRequiredError";
+// noinspection ES6PreferShortImport
+import {SignAuthenticationFailedError}          from "../main/error/signAuthenticationFailedError";
+// noinspection ES6PreferShortImport
+import {DeauthenticationFailedError}            from "../main/error/deauthenticationFailedError";
+// noinspection ES6PreferShortImport
+import {UndefinedUserIdError}                   from "../main/error/undefinedUserIdError";
+// noinspection ES6PreferShortImport
+import {UndefinedAuthUserGroupError}            from "../main/error/undefinedAuthUserGroupError";
+// noinspection ES6PreferShortImport
 import {SpecialController, ValidationCheckPair} from "../main/controller/controllerDefinitions";
 import {controllerRequestSend}                  from "../main/controller/controllerSendUtils";
 import Package, {isPackage}                     from "../main/receiver/package/main/package";
@@ -49,17 +58,21 @@ import PackageBuilder                           from "../main/receiver/package/f
 import Channel                                  from "../main/channel/channel";
 import Databox, {DataboxOptions}                from "../main/databox/databox";
 import DataboxManager                           from "../main/databox/databoxManager";
+import {deepClone}                              from "../main/utils/cloneUtils";
+const stringify                               = require("fast-stringify");
 
-const stringify                     = require("fast-stringify");
-
-export class ZationClient
+export class ZationClient<TP extends object = any>
 {
-    private readonly authEngine: AuthEngine;
     private readonly channelEngine: ChannelEngine;
     private readonly databoxManager: DataboxManager;
     private readonly zc: ZationClientConfig;
 
-    //Responds
+    //auth
+    private _userId: number | string | undefined = undefined;
+    private _authUserGroup: string | undefined = undefined;
+    private _signedToken: string | null = null;
+    private _plainToken: ZationToken | null = null;
+
     private readonly responseReactionMainBox: MultiList<ResponseReactionBox>;
     private readonly eventReactionMainBox: MultiList<EventReactionBox>;
 
@@ -88,7 +101,6 @@ export class ZationClient
 
         this.channelEngine = new ChannelEngine(this.zc);
         this.databoxManager = new DataboxManager();
-        this.authEngine = new AuthEngine(this);
 
         //Responds
         this.responseReactionMainBox = new MultiList<ResponseReactionBox>();
@@ -105,7 +117,6 @@ export class ZationClient
 
         this._buildWsSocket();
         this._registerSocketEvents();
-        this.authEngine.connectToSocket(this._socket);
         this.channelEngine.connectToSocket(this._socket);
     }
 
@@ -254,17 +265,6 @@ export class ZationClient
     //Part Auth
     // noinspection JSUnusedGlobalSymbols
     /**
-     * @internal
-     * @description
-     * Don't use this method,
-     * it is used internal and returns the auth engine.
-     */
-    _getAuthEngine(): AuthEngine {
-        return this.authEngine;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
      * @description
      * Authenticate this connection (use authentication controller)
      * with authentication authData and returns the response.
@@ -338,18 +338,36 @@ export class ZationClient
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
-    async signAuthenticate(signToken: string,connectTimeout: ConnectTimeoutOption = undefined): Promise<void> {
-        await this.authEngine.signAuthenticate(signToken,connectTimeout);
+    async signAuthenticate(signToken: string, connectTimeout: ConnectTimeoutOption = undefined): Promise<void> {
+        await ConnectionUtils.checkConnection(this,connectTimeout);
+
+        return new Promise<void>(async (resolve, reject) => {
+            this._socket.authenticate(signToken,(err,authState) => {
+                if(err){
+                    if(err.name === 'TimeoutError'){reject(new TimeoutError(err.message));}
+                    else {reject(new SignAuthenticationFailedError(err));}
+                }
+                else if(authState.authError){
+                    reject(new SignAuthenticationFailedError(authState.authError));
+                }
+                else {resolve();}
+            });
+        });
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Deauthenticate the connection if it is authenticated.
+     * Deauthenticates the client.
      * @throws DeauthenticationFailedError
      */
     async deauthenticate(): Promise<void> {
-        await this.authEngine.deauthenticate();
+        return new Promise<void>(async (resolve, reject) => {
+            this._socket.deauthenticate((e => {
+                if(e){reject(new DeauthenticationFailedError(e));}
+                else {resolve();}
+            }));
+        });
     }
 
     //Part Easy
@@ -677,15 +695,11 @@ export class ZationClient
     {
         this._socket.on('connect',async () => {
             if(this.firstConnection) {
-                if(this.zc.isDebug()) {
-                    Logger.printInfo('Client is first connected.');
-                }
+                if(this.zc.isDebug()) {Logger.printInfo('Client is connected.');}
                 await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.FirstConnect));
             }
             else {
-                if(this.zc.isDebug()) {
-                    Logger.printInfo('Client is reconnected.');
-                }
+                if(this.zc.isDebug()) {Logger.printInfo('Client is reconnected.');}
                 await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.Reconnect));
             }
             await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.Connect,this.firstConnection));
@@ -693,71 +707,79 @@ export class ZationClient
         });
 
         this._socket.on('error', async (err) => {
-            if(this.zc.isDebug()) {
-                Logger.printError(err);
-            }
+            if(this.zc.isDebug()) {Logger.printError(err);}
             await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.Error,err));
         });
 
         this._socket.on('disconnect',async (code,data) =>
         {
-            const fromClient: any = data ? data['#internal-fromZationClient']: false;
+            if(this.zc.isDebug()) {Logger.printInfo(`Client is disconnected. Code:'${code}' Data:'${data}'`);}
+
+            const fromClient: any = data ? data['#internal-fromZationClient'] : false;
             if(typeof fromClient === "boolean" && fromClient){
-                if(this.zc.isDebug()) {
-                    Logger.printInfo(`Client is disconnected from client. Code:'${code}' Data:'${data}'`);
-                }
                 await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.ClientDisconnect,code,data));
             }
             else{
-                if(this.zc.isDebug()) {
-                    Logger.printInfo(`Client is disconnected from server. Code:'${code}' Data:'${data}'`);
-                }
                 await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.ServerDisconnect,code,data));
             }
             await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.Disconnect,fromClient,code,data));
         });
 
-        this._socket.on('deauthenticate',async (oldSignedJwtToken,fromClient) =>
+        this._socket.on('deauthenticate',async (oldSignedJwtToken,fromClient: any) =>
         {
+            this._updateToken(null,null);
+            if(this.zc.isDebug()) {Logger.printInfo('Client is deauthenticated.');}
             if(fromClient){
-                if(this.zc.isDebug()) {
-                    Logger.printInfo('Client is deauthenticated from client.');
-                }
                 await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.ClientDeauthenticate,oldSignedJwtToken));
             }
             else{
-                if(this.zc.isDebug()) {
-                    Logger.printInfo('Client is deauthenticated from server.');
-                }
                 await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.ServerDeauthenticate,oldSignedJwtToken));
             }
             await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.Deauthenticate,!!fromClient,oldSignedJwtToken));
         });
 
         this._socket.on('connectAbort',async (code,data) => {
-            if(this.zc.isDebug()) {
-                Logger.printInfo(`Client connect aborted. Code:'${code}' Data:'${data}'`);
-            }
+            if(this.zc.isDebug()) {Logger.printInfo(`Client connect aborted. Code:'${code}' Data:'${data}'`);}
             await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.ConnectAbort,code,data));
         });
 
         this._socket.on('connecting', async () => {
-            if(this.zc.isDebug()) {
-                Logger.printInfo('Client is connecting.');
-            }
+            if(this.zc.isDebug()) {Logger.printInfo('Client is connecting.');}
             await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.Connecting));
         });
 
         this._socket.on('close', async (code,data) => {
+            this._resetAuthState();
             await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.Close,code,data));
         });
 
         this._socket.on('authenticate', async (signedJwtToken) => {
-            if(this.zc.isDebug()) {
-                Logger.printInfo('Client is authenticated.');
+            this._updateToken(this._socket.getAuthToken(),this._socket.getSignedAuthToken());
+            if(this.isDebug()) {
+                Logger.printInfo(`Client is authenticated with userId: '${this._userId}' and auth user group: '${this._authUserGroup}'.`)
             }
             await this.eventReactionMainBox.forEachParallel(box => box._trigger(Events.Authenticate,signedJwtToken));
         });
+    }
+
+    private _resetAuthState() {
+        this._userId = undefined;
+        this._authUserGroup = undefined;
+        this._plainToken = null;
+        this._signedToken = null;
+    }
+
+    private _updateToken(token: ZationToken | null, signedToken: null | string) {
+        this._plainToken = token;
+        this._signedToken = signedToken;
+        if(token != null){
+            this._userId = token.userId;
+            this._authUserGroup = token.authUserGroup;
+        }
+        else {
+            this._userId = undefined;
+            this._authUserGroup = undefined;
+        }
     }
 
     private _buildScOptions()
@@ -788,129 +810,176 @@ export class ZationClient
         this._socket = ModifiedScClient.create(this._buildScOptions());
     }
 
-    //Part TokenVar
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Has a token variable with object path.
-     * Notice that the token variables are separated from the main zation token variables.
-     * You can access this variables on client and server side.
-     * But only change, delete or set on the server.
-     * @example
-     * hasTokenVariable('person.email');
-     * @param path
-     * @throws AuthenticationRequiredError
-     */
-    hasTokenVariable(path?: string | string[]): boolean {
-        return ObjectPath.has(this.authEngine.getTokenVariables(),path);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Get a token variable with object path.
-     * Notice that the token variables are separated from the main zation token variables.
-     * You can access this variables on client and server side.
-     * But only change, delete or set on the server.
-     * @example
-     * getTokenVariable('person.email');
-     * @param path Notice if you don't provide a path, it returns all variables in an object.
-     * @throws AuthenticationRequiredError
-     */
-    getTokenVariable(path?: string | string[]): any {
-        return ObjectPath.get(this.authEngine.getTokenVariables(),path);
-    }
-
     //Part Token
-
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns token id of the token form the sc.
-     * @throws AuthenticationRequiredError
+     * Returns if the client is authenticated.
      */
-    getTokenId(): string
-    {
-       // @ts-ignore
-        return this.authEngine.getSecurePlainToken().tid;
+    isAuthenticated(): boolean {
+        return this._plainToken != null;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the expire of the token from the sc.
-     * @throws AuthenticationRequiredError
+     * Returns if the client is not authenticated.
      */
-    getTokenExpire(): number
-    {
-        // @ts-ignore
-        return this.authEngine.getSecurePlainToken().exp;
+    isNotAuthenticated(): boolean {
+        return this._plainToken == null;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Returns the raw plain token.
+     */
+    get plainToken(): ZationToken | null {
+        return this._plainToken;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Returns the raw plain token.
+     * @throws AuthenticationRequiredError if the client is not authenticated.
+     */
+    getPlainToken(): ZationToken {
+        if(this._plainToken != null) return this._plainToken;
+        throw new AuthenticationRequiredError('To access the plain token.');
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Returns the raw singed token.
+     */
+    get rawSignedToken(): string | null {
+        return this._signedToken;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Returns the raw signed token.
+     * @throws AuthenticationRequiredError if the client is not authenticated.
+     */
+    getRawSignedToken(): string {
+        if(this._signedToken != null) return this._signedToken;
+        throw new AuthenticationRequiredError('To access the signed token.');
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Returns the token payload of this socket.
+     */
+    get tokenPayload(): Partial<TP> | undefined {
+        if(this._plainToken == null) return undefined;
+        return deepClone(this._plainToken.payload!);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Returns the token payload of this socket.
+     * @throws AuthenticationRequiredError if the client is not authenticated.
+     */
+    getTokenPayload(): Partial<TP> {
+        return deepClone(this.getPlainToken().payload!);
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns if the socket has panel access with the token.
-     * @throws AuthenticationRequiredError
+     * Returns the token id of the token.
      */
-    hasPanelAccess(): boolean
-    {
-        // @ts-ignore
-        return this.authEngine.getSecurePlainToken().panelAccess;
+    get tokenId(): string | undefined {
+        return this._plainToken?.tid;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the current plain token.
-     * @throws AuthenticationRequiredError
+     * Returns the token id of the token.
+     * @throws AuthenticationRequiredError if the client is not authenticated.
      */
-    getPlainToken(): ZationToken
-    {
-        return this.authEngine.getSecurePlainToken();
+    getTokenId(): string {
+        return this.getPlainToken().tid!;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the current sign token.
-     * Is null if socket has no token.
+     * Returns the token expire.
      */
-    getSignToken(): string | null
-    {
-        return this.authEngine.getSignToken();
+    get tokenExpire(): number | undefined {
+        return this._plainToken?.exp;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns if the socket is authenticated (token with auth user group).
+     * Returns the token expire.
+     * @throws AuthenticationRequiredError if the client is not authenticated.
      */
-    isAuthenticated(): boolean
-    {
-        return this.authEngine.isAuthenticated();
+    getTokenExpire(): number {
+        return this.getPlainToken().exp!;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the auth user group.
-     * Is undefined if socket is not authenticated.
+     * Returns if the client has panel access with the current token state.
      */
-    getAuthUserGroup(): string | undefined
-    {
-        return this.authEngine.getAuthUserGroup();
+    hasPanelAccess(): boolean {
+        return this.plainToken?.panelAccess === true;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the user id.
-     * Is undefined if socket is not authenticated or has not a userId.
+     * Returns the user id of the client.
      */
-    getUserId(): string | number | undefined
-    {
-        return this.authEngine.getUserId()
+    get userId(): string | number | undefined {
+        return this._userId;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the user id of the client.
+     * @throws AuthenticationRequiredError if the client is not authenticated.
+     * @throws UndefinedUserIdError if no user id is defined.
+     */
+    getUserId(): string | number {
+        if(this._plainToken == null) throw new AuthenticationRequiredError('To access the user id.');
+        if(this._userId !== undefined)
+            return this._userId!;
+        else {
+            throw new UndefinedUserIdError();
+        }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the authUserGroup of the client.
+     */
+    get authUserGroup(): string | undefined {
+        return this._authUserGroup;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Returns the authUserGroup of the client.
+     * @throws AuthenticationRequiredError if the client is not authenticated.
+     * @throws UndefinedAuthUserGroupError if no auth user group is defined.
+     * Can happen in only panel tokens.
+     */
+    getAuthUserGroup(): string {
+        if(this._plainToken == null) throw new AuthenticationRequiredError('To access the authUserGroup.');
+        if(this._authUserGroup !== undefined){
+            return this._authUserGroup;
+        }
+        else {
+            throw new UndefinedAuthUserGroupError();
+        }
     }
 
     /**
