@@ -257,7 +257,7 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      * Only use this method carefully.
      */
     async _trigger(response: Response) {
-        if(this.activate) {
+        if(this.active) {
             if(response.isSuccessful()) {
                 const sucList = this.map.tryGet(MapKey.Successful);
                 if(sucList) {
