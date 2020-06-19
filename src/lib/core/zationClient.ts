@@ -545,9 +545,12 @@ export class ZationClient<TP extends object = any>
     /**
      * Unsubscribe all channels.
      * Can be used to securely clear all resources.
+     * @param identifier
+     * If provided it only unsubscribe all
+     * channels with that identifier.
      */
-    unsubscribeAllChannels() {
-       this.channelEngine.unsubscribeAllChannels();
+    unsubscribeAllChannels(identifier?: string) {
+       this.channelEngine.unsubscribeAllChannels(identifier);
     }
 
     //Part Send

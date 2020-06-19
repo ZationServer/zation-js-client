@@ -15,6 +15,7 @@ import {
 import {buildFullChId}      from "./channelUtils";
 import {Socket}             from "../sc/socket";
 import {Logger}             from "../logger/logger";
+// noinspection ES6PreferShortImport
 import {RawError}           from "../../main/error/rawError";
 import {ZationClientConfig} from "../config/zationClientConfig";
 
@@ -141,10 +142,19 @@ export class ChannelEngine
     /**
      * Unsubscribes all channels.
      */
-    unsubscribeAllChannels() {
-        for(const channelSet of this._channels.values()) {
-            for(const channel of channelSet){
-                channel.unsubscribe();
+    unsubscribeAllChannels(identifier?: string) {
+        if(identifier != undefined) {
+            const searchId = CHANNEL_START_INDICATOR + identifier;
+            for(const [chId,channelSet] of this._channels.entries()) {
+                if(!chId.startsWith(searchId)) continue;
+                for(const channel of channelSet){
+                    channel.unsubscribe();
+                }
+            }
+        }
+        else {
+            for(const channelSet of this._channels.values()) {
+                for(const channel of channelSet){channel.unsubscribe();}
             }
         }
     }
