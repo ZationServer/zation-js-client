@@ -874,7 +874,8 @@ export class ZationClient<TP extends object = any>
      */
     get tokenPayload(): Partial<TP> | undefined {
         if(this._plainToken == null) return undefined;
-        return deepClone(this._plainToken.payload!);
+        const payload = this._plainToken.payload;
+        return payload ? deepClone(payload) : {};
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -883,7 +884,8 @@ export class ZationClient<TP extends object = any>
      * @throws AuthenticationRequiredError if the client is not authenticated.
      */
     getTokenPayload(): Partial<TP> {
-        return deepClone(this.getPlainToken().payload!);
+        const payload = this.getPlainToken().payload;
+        return payload ? deepClone(payload) : {};
     }
 
     // noinspection JSUnusedGlobalSymbols
