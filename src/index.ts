@@ -79,9 +79,7 @@ ZationMainClientManager.onMainClientChange(mainClient => client = mainClient);
  * use the function: clearMainClient.
  */
 const create = (options?: ZationClientOptions,main: boolean = false): ZationClient => {
-    const client = new ZationClient(options);
-    if(main) setMainClient(client);
-    return client;
+    return new ZationClient(options,main);
 };
 
 export {

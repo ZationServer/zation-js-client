@@ -12,9 +12,9 @@ export class ZationClientConfig
 {
     private _config: ZationClientOptionsInternal;
 
-    constructor(config?: ZationClientOptions)
+    constructor(config?: ZationClientOptions,main: boolean = false)
     {
-        this.loadDefaults(config);
+        this.loadDefaults(config,main);
         this.loadSettingsFromClientPrepare();
         if(config) {
             this.addToConfig(config,true);
@@ -51,7 +51,7 @@ export class ZationClientConfig
             (window.location.protocol === 'https:'): false;
     }
 
-    loadDefaults(customOptions?: ZationClientOptions)
+    loadDefaults(customOptions?: ZationClientOptions,main: boolean = false)
     {
         const defaultSecure = ZationClientConfig.getDefaultSecure();
         const defaultPort = ZationClientConfig.getDefaultPort(customOptions,defaultSecure);
@@ -70,7 +70,8 @@ export class ZationClientConfig
             autoReconnectOptions: {},
             responseTimeout: 10000,
             connectTimeout: 3000,
-            databoxConnectTimeout: 3000
+            databoxConnectTimeout: 3000,
+            storeTokenKey: main ? 'main' : null
         };
     }
 

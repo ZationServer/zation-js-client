@@ -59,6 +59,8 @@ import Channel                                  from "../main/channel/channel";
 import Databox, {DataboxOptions}                from "../main/databox/databox";
 import DataboxManager                           from "../main/databox/databoxManager";
 import {deepClone}                              from "../main/utils/cloneUtils";
+import ScAuthEngine                             from "../main/sc/scAuthEngine";
+import {setMainClient}                          from "./zationMainClientManager";
 const stringify                               = require("fast-stringify");
 
 export class ZationClient<TP extends object = any>
@@ -93,11 +95,12 @@ export class ZationClient<TP extends object = any>
      * @description
      * Creates a zation client.
      * @param settings
+     * @param main
      */
-    constructor(settings?: ZationClientOptions)
+    constructor(settings?: ZationClientOptions,main: boolean = false)
     {
         //config
-        this.zc = new ZationClientConfig(settings);
+        this.zc = new ZationClientConfig(settings,main);
 
         this.channelEngine = new ChannelEngine(this.zc);
         this.databoxManager = new DataboxManager();
@@ -118,6 +121,8 @@ export class ZationClient<TP extends object = any>
         this._buildWsSocket();
         this._registerSocketEvents();
         this.channelEngine.connectToSocket(this._socket);
+
+        if(main) setMainClient(this);
     }
 
     //Part Responds
@@ -789,6 +794,7 @@ export class ZationClient<TP extends object = any>
     {
         return {
             hostname: this.zc.config.hostname,
+            authEngine: new ScAuthEngine(),
             port: this.zc.config.port,
             secure: this.zc.config.secure,
             rejectUnauthorized: this.zc.config.rejectUnauthorized,

@@ -90,6 +90,18 @@ export interface ZationClientOptions {
     useAllServerSettings?: boolean;
 
     /**
+     * Specifies the key where the signed auth token should be stored
+     * in the browser local storage.
+     * If the local storage is not available or the name is null,
+     * the token will be stored in memory.
+     * The stored token will be loaded whenever the client wants to connect again.
+     * The local storage browser variant helps to reload the signed token
+     * when the client opens a new Tab or reloads the site in the browser.
+     * @default MainClient ? 'main' : null
+     */
+    storeTokenKey?: string | null;
+
+    /**
      * Defines if the client should try to reconnect to the server when the connection is lost.
      * Notice that the client will automatically resubscribe all previous channels.
      * @default true
