@@ -794,7 +794,7 @@ export class ZationClient<TP extends object = any>
     {
         return {
             hostname: this.zc.config.hostname,
-            authEngine: new ScAuthEngine(),
+            authEngine: new ScAuthEngine(this.zc.config.tokenStore),
             port: this.zc.config.port,
             secure: this.zc.config.secure,
             rejectUnauthorized: this.zc.config.rejectUnauthorized,

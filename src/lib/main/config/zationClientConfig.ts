@@ -5,6 +5,7 @@ Copyright(c) Luca Scaringella
  */
 
 import {ZationClientOptions, ZationClientOptionsInternal} from "../../core/zationClientOptions";
+import {createLocalStorageTokenStore}                     from "../tokenStore/localStorageTokenStore";
 
 const windowDefined = typeof window === 'object';
 
@@ -71,7 +72,7 @@ export class ZationClientConfig
             responseTimeout: 10000,
             connectTimeout: 3000,
             databoxConnectTimeout: 3000,
-            storeTokenKey: main ? 'main' : null
+            tokenStore: main ? createLocalStorageTokenStore('main') : undefined
         };
     }
 

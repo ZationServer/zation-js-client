@@ -4,53 +4,51 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-function isLocalStorageEnabled() {
-    let err;
-    try {
-        // Some browsers will throw an error here if localStorage is disabled.
-        global.localStorage;
-        // Safari, in Private Browsing Mode, looks like it supports localStorage but all calls to setItem
-        // throw QuotaExceededError. We're going to detect this and avoid hard to debug edge cases.
-        global.localStorage.setItem('__scLocalStorageTest', '1');
-        global.localStorage.removeItem('__scLocalStorageTest');
-    } catch (e) {err = e;}
-    return !err;
-}
-const localStorageEnabled = isLocalStorageEnabled();
-const tokenNamePrefix = 'ZationClientToken.';
+import TokenStore from "../tokenStore/tokenStore";
 
 export default class ScAuthEngine {
 
-    private _internalStorage?: string;
+    private readonly _tokenStore?: TokenStore;
 
-    saveToken(name: string | undefined | null,token: string,options: any, callback?: Function) {
-        if (name != null && localStorageEnabled && global.localStorage) {
-            global.localStorage.setItem(tokenNamePrefix + name, token);
-        } else {
+    constructor(tokenStore?: TokenStore) {
+        this._tokenStore = tokenStore;
+    }
+
+    private _internalStorage: string | null = null;
+
+    saveToken(_,token: string,options: any, callback?: Function) {
+        (async () => {
             this._internalStorage = token;
-        }
-        callback && callback(null, token);
+            if(this._tokenStore){
+                try {await this._tokenStore.saveToken(token);}
+                catch (e) {}
+            }
+            callback && callback(null, token);
+        })();
     }
 
-    loadToken(name: string | undefined | null, callback?: Function) {
-        let token;
-        if (name != null && localStorageEnabled && global.localStorage) {
-            token = global.localStorage.getItem(tokenNamePrefix + name);
-        } else {
-            token = this._internalStorage || null;
-        }
-        callback && callback(null, token);
+    loadToken(_, callback?: Function) {
+        (async () => {
+            let token: string | null = null;
+            if(this._tokenStore){
+                try {token = await this._tokenStore.loadToken();}
+                catch (_) {}
+            }
+            if(!token) token = this._internalStorage;
+            callback && callback(null, token);
+        })();
     }
 
-    removeToken(name: string | undefined | null, callback?: Function) {
-        let token;
-        this.loadToken(name, (_, authToken) => token = authToken);
-
-        if (name != null && localStorageEnabled && global.localStorage) {
-            global.localStorage.removeItem(tokenNamePrefix + name);
-        } else {
-            this._internalStorage = undefined;
-        }
-        callback && callback(null, token);
+    removeToken(_, callback?: Function) {
+        (async () => {
+            let token;
+            this.loadToken(name, (_, authToken) => token = authToken);
+            this._internalStorage = null;
+            if(this._tokenStore){
+                try {await this._tokenStore.removeToken();}
+                catch (e) {}
+            }
+            callback && callback(null, token);
+        })();
     }
 }

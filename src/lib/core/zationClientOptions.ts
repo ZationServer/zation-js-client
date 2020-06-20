@@ -5,6 +5,7 @@ Copyright(c) Luca Scaringella
  */
 
 import {ConnectTimeoutDefaultOption} from "../main/utils/connectionUtils";
+import TokenStore from "../main/tokenStore/tokenStore";
 
 export interface ZationClientOptions {
 
@@ -90,16 +91,19 @@ export interface ZationClientOptions {
     useAllServerSettings?: boolean;
 
     /**
-     * Specifies the key where the signed auth token should be stored
-     * in the browser local storage.
-     * If the local storage is not available or the name is null,
-     * the token will be stored in memory.
+     * Specifies the token store that is used to save/load and remove the token.
+     * Internal the client will also store the token in a variable
+     * independent of what store is used.
      * The stored token will be loaded whenever the client wants to connect again.
-     * The local storage browser variant helps to reload the signed token
-     * when the client opens a new Tab or reloads the site in the browser.
-     * @default MainClient ? 'main' : null
+     * The load tries to load the token with the store if no store is provided
+     * or the load fails it will load the token from the in-memory variable.
+     * The client already provides a local storage token store that
+     * uses the local storage of a browser.
+     * This store helps to reload the signed token when the client
+     * opens a new Tab or reloads the site in the browser.
+     * @default MainClient ? createLocalStorageTokenStore('main') : undefined
      */
-    storeTokenKey?: string | null;
+    tokenStore?: TokenStore;
 
     /**
      * Defines if the client should try to reconnect to the server when the connection is lost.

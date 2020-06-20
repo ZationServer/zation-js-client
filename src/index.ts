@@ -62,6 +62,8 @@ import {SpecialController, ValidationCheckPair} from "./lib/main/controller/cont
 import Package                          from "./lib/main/receiver/package/main/package";
 import PackageBuilder                   from "./lib/main/receiver/package/fluent/packageBuilder";
 import Channel, {UnsubscribeReason}     from "./lib/main/channel/channel";
+import TokenStore                       from "./lib/main/tokenStore/tokenStore";
+import {createLocalStorageTokenStore}   from "./lib/main/tokenStore/localStorageTokenStore";
 
 let client = mainClient;
 ZationMainClientManager.onMainClientChange(mainClient => client = mainClient);
@@ -141,5 +143,7 @@ export {
     DataEventReason,
     DbError,
     AbortTrigger,
-    AbortSignal
+    AbortSignal,
+    TokenStore,
+    createLocalStorageTokenStore
 };
