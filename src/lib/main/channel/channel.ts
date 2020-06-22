@@ -6,6 +6,7 @@ Copyright(c) Luca Scaringella
 
 import {ChannelEngine}                         from "./channelEngine";
 import ConnectionUtils, {ConnectTimeoutOption} from "../utils/connectionUtils";
+// noinspection ES6PreferShortImport
 import {ZationClient}                          from "../../core/zationClient";
 import {buildFullChId}                         from "./channelUtils";
 import {FullReaction}                          from "../react/fullReaction";
@@ -67,10 +68,12 @@ export default class Channel {
      * Subscribe this channel or a specific member of this channel.
      * If you access a ChannelFamily you need to provide a member as a first parameter.
      * If the subscription was successful the method will not throw an error.
-     * If the subscription is later on lost by a connection lost or kick out the
-     * client will automatically try to resubscribe the channel in case of
-     * reconnection or change of the authentication state.
-     * If you don't need the channel anymore you need to unsubscribe it to clear resources.
+     * Notice that your previous subscriptions are not cancelled,
+     * if you want this you can use the subscribeNew method.
+     * If the subscription is later on lost by a connection lost or kick out
+     * the client will automatically try to resubscribe in case of reconnection
+     * or change of the authentication state.
+     * If you don't need the subscription anymore you need to unsubscribe it to clear resources.
      * @param member
      * @param connectTimeout
      * With the ConnectTimeout option, you can activate that the socket is
@@ -100,6 +103,36 @@ export default class Channel {
 
     // noinspection JSUnusedGlobalSymbols
     /**
+     * Subscribe this channel or a specific member of this channel and
+     * unsubscribe the previous subscriptions.
+     * If you access a ChannelFamily you need to provide a member as a first parameter.
+     * If the subscription was successful the method will not throw an error.
+     * If the subscription is later on lost by a connection lost or kick out
+     * the client will automatically try to resubscribe in case of reconnection
+     * or change of the authentication state.
+     * If you don't need the subscription anymore you need to unsubscribe it to clear resources.
+     * @param member
+     * @param connectTimeout
+     * With the ConnectTimeout option, you can activate that the socket is
+     * trying to connect when it is not connected. You have five possible choices:
+     * Undefined: It will use the value from the default options.
+     * False: The action will fail and throw a ConnectionRequiredError,
+     * when the socket is not connected.
+     * Null: The socket will try to connect (if it is not connected) and
+     * waits until the connection is made, then it continues the action.
+     * Number: Same as null, but now you can specify a timeout (in ms) of
+     * maximum waiting time for the connection. If the timeout is reached,
+     * it will throw a timeout error.
+     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
+     * @throws ConnectionRequiredError, TimeoutError, Error,AbortSignal
+     */
+    async subscribeNew(member?: string | number,connectTimeout: ConnectTimeoutOption = undefined): Promise<void> {
+       this.unsubscribe();
+       return this.subscribe(member,connectTimeout);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
      * Returns if the channel has at least one subscription.
      */
     hasSubscription(includePending: boolean = false): boolean {
@@ -125,7 +158,8 @@ export default class Channel {
     }
 
     /**
-     * Unsubscribe this channel or a specific member of this channel.
+     * Unsubscribe this channel.
+     * In case of a channel family all members or only a specific member.
      * This is important to clear resources and avoid the trying of
      * resubscribing in case of reconnections or kick-outs.
      * @param member

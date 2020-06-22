@@ -533,9 +533,12 @@ export class ZationClient<TP extends object = any>
     }
 
     /**
-     * Returns a new Channel for the specific identifier with an API level.
+     * Returns a new Channel with the specific identifier and API level.
      * The Channel can be used to subscribe to it or to subscribe to specific
      * members in case of a ChannelFamily and listen to publishes.
+     * Notice that it will return a completely new channel instance with this identifier.
+     * The channel engine will manage the internal subscriptions but
+     * every channel instance must subscribe it by its own.
      * @param identifier
      * @param apiLevel
      * The API level of this client for the Channel subscription request.
