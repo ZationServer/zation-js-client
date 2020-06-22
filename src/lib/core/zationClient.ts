@@ -305,7 +305,7 @@ export class ZationClient<TP extends object = any>
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
-    async authenticate(authData: object = {},connectTimeout: ConnectTimeoutOption = undefined): Promise<Response>
+    async authenticate(authData: any = undefined,connectTimeout: ConnectTimeoutOption = undefined): Promise<Response>
     {
         const req = new AuthRequest(authData);
         req.setConnectTimeout(connectTimeout);
