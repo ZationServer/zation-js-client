@@ -6,8 +6,8 @@ Copyright(c) Luca Scaringella
 
 // noinspection TypeScriptPreferShortImport
 import {BackErrorFilter} from "./backErrorFilter";
-import {ErrorGroup}  from "../constants/errorGroup";
-import {ErrorType}   from "../constants/errorType";
+import {ErrorGroup}  from "../definitions/errorGroup";
+import {ErrorType}   from "../definitions/errorType";
 
 export abstract class PresetBackErrorLib<T>
 {

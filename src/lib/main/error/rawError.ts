@@ -4,7 +4,7 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {ErrorName} from "../constants/errorName";
+import {ErrorName} from "../definitions/errorName";
 
 export class RawError extends Error
 {

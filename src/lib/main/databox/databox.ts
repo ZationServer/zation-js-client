@@ -43,7 +43,7 @@ import {ZationClient}                                           from "../../core
 import ConnectionUtils, {ConnectTimeoutOption}                  from "../utils/connectionUtils";
 import EventManager                                             from "../utils/eventManager";
 import {RawError}                                               from "../error/rawError";
-import {ErrorName}                                              from "../constants/errorName";
+import {ErrorName}                                              from "../definitions/errorName";
 import DbsHead                                                  from "./storage/components/dbsHead";
 import DbUtils                                                  from "./dbUtils";
 import {InvalidInputError}                                      from "../../main/error/invalidInputError";

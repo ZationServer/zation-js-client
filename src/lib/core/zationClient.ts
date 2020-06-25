@@ -6,9 +6,9 @@ Copyright(c) Luca Scaringella
 
 import {ZationClientOptions}                        from "./zationClientOptions";
 import {OnHandlerFunction, Socket}                  from "../main/sc/socket";
-import {Events}                                     from "../main/constants/events";
-import {SystemController}                           from "../main/constants/systemController";
-import {ZATION_CUSTOM_EVENT_NAMESPACE, ZationToken} from "../main/constants/internal";
+import {Events}                                     from "../main/definitions/events";
+import {SystemController}                           from "../main/definitions/systemController";
+import {ZATION_CUSTOM_EVENT_NAMESPACE, ZationToken} from "../main/definitions/internal";
 import ConnectionUtils, {ConnectTimeoutOption}      from "../main/utils/connectionUtils";
 import {ChannelEngine}                              from "../main/channel/channelEngine";
 import {ZationClientConfig}                         from "../main/config/zationClientConfig";

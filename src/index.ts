@@ -46,7 +46,7 @@ import {PresetBackErrorLib}             from "./lib/main/backError/presetBackErr
 import {BackErrorFilter}                from "./lib/main/backError/backErrorFilter";
 import {BackError}                      from "./lib/main/backError/backError";
 import {AbstractBackErrorFilterBuilder} from "./lib/main/backError/abstractBackErrorFilterBuilder";
-import {ErrorName}                      from "./lib/main/constants/errorName";
+import {ErrorName}                      from "./lib/main/definitions/errorName";
 import {RawError}                       from "./lib/main/error/rawError";
 import {buildKeyArray}                  from "./lib/main/databox/storage/keyArrayUtils";
 import DbsHead                          from "./lib/main/databox/storage/components/dbsHead";

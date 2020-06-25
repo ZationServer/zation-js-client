@@ -4,7 +4,7 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {ErrorName}         from "../../main/constants/errorName";
+import {ErrorName}         from "../definitions/errorName";
 import {InvalidInputError} from "../error/invalidInputError";
 
 export default class DbError {

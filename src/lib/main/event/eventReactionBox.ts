@@ -4,7 +4,7 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {Events}      from "../constants/events";
+import {Events}      from "../definitions/events";
 import {ReactionBox} from "../react/reactionBox";
 import {ListMap}     from "../container/listMap";
 
