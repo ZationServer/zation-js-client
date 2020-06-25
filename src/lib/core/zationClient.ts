@@ -1005,51 +1005,24 @@ export class ZationClient<TP extends object = any>
         }
     }
 
-    /**
-     * Respond on emit-events of the server.
-     * It uses the custom zation event namespace
-     * (so you cannot have name conflicts with internal event names).
-     * @param event
-     * @param handler
-     * The function that gets called when the event occurs,
-     * parameters are the data and a response function that you can call to respond on the event back.
-     */
-    on(event: string,handler: OnHandlerFunction): void {
-        this._socket.on(ZATION_CUSTOM_EVENT_NAMESPACE+event,handler);
-    }
-
-    /**
-     * Respond on emit-event of the server but only once.
-     * It uses the custom zation event namespace
-     * (so you cannot have name conflicts with internal event names).
-     * @param event
-     * @param handler
-     * The function that gets called when the event occurs,
-     * parameters are the data and a response function that you can call to respond on the event back.
-     */
-    once(event: string,handler: OnHandlerFunction): void {
-        this._socket.once(ZATION_CUSTOM_EVENT_NAMESPACE+event,handler);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    async emit(eventName: string,data: any,onlyTransmit: true,options: {connectTimeout?: ConnectTimeoutOption,responseTimeout?: number | null}): Promise<void>
-    // noinspection JSUnusedGlobalSymbols
-    async emit(eventName: string,data: any,onlyTransmit: false,options: {connectTimeout?: ConnectTimeoutOption,responseTimeout?: number | null}): Promise<any>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Emit to the server.
-     * If you not only transmit than the return value is a promise with the result,
-     * and if an error occurs while emitting to the server, this error is thrown.
-     * It uses the custom zation event namespace
-     * (so you cannot have name conflicts with internal event names).
-     * @throws ConnectionRequiredError, TimeoutError, Error,AbortSignal
+     * Emit to the server socket.
+     * If you not only transmit the return value is a promise with the result,
+     * and if an error occurs while emitting the error is thrown.
+     * @throws ConnectionRequiredError, TimeoutError, Error, AbortSignal
      * @param event
      * @param data
-     * @param onlyTransmit
+     * @param transmit
      * Indicates if you only want to transmit data.
-     * If not than the promise will be resolved with the result when the server responded on the emit.
-     * @param connectTimeout
+     * @param options
+     * responseTimeout:
+     * Set the response timeout of the emit.
+     * Value can be null which means the timeout is disabled or
+     * undefined then it will use the default response timeout of the zation client config,
+     * or it can be a number that indicates the milliseconds.
+     * connectTimeout:
      * With the ConnectTimeout option, you can activate that the socket is
      * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options.
@@ -1061,39 +1034,60 @@ export class ZationClient<TP extends object = any>
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
-     * @param responseTimeout
-     * Set the response timeout of the emit.
-     * Value can be null which means the timeout is disabled or
-     * undefined then it will use the default response timeout of the zation client config,
-     * or it can be a number that indicates the milliseconds.
      */
-    async emit(event: string,data: any,onlyTransmit: boolean = true,
-               {connectTimeout,responseTimeout}: {connectTimeout?: ConnectTimeoutOption,responseTimeout?: number | null} = {}): Promise<object | void>
+    emit<T extends boolean = true>(event: string,data: any,transmit?: T, options?: {connectTimeout?: ConnectTimeoutOption,responseTimeout?: number | null}): T extends true ? Promise<void> : Promise<any>
+    async emit(event: string, data: any, transmit: boolean = true, {connectTimeout,responseTimeout}: {connectTimeout?: ConnectTimeoutOption,responseTimeout?: number | null} = {}): Promise<any | void>
     {
         await ConnectionUtils.checkConnection(this,connectTimeout);
 
-        return new Promise<object>((resolve, reject) => {
-            // noinspection DuplicatedCode
-            if(onlyTransmit){
-                this._socket.emit(ZATION_CUSTOM_EVENT_NAMESPACE+event,data,undefined);
-                resolve();
-            }
-            else {
-                this._socket.emit(ZATION_CUSTOM_EVENT_NAMESPACE+event,data,(err, data) => {
+        event = ZATION_CUSTOM_EVENT_NAMESPACE + event;
+        if(transmit){
+            this._socket.emit(event, data);
+        }
+        else {
+            return new Promise<any>((resolve, reject) => {
+                this._socket.emit(event, data,(err, data) => {
                     if(err){
                         if(err.name === 'TimeoutError'){
                             reject(new TimeoutError(err.message));
                         }
-                        else {
-                            reject(err);
-                        }
+                        else {reject(err);}
                     }
-                    else {
-                        resolve(data);
-                    }
+                    else {resolve(data);}
                 },responseTimeout);
-            }
-        });
+            });
+        }
+    }
+
+    /**
+     * Respond on an emit-event of the server socket.
+     * @param event
+     * @param handler
+     * The function that gets called when the event occurs, parameters are
+     * the data and a response function that you can call to respond to the event.
+     */
+    on(event: string,handler: OnHandlerFunction): void {
+        this._socket.on(ZATION_CUSTOM_EVENT_NAMESPACE + event, handler);
+    }
+
+    /**
+     * Respond on an emit-event of the server socket but only once.
+     * @param event
+     * @param handler
+     * The function that gets called when the event occurs, parameters are
+     * the data and a response function that you can call to respond to the event.
+     */
+    once(event: string,handler: OnHandlerFunction): void {
+        this._socket.once(ZATION_CUSTOM_EVENT_NAMESPACE + event, handler);
+    }
+
+    /**
+     * Removes a specific or all handlers of an emit-event of the server socket.
+     * @param event
+     * @param handler
+     */
+    off(event: string, handler?: OnHandlerFunction): void {
+        this._socket.off(ZATION_CUSTOM_EVENT_NAMESPACE + event, handler);
     }
 
     //Part Getter/Setter
