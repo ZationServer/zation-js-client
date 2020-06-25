@@ -61,6 +61,7 @@ import DataboxManager                           from "../main/databox/databoxMan
 import {deepClone}                              from "../main/utils/cloneUtils";
 import ScAuthEngine                             from "../main/sc/scAuthEngine";
 import {setMainClient}                          from "./zationMainClientManager";
+import {DeepReadonly}                           from "ts-essentials";
 const stringify                               = require("fast-stringify");
 
 export class ZationClient<TP extends object = any>
@@ -881,10 +882,9 @@ export class ZationClient<TP extends object = any>
     /**
      * Returns the token payload of this socket.
      */
-    get tokenPayload(): Partial<TP> | undefined {
+    get tokenPayload(): DeepReadonly<Partial<TP>> | undefined {
         if(this._plainToken == null) return undefined;
-        const payload = this._plainToken.payload;
-        return payload ? deepClone(payload) : {};
+        return (this._plainToken.payload || {}) as DeepReadonly<Partial<TP>>;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -892,7 +892,16 @@ export class ZationClient<TP extends object = any>
      * Returns the token payload of this socket.
      * @throws AuthenticationRequiredError if the client is not authenticated.
      */
-    getTokenPayload(): Partial<TP> {
+    getTokenPayload(): DeepReadonly<Partial<TP>> {
+        return (this.getPlainToken().payload || {}) as DeepReadonly<Partial<TP>>;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Returns a deep clone of the token payload of this socket.
+     * @throws AuthenticationRequiredError if the client is not authenticated.
+     */
+    getTokenPayloadClone(): Partial<TP> {
         const payload = this.getPlainToken().payload;
         return payload ? deepClone(payload) : {};
     }
