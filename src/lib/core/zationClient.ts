@@ -819,7 +819,6 @@ export class ZationClient<TP extends object = any>
     }
 
     private _buildWsSocket() {
-        // noinspection JSUnresolvedVariable
         this._socket = ModifiedScClient.create(this._buildScOptions());
     }
 
