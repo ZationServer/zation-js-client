@@ -9,6 +9,7 @@ import {PairOrAndBuilder}        from "../utils/pairOrAndBuilder";
 // noinspection TypeScriptPreferShortImport
 import {BackErrorFilter}             from "./backErrorFilter";
 import {PresetBackErrorFilter}       from "./presetBackErrorFilter";
+import {ErrorType}                   from "../definitions/errorType";
 
 export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackErrorFilterBuilder<R>>
 {
@@ -54,7 +55,7 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
      * More types are linked with OR.
      * @param type
      */
-    typeIs(...type: string[]): R
+    typeIs(...type: (string | ErrorType)[]): R
     {
         if(!Array.isArray(this.tmpFilter.type)) {
             this.tmpFilter.type = [];
