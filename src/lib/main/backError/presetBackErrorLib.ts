@@ -1625,7 +1625,7 @@ export abstract class PresetBackErrorLib<T>
     private _validationErrorBuild(name?: string,path?: string,value?: any,group?: string,opInfoKey?: string, opInfoValue?: any): BackErrorFilter
     {
         const preset: BackErrorFilter = {};
-        preset.fromZationSystem = true;
+        preset.custom = true;
         preset.type = ErrorType.ValidationError;
         if(name) {
             preset.name = name;
@@ -1654,7 +1654,7 @@ export abstract class PresetBackErrorLib<T>
     private _zationErrorBuild(type?: string,name?: string,group?: string): BackErrorFilter
     {
         const preset: BackErrorFilter = {};
-        preset.fromZationSystem = true;
+        preset.custom = true;
         if(name) {
             preset.name = name;
         }

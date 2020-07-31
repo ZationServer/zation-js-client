@@ -24,9 +24,9 @@ export interface DryBackError {
      */
     d?: string,
     /**
-     * From Zation System
+     * Custom
      */
-    z: 0 | 1,
+    c: 0 | 1,
     /**
      * Info
      */
@@ -90,10 +90,10 @@ export class BackError
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns if the BackError is from zation system.
+     * Returns if the BackError is a custom-defined error.
      */
-    isFromZationSystem(): boolean {
-        return !!this.dryBackError.z;
+    isCustom(): boolean {
+        return !!this.dryBackError.c;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -150,7 +150,7 @@ export class BackError
             `   Name: ${this.getName()}\n` +
             `   Group: ${this.getGroup() || 'No Group'}\n` +
             `   Type: ${this.getType()}\n` +
-            `   FromZationSystem: ${this.isFromZationSystem()}\n`+
+            `   Custom: ${this.isCustom()}\n`+
             `   Description: ${this.getDescription() || 'Unknown'}\n`+
             `   Info: ${typeof this.getInfo() === 'object' ? JSON.stringify(this.getInfo()): (this.getInfo() || 'Unknown')}\n`;
     }

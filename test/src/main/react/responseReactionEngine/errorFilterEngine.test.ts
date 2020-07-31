@@ -10,8 +10,8 @@ const assert            = require("chai").assert;
 describe('MAIN.ErrorFilterEngine',() => {
 
     const demoErrors = [
-        new BackError({n : 'toOld',g : 'ageError', t : 'input', d : 'The age is to old', z : 1, i : {age : 50,maxAge : 45}}),
-        new BackError({n : 'nameNotAllow',g : 'nameError', t : 'input2', d : 'The name is not allowed', z : 1, i : {name : 'peter'}}),
+        new BackError({n : 'toOld',g : 'ageError', t : 'input', d : 'The age is to old', c : 1, i : {age : 50,maxAge : 45}}),
+        new BackError({n : 'nameNotAllow',g : 'nameError', t : 'input2', d : 'The name is not allowed', c : 1, i : {name : 'peter'}}),
     ];
 
     describe('Name filer', () => {
@@ -221,12 +221,12 @@ describe('MAIN.ErrorFilterEngine',() => {
     describe('FromZationSystem', () => {
 
         it('With matching', () => {
-            const errors = ErrorFilterEngine.filterErrors(demoErrors,[{fromZationSystem : true}]);
+            const errors = ErrorFilterEngine.filterErrors(demoErrors,[{custom : true}]);
             assert(errors.length === 2);
         });
 
         it('With not matching', () => {
-            const errors = ErrorFilterEngine.filterErrors(demoErrors,[{fromZationSystem : false}]);
+            const errors = ErrorFilterEngine.filterErrors(demoErrors,[{custom : false}]);
             assert(errors.length === 0);
         });
     });

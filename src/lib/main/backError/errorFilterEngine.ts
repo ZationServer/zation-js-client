@@ -113,11 +113,11 @@ export class ErrorFilterEngine
             }
         }
 
-        if(typeof filter['fromZationSystem'] === 'boolean')
+        if(typeof filter['custom'] === 'boolean')
         {
             let filTemp: BackError[] = [];
             for(let i = 0; i < cachedFilterErrors.length; i++) {
-                if (cachedFilterErrors[i].isFromZationSystem() === filter['fromZationSystem']) {
+                if (cachedFilterErrors[i].isCustom() === filter['custom']) {
                     filTemp.push(cachedFilterErrors[i]);
                 }
             }

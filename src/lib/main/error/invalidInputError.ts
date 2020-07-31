@@ -82,10 +82,10 @@ export class InvalidInputError extends Error
      * {infoValue: ['name','firstName']}
      * For errors with all of the info values:
      * {infoValue: [['value1','value2']]}
-     * For errors there from the zation system:
-     * {fromZationSystem: true}
-     * For errors there not from the zation system:
-     * {fromZationSystem: false}
+     * For custom errors:
+     * {custom: true}
+     * For non-custom errors:
+     * {custom: false}
      * You can combine all of this properties.
      * @param filter
      * The purpose of this param is to filter the BackErrors errors.

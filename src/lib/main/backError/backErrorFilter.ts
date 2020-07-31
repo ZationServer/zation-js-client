@@ -12,7 +12,7 @@ export interface BackErrorFilter
     info?: object[] | object,
     infoKey?: (string | string[] )[] | string
     infoValue?: (any | any[] )[] | any
-    fromZationSystem?: boolean
+    custom?: boolean
 }
 
 

@@ -223,15 +223,15 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Filters errors there from the zation system.
-     * True means the error needs to be from the zation system.
-     * False means the error needs to be not from the zation system.
-     * Undefined means it dosent matter (like a reset).
-     * Notice that the filter property fromZationSystem will be reseted when you calling this method.
+     * Filters custom or non-custom errors.
+     * True means the error needs to be a custom error.
+     * False means the error needs to be a non-custom error.
+     * Undefined means it doesn't matter (like a reset).
+     * Notice that the filter property custom will be reset when you calling this method.
      */
-    fromZationSystem(fromZationSystem: boolean | undefined): R
+    custom(custom: boolean | undefined): R
     {
-        this.tmpFilter.fromZationSystem = fromZationSystem;
+        this.tmpFilter.custom = custom;
         return this.self();
     }
 
@@ -288,10 +288,10 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
      * {infoValue: ['name','firstName']}
      * For errors with all of the info values:
      * {infoValue: [['value1','value2']]}
-     * For errors there from the zation system:
-     * {fromZationSystem: true}
-     * For errors there not from the zation system:
-     * {fromZationSystem: false}
+     * For custom errors:
+     * {custom: true}
+     * For non-custom errors:
+     * {custom: false}
      * You can combine all of this properties.
      */
     addErrorFilter(filter: BackErrorFilter): R {
@@ -336,10 +336,10 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
      * {infoValue: ['name','firstName']}
      * For errors with all of the info values:
      * {infoValue: [['value1','value2']]}
-     * For errors there from the zation system:
-     * {fromZationSystem: true}
-     * For errors there not from the zation system:
-     * {fromZationSystem: false}
+     * For custom errors:
+     * {custom: true}
+     * For non-custom errors:
+     * {custom: false}
      * You can combine all of this properties.
      */
     setTmpFilter(filter: BackErrorFilter): R {
