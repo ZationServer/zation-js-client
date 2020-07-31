@@ -28,7 +28,7 @@ export function dbsMerger(oldValue: any, newValue: any,valueMerger: DbsValueMerg
             const merged = DbDataParser.parse(valueMerger(oldValue,newValue));
             return {
                 mergedValue: merged,
-                dataChanged: (isDbsComponent(merged) ? merged.getData(): merged) !== oldValue
+                dataChanged: (isDbsComponent(merged) ? merged.data : merged) !== oldValue
             }
         }
     }

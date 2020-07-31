@@ -21,10 +21,11 @@ import {
     DeleteProcessArgs,
     InsertProcessArgs,
     UpdateProcessArgs}                                 from "../../dbDefinitions";
+import {ImmutableJson}                                 from "../../../utils/typeUtils";
 
 export default class DbsObject extends DbsSimplePathCoordinator implements DbsComponent {
 
-    private readonly data: Record<string,any>;
+    public readonly data: ImmutableJson;
     private readonly componentStructure: Record<string,any>;
     private readonly keys: Set<string>;
     private readonly timestampMap: Map<string,number> = new Map<string, number>();
@@ -41,7 +42,7 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
         for (let key of this.keys.values()) {
             parsed = DbDataParser.parse(rawData[key]);
             this.componentStructure[key] = parsed;
-            this.data[key] = isDbsComponent(parsed) ? parsed.getData(): parsed;
+            (this.data as any)[key] = isDbsComponent(parsed) ? parsed.data : parsed;
         }
     }
 
@@ -115,7 +116,7 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      * @private
      */
     _getValue(key: string): any {
-        return this.data[key];
+        return (this.data as any)[key];
     }
 
     /**
@@ -131,21 +132,14 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
     /**
      * Returns a copy of the data.
      */
-    getDataCopy(): Record<string,any> {
+    getDataClone(): Record<string,any> {
         const data = {};
         let value;
         for(let key of this.keys.values()){
             value = this.componentStructure[key];
-            data[key] = isDbsComponent(value) ? value.getDataCopy(): value;
+            data[key] = isDbsComponent(value) ? value.getDataClone() : value;
         }
         return data;
-    }
-
-    /**
-     * Returns the data.
-     */
-    getData() {
-        return this.data;
     }
 
     /**
@@ -160,10 +154,10 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
                     const {mergedValue,dataChanged} = dbsMerger(this.componentStructure[key],componentValue,this.valueMerger);
                     mainDc = mainDc || dataChanged;
                     this.componentStructure[key] = mergedValue;
-                    this.data[key] = isDbsComponent(mergedValue) ? mergedValue.getData(): mergedValue;
+                    (this.data as any)[key] = isDbsComponent(mergedValue) ? mergedValue.data : mergedValue;
                 }
                 else {
-                    this.data[key] = value;
+                    (this.data as any)[key] = value;
                     this.componentStructure[key] = componentValue;
                     mainDc = true;
                 }
@@ -204,7 +198,7 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
         if (DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
             const parsed = DbDataParser.parse(value);
             this.componentStructure[key] = parsed;
-            this.data[key] = isDbsComponent(parsed) ? parsed.getData(): parsed;
+            (this.data as any)[key] = isDbsComponent(parsed) ? parsed.data : parsed;
 
             this.keys.add(key);
             this.timestampMap.set(key,timestamp);
@@ -240,12 +234,12 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
         if (DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
             mt.level = ModifyLevel.DATA_TOUCHED;
             const parsed = DbDataParser.parse(value);
-            const newData = isDbsComponent(parsed) ? parsed.getData(): parsed;
-            if(mt.checkDataChange && !deepEqual(newData,this.data[key])){
+            const newData = isDbsComponent(parsed) ? parsed.data : parsed;
+            if(mt.checkDataChange && !deepEqual(newData,(this.data as any)[key])){
                 mt.level = ModifyLevel.DATA_CHANGED;
             }
             this.componentStructure[key] = parsed;
-            this.data[key] = newData;
+            (this.data as any)[key] = newData;
 
             this.timestampMap.set(key,timestamp);
         }
@@ -267,7 +261,7 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
         if(ifOption !== undefined && !(args.if = this.checkIfConditions(ifOption))) return;
 
         if (DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
-            delete this.data[key];
+            delete (this.data as any)[key];
             delete this.componentStructure[key];
             this.keys.delete(key);
             this.timestampMap.set(key,timestamp);
@@ -281,7 +275,7 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      */
     forEachPair(func: (key: string,value: any,componentValue: any,timestamp: number | undefined) => void): void {
         for(let key of this.keys.values()){
-            func(key,this.data[key],this.componentStructure[key],this.timestampMap.get(key));
+            func(key,(this.data as any)[key],this.componentStructure[key],this.timestampMap.get(key));
         }
     }
 }

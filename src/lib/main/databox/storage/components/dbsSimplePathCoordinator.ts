@@ -4,9 +4,10 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import DbsComponent  from "./dbsComponent";
-import forint        from "forint";
-import {ModifyToken} from "./modifyToken";
+import DbsComponent    from "./dbsComponent";
+import forint          from "forint";
+import {ModifyToken}   from "./modifyToken";
+import {ImmutableJson} from "../../../utils/typeUtils";
 import {
     DbProcessedSelector,
     DbProcessedSelectorItem,
@@ -20,10 +21,7 @@ import {
 
 export default abstract class DbsSimplePathCoordinator {
 
-    /**
-     * Returns the data.
-     */
-    abstract getData(): any;
+    public readonly data: ImmutableJson;
 
     /**
      * Returns all keys.
@@ -88,7 +86,7 @@ export default abstract class DbsSimplePathCoordinator {
             tmpQuery = ifOption[i];
             switch (tmpQuery.t) {
                 case IfQueryType.full:
-                    tmpRes = forint(tmpQuery.q)(this.getData()) ? !tmpQuery.n: !!tmpQuery.n;
+                    tmpRes = forint(tmpQuery.q)(this.data) ? !tmpQuery.n: !!tmpQuery.n;
                     break;
                 case IfQueryType.search:
 

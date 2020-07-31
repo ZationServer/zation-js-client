@@ -54,6 +54,7 @@ import {createSimpleModifyToken}                                from "./storage/
 import {deepCloneInstance}                                      from "../utils/cloneUtils";
 import LocalCudOperationsMemory                                 from "./localCudOperationsMemory";
 import {Logger}                                                 from "../logger/logger";
+import {ImmutableJson}                                          from "../utils/typeUtils";
 
 export interface DataboxOptions {
     /**
@@ -1328,16 +1329,21 @@ export default class Databox {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Returns the data from the main storage.
-     * @param directAccess
-     * The direct access is dangerous if you modify something on the data,
+     * Notice that the return value is deep read-only.
+     * It is forbidden to modify directly on the storage data because
      * it can break the whole storage.
-     * The only advantage is that it is faster because the
-     * storage doesn't need to create a copy from the entire structure.
-     * You can use it if you need extreme performance.
-     * But you need to be careful that you only read from the data.
+     * If you need to modify the data you can use the getDataClone method.
      */
-    getData<T = any>(directAccess: boolean = false): T {
-        return this.mainDbStorage.getData<T>(directAccess);
+    get data(): ImmutableJson {
+        return this.mainDbStorage.data;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Returns a clone of the data from the main storage.
+     */
+    getDataClone<T = any>(): T {
+        return this.mainDbStorage.getDataClone<T>();
     }
 
     // noinspection JSUnusedGlobalSymbols

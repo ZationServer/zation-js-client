@@ -22,10 +22,11 @@ import {
     DeleteProcessArgs,
     InsertProcessArgs,
     UpdateProcessArgs}                                 from "../../dbDefinitions";
+import {ImmutableJson}                                 from "../../../utils/typeUtils";
 
 export default class DbsKeyArray extends DbsSimplePathCoordinator implements DbsComponent {
 
-    private readonly data: any[];
+    public readonly data: ReadonlyArray<ImmutableJson>;
     private readonly componentStructure: any[];
     private readonly keysSorted: string[];
     private readonly keyMap: Map<string,number>;
@@ -74,7 +75,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
 
                 parsed = DbDataParser.parse(withValue ? item[rawValueKey as string]: item);
                 this.componentStructure[tmpIndex] = parsed;
-                this.data[tmpIndex] = isDbsComponent(parsed) ? parsed.getData(): parsed;
+                (this.data as any[])[tmpIndex] = isDbsComponent(parsed) ? parsed.data : parsed;
             }
         }
     }
@@ -98,7 +99,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
             let wrapper: {i: number,k: string,v: any};
             let targetIndex;
             const tmpData = this.data.slice();
-            this.data.length = 0;
+            (this.data as any[]).length = 0;
             const tmpComponentStructure = this.componentStructure.slice();
             this.componentStructure.length = 0;
             this.keysSorted.length = 0;
@@ -109,7 +110,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
                 targetIndex = wrapper.i;
                 this.keyMap.set(wrapper.k,i);
                 this.keysSorted[i] = wrapper.k;
-                this.data[i] = tmpData[targetIndex];
+                (this.data as any[])[i] = tmpData[targetIndex];
                 this.componentStructure[i] = tmpComponentStructure[targetIndex];
             }
             return dataChanged;
@@ -245,21 +246,14 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
     /**
      * Returns a copy of the data.
      */
-    getDataCopy(): Record<string,any> {
+    getDataClone(): Record<string,any> {
         const data: any[] = [];
         let value;
         for(let i = 0; i < this.componentStructure.length; i++){
             value = this.componentStructure[i];
-            data[i] = isDbsComponent(value) ? value.getDataCopy(): value;
+            data[i] = isDbsComponent(value) ? value.getDataClone() : value;
         }
         return data;
-    }
-
-    /**
-     * Returns the data.
-     */
-    getData() {
-        return this.data;
     }
 
     /**
@@ -277,8 +271,8 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
                     const {mergedValue,dataChanged} = dbsMerger(this.componentStructure[index],componentValue,this.valueMerger);
                     mainDc = mainDc || dataChanged;
                     this.componentStructure[index] = mergedValue;
-                    mergedDataValueTmp = isDbsComponent(mergedValue) ? mergedValue.getData(): mergedValue;
-                    this.data[index] = mergedDataValueTmp;
+                    mergedDataValueTmp = isDbsComponent(mergedValue) ? mergedValue.data : mergedValue;
+                    (this.data as any[])[index] = mergedDataValueTmp;
 
                     if(dataChanged && this.hasCompartor && !needResort) { //resort?
                         needResort = this.getSortInIndex(key,mergedDataValueTmp) !== index;
@@ -309,7 +303,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
     private push(key: string,value: any) {
         const componentValue = DbDataParser.parse(value);
         this.pushWithComponentValue
-        (key,isDbsComponent(componentValue) ? componentValue.getData(): componentValue,componentValue);
+        (key,isDbsComponent(componentValue) ? componentValue.data : componentValue,componentValue);
     }
 
     /**
@@ -331,7 +325,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
         }
         //fallback
         this.componentStructure.push(componentValue);
-        this.data.push(value);
+        (this.data as any[]).push(value);
         const index = this.componentStructure.length - 1;
         this.keysSorted[index] = key;
         this.keyMap.set(key,index);
@@ -346,7 +340,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
      */
     private pushOnIndexWithComponentValue(index: number,key: string,value: any,componentValue: any) {
         this.componentStructure.splice(index,0,componentValue);
-        this.data.splice(index,0,value);
+        (this.data as any[]).splice(index,0,value);
         this.keysSorted.splice(index,0,key);
 
         //update keyMap
@@ -366,7 +360,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
         const index = this.keyMap.get(key);
         if(index !== undefined){
             this.componentStructure.splice(index,1);
-            this.data.splice(index,1);
+            (this.data as any[]).splice(index,1);
             this.keysSorted.splice(index, 1);
 
             //update keyMap
@@ -439,7 +433,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
         if (DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
             mt.level = ModifyLevel.DATA_TOUCHED;
             const parsed = DbDataParser.parse(value);
-            const newData = isDbsComponent(parsed) ? parsed.getData(): parsed;
+            const newData = isDbsComponent(parsed) ? parsed.data : parsed;
             if(mt.checkDataChange && !deepEqual(newData,this.data[index as number])){
                 mt.level = ModifyLevel.DATA_CHANGED;
             }
@@ -450,7 +444,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
             }
             else {
                 this.componentStructure[index as number] = parsed;
-                this.data[index as number] = newData;
+                (this.data as any[])[index as number] = newData;
             }
             this.timestampMap.set(key,timestamp);
         }

@@ -22,10 +22,11 @@ import {
     InsertProcessArgs,
     UpdateProcessArgs}                                 from "../../dbDefinitions";
 import {ModifyToken}                                   from "./modifyToken";
+import {ImmutableJson}                                 from "../../../utils/typeUtils";
 
 export default class DbsArray extends DbsSimplePathCoordinator implements DbsComponent {
 
-    private readonly data: any[];
+    public readonly data: ReadonlyArray<ImmutableJson>;
     private readonly componentStructure: any[];
     private readonly timestamps: number[] = [];
     private valueMerger: DbsValueMerger = defaultValueMerger;
@@ -40,7 +41,7 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
         for (let i = 0; i < rawData.length; i++) {
             parsed = DbDataParser.parse(rawData[i]);
             this.componentStructure[i] = parsed;
-            this.data[i] = isDbsComponent(parsed) ? parsed.getData(): parsed;
+            (this.data as any[])[i] = isDbsComponent(parsed) ? parsed.data : parsed;
         }
     }
 
@@ -135,21 +136,14 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
     /**
      * Returns a copy of the data.
      */
-    getDataCopy(): any[] {
+    getDataClone(): any[] {
         const data: any[] = [];
         let value;
         for(let i = 0; i < this.componentStructure.length; i++){
             value = this.componentStructure[i];
-            data[i] = isDbsComponent(value) ? value.getDataCopy(): value;
+            data[i] = isDbsComponent(value) ? value.getDataClone() : value;
         }
         return data;
-    }
-
-    /**
-     * Returns the data.
-     */
-    getData() {
-        return this.data;
     }
 
     /**
@@ -164,10 +158,10 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
                     const {mergedValue,dataChanged} = dbsMerger(this.componentStructure[index],componentValue,this.valueMerger);
                     mainDc = mainDc || dataChanged;
                     this.componentStructure[index] = mergedValue;
-                    this.data[index] = isDbsComponent(mergedValue) ? mergedValue.getData(): mergedValue;
+                    (this.data as any[])[index] = isDbsComponent(mergedValue) ? mergedValue.data : mergedValue;
                 }
                 else {
-                    this.data[index] = value;
+                    (this.data as any[])[index] = value;
                     this.componentStructure[index] = componentValue;
                     mainDc = true;
                 }
@@ -212,7 +206,7 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
         if (DbUtils.checkTimestamp(this.getTimestamp(index),timestamp)) {
             const parsed = DbDataParser.parse(value);
             this.componentStructure[index] = parsed;
-            this.data[index] = isDbsComponent(parsed) ? parsed.getData(): parsed;
+            (this.data as any[])[index] = isDbsComponent(parsed) ? parsed.data : parsed;
             this.timestamps[index] = timestamp;
             mt.level = ModifyLevel.DATA_CHANGED;
         }
@@ -248,11 +242,11 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
             mt.level = ModifyLevel.DATA_TOUCHED;
             const parsed = DbDataParser.parse(value);
             this.componentStructure[index] = parsed;
-            const newData = isDbsComponent(parsed) ? parsed.getData(): parsed;
+            const newData = isDbsComponent(parsed) ? parsed.data : parsed;
             if(mt.checkDataChange && !deepEqual(newData,this.data[index])){
                 mt.level = ModifyLevel.DATA_CHANGED;
             }
-            this.data[index] = newData;
+            (this.data as any[])[index] = newData;
             this.timestamps[index] = timestamp;
         }
     }
@@ -279,7 +273,7 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
         if(ifOption !== undefined && !(args.if = this.checkIfConditions(ifOption))) return;
 
         if (DbUtils.checkTimestamp(this.getTimestamp(index),timestamp)) {
-            this.data.splice(index, 1);
+            (this.data as any[]).splice(index, 1);
             this.componentStructure.splice(index, 1);
             this.timestamps.splice(index, 1);
             mt.level = ModifyLevel.DATA_CHANGED;

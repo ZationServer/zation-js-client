@@ -11,6 +11,7 @@ import DbsKeyArray       from "./dbsKeyArray";
 import {DbsComparator}   from "../dbsComparator";
 import DbsHead           from "./dbsHead";
 import {ModifyToken}     from "./modifyToken";
+import {ImmutableJson}   from "../../../utils/typeUtils";
 import {
     DbProcessedSelector,
     DeleteProcessArgs,
@@ -77,9 +78,8 @@ export default interface DbsComponent {
 
     getDbsComponents(selector: DbProcessedSelector): DbsComponent[];
 
-    getDataCopy(): any
-    getData(): any
-
+    getDataClone(): any;
+    readonly data: ImmutableJson;
 }
 
 export interface DbsComponentOptions {

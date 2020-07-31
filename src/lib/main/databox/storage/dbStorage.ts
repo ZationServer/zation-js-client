@@ -30,7 +30,8 @@ import {createDeleteModifyToken,
     createUpdateInsertModifyToken,
     getModifyTokenReaons}                               from "./components/modifyToken";
 import {deepCloneInstance}                              from "../../utils/cloneUtils";
-import LocalCudOperationsMemory from "../localCudOperationsMemory";
+import LocalCudOperationsMemory                         from "../localCudOperationsMemory";
+import {ImmutableJson}                                  from "../../utils/typeUtils";
 
 type ClearOnCloseMiddleware = (code: number | string | undefined,data: any) => boolean;
 type ClearOnKickOutMiddleware = (code: number | string | undefined,data: any) => boolean;
@@ -98,8 +99,8 @@ export const enum DataEventReason {
     Copied
 }
 
-export type OnDataChange = (reasons: DataEventReason[],storage: DbStorage) => void | Promise<void>;
-export type OnDataTouch = (reasons: DataEventReason[],storage: DbStorage) => void | Promise<void>;
+export type OnDataChange = (data: ImmutableJson,reasons: DataEventReason[],storage: DbStorage) => void | Promise<void>;
+export type OnDataTouch = (data: ImmutableJson,reasons: DataEventReason[],storage: DbStorage) => void | Promise<void>;
 export type OnInsert = (selector: DbProcessedSelector, value: any, options: IfOption & InfoOption & TimestampOption) => void | Promise<void>;
 export type OnUpdate = (selector: DbProcessedSelector, value: any, options: InfoOption & TimestampOption) => void | Promise<void>;
 export type OnDelete = (selector: DbProcessedSelector, options: InfoOption & TimestampOption) => void | Promise<void>;
@@ -222,9 +223,9 @@ export default class DbStorage {
         }
 
         if(triggerDataEvents && dataChanged){
-            this.dataTouchEvent.emit([DataEventReason.Sorted],this);
-            this.dataChangeEvent.emit([DataEventReason.Sorted],this);
-            this.dataChangeCombineSeqEvent.emit([DataEventReason.Sorted],this);
+            this.dataTouchEvent.emit(this.data,[DataEventReason.Sorted],this);
+            this.dataChangeEvent.emit(this.data,[DataEventReason.Sorted],this);
+            this.dataChangeCombineSeqEvent.emit(this.data,[DataEventReason.Sorted],this);
         }
     }
 
@@ -337,10 +338,10 @@ export default class DbStorage {
         const tmpOldHead = this.dbsHead;
         this.dbsHead = new DbsHead();
         this.updateCompOptions();
-        this.dataTouchEvent.emit([DataEventReason.Cleared],this);
-        if(this.hasDataChangeListener && !deepEqual(tmpOldHead.getData(),this.dbsHead.getData())){
-            this.dataChangeEvent.emit([DataEventReason.Cleared],this);
-            this.dataChangeCombineSeqEvent.emit([DataEventReason.Cleared],this);
+        this.dataTouchEvent.emit(this.data,[DataEventReason.Cleared],this);
+        if(this.hasDataChangeListener && !deepEqual(tmpOldHead.data,this.dbsHead.data)){
+            this.dataChangeEvent.emit(this.data,[DataEventReason.Cleared],this);
+            this.dataChangeCombineSeqEvent.emit(this.data,[DataEventReason.Cleared],this);
         }
         return this;
     }
@@ -367,9 +368,9 @@ export default class DbStorage {
         this.dbsHead = mergedValue;
         if(dataChanged){
             this.updateCompOptions();
-            this.dataTouchEvent.emit([DataEventReason.Added],this);
-            this.dataChangeEvent.emit([DataEventReason.Added],this);
-            this.dataChangeCombineSeqEvent.emit([DataEventReason.Added],this);
+            this.dataTouchEvent.emit(this.data,[DataEventReason.Added],this);
+            this.dataChangeEvent.emit(this.data,[DataEventReason.Added],this);
+            this.dataChangeCombineSeqEvent.emit(this.data,[DataEventReason.Added],this);
         }
     }
 
@@ -395,10 +396,10 @@ export default class DbStorage {
         const reason: DataEventReason = isReload ?
             DataEventReason.Reloaded: DataEventReason.Copied;
 
-        this.dataTouchEvent.emit([reason],this);
-        if(this.hasDataChangeListener && !deepEqual(tmpOldHead.getData(),this.dbsHead.getData())){
-            this.dataChangeEvent.emit([reason],this);
-            this.dataChangeCombineSeqEvent.emit([reason],this);
+        this.dataTouchEvent.emit(this.data,[reason],this);
+        if(this.hasDataChangeListener && !deepEqual(tmpOldHead.data,this.dbsHead.data)){
+            this.dataChangeEvent.emit(this.data,[reason],this);
+            this.dataChangeCombineSeqEvent.emit(this.data,[reason],this);
         }
     }
 
@@ -436,21 +437,21 @@ export default class DbStorage {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Returns the current data of this storage.
-     * @param directAccess
-     * The direct access is dangerous if you modify something on the data,
+     * Notice that the return value is deep read-only.
+     * It is forbidden to modify directly on the storage data because
      * it can break the whole storage.
-     * The only advantage is that it is faster because the
-     * storage doesn't need to create a copy from the entire structure.
-     * You can use it if you need extreme performance.
-     * But you need to be careful that you only read from the data.
+     * If you need to modify the data you can use the getDataClone method.
      */
-    getData<T = any>(directAccess: boolean = false): T {
-        if(directAccess){
-            return this.dbsHead.getData();
-        }
-        else {
-            return this.dbsHead.getDataCopy();
-        }
+    get data(): ImmutableJson {
+        return this.dbsHead.data;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Returns a clone of the current data of this storage.
+     */
+    getDataClone<T = any>(): T {
+        return this.dbsHead.getDataClone();
     }
 
     /**
@@ -543,7 +544,7 @@ export default class DbStorage {
                 if(mt.level > 0){
                     this.updateCompOptions();
                     reasons = getModifyTokenReaons(mt,DataEventReason.Inserted,DataEventReason.Updated);
-                    this.dataTouchEvent.emit([...reasons],this);
+                    this.dataTouchEvent.emit(this.data,[...reasons],this);
                 }
                 if(mt.level === ModifyLevel.DATA_CHANGED){
                     this.tmpCudInserted = true;
@@ -642,7 +643,7 @@ export default class DbStorage {
                 if(mt.level > 0){
                     this.updateCompOptions();
                     reasons = getModifyTokenReaons(mt,DataEventReason.Updated,DataEventReason.Inserted);
-                    this.dataTouchEvent.emit([...reasons],this);
+                    this.dataTouchEvent.emit(this.data,[...reasons],this);
                 }
                 // noinspection DuplicatedCode
                 if(mt.level === ModifyLevel.DATA_CHANGED){
@@ -735,7 +736,7 @@ export default class DbStorage {
                 this.updateCompOptions();
                 this.tmpCudDeleted = true;
                 this.deleteEvent.emit(selector,options);
-                this.dataTouchEvent.emit([DataEventReason.Deleted],this);
+                this.dataTouchEvent.emit(this.data,[DataEventReason.Deleted],this);
                 this._triggerChangeEvents([DataEventReason.Deleted]);
             }
         }
@@ -798,7 +799,7 @@ export default class DbStorage {
         if(this.tmpCudDeleted){reasons.push(DataEventReason.Deleted);}
 
         if(reasons.length > 0){
-            this.dataChangeCombineSeqEvent.emit(reasons,this);
+            this.dataChangeCombineSeqEvent.emit(this.data,reasons,this);
         }
         this.cudSeqEditActive = false;
     }
@@ -813,9 +814,9 @@ export default class DbStorage {
     }
 
     private _triggerChangeEvents(reasons: DataEventReason[]) {
-        this.dataChangeEvent.emit([...reasons],this);
+        this.dataChangeEvent.emit(this.data,[...reasons],this);
         if(!this.cudSeqEditActive){
-            this.dataChangeCombineSeqEvent.emit([...reasons],this);
+            this.dataChangeCombineSeqEvent.emit(this.data,[...reasons],this);
         }
     }
 
