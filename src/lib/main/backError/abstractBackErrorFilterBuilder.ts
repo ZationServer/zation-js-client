@@ -10,6 +10,7 @@ import {PairOrAndBuilder}        from "../utils/pairOrAndBuilder";
 import {BackErrorFilter}             from "./backErrorFilter";
 import {PresetBackErrorFilter}       from "./presetBackErrorFilter";
 import {ErrorType}                   from "../definitions/errorType";
+import {ErrorGroup}                  from "../definitions/errorGroup";
 
 export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackErrorFilterBuilder<R>>
 {
@@ -41,7 +42,7 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
     /**
      * @description
      * Reset the filter property name.
-     * Than all names are allowed.
+     * Then all names are allowed.
      */
     resetName(): R {
         delete this.tmpFilter.name;
@@ -68,10 +69,37 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
     /**
      * @description
      * Reset the filter property type.
-     * Than all types are allowed.
+     * Then all types are allowed.
      */
     resetType(): R {
         delete this.tmpFilter.type;
+        return this.self();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Filter errors with the same group.
+     * More groups are linked with OR.
+     * @param group
+     */
+    groupIs(...group: (string | ErrorGroup)[]): R
+    {
+        if(!Array.isArray(this.tmpFilter.group)) {
+            this.tmpFilter.group = [];
+        }
+        this.tmpFilter.group.push(...group);
+        return this.self();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Reset the filter property group.
+     * Then all groups are allowed.
+     */
+    resetGroup(): R {
+        delete this.tmpFilter.group;
         return this.self();
     }
 
@@ -96,7 +124,7 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
     /**
      * @description
      * Reset the filter property info.
-     * Than all infos are allowed.
+     * Then all infos are allowed.
      */
     resetInfo(): R {
         delete this.tmpFilter.info;
@@ -145,7 +173,7 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
     /**
      * @description
      * Reset the filter property infoKey.
-     * Than all info keys are allowed.
+     * Then all info keys are allowed.
      */
     resetInfoKeys(): R {
         delete this.tmpFilter.infoKey;
@@ -193,7 +221,7 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
     /**
      * @description
      * Reset the filter property infoValue.
-     * Than all info values are allowed.
+     * Then all info values are allowed.
      */
     resetInfoValues(): R {
         delete this.tmpFilter.infoValue;
