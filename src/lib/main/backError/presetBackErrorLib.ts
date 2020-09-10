@@ -37,7 +37,7 @@ export abstract class PresetBackErrorLib<T>
      */
     valueNotMatchesWithType(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('valueNotMatchesWithType',path,value));
+        ('ValueNotMatchesWithType',path,value));
         return this.self();
     }
 
@@ -72,7 +72,7 @@ export abstract class PresetBackErrorLib<T>
      */
     valueNotMatchesWithMinLength(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('valueNotMatchesWithMinLength',path,value,ErrorGroup.ValueLengthError));
+        ('ValueNotMatchesWithMinLength',path,value,ErrorGroup.ValueLengthError));
         return this.self();
     }
 
@@ -91,7 +91,7 @@ export abstract class PresetBackErrorLib<T>
      */
     valueNotMatchesWithMaxLength(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('valueNotMatchesWithMaxLength',path,value,ErrorGroup.ValueLengthError));
+        ('ValueNotMatchesWithMaxLength',path,value,ErrorGroup.ValueLengthError));
         return this.self();
     }
 
@@ -110,7 +110,7 @@ export abstract class PresetBackErrorLib<T>
      */
     valueNotMatchesWithLength(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('valueNotMatchesWithLength',path,value,ErrorGroup.ValueLengthError));
+        ('ValueNotMatchesWithLength',path,value,ErrorGroup.ValueLengthError));
         return this.self();
     }
 
@@ -129,7 +129,7 @@ export abstract class PresetBackErrorLib<T>
      */
     valueNotMatchesWithLettersFormat(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('valueNotMatchesWithLettersFormat',path,value));
+        ('ValueNotMatchesWithLettersFormat',path,value));
         return this.self();
     }
 
@@ -148,7 +148,7 @@ export abstract class PresetBackErrorLib<T>
      */
     valueNotMatchesWithCharClass(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('valueNotMatchesWithCharClass',path,value));
+        ('ValueNotMatchesWithCharClass',path,value));
         return this.self();
     }
 
@@ -183,7 +183,7 @@ export abstract class PresetBackErrorLib<T>
      */
     dateIsNotBefore(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('dateIsNotBefore',path,value,ErrorGroup.DateError));
+        ('DateIsNotBefore',path,value,ErrorGroup.DateError));
         return this.self();
     }
 
@@ -202,7 +202,7 @@ export abstract class PresetBackErrorLib<T>
      */
     dateIsNotAfter(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('dateIsNotAfter',path,value,ErrorGroup.DateError));
+        ('DateIsNotAfter',path,value,ErrorGroup.DateError));
         return this.self();
     }
 
@@ -221,7 +221,7 @@ export abstract class PresetBackErrorLib<T>
      */
     valueNotMatchesWithContains(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('valueNotMatchesWithContains',path,value));
+        ('ValueNotMatchesWithContains',path,value));
         return this.self();
     }
 
@@ -240,7 +240,7 @@ export abstract class PresetBackErrorLib<T>
      */
     valueNotMatchesWithEquals(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('valueNotMatchesWithEquals',path,value));
+        ('ValueNotMatchesWithEquals',path,value));
         return this.self();
     }
 
@@ -275,7 +275,7 @@ export abstract class PresetBackErrorLib<T>
      */
     valueNotMatchesWithMinValue(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('valueNotMatchesWithMinValue',path,value,ErrorGroup.NumberSizeError));
+        ('ValueNotMatchesWithMinValue',path,value,ErrorGroup.NumberSizeError));
         return this.self();
     }
 
@@ -294,7 +294,7 @@ export abstract class PresetBackErrorLib<T>
      */
     valueNotMatchesWithMaxValue(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('valueNotMatchesWithMaxValue',path,value,ErrorGroup.NumberSizeError));
+        ('ValueNotMatchesWithMaxValue',path,value,ErrorGroup.NumberSizeError));
         return this.self();
     }
 
@@ -312,7 +312,7 @@ export abstract class PresetBackErrorLib<T>
      */
     valueNotMatchesWithRegex(path?: string,value?: any,regexName?: string): T {
         this._presetAdd(this._validationErrorBuild
-        ('valueNotMatchesWithRegex',path,value,undefined,'regexName',regexName));
+        ('ValueNotMatchesWithRegex',path,value,undefined,'regexName',regexName));
         return this.self();
     }
 
@@ -331,7 +331,7 @@ export abstract class PresetBackErrorLib<T>
      */
     valueNotMatchesWithStartsWith(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('valueNotMatchesWithStartsWith',path,value));
+        ('ValueNotMatchesWithStartsWith',path,value));
         return this.self();
     }
 
@@ -350,7 +350,7 @@ export abstract class PresetBackErrorLib<T>
      */
     valueNotMatchesWithEndsWith(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('valueNotMatchesWithEndsWith',path,value));
+        ('ValueNotMatchesWithEndsWith',path,value));
         return this.self();
     }
 
@@ -385,7 +385,7 @@ export abstract class PresetBackErrorLib<T>
      */
     valueNotMatchesWithIn(path?: string, value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('valueNotMatchesWithIn',path,value,ErrorGroup.InError));
+        ('ValueNotMatchesWithIn',path,value,ErrorGroup.InError));
         return this.self();
     }
 
@@ -401,7 +401,7 @@ export abstract class PresetBackErrorLib<T>
      */
     valueNotMatchesWithPrivateIn(path?: string, value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('valueNotMatchesWithPrivateIn',path,value,ErrorGroup.InError));
+        ('ValueNotMatchesWithPrivateIn',path,value,ErrorGroup.InError));
         return this.self();
     }
 
@@ -436,7 +436,7 @@ export abstract class PresetBackErrorLib<T>
      */
     valueNotMatchesWithMinByteSize(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('valueNotMatchesWithMinByteSize',path,value,ErrorGroup.ByteSizeError));
+        ('ValueNotMatchesWithMinByteSize',path,value,ErrorGroup.ByteSizeError));
         return this.self();
     }
 
@@ -455,7 +455,7 @@ export abstract class PresetBackErrorLib<T>
      */
     valueNotMatchesWithMaxByteSize(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('valueNotMatchesWithMaxByteSize',path,value,ErrorGroup.ByteSizeError));
+        ('ValueNotMatchesWithMaxByteSize',path,value,ErrorGroup.ByteSizeError));
         return this.self();
     }
 
@@ -490,7 +490,7 @@ export abstract class PresetBackErrorLib<T>
      */
     valueNotMatchesWithMimeType(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('valueNotMatchesWithMimeType',path,value,ErrorGroup.ContentTypeError));
+        ('ValueNotMatchesWithMimeType',path,value,ErrorGroup.ContentTypeError));
         return this.self();
     }
 
@@ -509,7 +509,7 @@ export abstract class PresetBackErrorLib<T>
      */
     valueNotMatchesWithMimeSubType(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('valueNotMatchesWithMimeSubType',path,value,ErrorGroup.ContentTypeError));
+        ('ValueNotMatchesWithMimeSubType',path,value,ErrorGroup.ContentTypeError));
         return this.self();
     }
 
@@ -544,7 +544,7 @@ export abstract class PresetBackErrorLib<T>
      */
     arrayNotMatchesWithMaxLength(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('arrayNotMatchesWithMaxLength',path,value,ErrorGroup.ArrayLengthError));
+        ('ArrayNotMatchesWithMaxLength',path,value,ErrorGroup.ArrayLengthError));
         return this.self();
     }
 
@@ -563,7 +563,7 @@ export abstract class PresetBackErrorLib<T>
      */
     arrayNotMatchesWithMinLength(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('arrayNotMatchesWithMinLength',path,value,ErrorGroup.ArrayLengthError));
+        ('ArrayNotMatchesWithMinLength',path,value,ErrorGroup.ArrayLengthError));
         return this.self();
     }
 
@@ -582,7 +582,7 @@ export abstract class PresetBackErrorLib<T>
      */
     arrayNotMatchesWithLength(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('arrayNotMatchesWithLength',path,value,ErrorGroup.ArrayLengthError));
+        ('ArrayNotMatchesWithLength',path,value,ErrorGroup.ArrayLengthError));
         return this.self();
     }
 
@@ -601,7 +601,7 @@ export abstract class PresetBackErrorLib<T>
      */
     noAnyOfMatch(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('noAnyOfMatch',path,value));
+        ('NoAnyOfMatch',path,value));
         return this.self();
     }
 
@@ -613,7 +613,7 @@ export abstract class PresetBackErrorLib<T>
      */
     inputNotAllowed(): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputNotAllowed'));
+        ('InputNotAllowed'));
         return this.self();
     }
 
@@ -625,7 +625,7 @@ export abstract class PresetBackErrorLib<T>
      */
     inputRequired(): T {
         this._presetAdd(this._validationErrorBuild
-        ('inputRequired'));
+        ('InputRequired'));
         return this.self();
     }
 
@@ -637,7 +637,7 @@ export abstract class PresetBackErrorLib<T>
      */
     valueRequired(): T {
         this._presetAdd(this._validationErrorBuild
-        ('valueRequired'));
+        ('ValueRequired'));
         return this.self();
     }
 
@@ -656,7 +656,7 @@ export abstract class PresetBackErrorLib<T>
      */
     invalidType(path?: string,value?: any): T {
         this._presetAdd(this._validationErrorBuild
-        ('invalidType',path,value));
+        ('InvalidType',path,value));
         return this.self();
     }
 
@@ -674,7 +674,7 @@ export abstract class PresetBackErrorLib<T>
      */
     missingObjectProperty(path?: string): T {
         this._presetAdd(this._validationErrorBuild
-        ('missingObjectProperty',path));
+        ('MissingObjectProperty',path));
         return this.self();
     }
 
@@ -691,7 +691,7 @@ export abstract class PresetBackErrorLib<T>
      */
     unknownObjectProperty(path?: string): T {
         this._presetAdd(this._validationErrorBuild
-        ('unknownObjectProperty',path));
+        ('UnknownObjectProperty',path));
         return this.self();
     }
 
@@ -719,7 +719,7 @@ export abstract class PresetBackErrorLib<T>
      */
     unknownController(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.InputError,'unknownController'));
+        (ErrorType.InputError,'UnknownController'));
         return this.self();
     }
 
@@ -734,7 +734,7 @@ export abstract class PresetBackErrorLib<T>
      */
     unknownReceiver(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.InputError,'unknownReceiver'));
+        (ErrorType.InputError,'UnknownReceiver'));
         return this.self();
     }
 
@@ -750,7 +750,7 @@ export abstract class PresetBackErrorLib<T>
      */
     apiLevelIncompatible(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.InputError,'apiLevelIncompatible'));
+        (ErrorType.InputError,'ApiLevelIncompatible'));
         return this.self();
     }
 
@@ -763,7 +763,7 @@ export abstract class PresetBackErrorLib<T>
      */
     authControllerNotSet(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.InputError,'authControllerNotSet'));
+        (ErrorType.InputError,'AuthControllerNotSet'));
         return this.self();
     }
 
@@ -789,7 +789,7 @@ export abstract class PresetBackErrorLib<T>
      */
     accessDenied(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.AccessError,'accessDenied'));
+        (ErrorType.AccessError,'AccessDenied'));
         return this.self();
     }
 
@@ -801,7 +801,7 @@ export abstract class PresetBackErrorLib<T>
      */
     invalidPanelAuthData(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.AccessError,'invalidPanelAuthData'));
+        (ErrorType.AccessError,'InvalidPanelAuthData'));
         return this.self();
     }
 
@@ -814,7 +814,7 @@ export abstract class PresetBackErrorLib<T>
      */
     panelDeactivated(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.InputError,'panelDeactivated'));
+        (ErrorType.InputError,'PanelDeactivated'));
         return this.self();
     }
 
@@ -826,7 +826,7 @@ export abstract class PresetBackErrorLib<T>
      */
     invalidRequest(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.InputError,'invalidRequest'));
+        (ErrorType.InputError,'InvalidRequest'));
         return this.self();
     }
 
@@ -854,7 +854,7 @@ export abstract class PresetBackErrorLib<T>
      */
     invalidValidationCheckStructure(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.InputError,'invalidValidationCheckStructure'));
+        (ErrorType.InputError,'InvalidValidationCheckStructure'));
         return this.self();
     }
 
@@ -871,7 +871,7 @@ export abstract class PresetBackErrorLib<T>
      */
     pathNotResolvable(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.InputError,'pathNotResolvable'));
+        (ErrorType.InputError,'PathNotResolvable'));
         return this.self();
     }
 
@@ -888,7 +888,7 @@ export abstract class PresetBackErrorLib<T>
      */
     validationCheckLimitReached(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.InputError,'validationCheckLimitReached'));
+        (ErrorType.InputError,'ValidationCheckLimitReached'));
         return this.self();
     }
 
@@ -925,7 +925,7 @@ export abstract class PresetBackErrorLib<T>
      */
     unknownError(): T {
         this._presetAdd(this._zationErrorBuild
-        (ErrorType.SystemError,'unknownError'));
+        (ErrorType.SystemError,'UnknownError'));
         return this.self();
     }
 
