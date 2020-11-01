@@ -51,20 +51,28 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
      * @param raw
      */
     private buildKeyArray(raw: RawKeyArray) {
-        const array = raw.___a___;
-        const rawKeyKey = raw.k;
-        const rawValueKey = raw.v;
-        const withValue = typeof rawValueKey === 'string';
+        const array = raw.___ka___;
 
-        let item;
+        let rawKeyKey: string | number | undefined = raw.k;
+        let rawValueKey: string | number | undefined = raw.v;
+        let withValue: boolean;
+        if(typeof rawKeyKey !== 'string') {
+            rawKeyKey = 0;
+            rawValueKey = 1;
+            withValue = true;
+        }
+        else withValue = typeof rawValueKey === 'string';
+
+        const arrLength = array.length;
+
         let itemKey;
         let tmpIndex;
         let parsed;
         let i = 0;
-        for(let j = 0; j < array.length; j++){
-            item = array[j];
-            if(typeof item === 'object'){
-                itemKey = item[rawKeyKey].toString();
+        for(let j = 0; j < arrLength; j++){
+            const item = array[j];
+            if(typeof item === 'object' && (itemKey = item[rawKeyKey])){
+                itemKey = itemKey.toString();
                 tmpIndex = this.keyMap.get(itemKey);
                 if(tmpIndex === undefined){
                     tmpIndex = i;
@@ -73,7 +81,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
                     i++;
                 }
 
-                parsed = DbDataParser.parse(withValue ? item[rawValueKey as string]: item);
+                parsed = DbDataParser.parse(withValue ? item[rawValueKey as string] : item);
                 this.componentStructure[tmpIndex] = parsed;
                 (this.data as any[])[tmpIndex] = isDbsComponent(parsed) ? parsed.data : parsed;
             }
