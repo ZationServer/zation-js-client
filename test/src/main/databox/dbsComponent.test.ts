@@ -7,7 +7,7 @@ Copyright(c) Luca Scaringella
 import DbsHead          from "../../../../src/lib/main/databox/storage/components/dbsHead";
 import {$any, $contains, $key, $matches, $not, $value, buildKeyArray} from "../../../../src";
 import {assert}         from 'chai';
-import {createSimpleModifyToken} from "../../../../src/lib/main/databox/storage/components/modifyToken";
+import {createSimpleModifyToken} from "../../../../src/lib/main/databox/storage/modifyToken";
 
 describe('MAIN.Databox.Storage',() => {
 
