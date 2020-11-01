@@ -21,14 +21,15 @@ import ObjectUtils                                      from "../../utils/object
 import DbsHead                                          from "./components/dbsHead";
 import DbUtils                                          from "../dbUtils";
 import {DbsComparator}                                  from "./dbsComparator";
-import {DbsValueMerger}                                 from "./dbsMergerUtils";
-import DbsComponent, {DbsComponentOptions, ModifyLevel} from "./components/dbsComponent";
+import {DbsValueMerger}                                 from "./dbsMerge";
+import DbsComponent, {DbsComponentOptions}              from "./components/dbsComponent";
 import EventManager                                     from "../../utils/eventManager";
 import {deepEqual}                                      from "../../utils/deepEqual";
 import DbLocalCudOperationSequence                      from "../dbLocalCudOperationSequence";
 import {createDeleteModifyToken,
     createUpdateInsertModifyToken,
-    getModifyTokenReaons}                               from "./components/modifyToken";
+    ModifyLevel,
+    getModifyTokenReaons}                               from "./modifyToken";
 import {deepCloneInstance}                              from "../../utils/cloneUtils";
 import LocalCudOperationsMemory                         from "../localCudOperationsMemory";
 import {ImmutableJson}                                  from "../../utils/typeUtils";

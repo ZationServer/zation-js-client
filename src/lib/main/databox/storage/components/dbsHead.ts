@@ -5,17 +5,15 @@ Copyright(c) Luca Scaringella
  */
 
 import DbsComponent, {
-    DbsComponentType,
-    isDbsComponent,
-    isDbsHead,
-    MergeResult,
-    ModifyLevel} from "./dbsComponent";
+    dbsComponentSymbol,
+    isDbsComponent
+} from "./dbsComponent";
 import DbDataParser                                    from "../dbDataParser";
 import DbUtils                                         from "../../dbUtils";
-import {dbsMerger, DbsValueMerger, defaultValueMerger} from "../dbsMergerUtils";
+import {dbsMerger, DbsValueMerger, defaultValueMerger, MergeResult} from "../dbsMerge";
 import {DbsComparator}                                 from "../dbsComparator";
 import forint                                          from "forint";
-import {ModifyToken}                                   from "./modifyToken";
+import {ModifyLevel, ModifyToken}                      from "../modifyToken";
 import {deepEqual}                                     from "../../../utils/deepEqual";
 import {ImmutableJson, Writeable}                      from "../../../utils/typeUtils";
 import {
@@ -29,6 +27,8 @@ import {
 
 export default class DbsHead implements DbsComponent {
 
+    public readonly [dbsComponentSymbol] = true;
+
     public readonly data: ImmutableJson;
     private componentValue: any;
     private timestamp: number = 0;
@@ -39,14 +39,6 @@ export default class DbsHead implements DbsComponent {
 
         this.data = isDbsComponent(this.componentValue) ?
             this.componentValue.data : this.componentValue;
-    }
-
-    get dbsComponent() {
-        return true;
-    }
-
-    get dbsComponentType() {
-        return DbsComponentType.dbsHead
     }
 
     /**
@@ -111,7 +103,7 @@ export default class DbsHead implements DbsComponent {
      * @param newValue
      */
     mergeWithNew(newValue: any): MergeResult {
-        if (isDbsHead(newValue)) {
+        if (newValue instanceof DbsHead) {
             const newTimestamp = newValue.getTimestamp();
             const newComponentValue = newValue.getComponentValue();
             const {mergedValue: mergedValue,dataChanged} = dbsMerger(this.componentValue,newComponentValue,this.valueMerger);

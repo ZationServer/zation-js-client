@@ -6,7 +6,7 @@ Copyright(c) Luca Scaringella
 
 import DbsComponent    from "./dbsComponent";
 import forint          from "forint";
-import {ModifyToken}   from "./modifyToken";
+import {ModifyToken}   from "../modifyToken";
 import {ImmutableJson} from "../../../utils/typeUtils";
 import {
     DbProcessedSelector,

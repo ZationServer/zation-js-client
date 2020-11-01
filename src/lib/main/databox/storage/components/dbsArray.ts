@@ -5,26 +5,25 @@ Copyright(c) Luca Scaringella
  */
 
 import DbsComponent, {
-    DbsComponentType,
-    isDbsArray,
     isDbsComponent,
-    MergeResult,
-    ModifyLevel
+    dbsComponentSymbol
 } from "./dbsComponent";
 import DbDataParser                                    from "../dbDataParser";
 import DbUtils                                         from "../../dbUtils";
 import DbsSimplePathCoordinator                        from "./dbsSimplePathCoordinator";
-import {dbsMerger, DbsValueMerger, defaultValueMerger} from "../dbsMergerUtils";
+import {dbsMerger, DbsValueMerger, defaultValueMerger, MergeResult} from "../dbsMerge";
 import {DbsComparator}                                 from "../dbsComparator";
 import {deepEqual}                                     from "../../../utils/deepEqual";
 import {
     DeleteProcessArgs,
     InsertProcessArgs,
     UpdateProcessArgs}                                 from "../../dbDefinitions";
-import {ModifyToken}                                   from "./modifyToken";
+import {ModifyLevel, ModifyToken}                      from "../modifyToken";
 import {ImmutableJson}                                 from "../../../utils/typeUtils";
 
 export default class DbsArray extends DbsSimplePathCoordinator implements DbsComponent {
+
+    public readonly [dbsComponentSymbol] = true;
 
     public readonly data: ReadonlyArray<ImmutableJson>;
     private readonly componentStructure: any[];
@@ -44,9 +43,6 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
             (this.data as any[])[i] = isDbsComponent(parsed) ? parsed.data : parsed;
         }
     }
-
-    get dbsComponent(){return true;}
-    get dbsComponentType(){return DbsComponentType.dbsArray}
 
     /**
      * Sets the value merger of this component.
@@ -151,7 +147,7 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
      * @param newValue
      */
     mergeWithNew(newValue: any): MergeResult {
-        if(isDbsArray(newValue)){
+        if(newValue instanceof DbsArray){
             let mainDc: boolean = false;
             newValue.forEachPair((index, value, componentValue, timestamp) => {
                 if(this.hasIndex(index)){

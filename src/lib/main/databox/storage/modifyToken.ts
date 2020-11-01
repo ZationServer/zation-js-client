@@ -4,7 +4,11 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {ModifyLevel} from "./dbsComponent";
+export const enum ModifyLevel {
+    NOTHING = 0,
+    DATA_TOUCHED = 1,
+    DATA_CHANGED= 2
+}
 
 export interface ModifyToken {
     level: ModifyLevel,
@@ -58,7 +62,7 @@ export const createSimpleModifyToken: () => ModifyToken =
     () => {
         return {
             checkDataChange: false,
-            set level(value) {},
+            set level(_) {},
         }
 };
 

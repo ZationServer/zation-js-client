@@ -4,14 +4,10 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {DbsValueMerger}  from "../dbsMergerUtils";
-import DbsObject         from "./dbsObject";
-import DbsArray          from "./dbsArray";
-import DbsKeyArray       from "./dbsKeyArray";
-import {DbsComparator}   from "../dbsComparator";
-import DbsHead           from "./dbsHead";
-import {ModifyToken}     from "./modifyToken";
-import {ImmutableJson}   from "../../../utils/typeUtils";
+import {DbsComparator}               from "../dbsComparator";
+import {ModifyToken}                 from "../modifyToken";
+import {ImmutableJson}               from "../../../utils/typeUtils";
+import {MergeResult, DbsValueMerger} from "../dbsMerge";
 import {
     DbProcessedSelector,
     DeleteProcessArgs,
@@ -19,10 +15,11 @@ import {
     UpdateProcessArgs
 } from "../../dbDefinitions";
 
+export const dbsComponentSymbol = Symbol();
+
 export default interface DbsComponent {
 
-    dbsComponent: boolean;
-    dbsComponentType: DbsComponentType;
+    readonly [dbsComponentSymbol]: true;
 
     /**
      * @return the modify level.
@@ -87,46 +84,6 @@ export interface DbsComponentOptions {
     valueMerger?: DbsValueMerger
 }
 
-export enum DbsComponentType {
-    dbsObject,
-    dbsKeyArray,
-    dbsArray,
-    dbsHead
-}
-
 export function isDbsComponent(value: any): value is DbsComponent  {
-    return value && value['dbsComponent'];
-}
-
-export function isDbsObject(value: any): value is DbsObject {
-    return value && value['dbsComponentType'] === DbsComponentType.dbsObject;
-}
-
-export function isDbsKeyArray(value: any): value is DbsKeyArray {
-    return value && value['dbsComponentType'] === DbsComponentType.dbsKeyArray;
-}
-
-export function isDbsArray(value: any): value is DbsArray {
-    return value && value['dbsComponentType'] === DbsComponentType.dbsArray;
-}
-
-export function isDbsHead(value: any): value is DbsHead {
-    return value && value['dbsComponentType'] === DbsComponentType.dbsHead;
-}
-
-export const enum ModifyLevel {
-    NOTHING = 0,
-    DATA_TOUCHED = 1,
-    DATA_CHANGED= 2
-}
-
-export interface MergeResult {
-    /**
-     * merged value
-     */
-    mergedValue: any,
-    /**
-     * Indicates if the data has changed.
-     */
-    dataChanged: boolean
+    return value && value[dbsComponentSymbol];
 }

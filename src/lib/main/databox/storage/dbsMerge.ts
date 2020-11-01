@@ -4,8 +4,19 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {isDbsComponent, MergeResult}              from "./components/dbsComponent";
+import {isDbsComponent}                           from "./components/dbsComponent";
 import DbDataParser                               from "./dbDataParser";
+
+export interface MergeResult {
+    /**
+     * merged value
+     */
+    mergedValue: any,
+    /**
+     * Indicates if the data has changed.
+     */
+    dataChanged: boolean
+}
 
 export type DbsValueMerger = (oldValue: any, newValue: any) => any;
 

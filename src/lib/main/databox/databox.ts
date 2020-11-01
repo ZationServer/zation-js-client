@@ -50,7 +50,7 @@ import {InvalidInputError}                                      from "../../main
 import afterPromise                                             from "../utils/promiseUtils";
 import DbLocalCudOperationSequence                              from "./dbLocalCudOperationSequence";
 import {TinyEmitter}                                            from "tiny-emitter";
-import {createSimpleModifyToken}                                from "./storage/components/modifyToken";
+import {createSimpleModifyToken}                                from "./storage/modifyToken";
 import {deepCloneInstance}                                      from "../utils/cloneUtils";
 import LocalCudOperationsMemory                                 from "./localCudOperationsMemory";
 import {Logger}                                                 from "../logger/logger";

@@ -53,7 +53,7 @@ import DbsHead                          from "./lib/main/databox/storage/compone
 import DbStorage, {DataEventReason}     from "./lib/main/databox/storage/dbStorage";
 import Databox                          from "./lib/main/databox/databox";
 import {DbsComparator}                  from "./lib/main/databox/storage/dbsComparator";
-import {DbsValueMerger}                 from "./lib/main/databox/storage/dbsMergerUtils";
+import {DbsValueMerger}                 from "./lib/main/databox/storage/dbsMerge";
 import {InvalidInputError}              from "./lib/main/error/invalidInputError";
 import DbError                          from "./lib/main/databox/dbError";
 import {AbortSignal, AbortTrigger}      from "./lib/main/utils/connectionUtils";

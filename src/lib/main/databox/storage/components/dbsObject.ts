@@ -5,18 +5,16 @@ Copyright(c) Luca Scaringella
  */
 
 import DbsComponent, {
-    DbsComponentType,
-    isDbsComponent,
-    isDbsObject,
-    MergeResult,
-    ModifyLevel} from "./dbsComponent";
+    dbsComponentSymbol,
+    isDbsComponent
+} from "./dbsComponent";
 import DbDataParser                                    from "../dbDataParser";
 import DbUtils                                         from "../../dbUtils";
 import DbsSimplePathCoordinator                        from "./dbsSimplePathCoordinator";
-import {dbsMerger, DbsValueMerger, defaultValueMerger} from "../dbsMergerUtils";
+import {dbsMerger, DbsValueMerger, defaultValueMerger, MergeResult} from "../dbsMerge";
 import {DbsComparator}                                 from "../dbsComparator";
 import {deepEqual}                                     from "../../../utils/deepEqual";
-import {ModifyToken}                                   from "./modifyToken";
+import {ModifyLevel, ModifyToken}                      from "../modifyToken";
 import {
     DeleteProcessArgs,
     InsertProcessArgs,
@@ -24,6 +22,8 @@ import {
 import {ImmutableJson}                                 from "../../../utils/typeUtils";
 
 export default class DbsObject extends DbsSimplePathCoordinator implements DbsComponent {
+
+    public readonly [dbsComponentSymbol] = true;
 
     public readonly data: ImmutableJson;
     private readonly componentStructure: Record<string,any>;
@@ -45,9 +45,6 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
             (this.data as any)[key] = isDbsComponent(parsed) ? parsed.data : parsed;
         }
     }
-
-    get dbsComponent(){return true;}
-    get dbsComponentType(){return DbsComponentType.dbsObject}
 
     /**
      * Sets the value merger of this component.
@@ -147,7 +144,7 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      * @param newValue
      */
     mergeWithNew(newValue: any): MergeResult {
-        if(isDbsObject(newValue)){
+        if(newValue instanceof DbsObject){
             let mainDc: boolean = false;
             newValue.forEachPair((key, value, componentValue, timestamp) => {
                 if(this.hasKey(key)){

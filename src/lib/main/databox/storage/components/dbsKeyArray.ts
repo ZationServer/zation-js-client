@@ -5,19 +5,17 @@ Copyright(c) Luca Scaringella
  */
 
 import DbsComponent, {
-    DbsComponentType,
-    isDbsComponent,
-    isDbsKeyArray,
-    MergeResult,
-    ModifyLevel} from "./dbsComponent";
+    dbsComponentSymbol,
+    isDbsComponent
+} from "./dbsComponent";
 import DbDataParser                                    from "../dbDataParser";
 import DbUtils                                         from "../../dbUtils";
 import DbsSimplePathCoordinator                        from "./dbsSimplePathCoordinator";
-import {dbsMerger, DbsValueMerger, defaultValueMerger} from "../dbsMergerUtils";
+import {dbsMerger, DbsValueMerger, defaultValueMerger, MergeResult} from "../dbsMerge";
 import {DbsComparator}                                 from "../dbsComparator";
 import {RawKeyArray}                                   from "../keyArrayUtils";
 import {deepEqual}                                     from "../../../utils/deepEqual";
-import {ModifyToken}                                   from "./modifyToken";
+import {ModifyLevel, ModifyToken}                      from "../modifyToken";
 import {
     DeleteProcessArgs,
     InsertProcessArgs,
@@ -25,6 +23,8 @@ import {
 import {ImmutableJson}                                 from "../../../utils/typeUtils";
 
 export default class DbsKeyArray extends DbsSimplePathCoordinator implements DbsComponent {
+
+    public readonly [dbsComponentSymbol] = true;
 
     public readonly data: ReadonlyArray<ImmutableJson>;
     private readonly componentStructure: any[];
@@ -79,9 +79,6 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
             }
         }
     }
-
-    get dbsComponent(){return true;}
-    get dbsComponentType(){return DbsComponentType.dbsKeyArray}
 
     /**
      * Sorts the key array if a comparator is provided.
@@ -261,7 +258,7 @@ export default class DbsKeyArray extends DbsSimplePathCoordinator implements Dbs
      * @param newValue
      */
     mergeWithNew(newValue: any): MergeResult {
-        if(isDbsKeyArray(newValue)){
+        if(newValue instanceof DbsKeyArray){
             let mainDc: boolean = false;
             let needResort: boolean = false;
             let mergedDataValueTmp;
