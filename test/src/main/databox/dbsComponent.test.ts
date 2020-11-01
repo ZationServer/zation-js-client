@@ -43,6 +43,16 @@ describe('MAIN.Databox.Storage',() => {
             assert.deepEqual(data,['a','b','c']);
         });
 
+        it('KeyArray - with key-value pair arrays', () => {
+            const head = new DbsHead(buildKeyArray([[1,'a'],[2,'b'],['3','c']]));
+
+            const data = head.data;
+            const dataCopy = head.getDataClone();
+            assert.deepEqual(data,dataCopy,'Copy should be deep equal');
+
+            assert.deepEqual(data,['a','b','c']);
+        });
+
         it('Object', () => {
             const head = new DbsHead({name : 'luca',age : 20});
 
