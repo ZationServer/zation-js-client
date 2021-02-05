@@ -34,22 +34,6 @@ export default class DbError {
     }
 
     /**
-     * Returns if the client has no access with the current version.
-     * @param err
-     */
-    static hasNoAccessWithVersion(err: any): boolean {
-        return err.name === ErrorName.NoAccessWithVersion;
-    }
-
-    /**
-     * Returns if the client has no access with the current system.
-     * @param err
-     */
-    static hasNoAccessWithSystem(err: any): boolean {
-        return err.name === ErrorName.NoAccessWithSystem;
-    }
-
-    /**
      * Returns if the member is invalid.
      * @param err
      */

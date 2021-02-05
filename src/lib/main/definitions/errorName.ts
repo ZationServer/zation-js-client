@@ -9,11 +9,8 @@ export enum ErrorName {
     UnnecessaryMember            = 'UnnecessaryMember',
     IdentifierMissing            = 'IdentifierMissing',
     UnknownChannel               = 'UnknownChannel',
-    NoAccessWithVersion          = 'NoAccessWithVersion',
-    NoAccessWithSystem           = 'NoAccessWithSystem',
     AccessDenied                 = 'AccessDenied',
     InvalidMember                = 'InvalidMember',
-
     InvalidToken                 = 'InvalidToken',
     InvalidPackage               = 'InvalidPackage',
     InvalidRequest               = 'InvalidRequest',
@@ -27,6 +24,7 @@ export enum ErrorName {
     MaxBackpressureReached       = 'MaxBackpressureReached',
     InvalidInput                 = 'InvalidInput',
     MaxInputChannelsReached      = 'MaxInputChannelsReached',
+    MaxMembersReached            = 'MaxMembersReached',
 
     UnknownServerError           = 'Error'
 }
