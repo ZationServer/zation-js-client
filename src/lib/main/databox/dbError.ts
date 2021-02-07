@@ -10,19 +10,11 @@ import {InvalidInputError} from "../error/invalidInputError";
 export default class DbError {
 
     /**
-     * Returns if no more data is available.
+     * Returns if it is a not data error.
      * @param err
      */
-    static isNoMoreDataAvailable(err: any): boolean {
-        return err.name === ErrorName.NoMoreDataAvailable;
-    }
-
-    /**
-     * Returns if not data is available.
-     * @param err
-     */
-    static isNoDataAvailable(err: any): err is {info: {code?: number | string,data?: any}} {
-        return err.name === ErrorName.NoDataAvailable;
+    static isNoData(err: any): err is {info: {code?: number | string,data?: any}} {
+        return err.name === ErrorName.NoData;
     }
 
     /**
@@ -37,7 +29,7 @@ export default class DbError {
      * Returns if the member is invalid.
      * @param err
      */
-    static isInvalidMember(err: any): boolean {
+    static isInvalidMember(err: any): err is {info: {code?: number | string,data?: any}} {
         return err.name === ErrorName.InvalidMember;
     }
 

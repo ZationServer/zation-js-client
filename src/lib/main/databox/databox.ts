@@ -586,8 +586,7 @@ export default class Databox {
                     results[fetchResult.c] = dbsHead;
                     this.tmpReloadDataSets.add(dbsHead);
                 } catch (err) {
-                    if ((err.name as ErrorName) !== ErrorName.NoMoreDataAvailable &&
-                        (err.name as ErrorName) !== ErrorName.NoDataAvailable) {
+                    if ((err.name as ErrorName) !== ErrorName.NoData) {
                         throw err;
                     }
                 }
@@ -611,8 +610,7 @@ export default class Databox {
                 results[fetchResult.c] = dbsHead;
                 this.tmpReloadDataSets.add(dbsHead);
             } catch (err) {
-                if ((err.name as ErrorName) !== ErrorName.NoMoreDataAvailable &&
-                    (err.name as ErrorName) !== ErrorName.NoDataAvailable) {
+                if ((err.name as ErrorName) !== ErrorName.NoData) {
                     throw err;
                 }
             }
