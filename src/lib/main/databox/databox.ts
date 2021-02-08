@@ -435,19 +435,19 @@ export default class Databox {
 
                 this.connected = true;
 
-                this.serverSideCudId = res[2];
+                this.serverSideCudId = res.lc;
                 if (this.cudId === undefined) {
                     //first register
-                    this.cudId = res[2];
+                    this.cudId = res.lc;
                 }
 
-                this.inputChannel = res[0];
-                this.outputChannel = res[1];
-                this.parallelFetch = res[3];
+                this.inputChannel = res.i;
+                this.outputChannel = res.o;
+                this.parallelFetch = res.p;
 
-                if(res[4]) {
-                    this.lastRemoteInitialDataStructure = res[4];
-                    this._applyRemoteInitialDataStructure(res[4]);
+                if(res.ids) {
+                    this.lastRemoteInitialDataStructure = res.ids;
+                    this._applyRemoteInitialDataStructure(res.ids);
                 }
 
                 this.connectEvent.emit();

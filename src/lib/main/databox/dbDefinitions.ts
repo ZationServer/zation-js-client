@@ -35,23 +35,23 @@ export interface DataboxConnectRes {
     /**
      * Input key
      */
-    0: string,
+    i: string,
     /**
      * Output key
      */
-    1: string,
+    o: string,
     /**
      * Last cud id
      */
-    2: string,
+    lc: string,
     /**
      * Parallel fetching
      */
-    3: boolean,
+    p: boolean,
     /**
      * Initial data structure
      */
-    4?: any
+    ids?: any
 }
 
 export const DATABOX_START_INDICATOR = 'D>';
@@ -108,7 +108,11 @@ export interface DbClientInputFetchResponse {
     /**
      * data
      */
-    d: any
+    d: any,
+    /**
+     * Timestamp
+     */
+    ti: string
 }
 
 /**
