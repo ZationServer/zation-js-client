@@ -47,7 +47,11 @@ export interface DataboxConnectRes {
     /**
      * Parallel fetching
      */
-    3: boolean
+    3: boolean,
+    /**
+     * Initial data structure
+     */
+    4?: any
 }
 
 export const DATABOX_START_INDICATOR = 'D>';

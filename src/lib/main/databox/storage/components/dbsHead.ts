@@ -35,9 +35,17 @@ export default class DbsHead implements DbsComponent {
     private valueMerger: DbsValueMerger = defaultValueMerger;
 
     constructor(rawData: any = undefined) {
-        this.componentValue = DbDataParser.parse(rawData);
+        this.setData(rawData);
+    }
 
-        this.data = isDbsComponent(this.componentValue) ?
+    /**
+     * Sets the data of the DbsHead.
+     * Notice will overwrite everything.
+     * @param rawData
+     */
+    setData(rawData: any) {
+        this.componentValue = DbDataParser.parse(rawData);
+        (this as Writeable<DbsComponent>).data = isDbsComponent(this.componentValue) ?
             this.componentValue.data : this.componentValue;
     }
 

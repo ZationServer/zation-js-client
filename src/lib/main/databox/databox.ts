@@ -170,6 +170,8 @@ export default class Databox {
 
     private readonly localCudOperationsMemory: LocalCudOperationsMemory = new LocalCudOperationsMemory();
 
+    private lastRemoteInitialDataStructure: any;
+
     /**
      * The current cud id of this Databox.
      */
@@ -201,7 +203,7 @@ export default class Databox {
     private cudEvent: EventManager<OnCud> = new EventManager();
     private newDataEvent: EventManager<OnNewData> = new EventManager();
 
-    private dbOptions: RequiredDbOptions = {
+    private readonly dbOptions: RequiredDbOptions = {
         autoFetch: true,
         autoFetchData: undefined,
         mainStorageOptions: {},
@@ -223,13 +225,31 @@ export default class Databox {
             doAddFetchData: true,
             doUpdate: true,
             doDelete: true,
-            doInsert: true
+            doInsert: true,
+            clearOnClose: true,
+            clearOnKickOut: true,
+            doReload: true,
+            applyRemoteInitialDataStructure: true
         };
         ObjectUtils.addObToOb(tmpRestoreStorageOptions, this.dbOptions.mainStorageOptions);
         this.tmpReloadStorage = new DbStorage(tmpRestoreStorageOptions);
 
         this.mainDbStorage = new DbStorage(this.dbOptions.mainStorageOptions);
         this.dbStorages.add(this.mainDbStorage);
+    }
+
+    /**
+     * @internal
+     * Applies the remote initial data structure on the db storages.
+     * @private
+     */
+    private _applyRemoteInitialDataStructure(initialDataStructure): void {
+        for (const dbStorage of this.dbStorages) {
+            if(dbStorage.shouldApplyRemoteInitialDataStructure())
+                dbStorage.setInitialDataStructure(initialDataStructure);
+        }
+        if(this.tmpReloadStorage.shouldApplyRemoteInitialDataStructure())
+            this.tmpReloadStorage.setInitialDataStructure(initialDataStructure);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -257,7 +277,7 @@ export default class Databox {
             this.clearStorages();
         }
         if(clearLocalCudOperations){
-            this.clearLocalCudOpertions();
+            this.clearLocalCudOperations();
         }
         await disconnectResp;
         this.disconnectEvent.emit(true);
@@ -424,6 +444,11 @@ export default class Databox {
                 this.inputChannel = res[0];
                 this.outputChannel = res[1];
                 this.parallelFetch = res[3];
+
+                if(res[4]) {
+                    this.lastRemoteInitialDataStructure = res[4];
+                    this._applyRemoteInitialDataStructure(res[4]);
+                }
 
                 this.connectEvent.emit();
 
@@ -830,10 +855,10 @@ export default class Databox {
     }
 
     /**
-     * Handler for kickout.
+     * Handler for kickOut.
      * @private
      */
-    private _kickout(code: number | string | undefined, data: any) {
+    private _kickOut(code: number | string | undefined, data: any) {
         this._clearListenersAndReset();
         this._storageIfClear((s) => s.shouldClearOnKickOut(code,data));
         this.kickOutEvent.emit(code, data);
@@ -870,7 +895,7 @@ export default class Databox {
                     break;
                 case DbClientOutputEvent.kickOut:
                     const kickOutPackage = (outputPackage as DbClientOutputKickOutPackage);
-                    this._kickout(kickOutPackage.c, kickOutPackage.d);
+                    this._kickOut(kickOutPackage.c, kickOutPackage.d);
                     break;
                 case DbClientOutputEvent.reload:
                     const reloadPackage = (outputPackage as DbClientOutputReloadPackage);
@@ -909,7 +934,7 @@ export default class Databox {
     /**
      * Returns the last added local cud operations.
      */
-    public getLastLocalCudOpertions(): LocalCudOperation[] {
+    public getLastLocalCudOperations(): LocalCudOperation[] {
         return this.localCudOperationsMemory.getLast();
     }
 
@@ -920,7 +945,7 @@ export default class Databox {
      * re-executed after a reload of the databox.
      * @param operations
      */
-    public removeLocalCudOpertions(operations: LocalCudOperation[]): Databox {
+    public removeLocalCudOperations(operations: LocalCudOperation[]): Databox {
         this.localCudOperationsMemory.remove(operations);
         return this;
     }
@@ -931,7 +956,7 @@ export default class Databox {
      * That means that the operations will no longer
      * re-executed after a reload of the databox.
      */
-    public clearLocalCudOpertions(): Databox {
+    public clearLocalCudOperations(): Databox {
         this.localCudOperationsMemory.clear();
         return this;
     }
@@ -977,7 +1002,7 @@ export default class Databox {
      * In the case of a reload, the databox is then able to re-execute
      * all cud operations to prevent that the changes are lost.
      * It's also possible to remove the cud operations later manually from memory.
-     * This can be done with the methods: getLastLocalCudOpertions and removeLocalCudOpertions.
+     * This can be done with the methods: getLastLocalCudOperations and removeLocalCudOperations.
      */
     insert(selector: DbSelector, value: any, options: IfOption & PotentialUpdateOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true): Databox {
         const timestampTmp = options.timestamp;
@@ -1063,7 +1088,7 @@ export default class Databox {
      * In the case of a reload, the databox is then able to re-execute
      * all cud operations to prevent that the changes are lost.
      * It's also possible to remove the cud operations later manually from memory.
-     * This can be done with the methods: getLastLocalCudOpertions and removeLocalCudOpertions.
+     * This can be done with the methods: getLastLocalCudOperations and removeLocalCudOperations.
      */
     update(selector: DbSelector, value: any, options: IfOption & PotentialInsertOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true): Databox {
         const timestampTmp = options.timestamp;
@@ -1148,7 +1173,7 @@ export default class Databox {
      * In the case of a reload, the databox is then able to re-execute
      * all cud operations to prevent that the changes are lost.
      * It's also possible to remove the cud operations later manually from memory.
-     * This can be done with the methods: getLastLocalCudOpertions and removeLocalCudOpertions.
+     * This can be done with the methods: getLastLocalCudOperations and removeLocalCudOperations.
      */
     delete(selector: DbSelector, options: IfOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true): Databox {
         const timestampTmp = options.timestamp;
@@ -1208,7 +1233,7 @@ export default class Databox {
      * In the case of a reload, the databox is then able to re-execute
      * all cud operations to prevent that the changes are lost.
      * It's also possible to remove the cud operations later manually from memory.
-     * This can be done with the methods: getLastLocalCudOpertions and removeLocalCudOpertions.
+     * This can be done with the methods: getLastLocalCudOperations and removeLocalCudOperations.
      */
     seqEdit(timestamp?: number, keepInMemory: boolean = true): DbLocalCudOperationSequence {
         return new DbLocalCudOperationSequence(timestamp,(operations) => {
@@ -1316,6 +1341,8 @@ export default class Databox {
      * @param dbStorage
      */
     connectStorage(dbStorage: DbStorage): Databox {
+        if(dbStorage.shouldApplyRemoteInitialDataStructure())
+            dbStorage.setInitialDataStructure(this.lastRemoteInitialDataStructure);
         this.dbStorages.add(dbStorage);
         return this;
     }
@@ -1517,8 +1544,8 @@ export default class Databox {
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Adds a listener that gets triggered
-     * whenever the server tolds the Databox to reload the data.
+     * Adds a listener that gets triggered whenever the
+     * server told the Databox to reload the data.
      * @param listener
      */
     onReload(listener: OnReload): Databox {
@@ -1529,7 +1556,7 @@ export default class Databox {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Adds a once listener that gets triggered when
-     * the server tolds the Databox to reload the data.
+     * the server told the Databox to reload the data.
      * @param listener
      */
     onceReload(listener: OnReload): Databox {
@@ -1551,7 +1578,7 @@ export default class Databox {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Adds a listener that gets triggered
-     * whenever this Databox gets a new cud opertion.
+     * whenever this Databox gets a new cud operation.
      * @param listener
      */
     onCud(listener: OnCud): Databox {
@@ -1562,7 +1589,7 @@ export default class Databox {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Adds a once listener that gets triggered when
-     * this Databox gets a new cud opertion.
+     * this Databox gets a new cud operation.
      * @param listener
      */
     onceCud(listener: OnCud): Databox {

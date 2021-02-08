@@ -87,6 +87,19 @@ export interface DbStorageOptions {
      * @default true
      */
     doAddFetchData?: AddFetchDataMiddleware | AddFetchDataMiddleware[] | boolean
+    /**
+     * The initial data structure will be applied when creating/clearing the storage.
+     * Notice that if applyRemoteInitialDataStructure is true, it can be
+     * overwritten by the initialDataStructure of a Databox connect response.
+     * @default undefined
+     */
+    initialDataStructure?: any;
+    /**
+     * Defines if the storage should apply the initial data structure from
+     * the Databox connect response (if it exists).
+     * @default true
+     */
+    applyRemoteInitialDataStructure?: boolean;
 }
 
 export const enum DataEventReason {
@@ -115,10 +128,12 @@ export default class DbStorage {
         doInsert: true,
         doUpdate: true,
         doDelete: true,
-        doAddFetchData: true
+        doAddFetchData: true,
+        initialDataStructure: undefined,
+        applyRemoteInitialDataStructure: true
     };
 
-    private dbsHead: DbsHead = new DbsHead();
+    private dbsHead: DbsHead;
     private mainCompOptions: DbsComponentOptions = {};
     private compOptionsConstraint: Map<string,{s: DbProcessedSelector,o: DbsComponentOptions}> = new Map();
 
@@ -150,6 +165,7 @@ export default class DbStorage {
 
     constructor(options: DbStorageOptions = {},dbStorage?: DbStorage) {
         ObjectUtils.addObToOb(this.dbStorageOptions,options,true);
+        this.dbsHead = new DbsHead(this.dbStorageOptions.initialDataStructure);
 
         this.loadMiddleware();
 
@@ -232,6 +248,18 @@ export default class DbStorage {
 
     // noinspection JSUnusedGlobalSymbols
     /**
+     * Sets the initial data structure and
+     * applies it directly if the DbsHead data is undefined.
+     * @param initialDataStructure
+     */
+    setInitialDataStructure(initialDataStructure: any) {
+        this.dbStorageOptions.initialDataStructure = initialDataStructure;
+        if(this.dbsHead.getComponentValue() === undefined)
+            this.dbsHead.setData(initialDataStructure);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
      * Sets a value merger.
      * The valueMerger is used when the component needs to merge two values.
      * These values can be anything except an object or array.
@@ -300,6 +328,13 @@ export default class DbStorage {
     }
 
     /**
+     * Returns if the storage should apply remote initial data structure.
+     */
+    shouldApplyRemoteInitialDataStructure(): boolean {
+        return this.dbStorageOptions.applyRemoteInitialDataStructure;
+    }
+
+    /**
      * Returns if the storage should be cleared on close.
      */
     shouldClearOnClose(code: number | string | undefined,data: any): boolean {
@@ -323,9 +358,9 @@ export default class DbStorage {
     /**
      * Reloads the data.
      */
-    reload(relodedData: DbStorage): DbStorage {
-        if(this.reloadMiddleware(relodedData)){
-            this._copyFrom(relodedData,true);
+    reload(reloadedData: DbStorage): DbStorage {
+        if(this.reloadMiddleware(reloadedData)){
+            this._copyFrom(reloadedData,true);
         }
         return this;
     }
@@ -337,7 +372,7 @@ export default class DbStorage {
      */
     clear(clearLocalCudOperations: boolean = true): DbStorage {
         const tmpOldHead = this.dbsHead;
-        this.dbsHead = new DbsHead();
+        this.dbsHead = new DbsHead(this.dbStorageOptions.initialDataStructure);
         this.updateCompOptions();
         this.dataTouchEvent.emit(this.data,[DataEventReason.Cleared],this);
         if(this.hasDataChangeListener && !deepEqual(tmpOldHead.data,this.dbsHead.data)){
@@ -408,7 +443,7 @@ export default class DbStorage {
     /**
      * Returns the last added local cud operations.
      */
-    public getLastLocalCudOpertions(): LocalCudOperation[] {
+    public getLastLocalCudOperations(): LocalCudOperation[] {
         return this.localCudOperationsMemory.getLast();
     }
 
@@ -419,7 +454,7 @@ export default class DbStorage {
      * re-executed after a reload or copy of data.
      * @param operations
      */
-    public removeLocalCudOpertions(operations: LocalCudOperation[]): DbStorage {
+    public removeLocalCudOperations(operations: LocalCudOperation[]): DbStorage {
         this.localCudOperationsMemory.remove(operations);
         return this;
     }
@@ -430,7 +465,7 @@ export default class DbStorage {
      * That means that the operations will no longer
      * re-executed after a reload or copy of data.
      */
-    public clearLocalCudOpertions(): DbStorage {
+    public clearLocalCudOperations(): DbStorage {
         this.localCudOperationsMemory.clear();
         return this;
     }
@@ -497,7 +532,7 @@ export default class DbStorage {
      * In the case of a reload or copy, the storage is then able to
      * re-execute all cud operations to prevent that the changes are lost.
      * It's also possible to remove the cud operations later manually from memory.
-     * This can be done with the methods: getLastLocalCudOpertions and removeLocalCudOpertions.
+     * This can be done with the methods: getLastLocalCudOperations and removeLocalCudOperations.
      */
     insert(selector: DbSelector, value: any, options: IfOption & PotentialUpdateOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true): DbStorage {
         const timestampTmp = options.timestamp;
@@ -596,7 +631,7 @@ export default class DbStorage {
      * In the case of a reload or copy, the storage is then able to
      * re-execute all cud operations to prevent that the changes are lost.
      * It's also possible to remove the cud operations later manually from memory.
-     * This can be done with the methods: getLastLocalCudOpertions and removeLocalCudOpertions.
+     * This can be done with the methods: getLastLocalCudOperations and removeLocalCudOperations.
      */
     update(selector: DbSelector, value: any, options: IfOption & PotentialInsertOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true): DbStorage {
         const timestampTmp = options.timestamp;
@@ -695,7 +730,7 @@ export default class DbStorage {
      * In the case of a reload or copy, the storage is then able to
      * re-execute all cud operations to prevent that the changes are lost.
      * It's also possible to remove the cud operations later manually from memory.
-     * This can be done with the methods: getLastLocalCudOpertions and removeLocalCudOpertions.
+     * This can be done with the methods: getLastLocalCudOperations and removeLocalCudOperations.
      */
     delete(selector: DbSelector, options: IfOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true): DbStorage {
         const timestampTmp = options.timestamp;
@@ -760,7 +795,7 @@ export default class DbStorage {
      * In the case of a reload or copy, the storage is then able to
      * re-execute all cud operations to prevent that the changes are lost.
      * It's also possible to remove the cud operations later manually from memory.
-     * This can be done with the methods: getLastLocalCudOpertions and removeLocalCudOpertions.
+     * This can be done with the methods: getLastLocalCudOperations and removeLocalCudOperations.
      */
     seqEdit(timestamp?: number, keepInMemory: boolean = true): DbLocalCudOperationSequence {
         return new DbLocalCudOperationSequence( timestamp,(operations) => {
