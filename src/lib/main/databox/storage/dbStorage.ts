@@ -88,18 +88,18 @@ export interface DbStorageOptions {
      */
     doAddFetchData?: AddFetchDataMiddleware | AddFetchDataMiddleware[] | boolean
     /**
-     * The initial data structure will be applied when creating/clearing the storage.
-     * Notice that if applyRemoteInitialDataStructure is true, it can be
-     * overwritten by the initialDataStructure of a Databox connect response.
+     * The initial data will be applied when creating/clearing the storage.
+     * Notice that if applyRemoteInitialData is true, it can be
+     * overwritten by the initialData of a Databox connect response.
      * @default undefined
      */
-    initialDataStructure?: any;
+    initialData?: any;
     /**
-     * Defines if the storage should apply the initial data structure from
+     * Defines if the storage should apply the initial data from
      * the Databox connect response (if it exists).
      * @default true
      */
-    applyRemoteInitialDataStructure?: boolean;
+    applyRemoteInitialData?: boolean;
 }
 
 export const enum DataEventReason {
@@ -129,8 +129,8 @@ export default class DbStorage {
         doUpdate: true,
         doDelete: true,
         doAddFetchData: true,
-        initialDataStructure: undefined,
-        applyRemoteInitialDataStructure: true
+        initialData: undefined,
+        applyRemoteInitialData: true
     };
 
     private dbsHead: DbsHead;
@@ -165,7 +165,7 @@ export default class DbStorage {
 
     constructor(options: DbStorageOptions = {},dbStorage?: DbStorage) {
         ObjectUtils.addObToOb(this.dbStorageOptions,options,true);
-        this.dbsHead = new DbsHead(this.dbStorageOptions.initialDataStructure);
+        this.dbsHead = new DbsHead(this.dbStorageOptions.initialData);
 
         this.loadMiddleware();
 
@@ -248,14 +248,14 @@ export default class DbStorage {
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Sets the initial data structure and
+     * Sets the initial data and
      * applies it directly if the DbsHead data is undefined.
-     * @param initialDataStructure
+     * @param initialData
      */
-    setInitialDataStructure(initialDataStructure: any) {
-        this.dbStorageOptions.initialDataStructure = initialDataStructure;
+    setInitialData(initialData: any) {
+        this.dbStorageOptions.initialData = initialData;
         if(this.dbsHead.getComponentValue() === undefined)
-            this.dbsHead.setData(initialDataStructure);
+            this.dbsHead.setData(initialData);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -328,10 +328,10 @@ export default class DbStorage {
     }
 
     /**
-     * Returns if the storage should apply remote initial data structure.
+     * Returns if the storage should apply remote initial data.
      */
-    shouldApplyRemoteInitialDataStructure(): boolean {
-        return this.dbStorageOptions.applyRemoteInitialDataStructure;
+    shouldApplyRemoteInitialData(): boolean {
+        return this.dbStorageOptions.applyRemoteInitialData;
     }
 
     /**
@@ -372,7 +372,7 @@ export default class DbStorage {
      */
     clear(clearLocalCudOperations: boolean = true): DbStorage {
         const tmpOldHead = this.dbsHead;
-        this.dbsHead = new DbsHead(this.dbStorageOptions.initialDataStructure);
+        this.dbsHead = new DbsHead(this.dbStorageOptions.initialData);
         this.updateCompOptions();
         this.dataTouchEvent.emit(this.data,[DataEventReason.Cleared],this);
         if(this.hasDataChangeListener && !deepEqual(tmpOldHead.data,this.dbsHead.data)){

@@ -170,7 +170,7 @@ export default class Databox {
 
     private readonly localCudOperationsMemory: LocalCudOperationsMemory = new LocalCudOperationsMemory();
 
-    private lastRemoteInitialDataStructure: any;
+    private lastRemoteInitialData: any;
 
     /**
      * The current cud id of this Databox.
@@ -229,7 +229,7 @@ export default class Databox {
             clearOnClose: true,
             clearOnKickOut: true,
             doReload: true,
-            applyRemoteInitialDataStructure: true
+            applyRemoteInitialData: true
         };
         ObjectUtils.addObToOb(tmpRestoreStorageOptions, this.dbOptions.mainStorageOptions);
         this.tmpReloadStorage = new DbStorage(tmpRestoreStorageOptions);
@@ -240,16 +240,16 @@ export default class Databox {
 
     /**
      * @internal
-     * Applies the remote initial data structure on the db storages.
+     * Applies the remote initial data on the db storages.
      * @private
      */
-    private _applyRemoteInitialDataStructure(initialDataStructure): void {
+    private _applyRemoteInitialData(initialData): void {
         for (const dbStorage of this.dbStorages) {
-            if(dbStorage.shouldApplyRemoteInitialDataStructure())
-                dbStorage.setInitialDataStructure(initialDataStructure);
+            if(dbStorage.shouldApplyRemoteInitialData())
+                dbStorage.setInitialData(initialData);
         }
-        if(this.tmpReloadStorage.shouldApplyRemoteInitialDataStructure())
-            this.tmpReloadStorage.setInitialDataStructure(initialDataStructure);
+        if(this.tmpReloadStorage.shouldApplyRemoteInitialData())
+            this.tmpReloadStorage.setInitialData(initialData);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -445,9 +445,9 @@ export default class Databox {
                 this.outputChannel = res.o;
                 this.parallelFetch = res.p;
 
-                if(res.ids) {
-                    this.lastRemoteInitialDataStructure = res.ids;
-                    this._applyRemoteInitialDataStructure(res.ids);
+                if(res.id !== undefined) {
+                    this.lastRemoteInitialData = res.id;
+                    this._applyRemoteInitialData(res.id);
                 }
 
                 this.connectEvent.emit();
@@ -1341,8 +1341,8 @@ export default class Databox {
      * @param dbStorage
      */
     connectStorage(dbStorage: DbStorage): Databox {
-        if(dbStorage.shouldApplyRemoteInitialDataStructure())
-            dbStorage.setInitialDataStructure(this.lastRemoteInitialDataStructure);
+        if(dbStorage.shouldApplyRemoteInitialData())
+            dbStorage.setInitialData(this.lastRemoteInitialData);
         this.dbStorages.add(dbStorage);
         return this;
     }

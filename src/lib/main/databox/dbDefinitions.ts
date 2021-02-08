@@ -49,9 +49,9 @@ export interface DataboxConnectRes {
      */
     p: boolean,
     /**
-     * Initial data structure
+     * Initial data
      */
-    ids?: any
+    id?: any
 }
 
 export const DATABOX_START_INDICATOR = 'D>';
@@ -112,7 +112,7 @@ export interface DbClientInputFetchResponse {
     /**
      * Timestamp
      */
-    ti: string
+    ti: number
 }
 
 /**
