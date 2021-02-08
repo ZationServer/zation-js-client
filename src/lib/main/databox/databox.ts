@@ -55,6 +55,7 @@ import {deepCloneInstance}                                      from "../utils/c
 import LocalCudOperationsMemory                                 from "./localCudOperationsMemory";
 import {Logger}                                                 from "../logger/logger";
 import {ImmutableJson}                                          from "../utils/typeUtils";
+import SyncLock                                                 from '../utils/syncLock';
 
 export interface DataboxOptions {
     /**
@@ -181,6 +182,8 @@ export default class Databox {
     private reloadProcessPromise: Promise<void> = Promise.resolve();
     private historyFetch: (history: FetchHistoryItem[]) => Promise<DbsHead[]>
         = this._normalHistoryFetch.bind(this);
+
+    private fetchSyncLock: SyncLock = new SyncLock();
 
     private inputChannel: string;
     private outputChannel: string;
@@ -521,31 +524,33 @@ export default class Databox {
         await ConnectionUtils.checkDbConnection
         (this, this.client, (databoxConnectTimeout === undefined ? this.dbOptions.databoxConnectTimeout: databoxConnectTimeout));
 
-        try {
-            const resp = await this._fetch(data, DBClientInputSessionTarget.mainSession);
+        return this.fetchSyncLock.schedule<void>(async () => {
+            try {
+                const resp = await this._fetch(data, DBClientInputSessionTarget.mainSession);
 
-            if(addToHistory){
-                this.fetchHistoryManager.pushHistory(resp.c, data, resp.d);
-            }
+                if(addToHistory){
+                    this.fetchHistoryManager.pushHistory(resp.c, data, resp.d);
+                }
 
-            const dbsHead = new DbsHead(resp.d);
-            const counter = resp.c;
+                const dbsHead = new DbsHead(resp.d);
+                const counter = resp.c;
 
-            let needCloneHead = this.dbStorages.size > 1;
-            for (let dbStorage of this.dbStorages) {
-                if (dbStorage.shouldAddFetchData(counter,dbsHead)) {
-                    dbStorage._addDataHead(needCloneHead ? deepCloneInstance(dbsHead): dbsHead);
+                let needCloneHead = this.dbStorages.size > 1;
+                for (let dbStorage of this.dbStorages) {
+                    if (dbStorage.shouldAddFetchData(counter,dbsHead)) {
+                        dbStorage._addDataHead(needCloneHead ? deepCloneInstance(dbsHead): dbsHead);
+                    }
+                }
+                this.newDataEvent.emit(this);
+            } catch (e) {
+                if(e.name === ErrorName.InvalidInput) {
+                    throw new InvalidInputError('Invalid fetch input.',e);
+                }
+                else {
+                    throw new RawError('Fetch new data failed.', e);
                 }
             }
-            this.newDataEvent.emit(this);
-        } catch (e) {
-            if(e.name === ErrorName.InvalidInput) {
-                throw new InvalidInputError('Invalid fetch input.',e);
-            }
-            else {
-                throw new RawError('Fetch new data failed.', e);
-            }
-        }
+        });
     }
 
     /**
@@ -576,13 +581,11 @@ export default class Databox {
      * @param history
      */
     private async _parallelHistoryFetch(history: FetchHistoryItem[]): Promise<DbsHead[]> {
-        const promises: Promise<void>[] = [];
         const results: DbsHead[] = [];
-        for (let i = 0; i < history.length; i++) {
-            promises.push((async () => {
-                // noinspection DuplicatedCode
+        await this.fetchSyncLock.schedule(async () => {
+            await Promise.all(history.map(async histItem => {
                 try {
-                    const fetchResult = await this._fetch(history[i].input, DBClientInputSessionTarget.reloadSession);
+                    const fetchResult = await this._fetch(histItem.input, DBClientInputSessionTarget.reloadSession);
                     const dbsHead = new DbsHead(fetchResult.d);
                     results[fetchResult.c] = dbsHead;
                     this.tmpReloadDataSets.add(dbsHead);
@@ -591,9 +594,9 @@ export default class Databox {
                         throw err;
                     }
                 }
-            })());
-        }
-        await Promise.all(promises);
+
+            }))
+        });
         return results;
     }
 
@@ -605,16 +608,18 @@ export default class Databox {
         const results: DbsHead[] = [];
         for (let i = 0; i < history.length; i++) {
             // noinspection DuplicatedCode
-            try {
-                const fetchResult = await this._fetch(history[i].input, DBClientInputSessionTarget.reloadSession);
-                const dbsHead = new DbsHead(fetchResult.d);
-                results[fetchResult.c] = dbsHead;
-                this.tmpReloadDataSets.add(dbsHead);
-            } catch (err) {
-                if ((err.name as ErrorName) !== ErrorName.NoData) {
-                    throw err;
+            await this.fetchSyncLock.schedule(async () => {
+                try {
+                    const fetchResult = await this._fetch(history[i].input, DBClientInputSessionTarget.reloadSession);
+                    const dbsHead = new DbsHead(fetchResult.d);
+                    results[fetchResult.c] = dbsHead;
+                    this.tmpReloadDataSets.add(dbsHead);
+                } catch (err) {
+                    if ((err.name as ErrorName) !== ErrorName.NoData) {
+                        throw err;
+                    }
                 }
-            }
+            });
         }
         return results;
     }
