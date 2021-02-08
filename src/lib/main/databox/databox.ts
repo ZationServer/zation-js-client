@@ -120,11 +120,12 @@ export interface DataboxOptions {
      */
     databoxConnectTimeout?: ConnectTimeoutOption;
     /**
-     * The init data that the Databox is sent to the server
-     * when it's creating a connection.
+     * The options that the Client Databox will send to the server
+     * side when creating the connection.
+     * On the server-side, the options can be accessed.
      * @default undefined
      */
-    initData?: any;
+    remoteOptions?: any;
 }
 
 interface RequiredDbOptions extends DataboxOptions {
@@ -134,7 +135,7 @@ interface RequiredDbOptions extends DataboxOptions {
     mainStorageOptions: DbStorageOptions;
     connectTimeout: ConnectTimeoutOption;
     databoxConnectTimeout: ConnectTimeoutOption;
-    initData: any;
+    remoteOptions: any;
 }
 
 type OnConnect     = () => void | Promise<void>;
@@ -161,7 +162,7 @@ export default class Databox {
     private readonly tmpReloadStorage: DbStorage;
     private readonly receivedSignalEmitter: TinyEmitter = new TinyEmitter();
 
-    private readonly initData: any;
+    private readonly remoteOptions: any;
 
     private initialized: boolean = false;
     private token: string | undefined = undefined;
@@ -204,7 +205,7 @@ export default class Databox {
         apiLevel: undefined,
         connectTimeout: undefined,
         databoxConnectTimeout: undefined,
-        initData: undefined
+        remoteOptions: undefined
     };
 
     constructor(client: ZationClient, identifier: string, options: DataboxOptions) {
@@ -213,7 +214,7 @@ export default class Databox {
         this.client = client;
         this.apiLevel = this.dbOptions.apiLevel;
         this.identifier = identifier;
-        this.initData = this.dbOptions.initData;
+        this.remoteOptions = this.dbOptions.remoteOptions;
 
         const tmpRestoreStorageOptions: DbStorageOptions = {
             doAddFetchData: true,
@@ -396,7 +397,7 @@ export default class Databox {
                 d: this.identifier,
                 ...(this.member !== undefined ? {m: this.member}: {}),
                 ...(sendToken ? ({t: currentToken}) :
-                    (this.initData !== undefined ? {i: this.initData}: {}))
+                    (this.remoteOptions !== undefined ? {o: this.remoteOptions}: {}))
             } as DataboxConnectReq, async (err, res: DataboxConnectRes) => {
 
                 if (err) {
