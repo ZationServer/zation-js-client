@@ -31,16 +31,19 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
     private readonly timestampMap: Map<string,number> = new Map<string, number>();
     private valueMerger: DbsValueMerger = defaultValueMerger;
 
-    constructor(rawData: Record<string,any>) {
+    private readonly startDataTimestamp: number;
+
+    constructor(rawData: Record<string,any>, dataTimestamp: number) {
         super();
 
+        this.startDataTimestamp = dataTimestamp;
         this.keys = new Set<string>(Object.keys(rawData));
         this.data = {};
         this.componentStructure = {};
 
         let parsed;
         for (let key of this.keys.values()) {
-            parsed = DbDataParser.parse(rawData[key]);
+            parsed = DbDataParser.parse(rawData[key],this.startDataTimestamp);
             this.componentStructure[key] = parsed;
             (this.data as any)[key] = isDbsComponent(parsed) ? parsed.data : parsed;
         }
@@ -88,7 +91,7 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      */
     private getTimestamp(key: string): number {
         const timestamp = this.timestampMap.get(key);
-        return timestamp !== undefined ? timestamp: 0;
+        return timestamp !== undefined ? timestamp : this.startDataTimestamp;
     }
 
     /**
@@ -148,7 +151,7 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
             let mainDc: boolean = false;
             newValue.forEachPair((key, value, componentValue, timestamp) => {
                 if(this.hasKey(key)){
-                    const {mergedValue,dataChanged} = dbsMerger(this.componentStructure[key],componentValue,this.valueMerger);
+                    const {mergedValue,dataChanged} = dbsMerger(this.componentStructure[key],componentValue,this.valueMerger,timestamp);
                     mainDc = mainDc || dataChanged;
                     this.componentStructure[key] = mergedValue;
                     (this.data as any)[key] = isDbsComponent(mergedValue) ? mergedValue.data : mergedValue;
@@ -193,7 +196,7 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
         if(ifOption !== undefined && !(args.if = this.checkIfConditions(ifOption))) return;
 
         if (DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
-            const parsed = DbDataParser.parse(value);
+            const parsed = DbDataParser.parse(value,timestamp);
             this.componentStructure[key] = parsed;
             (this.data as any)[key] = isDbsComponent(parsed) ? parsed.data : parsed;
 
@@ -230,7 +233,7 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
 
         if (DbUtils.checkTimestamp(this.getTimestamp(key),timestamp)) {
             mt.level = ModifyLevel.DATA_TOUCHED;
-            const parsed = DbDataParser.parse(value);
+            const parsed = DbDataParser.parse(value,timestamp);
             const newData = isDbsComponent(parsed) ? parsed.data : parsed;
             if(mt.checkDataChange && !deepEqual(newData,(this.data as any)[key])){
                 mt.level = ModifyLevel.DATA_CHANGED;
@@ -270,9 +273,9 @@ export default class DbsObject extends DbsSimplePathCoordinator implements DbsCo
      * For each pair in this dbsObject.
      * @param func
      */
-    forEachPair(func: (key: string,value: any,componentValue: any,timestamp: number | undefined) => void): void {
+    forEachPair(func: (key: string,value: any,componentValue: any,timestamp: number) => void): void {
         for(let key of this.keys.values()){
-            func(key,(this.data as any)[key],this.componentStructure[key],this.timestampMap.get(key));
+            func(key,(this.data as any)[key],this.componentStructure[key],this.getTimestamp(key));
         }
     }
 }

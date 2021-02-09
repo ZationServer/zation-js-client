@@ -30,15 +30,18 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
     private readonly timestamps: number[] = [];
     private valueMerger: DbsValueMerger = defaultValueMerger;
 
-    constructor(rawData: any[]) {
+    private readonly startDataTimestamp: number;
+
+    constructor(rawData: any[], dataTimestamp: number) {
         super();
 
+        this.startDataTimestamp = dataTimestamp;
         this.data = [];
         this.componentStructure = [];
 
         let parsed;
         for (let i = 0; i < rawData.length; i++) {
-            parsed = DbDataParser.parse(rawData[i]);
+            parsed = DbDataParser.parse(rawData[i],this.startDataTimestamp);
             this.componentStructure[i] = parsed;
             (this.data as any[])[i] = isDbsComponent(parsed) ? parsed.data : parsed;
         }
@@ -86,7 +89,7 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
      */
     private getTimestamp(index: number): number {
         const timestamp = this.timestamps[index];
-        return timestamp !== undefined ? timestamp: 0;
+        return timestamp !== undefined ? timestamp: this.startDataTimestamp;
     }
 
     /**
@@ -151,7 +154,7 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
             let mainDc: boolean = false;
             newValue.forEachPair((index, value, componentValue, timestamp) => {
                 if(this.hasIndex(index)){
-                    const {mergedValue,dataChanged} = dbsMerger(this.componentStructure[index],componentValue,this.valueMerger);
+                    const {mergedValue,dataChanged} = dbsMerger(this.componentStructure[index],componentValue,this.valueMerger,timestamp);
                     mainDc = mainDc || dataChanged;
                     this.componentStructure[index] = mergedValue;
                     (this.data as any[])[index] = isDbsComponent(mergedValue) ? mergedValue.data : mergedValue;
@@ -200,7 +203,7 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
         if(ifOption !== undefined && !(args.if = this.checkIfConditions(ifOption))) return;
 
         if (DbUtils.checkTimestamp(this.getTimestamp(index),timestamp)) {
-            const parsed = DbDataParser.parse(value);
+            const parsed = DbDataParser.parse(value,timestamp);
             this.componentStructure[index] = parsed;
             (this.data as any[])[index] = isDbsComponent(parsed) ? parsed.data : parsed;
             this.timestamps[index] = timestamp;
@@ -236,7 +239,7 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
 
         if (DbUtils.checkTimestamp(this.getTimestamp(index),timestamp)) {
             mt.level = ModifyLevel.DATA_TOUCHED;
-            const parsed = DbDataParser.parse(value);
+            const parsed = DbDataParser.parse(value,timestamp);
             this.componentStructure[index] = parsed;
             const newData = isDbsComponent(parsed) ? parsed.data : parsed;
             if(mt.checkDataChange && !deepEqual(newData,this.data[index])){
@@ -280,9 +283,9 @@ export default class DbsArray extends DbsSimplePathCoordinator implements DbsCom
      * For each pair in this dbsArray.
      * @param func
      */
-    forEachPair(func: (index: number,value: any,componentValue: any,timestamp: number | undefined) => void): void {
+    forEachPair(func: (index: number,value: any,componentValue: any,timestamp: number) => void): void {
         for(let i = 0; i < this.componentStructure.length; i++){
-            func(i,this.data[i],this.componentStructure[i],this.timestamps[i]);
+            func(i,this.data[i],this.componentStructure[i],this.getTimestamp(i));
         }
     }
 }

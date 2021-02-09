@@ -24,7 +24,7 @@ export function defaultValueMerger(oldValue: any, newValue: any): any {
     return newValue;
 }
 
-export function dbsMerger(oldValue: any, newValue: any,valueMerger: DbsValueMerger): MergeResult {
+export function dbsMerger(oldValue: any, newValue: any,valueMerger: DbsValueMerger, newTimestamp: number): MergeResult {
     if(isDbsComponent(oldValue)){
         return oldValue.mergeWithNew(newValue);
     }
@@ -36,7 +36,7 @@ export function dbsMerger(oldValue: any, newValue: any,valueMerger: DbsValueMerg
             };
         }
         else {
-            const merged = DbDataParser.parse(valueMerger(oldValue,newValue));
+            const merged = DbDataParser.parse(valueMerger(oldValue,newValue),newTimestamp);
             return {
                 mergedValue: merged,
                 dataChanged: (isDbsComponent(merged) ? merged.data : merged) !== oldValue

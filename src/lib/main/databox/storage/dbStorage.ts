@@ -165,7 +165,7 @@ export default class DbStorage {
 
     constructor(options: DbStorageOptions = {},dbStorage?: DbStorage) {
         ObjectUtils.addObToOb(this.dbStorageOptions,options,true);
-        this.dbsHead = new DbsHead(this.dbStorageOptions.initialData);
+        this.dbsHead = new DbsHead(this.dbStorageOptions.initialData,0);
 
         this.loadMiddleware();
 
@@ -255,7 +255,7 @@ export default class DbStorage {
     setInitialData(initialData: any) {
         this.dbStorageOptions.initialData = initialData;
         if(this.dbsHead.getComponentValue() === undefined)
-            this.dbsHead.setData(initialData);
+            this.dbsHead.initDataTo(initialData,0);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -372,7 +372,7 @@ export default class DbStorage {
      */
     clear(clearLocalCudOperations: boolean = true): DbStorage {
         const tmpOldHead = this.dbsHead;
-        this.dbsHead = new DbsHead(this.dbStorageOptions.initialData);
+        this.dbsHead = new DbsHead(this.dbStorageOptions.initialData,0);
         this.updateCompOptions();
         this.dataTouchEvent.emit(this.data,[DataEventReason.Cleared],this);
         if(this.hasDataChangeListener && !deepEqual(tmpOldHead.data,this.dbsHead.data)){
@@ -387,8 +387,8 @@ export default class DbStorage {
      * The data will be merged with the old data.
      * @param data
      */
-    addData(data: any): DbStorage {
-        this._addDataHead((data instanceof DbsHead) ? deepCloneInstance(data): new DbsHead(data));
+    addData(data: DbsHead): DbStorage {
+        this._addDataHead(deepCloneInstance(data));
         return this;
     }
 

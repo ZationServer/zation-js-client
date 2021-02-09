@@ -185,7 +185,7 @@ export default class Databox {
     private historyFetch: (history: FetchHistoryItem[]) => Promise<DbsHead[]>
         = this._normalHistoryFetch.bind(this);
 
-    private fetchSyncLock: SyncLock = new SyncLock();
+    private remoteCudSyncLock: SyncLock = new SyncLock();
 
     private inputChannel: string;
     private outputChannel: string;
@@ -225,15 +225,10 @@ export default class Databox {
             doAddFetchData: true,
             doUpdate: true,
             doDelete: true,
-            doInsert: true,
-            clearOnClose: true,
-            clearOnKickOut: true,
-            doReload: true,
-            applyRemoteInitialData: true
+            doInsert: true
         };
         ObjectUtils.addObToOb(tmpRestoreStorageOptions, this.dbOptions.mainStorageOptions);
         this.tmpReloadStorage = new DbStorage(tmpRestoreStorageOptions);
-
         this.mainDbStorage = new DbStorage(this.dbOptions.mainStorageOptions);
         this.dbStorages.add(this.mainDbStorage);
     }
@@ -549,15 +544,15 @@ export default class Databox {
         await ConnectionUtils.checkDbConnection
         (this, this.client, (databoxConnectTimeout === undefined ? this.dbOptions.databoxConnectTimeout: databoxConnectTimeout));
 
-        return this.fetchSyncLock.schedule<void>(async () => {
+        return this.remoteCudSyncLock.schedule<void>(async () => {
             try {
                 const resp = await this._fetch(data, DBClientInputSessionTarget.mainSession);
 
                 if(addToHistory){
-                    this.fetchHistoryManager.pushHistory(resp.c, data, resp.d);
+                    this.fetchHistoryManager.pushHistory(resp.c, data, resp.d, resp.ti);
                 }
 
-                const dbsHead = new DbsHead(resp.d);
+                const dbsHead = new DbsHead(resp.d,resp.ti);
                 const counter = resp.c;
 
                 let needCloneHead = this.dbStorages.size > 1;
@@ -607,11 +602,11 @@ export default class Databox {
      */
     private async _parallelHistoryFetch(history: FetchHistoryItem[]): Promise<DbsHead[]> {
         const results: DbsHead[] = [];
-        await this.fetchSyncLock.schedule(async () => {
+        await this.remoteCudSyncLock.schedule(async () => {
             await Promise.all(history.map(async histItem => {
                 try {
                     const fetchResult = await this._fetch(histItem.input, DBClientInputSessionTarget.reloadSession);
-                    const dbsHead = new DbsHead(fetchResult.d);
+                    const dbsHead = new DbsHead(fetchResult.d,fetchResult.ti);
                     results[fetchResult.c] = dbsHead;
                     this.tmpReloadDataSets.add(dbsHead);
                 } catch (err) {
@@ -633,10 +628,10 @@ export default class Databox {
         const results: DbsHead[] = [];
         for (let i = 0; i < history.length; i++) {
             // noinspection DuplicatedCode
-            await this.fetchSyncLock.schedule(async () => {
+            await this.remoteCudSyncLock.schedule(async () => {
                 try {
                     const fetchResult = await this._fetch(history[i].input, DBClientInputSessionTarget.reloadSession);
-                    const dbsHead = new DbsHead(fetchResult.d);
+                    const dbsHead = new DbsHead(fetchResult.d,fetchResult.ti);
                     results[fetchResult.c] = dbsHead;
                     this.tmpReloadDataSets.add(dbsHead);
                 } catch (err) {
@@ -690,25 +685,27 @@ export default class Databox {
 
                     const missedHistory = this.fetchHistoryManager.getHistory();
                     for (let i = 0; i < missedHistory.length; i++) {
-                        result.push(new DbsHead(missedHistory[i].data));
+                        result.push(new DbsHead(missedHistory[i].data, missedHistory[i].dataTimestamp));
                     }
 
-                    this.tmpReloadStorage.clear();
-                    for (let i = 0; i < result.length; i++) {
-                        if (result[i] === undefined) {
-                            continue;
+                    await this.remoteCudSyncLock.schedule(async () => {
+                        this.tmpReloadStorage.clear();
+                        for (let i = 0; i < result.length; i++) {
+                            if (result[i] === undefined) {
+                                continue;
+                            }
+                            this.tmpReloadStorage.addData(result[i]);
                         }
-                        this.tmpReloadStorage.addData(result[i]);
-                    }
-                    //re-execute local cud operations.
-                    const localCudOperations = this.localCudOperationsMemory.getAll();
-                    for(let i = 0; i < localCudOperations.length; i++){
-                        this.tmpReloadStorage._executeLocalCudOperation(localCudOperations[i],true);
-                    }
+                        //re-execute local cud operations.
+                        const localCudOperations = this.localCudOperationsMemory.getAll();
+                        for(let i = 0; i < localCudOperations.length; i++){
+                            this.tmpReloadStorage._executeLocalCudOperation(localCudOperations[i],true);
+                        }
 
-                    await this.sendSessionAction(DbClientInputAction.copySession, DBClientInputSessionTarget.reloadSession);
-                    this.tmpReloadDataSets.clear();
-                    this._reloadStorages(this.tmpReloadStorage);
+                        await this.sendSessionAction(DbClientInputAction.copySession, DBClientInputSessionTarget.reloadSession);
+                        this.tmpReloadDataSets.clear();
+                        this._reloadStorages(this.tmpReloadStorage);
+                    })
 
                     this.fetchHistoryManager.done();
                     this.newDataEvent.emit(this);
@@ -881,9 +878,11 @@ export default class Databox {
         const outputListener = async (outputPackage: DbClientOutputPackage) => {
             switch (outputPackage.a) {
                 case DbClientOutputEvent.cud:
-                    const cudPackage = (outputPackage as DbClientOutputCudPackage).d;
-                    this._processCudPackage(cudPackage);
-                    this.cudEvent.emit(cudPackage);
+                    await this.remoteCudSyncLock.schedule(() => {
+                        const cudPackage = (outputPackage as DbClientOutputCudPackage).d;
+                        this._processCudPackage(cudPackage);
+                        this.cudEvent.emit(cudPackage);
+                    });
                     break;
                 case DbClientOutputEvent.signal:
                     const signalPackage = (outputPackage as DbClientOutputSignalPackage);
@@ -1328,6 +1327,7 @@ export default class Databox {
         return this.cudId;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Returns the current member.
      */

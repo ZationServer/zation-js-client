@@ -8,6 +8,7 @@ export interface FetchHistoryItem {
     counter: number;
     input: any;
     data: any;
+    dataTimestamp: number;
 }
 
 export default class DbFetchHistoryManager {
@@ -30,9 +31,10 @@ export default class DbFetchHistoryManager {
      * @param counter
      * @param input
      * @param data
+     * @param dataTimestamp
      */
-    pushHistory(counter: number, input: any, data: any) {
-        this.history.push({counter,input,data});
+    pushHistory(counter: number, input: any, data: any, dataTimestamp: number) {
+        this.history.push({counter,input,data,dataTimestamp});
     }
 
     /**

@@ -31,23 +31,26 @@ export default class DbsHead implements DbsComponent {
 
     public readonly data: ImmutableJson;
     private componentValue: any;
-    private timestamp: number = 0;
+    private timestamp: number;
     private valueMerger: DbsValueMerger = defaultValueMerger;
 
-    constructor(rawData: any = undefined) {
-        this.setData(rawData);
+    constructor(rawData: any = undefined, dataTimestamp: number = 0) {
+        this.initDataTo(rawData,dataTimestamp);
     }
 
     /**
-     * Sets the data of the DbsHead.
+     * Init the data of the DbsHead.
      * Notice will overwrite everything.
      * @param rawData
+     * @param timestamp
      */
-    setData(rawData: any) {
-        this.componentValue = DbDataParser.parse(rawData);
+    initDataTo(rawData: any, timestamp: number) {
+        this.timestamp = timestamp;
+        this.componentValue = DbDataParser.parse(rawData,timestamp);
         (this as Writeable<DbsComponent>).data = isDbsComponent(this.componentValue) ?
             this.componentValue.data : this.componentValue;
     }
+
 
     /**
      * Returns a copy of the data.
@@ -114,7 +117,7 @@ export default class DbsHead implements DbsComponent {
         if (newValue instanceof DbsHead) {
             const newTimestamp = newValue.getTimestamp();
             const newComponentValue = newValue.getComponentValue();
-            const {mergedValue: mergedValue,dataChanged} = dbsMerger(this.componentValue,newComponentValue,this.valueMerger);
+            const {mergedValue: mergedValue,dataChanged} = dbsMerger(this.componentValue,newComponentValue,this.valueMerger,newTimestamp);
             this.componentValue = mergedValue;
             (this as Writeable<DbsComponent>).data = isDbsComponent(mergedValue) ? mergedValue.data : mergedValue;
 
@@ -183,7 +186,7 @@ export default class DbsHead implements DbsComponent {
      * @param mt
      */
     insert(selector: DbProcessedSelector, value: any, args: InsertProcessArgs, mt: ModifyToken): void {
-        //clone args (if condition result prepare) and selector (shift) (more storages don't conflict with refernces)
+        //clone args (if condition result prepare) and selector (shift) (more storages don't conflict with references)
         args = {...args};
         selector = [...selector];
         if (selector.length === 0) {
@@ -208,7 +211,7 @@ export default class DbsHead implements DbsComponent {
         if(ifOption !== undefined && !(args.if = this.checkIfConditions(ifOption))) return;
 
         if (DbUtils.checkTimestamp(this.timestamp,timestamp)) {
-            const parsed = DbDataParser.parse(value);
+            const parsed = DbDataParser.parse(value,timestamp);
             this.componentValue = parsed;
             (this as Writeable<DbsComponent>).data = isDbsComponent(parsed) ? parsed.data : parsed;
             this.timestamp = timestamp;
@@ -225,7 +228,7 @@ export default class DbsHead implements DbsComponent {
      * @param mt
      */
     update(selector: DbProcessedSelector, value: any, args: UpdateProcessArgs, mt: ModifyToken): void {
-        //clone args (if condition result prepare) and selector (shift) (more storages don't conflict with refernces)
+        //clone args (if condition result prepare) and selector (shift) (more storages don't conflict with references)
         args = {...args};
         selector = [...selector];
         if (selector.length === 0) {
@@ -251,7 +254,7 @@ export default class DbsHead implements DbsComponent {
 
         if (DbUtils.checkTimestamp(this.timestamp, timestamp)) {
             mt.level = ModifyLevel.DATA_TOUCHED;
-            const parsed = DbDataParser.parse(value);
+            const parsed = DbDataParser.parse(value,timestamp);
             this.componentValue = parsed;
             const newData = isDbsComponent(parsed) ? parsed.data : parsed;
             if(mt.checkDataChange && !deepEqual(newData,this.data)){
@@ -270,7 +273,7 @@ export default class DbsHead implements DbsComponent {
      * @param mt
      */
     delete(selector: DbProcessedSelector, args: DeleteProcessArgs, mt: ModifyToken): void {
-        //clone args (if condition result prepare) and selector (shift) (more storages don't conflict with refernces)
+        //clone args (if condition result prepare) and selector (shift) (more storages don't conflict with references)
         args = {...args};
         selector = [...selector];
         if (selector.length === 0) {
