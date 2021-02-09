@@ -4,7 +4,8 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {ForintQuery} from "forint";
+import {ForintQuery}   from "forint";
+import {ImmutableJson} from '../utils/typeUtils';
 
 export interface DataboxConnectReq {
     /**
@@ -51,7 +52,11 @@ export interface DataboxConnectRes {
     /**
      * Initial data
      */
-    id?: any
+    id?: any,
+    /**
+     * Reload strategy
+     */
+    rs?: [string,Record<string,ImmutableJson>]
 }
 
 export const DATABOX_START_INDICATOR = 'D>';

@@ -64,6 +64,9 @@ import PackageBuilder                   from "./lib/main/receiver/package/fluent
 import Channel, {UnsubscribeReason}     from "./lib/main/channel/channel";
 import TokenStore                       from "./lib/main/tokenStore/tokenStore";
 import {createLocalStorageTokenStore}   from "./lib/main/tokenStore/localStorageTokenStore";
+import {buildHistoryBasedStrategy}      from './lib/main/databox/reloadStrategy/historyBasedStrategy';
+import {buildTimeBasedListStrategy}     from './lib/main/databox/reloadStrategy/timeBasedListStrategy';
+import {registerReloadStrategy, ReloadStrategy, ReloadStrategyBuilder} from './lib/main/databox/reloadStrategy/reloadStrategy';
 
 let client = mainClient;
 ZationMainClientManager.onMainClientChange(mainClient => client = mainClient);
@@ -145,5 +148,10 @@ export {
     AbortTrigger,
     AbortSignal,
     TokenStore,
-    createLocalStorageTokenStore
+    createLocalStorageTokenStore,
+    ReloadStrategy,
+    ReloadStrategyBuilder,
+    registerReloadStrategy,
+    buildHistoryBasedStrategy,
+    buildTimeBasedListStrategy
 };

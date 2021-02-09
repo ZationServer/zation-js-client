@@ -37,7 +37,7 @@ import {
 } from "./dbDefinitions";
 import {Socket}                                                 from "../sc/socket";
 import DbStorage, {DbStorageOptions, OnDataChange, OnDataTouch} from "./storage/dbStorage";
-import DbFetchHistoryManager, {FetchHistoryItem}                from "./dbFetchHistoryManager";
+import DbFetchHistoryManager                                    from "./dbFetchHistoryManager";
 import ObjectUtils                                              from "../utils/objectUtils";
 import {ZationClient}                                           from "../../core/zationClient";
 import ConnectionUtils, {ConnectTimeoutOption}                  from "../utils/connectionUtils";
@@ -56,6 +56,8 @@ import LocalCudOperationsMemory                                 from "./localCud
 import {Logger}                                                 from "../logger/logger";
 import {ImmutableJson}                                          from "../utils/typeUtils";
 import SyncLock                                                 from '../utils/syncLock';
+import {getReloadStrategyBuilder, ReloadStrategy}               from './reloadStrategy/reloadStrategy';
+import {buildHistoryBasedStrategy}                              from './reloadStrategy/historyBasedStrategy';
 
 export interface DataboxOptions {
     /**
@@ -127,6 +129,13 @@ export interface DataboxOptions {
      * @default undefined
      */
     remoteOptions?: any;
+    /**
+     * Defines the reload strategy that the Databox uses to
+     * reload the current and missed data.
+     * If not specified the defined strategy on the server-side will be used.
+     * If the server-side has not defined strategy, the history-based strategy is used.
+     */
+    reloadStrategy?: ReloadStrategy;
 }
 
 interface RequiredDbOptions extends DataboxOptions {
@@ -181,9 +190,11 @@ export default class Databox {
      */
     private serverSideCudId: string | undefined = undefined;
 
+    private disconnectTimestamp?: number;
+
     private reloadProcessPromise: Promise<void> = Promise.resolve();
-    private historyFetch: (history: FetchHistoryItem[]) => Promise<DbsHead[]>
-        = this._normalHistoryFetch.bind(this);
+    private reloadStrategy: ReloadStrategy;
+    private readonly explicitClientReloadStrategy: boolean;
 
     private remoteCudSyncLock: SyncLock = new SyncLock();
 
@@ -220,6 +231,10 @@ export default class Databox {
         this.apiLevel = this.dbOptions.apiLevel;
         this.identifier = identifier;
         this.remoteOptions = this.dbOptions.remoteOptions;
+
+        this.explicitClientReloadStrategy = this.dbOptions.reloadStrategy != null;
+        this.reloadStrategy = this.dbOptions.reloadStrategy != null ? this.dbOptions.reloadStrategy :
+            buildHistoryBasedStrategy();
 
         const tmpRestoreStorageOptions: DbStorageOptions = {
             doAddFetchData: true,
@@ -275,6 +290,7 @@ export default class Databox {
             this.clearLocalCudOperations();
         }
         await disconnectResp;
+        this.disconnectTimestamp = Date.now();
         this.disconnectEvent.emit(true);
     }
 
@@ -354,7 +370,6 @@ export default class Databox {
                 this._registerSocketStateHandler();
                 await this._sendConnect();
                 this._registerOutputChannel();
-                this._updateHistoryFetch();
                 this.initialized = true;
                 this.client._getDataboxManager().add(this);
             } catch (e) {
@@ -385,18 +400,6 @@ export default class Databox {
     private async _reconnect() {
         await this._sendConnect();
         await this._checkCudUpToDate();
-    }
-
-    /**
-     * Updates the history fetcher.
-     * @private
-     */
-    private _updateHistoryFetch() {
-        if (this.parallelFetch) {
-            this.historyFetch = this._parallelHistoryFetch.bind(this);
-        } else {
-            this.historyFetch = this._normalHistoryFetch.bind(this);
-        }
     }
 
     /**
@@ -445,13 +448,22 @@ export default class Databox {
                     this._applyRemoteInitialData(res.id);
                 }
 
+                if(res.rs && !this.explicitClientReloadStrategy) {
+                    try {
+                        const [name,options] = res.rs;
+                        const strategyBuilder = getReloadStrategyBuilder(name);
+                        if(strategyBuilder) this.reloadStrategy = strategyBuilder(options);
+                    }
+                    catch (_){}
+                }
+
                 this.connectEvent.emit();
 
                 if (!withToken && tokenExists) {
                     // noinspection ES6MissingAwait
                     (async () => {
                         this.tokenReloadActive = true;
-                        await this._tryReload();
+                        await this._tryReload(true);
                         this.tokenReloadActive = false;
                     })();
                 }
@@ -468,7 +480,7 @@ export default class Databox {
     private async _checkCudUpToDate() {
         if (this.cudId !== this.serverSideCudId && !this.tokenReloadActive) {
             //Can not be undefined because the Databox was already registered.
-            await this._tryReload();
+            await this._tryReload(true);
         }
     }
 
@@ -479,6 +491,7 @@ export default class Databox {
     private _registerSocketStateHandler() {
         const disconnectHandler = () => {
             this.connected = false;
+            this.disconnectTimestamp = Date.now();
             this.disconnectEvent.emit(false);
         };
 
@@ -597,52 +610,27 @@ export default class Databox {
     }
 
     /**
-     * The parallel history fetcher.
-     * @param history
+     * Executes a reload fetch.
+     * @param input
+     * @private
      */
-    private async _parallelHistoryFetch(history: FetchHistoryItem[]): Promise<DbsHead[]> {
-        const results: DbsHead[] = [];
-        await this.remoteCudSyncLock.schedule(async () => {
-            await Promise.all(history.map(async histItem => {
-                try {
-                    const fetchResult = await this._fetch(histItem.input, DBClientInputSessionTarget.reloadSession);
-                    const dbsHead = new DbsHead(fetchResult.d,fetchResult.ti);
-                    results[fetchResult.c] = dbsHead;
-                    this.tmpReloadDataSets.add(dbsHead);
-                } catch (err) {
-                    if ((err.name as ErrorName) !== ErrorName.NoData) {
-                        throw err;
-                    }
+    private async _reloadFetch(input?: any): Promise<{data: DbsHead, counter: number} | null> {
+        return this.remoteCudSyncLock.schedule<{data: DbsHead, counter: number} | null>(async () => {
+            try {
+                const fetchResult = await this._fetch(input, DBClientInputSessionTarget.reloadSession);
+                const dbsHead = new DbsHead(fetchResult.d,fetchResult.ti);
+                this.tmpReloadDataSets.add(dbsHead);
+                return {data: dbsHead, counter: fetchResult.c};
+            } catch (err) {
+                if ((err.name as ErrorName) !== ErrorName.NoData) {
+                    throw err;
                 }
-
-            }))
-        });
-        return results;
+                else return null;
+            }
+        })
     }
+    private readonly _boundReloadFetch: typeof Databox['prototype']['_reloadFetch'] = this._reloadFetch.bind(this);
 
-    /**
-     * The normal history fetcher.
-     * @param history
-     */
-    private async _normalHistoryFetch(history: FetchHistoryItem[]): Promise<DbsHead[]> {
-        const results: DbsHead[] = [];
-        for (let i = 0; i < history.length; i++) {
-            // noinspection DuplicatedCode
-            await this.remoteCudSyncLock.schedule(async () => {
-                try {
-                    const fetchResult = await this._fetch(history[i].input, DBClientInputSessionTarget.reloadSession);
-                    const dbsHead = new DbsHead(fetchResult.d,fetchResult.ti);
-                    results[fetchResult.c] = dbsHead;
-                    this.tmpReloadDataSets.add(dbsHead);
-                } catch (err) {
-                    if ((err.name as ErrorName) !== ErrorName.NoData) {
-                        throw err;
-                    }
-                }
-            });
-        }
-        return results;
-    }
 
     /**
      * Resets the databox by disconnect and connect again.
@@ -656,7 +644,7 @@ export default class Databox {
     }
 
     /**
-     * Reload the fetched data.
+     * Reloads the current data or missed data by using the reload strategy.
      * @param databoxConnectTimeout
      * With the DataboxConnectTimeout option, you can activate that the Databox is
      * trying to connect (if it's not connected).
@@ -674,55 +662,69 @@ export default class Databox {
      * @throws ConnectionRequiredError,TimeoutError,RawError,InvalidInputError,AbortSignal
      */
     async reload(databoxConnectTimeout: ConnectTimeoutOption = false) {
+        return this._reload(false,databoxConnectTimeout);
+    }
+
+    /**
+     * Reloads the current data or missed data by using the reload strategy.
+     * @internal
+     * @param reconnectReload
+     * @param databoxConnectTimeout
+     * @private
+     */
+    private async _reload(reconnectReload: boolean,databoxConnectTimeout: ConnectTimeoutOption = false) {
         await ConnectionUtils.checkDbConnection(this, this.client, databoxConnectTimeout);
         const reloadPromise: Promise<void> = afterPromise(this.reloadProcessPromise, async () => {
             const tmpCudId = this.cudId;
-            const history = this.fetchHistoryManager.getHistory();
-            if (history.length > 0) {
-                await this.sendSessionAction(DbClientInputAction.resetSession, DBClientInputSessionTarget.reloadSession);
-                try {
-                    const result = await this.historyFetch(history);
+            await this.sendSessionAction(DbClientInputAction.resetSession, DBClientInputSessionTarget.reloadSession);
+            try {
+                const result = await this.reloadStrategy({
+                    history: this.fetchHistoryManager.getHistory(),
+                    currentData: this.data,
+                    disconnectedTimestamp: reconnectReload ? this.disconnectTimestamp : undefined,
+                    parallelFetch: this.parallelFetch,
+                    reloadFetch: this._boundReloadFetch
+                })
 
-                    const missedHistory = this.fetchHistoryManager.getHistory();
-                    for (let i = 0; i < missedHistory.length; i++) {
-                        result.push(new DbsHead(missedHistory[i].data, missedHistory[i].dataTimestamp));
-                    }
+                const missedHistory = this.fetchHistoryManager.getHistory();
+                for (let i = 0; i < missedHistory.length; i++) {
+                    result.push(new DbsHead(missedHistory[i].data, missedHistory[i].dataTimestamp));
+                }
 
-                    await this.remoteCudSyncLock.schedule(async () => {
-                        this.tmpReloadStorage.clear();
-                        for (let i = 0; i < result.length; i++) {
-                            if (result[i] === undefined) {
-                                continue;
-                            }
-                            this.tmpReloadStorage.addData(result[i]);
-                        }
-                        //re-execute local cud operations.
-                        const localCudOperations = this.localCudOperationsMemory.getAll();
-                        for(let i = 0; i < localCudOperations.length; i++){
-                            this.tmpReloadStorage._executeLocalCudOperation(localCudOperations[i],true);
-                        }
-
-                        await this.sendSessionAction(DbClientInputAction.copySession, DBClientInputSessionTarget.reloadSession);
-                        this.tmpReloadDataSets.clear();
-                        this._reloadStorages(this.tmpReloadStorage);
-                    })
-
-                    this.fetchHistoryManager.done();
-                    this.newDataEvent.emit(this);
-
-                    //Check is not updated from cud event.
-                    if (tmpCudId === this.cudId) {
-                        await this._updateCudId();
-                    }
-                } catch (e) {
-                    this.fetchHistoryManager.done();
+                // Lock the transform of reload-DbsHeads into storage and apply storage.
+                // To avoid missing incoming cud events on reloaded data
+                await this.remoteCudSyncLock.schedule(async () => {
                     this.tmpReloadDataSets.clear();
-                    if(e.name === ErrorName.InvalidInput){
-                        throw new InvalidInputError('Invalid fetch input in the reload process.',e);
+                    this.tmpReloadStorage.clear();
+
+                    for (let i = 0; i < result.length; i++)
+                        this.tmpReloadStorage.addData(result[i]);
+
+                    //re-execute local cud operations.
+                    const localCudOperations = this.localCudOperationsMemory.getAll();
+                    for(let i = 0; i < localCudOperations.length; i++){
+                        this.tmpReloadStorage._executeLocalCudOperation(localCudOperations[i],true);
                     }
-                    else {
-                        throw new RawError('Fetch data to reload failed.', e);
-                    }
+
+                    await this.sendSessionAction(DbClientInputAction.copySession, DBClientInputSessionTarget.reloadSession);
+                    this._reloadStorages(this.tmpReloadStorage);
+                })
+
+                this.fetchHistoryManager.done();
+                this.newDataEvent.emit(this);
+
+                //Check is not updated from cud event.
+                if (tmpCudId === this.cudId) {
+                    await this._updateCudId();
+                }
+            } catch (e) {
+                this.fetchHistoryManager.done();
+                this.tmpReloadDataSets.clear();
+                if(e.name === ErrorName.InvalidInput){
+                    throw new InvalidInputError('Invalid fetch input in the reload process.',e);
+                }
+                else {
+                    throw new RawError('Fetch data to reload failed.', e);
                 }
             }
         });
@@ -751,9 +753,9 @@ export default class Databox {
      * it will try to reload again.
      * @private
      */
-    private async _tryReload() {
+    private async _tryReload(reconnectReload: boolean) {
         try {
-            await this.reload();
+            await this._reload(reconnectReload);
         } catch (e) {
             if(this.client.isDebug())
                 Logger.printError('Failed to reload databox: ',e);
@@ -898,7 +900,7 @@ export default class Databox {
                     break;
                 case DbClientOutputEvent.reload:
                     const reloadPackage = (outputPackage as DbClientOutputReloadPackage);
-                    await this._tryReload();
+                    await this._tryReload(false);
                     this.reloadEvent.emit(reloadPackage.c, reloadPackage.d);
                     break;
             }
