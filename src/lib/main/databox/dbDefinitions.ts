@@ -5,7 +5,6 @@ Copyright(c) Luca Scaringella
  */
 
 import {ForintQuery}   from "forint";
-import {ImmutableJson} from '../utils/typeUtils';
 
 export interface DataboxConnectReq {
     /**
@@ -56,7 +55,7 @@ export interface DataboxConnectRes {
     /**
      * Reload strategy
      */
-    rs?: [string,Record<string,ImmutableJson>]
+    rs?: [string,any]
 }
 
 export const DATABOX_START_INDICATOR = 'D>';
