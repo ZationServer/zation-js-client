@@ -27,12 +27,14 @@ export type ChannelReactionOnPublish        = (data: any,member?: string) => voi
 export type ChannelReactionOnSubscribe      = (member?: string) => void | Promise<void>;
 export type ChannelReactionOnUnsubscribe    = (reason: UnsubscribeReason,member?: string) => void | Promise<void>;
 export type ChannelReactionOnKickOut        = (member?: string,code?: number | string | undefined,data?: any) => void | Promise<void>;
+export type ChannelReactionOnClose          = (member?: string,code?: number | string | undefined,data?: any) => void | Promise<void>;
 
 const enum ChannelEvent {
     Publish,
     Subscribe,
     Unsubscribe,
-    KickOut
+    KickOut,
+    Close
 }
 type ReactionFilter = (filter: object) => boolean;
 interface ChFilter {
@@ -42,7 +44,8 @@ interface ChFilter {
 export enum UnsubscribeReason {
     Client,
     KickOut,
-    Disconnect
+    Disconnect,
+    Close
 }
 
 export default class Channel {
@@ -74,6 +77,8 @@ export default class Channel {
      * the client will automatically try to resubscribe in case of reconnection
      * or change of the authentication state.
      * If you don't need the subscription anymore you need to unsubscribe it to clear resources.
+     * If the channel is closed from the server-side, the client will
+     * remove the specific channel and not resubscribe it again.
      * @param member
      * @param connectTimeout
      * With the ConnectTimeout option, you can activate that the socket is
@@ -173,16 +178,14 @@ export default class Channel {
         else {
             member = member.toString();
             for(const [fullChId, info] of this._states){
-                if(info.member === member){this._unsubscribe(fullChId,member);}
+                if(info.member === member) this._unsubscribe(fullChId,member);
             }
         }
-        if(this._states.size === 0){
-            this._deleteChId();
-        }
+        if(this._states.size <= 0) this._deleteChId();
     }
 
     private _unsubscribe(fullChId: string,member?: string) {
-        this._channelEngine.unsubsribe(fullChId,this);
+        this._channelEngine.unsubscribe(fullChId,this);
         this._states.delete(fullChId);
         this._triggerEvent<ChannelReactionOnUnsubscribe>(ChannelEvent.Unsubscribe,UnsubscribeReason.Client,member);
     }
@@ -192,7 +195,7 @@ export default class Channel {
      * @param fullChId
      * @private
      */
-    _triggerSubscribtion(fullChId: string) {
+    _triggerSubscription(fullChId: string) {
         const info = this._states.get(fullChId);
         if(info) {
             const oldState = info.state;
@@ -233,6 +236,26 @@ export default class Channel {
             if(oldState === ChannelSubscribeState.Subscribed){
                 this._triggerEvent<ChannelReactionOnUnsubscribe>
                 (ChannelEvent.Unsubscribe,UnsubscribeReason.KickOut,member);
+            }
+        }
+    }
+
+    /**
+     * @internal
+     * @private
+     */
+    _triggerClose(member: string | undefined,code: number | string | undefined,data: any) {
+        const fullChId = buildFullChId(this.chId,member);
+        const info = this._states.get(fullChId);
+        if(info){
+            const oldState = info.state;
+            this._states.delete(fullChId);
+            if(this._states.size <= 0) this._deleteChId();
+
+            this._triggerEvent<ChannelReactionOnClose>(ChannelEvent.Close,member,code,data);
+            if(oldState === ChannelSubscribeState.Subscribed){
+                this._triggerEvent<ChannelReactionOnUnsubscribe>
+                (ChannelEvent.Unsubscribe,UnsubscribeReason.Close,member);
             }
         }
     }
@@ -350,7 +373,7 @@ export default class Channel {
      * To remove the reaction later, you can use the
      * specific off method with the returned FullReaction.
      * @example
-     * onPublish((data: any,member?: string) => {});
+     * oncePublish((data: any,member?: string) => {});
      * @param event
      * @param reaction
      */
@@ -391,7 +414,7 @@ export default class Channel {
      * To remove the reaction later, you can use the
      * specific off method with the returned FullReaction.
      * @example
-     * onSubscribe((member?: string) => {});
+     * onceSubscribe((member?: string) => {});
      * @param reaction
      */
     onceSubscribe(reaction: ChannelReactionOnSubscribe): FullReaction<ChannelReactionOnSubscribe> {
@@ -431,7 +454,7 @@ export default class Channel {
      * To remove the reaction later, you can use the
      * specific off method with the returned FullReaction.
      * @example
-     * onUnsubscribe((member?: string) => {});
+     * onceUnsubscribe((member?: string) => {});
      * @param reaction
      */
     onceUnsubscribe(reaction: ChannelReactionOnUnsubscribe): FullReaction<ChannelReactionOnUnsubscribe> {
@@ -471,7 +494,7 @@ export default class Channel {
      * To remove the reaction later, you can use the
      * specific off method with the returned FullReaction.
      * @example
-     * onKickOut((member?: string,code?: number | string,data?: any) => {});
+     * onceKickOut((member?: string,code?: number | string,data?: any) => {});
      * @param reaction
      */
     onceKickOut(reaction: ChannelReactionOnKickOut): FullReaction<ChannelReactionOnKickOut> {
@@ -488,5 +511,45 @@ export default class Channel {
      */
     offKickOut(fullReaction?: FullReaction<ChannelReactionOnKickOut>): void {
         this._reactionMap.remove(ChannelEvent.KickOut, fullReaction);
+    }
+
+    /**
+     * @description
+     * React on close.
+     * To remove the reaction later, you can use the
+     * specific off method with the returned FullReaction.
+     * @example
+     * onClose((member?: string,code?: number | string,data?: any) => {});
+     * @param reaction
+     */
+    onClose(reaction: ChannelReactionOnClose): FullReaction<ChannelReactionOnClose> {
+        const fullReaction = new FullReaction<ChannelReactionOnClose>(reaction,{})
+        this._reactionMap.add(ChannelEvent.Close, fullReaction);
+        return fullReaction;
+    }
+
+    /**
+     * @description
+     * React once close.
+     * To remove the reaction later, you can use the
+     * specific off method with the returned FullReaction.
+     * @example
+     * onceClose((member?: string,code?: number | string,data?: any) => {});
+     * @param reaction
+     */
+    onceClose(reaction: ChannelReactionOnClose): FullReaction<ChannelReactionOnClose> {
+        const fullReaction = new FullReaction<ChannelReactionOnClose>(reaction,{},true)
+        this._reactionMap.add(ChannelEvent.Close, fullReaction);
+        return fullReaction;
+    }
+
+    /**
+     * @description
+     * Removes on/once close reaction/s.
+     * @param fullReaction
+     * If no specific FullReaction is provided, all will be removed.
+     */
+    offClose(fullReaction?: FullReaction<ChannelReactionOnClose>): void {
+        this._reactionMap.remove(ChannelEvent.Close, fullReaction);
     }
 }

@@ -6,12 +6,13 @@ Copyright(c) Luca Scaringella
 
 import Channel  from "./channel";
 import {
+    CH_CLIENT_OUTPUT_CLOSE,
     CH_CLIENT_OUTPUT_KICK_OUT,
     CH_CLIENT_OUTPUT_PUBLISH, CHANNEL_START_INDICATOR, ChannelSubscribeRequest,
     ChClientInputAction,
-    ChClientInputPackage, ChClientOutputKickOutPackage,
+    ChClientInputPackage, ChClientOutputClosePackage, ChClientOutputKickOutPackage,
     ChClientOutputPublishPackage
-} from "./channelDefinitions";
+} from './channelDefinitions';
 import {buildFullChId}      from "./channelUtils";
 import {Socket}             from "../sc/socket";
 import {Logger}             from "../logger/logger";
@@ -34,20 +35,17 @@ export class ChannelEngine
         this._socket = socket;
         this._socket.on(CH_CLIENT_OUTPUT_PUBLISH,(data: ChClientOutputPublishPackage) => {
             const channelSet = this._channels.get(data.i);
-            if(channelSet) {
-                for(const channel of channelSet) {
-                    channel._triggerPublish(data.m,data.e,data.d);
-                }
-            }
+            if(channelSet) for(const channel of channelSet) channel._triggerPublish(data.m,data.e,data.d);
         });
 
         this._socket.on(CH_CLIENT_OUTPUT_KICK_OUT,(data: ChClientOutputKickOutPackage) => {
             const channelSet = this._channels.get(data.i);
-            if(channelSet) {
-                for(const channel of channelSet) {
-                    channel._triggerKickOut(data.m,data.c,data.d);
-                }
-            }
+            if(channelSet) for(const channel of channelSet) channel._triggerKickOut(data.m,data.c,data.d);
+        });
+
+        this._socket.on(CH_CLIENT_OUTPUT_CLOSE,(data: ChClientOutputClosePackage) => {
+            const channelSet = this._channels.get(data.i);
+            if(channelSet) for(const channel of channelSet) channel._triggerClose(data.m,data.c,data.d);
         });
 
         this._socket.on('disconnect',() => {
@@ -97,7 +95,7 @@ export class ChannelEngine
                     if(channelSet){
                         for(const channel of channelSet){
                             if(channel === notTriggerChannel) continue;
-                            channel._triggerSubscribtion(fullChId);
+                            channel._triggerSubscription(fullChId);
                         }
                     }
                     if(this._zc.isDebug()) {
@@ -129,7 +127,7 @@ export class ChannelEngine
         }
     }
 
-    unsubsribe(fullChId: string, sourceChannel: Channel)
+    unsubscribe(fullChId: string, sourceChannel: Channel)
     {
         for(const channelSet of this._channels.values()) {
             for(const channel of channelSet){

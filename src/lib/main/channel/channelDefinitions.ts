@@ -81,5 +81,26 @@ export interface ChClientOutputKickOutPackage {
     d?: any;
 }
 
+export const CH_CLIENT_OUTPUT_CLOSE = 'C>C';
+
+export interface ChClientOutputClosePackage {
+    /**
+     * Channel id
+     */
+    i: string;
+    /**
+     * Member
+     */
+    m?: string;
+    /**
+     * code
+     */
+    c?: number | string;
+    /**
+     * data
+     */
+    d?: any;
+}
+
 export const CHANNEL_START_INDICATOR = 'C>';
 export const CHANNEL_MEMBER_SPLIT = '.';
