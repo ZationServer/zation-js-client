@@ -200,7 +200,6 @@ export default class Databox {
 
     private inputChannel: string;
     private outputChannel: string;
-    private outputListener: ((data: any) => void) | undefined = undefined;
     private unregisterSocketStateListener: (() => void) | undefined = undefined;
     private parallelFetch: boolean;
     private connected: boolean = false;
@@ -359,6 +358,50 @@ export default class Databox {
     }
 
     /**
+     * Process a output package.
+     * @param outputPackage
+     * @private
+     */
+    private async _processOutputPackage(outputPackage: DbClientOutputPackage) {
+        switch (outputPackage.a) {
+            case DbClientOutputEvent.cud:
+                await this.remoteCudSyncLock.schedule(() => {
+                    const cudPackage = (outputPackage as DbClientOutputCudPackage).d;
+                    this._processCudPackage(cudPackage);
+                    this.cudEvent.emit(cudPackage);
+                });
+                break;
+            case DbClientOutputEvent.signal:
+                const signalPackage = (outputPackage as DbClientOutputSignalPackage);
+                this.receivedSignalEmitter.emit(signalPackage.s, signalPackage.d);
+                break;
+            case DbClientOutputEvent.close:
+                const closePackage = (outputPackage as DbClientOutputClosePackage);
+                await this._close(closePackage.c, closePackage.d);
+                break;
+            case DbClientOutputEvent.kickOut:
+                const kickOutPackage = (outputPackage as DbClientOutputKickOutPackage);
+                this._kickOut(kickOutPackage.c, kickOutPackage.d);
+                break;
+            case DbClientOutputEvent.reload:
+                const reloadPackage = (outputPackage as DbClientOutputReloadPackage);
+                await this._tryReload(false);
+                this.reloadEvent.emit(reloadPackage.c, reloadPackage.d);
+                break;
+        }
+    }
+    private _boundProcessOutputPackage: typeof Databox['prototype']['_processOutputPackage'] =
+        this._processOutputPackage.bind(this);
+
+    private _setOutputChannel(outputCh: string) {
+        if(this.outputChannel === outputCh) return;
+
+        this._unregisterOutputChannel();
+        this.outputChannel = outputCh;
+        this.socket.on(this.outputChannel, this._boundProcessOutputPackage);
+    }
+
+    /**
      * Internal connect.
      * If the databox is not initialized it also initializes the databox.
      * @internal
@@ -369,7 +412,6 @@ export default class Databox {
             try {
                 this._registerSocketStateHandler();
                 await this._sendConnect();
-                this._registerOutputChannel();
                 this.initialized = true;
                 this.client._getDataboxManager().add(this);
             } catch (e) {
@@ -440,7 +482,7 @@ export default class Databox {
                 }
 
                 this.inputChannel = res.i;
-                this.outputChannel = res.o;
+                this._setOutputChannel(res.o);
                 this.parallelFetch = res.p;
 
                 if(res.id !== undefined) {
@@ -873,51 +915,12 @@ export default class Databox {
     }
 
     /**
-     * Registers the output handler.
-     * @private
-     */
-    private _registerOutputChannel() {
-        const outputListener = async (outputPackage: DbClientOutputPackage) => {
-            switch (outputPackage.a) {
-                case DbClientOutputEvent.cud:
-                    await this.remoteCudSyncLock.schedule(() => {
-                        const cudPackage = (outputPackage as DbClientOutputCudPackage).d;
-                        this._processCudPackage(cudPackage);
-                        this.cudEvent.emit(cudPackage);
-                    });
-                    break;
-                case DbClientOutputEvent.signal:
-                    const signalPackage = (outputPackage as DbClientOutputSignalPackage);
-                    this.receivedSignalEmitter.emit(signalPackage.s, signalPackage.d);
-                    break;
-                case DbClientOutputEvent.close:
-                    const closePackage = (outputPackage as DbClientOutputClosePackage);
-                    await this._close(closePackage.c, closePackage.d);
-                    break;
-                case DbClientOutputEvent.kickOut:
-                    const kickOutPackage = (outputPackage as DbClientOutputKickOutPackage);
-                    this._kickOut(kickOutPackage.c, kickOutPackage.d);
-                    break;
-                case DbClientOutputEvent.reload:
-                    const reloadPackage = (outputPackage as DbClientOutputReloadPackage);
-                    await this._tryReload(false);
-                    this.reloadEvent.emit(reloadPackage.c, reloadPackage.d);
-                    break;
-            }
-        };
-        this.outputListener = outputListener;
-        this.socket.on(this.outputChannel, outputListener);
-    }
-
-    /**
      * Unregisters the output handler.
      * @private
      */
     private _unregisterOutputChannel() {
-        if (this.outputListener) {
-            this.socket.off(this.outputChannel, this.outputListener);
-        }
-        this.outputListener = undefined;
+        if(this.outputChannel != null)
+            this.socket.off(this.outputChannel, this._boundProcessOutputPackage);
     }
 
     /**
