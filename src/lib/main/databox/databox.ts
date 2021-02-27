@@ -58,6 +58,7 @@ import {ImmutableJson}                                          from "../utils/t
 import SyncLock                                                 from '../utils/syncLock';
 import {getReloadStrategyBuilder, ReloadStrategy}               from './reloadStrategy/reloadStrategy';
 import {buildHistoryBasedStrategy}                              from './reloadStrategy/historyBasedStrategy';
+import {stringifyMember}                                        from '../utils/memberParser';
 
 export interface DataboxOptions {
     /**
@@ -154,13 +155,14 @@ type OnKickOut     = (code: number | string | undefined,data: any) => void | Pro
 type OnClose       = (code: number | string | undefined,data: any) => void | Promise<void>
 type OnReload      = (code: number | string | undefined,data: any) => void | Promise<void>
 type OnCud         = (cudPackage: CudPackage) => void | Promise<void>
-type OnNewData     = (db: Databox) => void | Promise<void>
+type OnNewData<M>  = (db: Databox<M>) => void | Promise<void>
 type OnSignal      = (data: any) => void | Promise<void>
 
-export default class Databox {
+export default class Databox<M = string> {
 
     private readonly identifier: string;
-    private member: string | undefined;
+    private member: M | undefined;
+    private memberStr: string | undefined;
     private readonly apiLevel: number | undefined;
     private readonly socket: Socket;
     private readonly client: ZationClient;
@@ -211,7 +213,7 @@ export default class Databox {
     private closeEvent: EventManager<OnClose> = new EventManager();
     private reloadEvent: EventManager<OnReload> = new EventManager();
     private cudEvent: EventManager<OnCud> = new EventManager();
-    private newDataEvent: EventManager<OnNewData> = new EventManager();
+    private newDataEvent: EventManager<OnNewData<M>> = new EventManager();
 
     private readonly dbOptions: RequiredDbOptions = {
         autoFetch: true,
@@ -344,15 +346,16 @@ export default class Databox {
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
-    async connect(member?: string | number,connectTimeout: ConnectTimeoutOption = undefined): Promise<void> {
+    async connect(member?: M,connectTimeout: ConnectTimeoutOption = undefined): Promise<void> {
         await ConnectionUtils.checkConnection(this.client,
             (connectTimeout === undefined ? this.dbOptions.connectTimeout: connectTimeout));
 
-        member = member !== undefined ? member.toString() : member;
-        if(this.initialized && member !== this.member) {
+        const memberStr = member != null ? stringifyMember(member) : undefined;
+        if(this.initialized && memberStr !== this.memberStr) {
             await this.disconnect(true,true);
         }
         this.member = member;
+        this.memberStr = memberStr;
 
         await this._connect();
     }
@@ -949,7 +952,7 @@ export default class Databox {
      * re-executed after a reload of the databox.
      * @param operations
      */
-    public removeLocalCudOperations(operations: LocalCudOperation[]): Databox {
+    public removeLocalCudOperations(operations: LocalCudOperation[]): Databox<M> {
         this.localCudOperationsMemory.remove(operations);
         return this;
     }
@@ -960,7 +963,7 @@ export default class Databox {
      * That means that the operations will no longer
      * re-executed after a reload of the databox.
      */
-    public clearLocalCudOperations(): Databox {
+    public clearLocalCudOperations(): Databox<M> {
         this.localCudOperationsMemory.clear();
         return this;
     }
@@ -1008,7 +1011,7 @@ export default class Databox {
      * It's also possible to remove the cud operations later manually from memory.
      * This can be done with the methods: getLastLocalCudOperations and removeLocalCudOperations.
      */
-    insert(selector: DbSelector, value: any, options: IfOption & PotentialUpdateOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true): Databox {
+    insert(selector: DbSelector, value: any, options: IfOption & PotentialUpdateOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true): Databox<M> {
         const timestampTmp = options.timestamp;
         options.timestamp = DbUtils.processTimestamp(timestampTmp);
         options.if = DbUtils.processIfOption(options.if);
@@ -1094,7 +1097,7 @@ export default class Databox {
      * It's also possible to remove the cud operations later manually from memory.
      * This can be done with the methods: getLastLocalCudOperations and removeLocalCudOperations.
      */
-    update(selector: DbSelector, value: any, options: IfOption & PotentialInsertOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true): Databox {
+    update(selector: DbSelector, value: any, options: IfOption & PotentialInsertOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true): Databox<M> {
         const timestampTmp = options.timestamp;
         options.timestamp = DbUtils.processTimestamp(timestampTmp);
         options.if = DbUtils.processIfOption(options.if);
@@ -1179,7 +1182,7 @@ export default class Databox {
      * It's also possible to remove the cud operations later manually from memory.
      * This can be done with the methods: getLastLocalCudOperations and removeLocalCudOperations.
      */
-    delete(selector: DbSelector, options: IfOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true): Databox {
+    delete(selector: DbSelector, options: IfOption & InfoOption & TimestampOption = {}, keepInMemory: boolean = true): Databox<M> {
         const timestampTmp = options.timestamp;
         options.timestamp = DbUtils.processTimestamp(timestampTmp);
         options.if = DbUtils.processIfOption(options.if);
@@ -1258,7 +1261,7 @@ export default class Databox {
     /**
      * This method will clear all connected db storages.
      */
-    clearStorages(): Databox {
+    clearStorages(): Databox<M> {
         for (let dbStorage of this.dbStorages) {
             dbStorage.clear();
         }
@@ -1298,7 +1301,7 @@ export default class Databox {
      * Do something for each storage.
      * @param func
      */
-    forEachStorage(func: (storage: DbStorage) => void): Databox {
+    forEachStorage(func: (storage: DbStorage) => void): Databox<M> {
         for (let dbStorage of this.dbStorages) {
             func(dbStorage);
         }
@@ -1336,7 +1339,7 @@ export default class Databox {
     /**
      * Returns the current member.
      */
-    getCurrentMember(): string | undefined {
+    getCurrentMember(): M | undefined {
         return this.member;
     }
 
@@ -1345,7 +1348,7 @@ export default class Databox {
      * Connect a new Storage to the Databox.
      * @param dbStorage
      */
-    connectStorage(dbStorage: DbStorage): Databox {
+    connectStorage(dbStorage: DbStorage): Databox<M> {
         if(dbStorage.shouldApplyRemoteInitialData())
             dbStorage.setInitialData(this.lastRemoteInitialData);
         this.dbStorages.add(dbStorage);
@@ -1357,7 +1360,7 @@ export default class Databox {
      * Disconnect a Storage from the Databox.
      * @param dbStorage
      */
-    disconnectStorage(dbStorage: DbStorage): Databox {
+    disconnectStorage(dbStorage: DbStorage): Databox<M> {
         this.dbStorages.delete(dbStorage);
         return this;
     }
@@ -1422,7 +1425,7 @@ export default class Databox {
      * That also includes reconnections.
      * @param listener
      */
-    onConnect(listener: OnConnect): Databox {
+    onConnect(listener: OnConnect): Databox<M> {
         this.connectEvent.on(listener);
         return this;
     }
@@ -1433,7 +1436,7 @@ export default class Databox {
      * That also includes reconnections.
      * @param listener
      */
-    onceConnect(listener: OnConnect): Databox {
+    onceConnect(listener: OnConnect): Databox<M> {
         this.connectEvent.once(listener);
         return this;
     }
@@ -1443,7 +1446,7 @@ export default class Databox {
      * Can be a once or normal listener.
      * @param listener
      */
-    offConnect(listener: OnConnect){
+    offConnect(listener: OnConnect): Databox<M> {
         this.connectEvent.off(listener);
         return this;
     }
@@ -1454,7 +1457,7 @@ export default class Databox {
      * whenever the Databox is disconnected from the server.
      * @param listener
      */
-    onDisconnect(listener: OnDisconnect): Databox {
+    onDisconnect(listener: OnDisconnect): Databox<M> {
         this.disconnectEvent.on(listener);
         return this;
     }
@@ -1465,7 +1468,7 @@ export default class Databox {
      * the Databox is disconnected from the server.
      * @param listener
      */
-    onceDisconnect(listener: OnDisconnect): Databox {
+    onceDisconnect(listener: OnDisconnect): Databox<M> {
         this.disconnectEvent.once(listener);
         return this;
     }
@@ -1476,7 +1479,7 @@ export default class Databox {
      * Can be a once or normal listener.
      * @param listener
      */
-    offDisconnect(listener: OnDisconnect){
+    offDisconnect(listener: OnDisconnect): Databox<M> {
         this.disconnectEvent.off(listener);
         return this;
     }
@@ -1487,7 +1490,7 @@ export default class Databox {
      * whenever the socket is kicked out from the Databox.
      * @param listener
      */
-    onKickOut(listener: OnKickOut): Databox {
+    onKickOut(listener: OnKickOut): Databox<M> {
         this.kickOutEvent.on(listener);
         return this;
     }
@@ -1498,7 +1501,7 @@ export default class Databox {
      * the socket is kicked out from the Databox.
      * @param listener
      */
-    onceKickOut(listener: OnKickOut): Databox {
+    onceKickOut(listener: OnKickOut): Databox<M> {
         this.kickOutEvent.once(listener);
         return this;
     }
@@ -1509,7 +1512,7 @@ export default class Databox {
      * Can be a once or normal listener.
      * @param listener
      */
-    offKickOut(listener: OnKickOut){
+    offKickOut(listener: OnKickOut): Databox<M> {
         this.kickOutEvent.off(listener);
         return this;
     }
@@ -1520,7 +1523,7 @@ export default class Databox {
      * whenever the server closes the Databox.
      * @param listener
      */
-    onClose(listener: OnClose): Databox {
+    onClose(listener: OnClose): Databox<M> {
         this.closeEvent.on(listener);
         return this;
     }
@@ -1531,7 +1534,7 @@ export default class Databox {
      * the server closes the Databox.
      * @param listener
      */
-    onceClose(listener: OnClose): Databox {
+    onceClose(listener: OnClose): Databox<M> {
         this.closeEvent.once(listener);
         return this;
     }
@@ -1542,7 +1545,7 @@ export default class Databox {
      * Can be a once or normal listener.
      * @param listener
      */
-    offClose(listener: OnClose){
+    offClose(listener: OnClose): Databox<M> {
         this.closeEvent.off(listener);
         return this;
     }
@@ -1553,7 +1556,7 @@ export default class Databox {
      * server told the Databox to reload the data.
      * @param listener
      */
-    onReload(listener: OnReload): Databox {
+    onReload(listener: OnReload): Databox<M> {
         this.reloadEvent.on(listener);
         return this;
     }
@@ -1564,7 +1567,7 @@ export default class Databox {
      * the server told the Databox to reload the data.
      * @param listener
      */
-    onceReload(listener: OnReload): Databox {
+    onceReload(listener: OnReload): Databox<M> {
         this.reloadEvent.once(listener);
         return this;
     }
@@ -1575,7 +1578,7 @@ export default class Databox {
      * Can be a once or normal listener.
      * @param listener
      */
-    offReload(listener: OnReload){
+    offReload(listener: OnReload): Databox<M> {
         this.reloadEvent.off(listener);
         return this;
     }
@@ -1586,7 +1589,7 @@ export default class Databox {
      * whenever this Databox gets a new cud operation.
      * @param listener
      */
-    onCud(listener: OnCud): Databox {
+    onCud(listener: OnCud): Databox<M> {
         this.cudEvent.on(listener);
         return this;
     }
@@ -1597,7 +1600,7 @@ export default class Databox {
      * this Databox gets a new cud operation.
      * @param listener
      */
-    onceCud(listener: OnCud): Databox {
+    onceCud(listener: OnCud): Databox<M> {
         this.cudEvent.once(listener);
         return this;
     }
@@ -1608,7 +1611,7 @@ export default class Databox {
      * Can be a once or normal listener.
      * @param listener
      */
-    offCud(listener: OnCud){
+    offCud(listener: OnCud): Databox<M> {
         this.cudEvent.off(listener);
         return this;
     }
@@ -1623,7 +1626,7 @@ export default class Databox {
      * or newly fetched data.
      * @param listener
      */
-    onNewData(listener: OnNewData): Databox {
+    onNewData(listener: OnNewData<M>): Databox<M> {
         this.newDataEvent.on(listener);
         return this;
     }
@@ -1638,7 +1641,7 @@ export default class Databox {
      * or newly fetched data.
      * @param listener
      */
-    onceNewData(listener: OnNewData): Databox {
+    onceNewData(listener: OnNewData<M>): Databox<M> {
         this.newDataEvent.once(listener);
         return this;
     }
@@ -1649,7 +1652,7 @@ export default class Databox {
      * Can be a once or normal listener.
      * @param listener
      */
-    offNewData(listener: OnNewData){
+    offNewData(listener: OnNewData<M>): Databox<M>{
         this.newDataEvent.off(listener);
         return this;
     }
@@ -1675,7 +1678,7 @@ export default class Databox {
      * For example, you do four updates then this event triggers after all four updates.
      * If you have deactivated, then it will trigger for each updater separately.
      */
-    onDataChange(listener: OnDataChange,combineCudSeqOperations: boolean = true): Databox {
+    onDataChange(listener: OnDataChange,combineCudSeqOperations: boolean = true): Databox<M> {
         this.mainDbStorage.onDataChange(listener,combineCudSeqOperations);
         return this;
     }
@@ -1701,7 +1704,7 @@ export default class Databox {
      * For example, you do four updates then this event triggers after all four updates.
      * If you have deactivated, then it will trigger for each updater separately.
      */
-    onceDataChange(listener: OnDataChange,combineCudSeqOperations: boolean = true): Databox {
+    onceDataChange(listener: OnDataChange,combineCudSeqOperations: boolean = true): Databox<M> {
         this.mainDbStorage.onceDataChange(listener,combineCudSeqOperations);
         return this;
     }
@@ -1713,7 +1716,7 @@ export default class Databox {
      * Can be a once or normal listener.
      * @param listener
      */
-    offDataChange(listener: OnDataChange): Databox {
+    offDataChange(listener: OnDataChange): Databox<M> {
         this.mainDbStorage.offDataChange(listener);
         return this;
     }
@@ -1729,7 +1732,7 @@ export default class Databox {
      * then the data touch event will be triggered but not the data change event.
      * @param listener
      */
-    onDataTouch(listener: OnDataTouch): Databox {
+    onDataTouch(listener: OnDataTouch): Databox<M> {
         this.mainDbStorage.onDataTouch(listener);
         return this;
     }
@@ -1745,7 +1748,7 @@ export default class Databox {
      * then the data touch event will be triggered but not the data change event.
      * @param listener
      */
-    onceDataTouch(listener: OnDataTouch): Databox {
+    onceDataTouch(listener: OnDataTouch): Databox<M> {
         this.mainDbStorage.onceDataTouch(listener);
         return this;
     }
@@ -1757,7 +1760,7 @@ export default class Databox {
      * Can be a once or normal listener.
      * @param listener
      */
-    offDataTouch(listener: OnDataTouch): Databox {
+    offDataTouch(listener: OnDataTouch): Databox<M> {
         this.mainDbStorage.offDataTouch(listener);
         return this;
     }
@@ -1769,7 +1772,7 @@ export default class Databox {
      * @param signal
      * @param listener
      */
-    onReceivedSignal(signal: string, listener: OnSignal): Databox {
+    onReceivedSignal(signal: string, listener: OnSignal): Databox<M> {
         this.receivedSignalEmitter.on(signal,listener);
         return this;
     }
@@ -1781,7 +1784,7 @@ export default class Databox {
      * @param signal
      * @param listener
      */
-    onceReceivedSignal(signal: string, listener: OnSignal): Databox {
+    onceReceivedSignal(signal: string, listener: OnSignal): Databox<M> {
         this.receivedSignalEmitter.once(signal,listener);
         return this;
     }
@@ -1793,7 +1796,7 @@ export default class Databox {
      * @param signal
      * @param listener
      */
-    offReceivedSignal(signal: string, listener?: OnSignal): Databox {
+    offReceivedSignal(signal: string, listener?: OnSignal): Databox<M> {
         this.receivedSignalEmitter.off(signal,listener);
         return this;
     }
@@ -1804,7 +1807,7 @@ export default class Databox {
      * but the IDE can interpret the typescript information of this library.
      * @param value
      */
-    static cast(value: any): Databox {
-        return value as Databox;
+    static cast(value: any): Databox<any> {
+        return value as Databox<any>;
     }
 }

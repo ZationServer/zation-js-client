@@ -81,7 +81,7 @@ export default class ConnectionUtils {
      * @param client
      * @param connectTimeout
      */
-    static async checkDbConnection(databox: Databox, client: ZationClient, connectTimeout: ConnectTimeoutOption){
+    static async checkDbConnection(databox: Databox<any>, client: ZationClient, connectTimeout: ConnectTimeoutOption){
 
         if(!databox.isConnected()){
             connectTimeout = connectTimeout === undefined ? client.getZc().config.databoxConnectTimeout: connectTimeout;

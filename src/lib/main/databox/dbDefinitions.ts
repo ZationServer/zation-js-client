@@ -14,7 +14,7 @@ export interface DataboxConnectReq {
     /**
      * member
      */
-    m?: string,
+    m?: any,
     /**
      * apiLevel
      */

@@ -8,13 +8,13 @@ import Databox from "./databox";
 
 export default class DataboxManager {
 
-    private readonly _initializedDataboxes: Set<Databox> = new Set<Databox>();
+    private readonly _initializedDataboxes: Set<Databox<any>> = new Set<Databox<any>>();
 
-    add(databox: Databox) {
+    add(databox: Databox<any>) {
         this._initializedDataboxes.add(databox);
     }
 
-    delete(databox: Databox){
+    delete(databox: Databox<any>){
         this._initializedDataboxes.delete(databox);
     }
 
