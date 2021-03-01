@@ -54,14 +54,14 @@ import {createSimpleModifyToken}                                from "./storage/
 import {deepClone, deepCloneInstance}                           from '../utils/cloneUtils';
 import LocalCudOperationsMemory                                 from "./localCudOperationsMemory";
 import {Logger}                                                 from "../logger/logger";
-import {DeepReadonly, ImmutableJson}                            from '../utils/typeUtils';
+import {DeepReadonly, Json}                                     from '../utils/typeUtils';
 import SyncLock                                                 from '../utils/syncLock';
 import {getReloadStrategyBuilder, ReloadStrategy}               from './reloadStrategy/reloadStrategy';
 import {buildHistoryBasedStrategy}                              from './reloadStrategy/historyBasedStrategy';
 import {stringifyMember}                                        from '../utils/memberParser';
 import {deepFreeze}                                             from '../utils/deepFreeze';
 
-export interface DataboxOptions {
+export interface DataboxOptions<O = any,F = any> {
     /**
      * Activates that the Databox automatically fetch data after the first connection.
      * @default true
@@ -71,7 +71,7 @@ export interface DataboxOptions {
      * The fetch input data for the auto fetch.
      * @default undefined
      */
-    autoFetchData?: any,
+    autoFetchData?: F,
     /**
      * The API level of this client for the Databox connection request.
      * If you don't provide one, the server will use the connection API
@@ -130,7 +130,7 @@ export interface DataboxOptions {
      * On the server-side, the options can be accessed.
      * @default undefined
      */
-    remoteOptions?: any;
+    remoteOptions?: O;
     /**
      * Defines the reload strategy that the Databox uses to
      * reload the current and missed data.
@@ -159,7 +159,7 @@ type OnCud         = (cudPackage: CudPackage) => void | Promise<void>
 type OnNewData<M>  = (db: Databox<M>) => void | Promise<void>
 type OnSignal      = (data: any) => void | Promise<void>
 
-export default class Databox<M = any> {
+export default class Databox<M = any,D extends Json = any,O = any,F = any> {
 
     private readonly identifier: string;
     private member: DeepReadonly<M> | undefined;
@@ -169,7 +169,7 @@ export default class Databox<M = any> {
     private readonly client: ZationClient;
 
     private readonly dbStorages: Set<DbStorage> = new Set<DbStorage>();
-    private readonly mainDbStorage: DbStorage;
+    private readonly mainDbStorage: DbStorage<D>;
     private readonly tmpReloadDataSets: Set<DbsHead> = new Set<DbsHead>();
     private readonly fetchHistoryManager: DbFetchHistoryManager = new DbFetchHistoryManager();
     private readonly tmpReloadStorage: DbStorage;
@@ -226,7 +226,7 @@ export default class Databox<M = any> {
         remoteOptions: undefined
     };
 
-    constructor(client: ZationClient, identifier: string, options: DataboxOptions) {
+    constructor(client: ZationClient, identifier: string, options: DataboxOptions<O,F>) {
         ObjectUtils.addObToOb(this.dbOptions, options, true);
         this.socket = client.socket;
         this.client = client;
@@ -604,7 +604,7 @@ export default class Databox<M = any> {
      * @throws ConnectionRequiredError,TimeoutError,RawError,InvalidInputError,AbortSignal
      * To react to the error, you can use the DbError class.
      */
-    async fetch(data?: any, databoxConnectTimeout: ConnectTimeoutOption = undefined, addToHistory: boolean = true): Promise<void> {
+    async fetch(data?: F, databoxConnectTimeout: ConnectTimeoutOption = undefined, addToHistory: boolean = true): Promise<void> {
         await ConnectionUtils.checkDbConnection
         (this, this.client, (databoxConnectTimeout === undefined ? this.dbOptions.databoxConnectTimeout: databoxConnectTimeout));
 
@@ -665,7 +665,7 @@ export default class Databox<M = any> {
      * @param input
      * @private
      */
-    private async _reloadFetch(input?: any): Promise<{data: DbsHead, counter: number} | null> {
+    private async _reloadFetch(input?: F): Promise<{data: DbsHead, counter: number} | null> {
         return this.remoteCudSyncLock.schedule<{data: DbsHead, counter: number} | null>(async () => {
             try {
                 const fetchResult = await this._fetch(input, DBClientInputSessionTarget.reloadSession);
@@ -1379,7 +1379,7 @@ export default class Databox<M = any> {
      * it can break the whole storage.
      * If you need to modify the data you can use the getDataClone method.
      */
-    get data(): ImmutableJson {
+    get data(): DeepReadonly<D> | undefined {
         return this.mainDbStorage.data;
     }
 
@@ -1387,8 +1387,8 @@ export default class Databox<M = any> {
     /**
      * Returns a clone of the data from the main storage.
      */
-    getDataClone<T = any>(): T {
-        return this.mainDbStorage.getDataClone<T>();
+    getDataClone(): D | undefined {
+        return this.mainDbStorage.getDataClone();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1684,7 +1684,7 @@ export default class Databox<M = any> {
      * For example, you do four updates then this event triggers after all four updates.
      * If you have deactivated, then it will trigger for each updater separately.
      */
-    onDataChange(listener: OnDataChange,combineCudSeqOperations: boolean = true): Databox<M> {
+    onDataChange(listener: OnDataChange<D>,combineCudSeqOperations: boolean = true): Databox<M> {
         this.mainDbStorage.onDataChange(listener,combineCudSeqOperations);
         return this;
     }
@@ -1710,7 +1710,7 @@ export default class Databox<M = any> {
      * For example, you do four updates then this event triggers after all four updates.
      * If you have deactivated, then it will trigger for each updater separately.
      */
-    onceDataChange(listener: OnDataChange,combineCudSeqOperations: boolean = true): Databox<M> {
+    onceDataChange(listener: OnDataChange<D>,combineCudSeqOperations: boolean = true): Databox<M> {
         this.mainDbStorage.onceDataChange(listener,combineCudSeqOperations);
         return this;
     }
@@ -1722,7 +1722,7 @@ export default class Databox<M = any> {
      * Can be a once or normal listener.
      * @param listener
      */
-    offDataChange(listener: OnDataChange): Databox<M> {
+    offDataChange(listener: OnDataChange<any>): Databox<M> {
         this.mainDbStorage.offDataChange(listener);
         return this;
     }
@@ -1738,7 +1738,7 @@ export default class Databox<M = any> {
      * then the data touch event will be triggered but not the data change event.
      * @param listener
      */
-    onDataTouch(listener: OnDataTouch): Databox<M> {
+    onDataTouch(listener: OnDataTouch<D>): Databox<M> {
         this.mainDbStorage.onDataTouch(listener);
         return this;
     }
@@ -1754,7 +1754,7 @@ export default class Databox<M = any> {
      * then the data touch event will be triggered but not the data change event.
      * @param listener
      */
-    onceDataTouch(listener: OnDataTouch): Databox<M> {
+    onceDataTouch(listener: OnDataTouch<D>): Databox<M> {
         this.mainDbStorage.onceDataTouch(listener);
         return this;
     }
@@ -1766,7 +1766,7 @@ export default class Databox<M = any> {
      * Can be a once or normal listener.
      * @param listener
      */
-    offDataTouch(listener: OnDataTouch): Databox<M> {
+    offDataTouch(listener: OnDataTouch<any>): Databox<M> {
         this.mainDbStorage.offDataTouch(listener);
         return this;
     }
@@ -1813,7 +1813,7 @@ export default class Databox<M = any> {
      * but the IDE can interpret the typescript information of this library.
      * @param value
      */
-    static cast(value: any): Databox<any> {
-        return value as Databox<any>;
+    static cast(value: any): Databox {
+        return value as Databox;
     }
 }

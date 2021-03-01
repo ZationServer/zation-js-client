@@ -111,7 +111,7 @@ export class ChannelEngine
         });
     }
 
-    register(chId: string,channel: Channel<any>) {
+    register(chId: string,channel: Channel<any,any>) {
         let channelSet = this._channels.get(chId);
         if(!channelSet) {
             channelSet = new Set<Channel>();
@@ -120,7 +120,7 @@ export class ChannelEngine
         channelSet.add(channel);
     }
 
-    unregister(chId: string,channel: Channel<any>) {
+    unregister(chId: string,channel: Channel<any,any>) {
         const channelSet = this._channels.get(chId);
         if(channelSet){
             channelSet.delete(channel);
@@ -130,7 +130,7 @@ export class ChannelEngine
         }
     }
 
-    unsubscribe(fullChId: string, sourceChannel: Channel<any>) {
+    unsubscribe(fullChId: string, sourceChannel: Channel<any,any>) {
         for(const channelSet of this._channels.values()) {
             for(const channel of channelSet){
                 if(channel !== sourceChannel && channel._hasSub(fullChId)) return;

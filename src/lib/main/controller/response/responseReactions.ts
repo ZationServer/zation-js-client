@@ -8,8 +8,8 @@ import {Response}  from "./response";
 // noinspection ES6PreferShortImport
 import {BackError} from "../../backError/backError";
 
-export type ResponseReactionOnSuccessful = (result: any, response: Response) => void | Promise<void>;
-export type ResponseReactionOnResponse   = (response: Response) => void | Promise<void>;
-export type ResponseReactionOnError      = (errors: BackError[], response: Response) => void | Promise<void>;
-export type ResponseReactionCatchError   = (caughtErrors: BackError[], response: Response) => void | Promise<void>;
+export type ResponseReactionOnSuccessful<T> = (result: T, response: Response<T>) => void | Promise<void>;
+export type ResponseReactionOnResponse<T> = (response: Response<T>) => void | Promise<void>;
+export type ResponseReactionOnError<T> = (errors: BackError[], response: Response<T>) => void | Promise<void>;
+export type ResponseReactionCatchError<T> = (caughtErrors: BackError[], response: Response<T>) => void | Promise<void>;
 

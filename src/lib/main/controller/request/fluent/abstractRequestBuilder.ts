@@ -21,10 +21,10 @@ import {ResponseReactionBox}         from "../../response/responseReactionBox";
 // noinspection ES6PreferShortImport
 import {Response}                from "../../response/response";
 import {ResponseReactAble}       from "../../response/responseReactAble";
-import {ConnectTimeoutOption} from "../../../utils/connectionUtils";
+import {ConnectTimeoutOption}    from "../../../utils/connectionUtils";
 import {BaseRequest}             from "../main/baseRequest";
 
-export abstract class AbstractRequestBuilder<T> implements ResponseReactAble<AbstractRequestBuilder<T>,T>
+export abstract class AbstractRequestBuilder<T,RDT extends any = any> implements ResponseReactAble<AbstractRequestBuilder<T,RDT>,T>
 {
     protected readonly client: ZationClient;
 
@@ -145,8 +145,8 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble<Abs
      *     .valueNotMatchesWithMinLength('name')
      *     .react((errors, response) => {})
      */
-    onError(reaction: ResponseReactionOnError,...filter: BackErrorFilter[]): T;
-    onError(reaction?: ResponseReactionOnError,...filter: BackErrorFilter[]): T | OnBackErrorBuilder<AbstractRequestBuilder<T>,T>
+    onError(reaction: ResponseReactionOnError<RDT>,...filter: BackErrorFilter[]): T;
+    onError(reaction?: ResponseReactionOnError<RDT>,...filter: BackErrorFilter[]): T | OnBackErrorBuilder<AbstractRequestBuilder<T>,T>
     {
         if(reaction) {
             this._responseReactionBox.onError(reaction,...filter);
@@ -193,8 +193,8 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble<Abs
      *     .valueNotMatchesWithMinLength('name')
      *     .react((caughtErrors, response) => {})
      */
-    catchError(reaction: ResponseReactionCatchError,...filter: BackErrorFilter[]): T;
-    catchError(reaction?: ResponseReactionOnError,...filter: BackErrorFilter[]): T | CatchBackErrorBuilder<AbstractRequestBuilder<T>,T>
+    catchError(reaction: ResponseReactionCatchError<RDT>,...filter: BackErrorFilter[]): T;
+    catchError(reaction?: ResponseReactionOnError<RDT>,...filter: BackErrorFilter[]): T | CatchBackErrorBuilder<AbstractRequestBuilder<T>,T>
     {
         if(reaction) {
             this._responseReactionBox.catchError(reaction,...filter);
@@ -214,7 +214,7 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble<Abs
      * onSuccessful((result,response) => {});
      * @param reaction
      */
-    onSuccessful(reaction: ResponseReactionOnSuccessful): T {
+    onSuccessful(reaction: ResponseReactionOnSuccessful<RDT>): T {
         this._responseReactionBox.onSuccessful(reaction);
         this._reactionAdded = true;
         return this.self();
@@ -229,7 +229,7 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble<Abs
      * onResponse((response) => {});
      * @param reaction
      */
-    onResponse(reaction:  ResponseReactionOnResponse): T {
+    onResponse(reaction: ResponseReactionOnResponse<RDT>): T {
         this._responseReactionBox.onResponse(reaction);
         this._reactionAdded = true;
         return this.self();
@@ -246,7 +246,7 @@ export abstract class AbstractRequestBuilder<T> implements ResponseReactAble<Abs
      * Otherwise, you have the possibility to react with the response on specific things first and
      * then trigger the client boxes by using response.react().triggerClientBoxes().
      */
-    send(triggerClientBoxes: boolean = this._reactionAdded || this._addedResponseReactionBoxes.length > 0): Promise<Response> {
+    send(triggerClientBoxes: boolean = this._reactionAdded || this._addedResponseReactionBoxes.length > 0): Promise<Response<RDT>> {
         return this.client.send(
             this.buildRequest(),
             triggerClientBoxes,

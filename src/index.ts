@@ -66,6 +66,10 @@ import TokenStore                       from "./lib/main/tokenStore/tokenStore";
 import {createLocalStorageTokenStore}   from "./lib/main/tokenStore/localStorageTokenStore";
 import {buildHistoryBasedStrategy}      from './lib/main/databox/reloadStrategy/historyBasedStrategy';
 import {buildTimeBasedListStrategy}     from './lib/main/databox/reloadStrategy/timeBasedListStrategy';
+import {
+    APIDefinition,
+    CustomApiDefinition,
+}                                       from './lib/main/definitions/apiDefinition';
 import {registerReloadStrategy, ReloadStrategy, ReloadStrategyBuilder} from './lib/main/databox/reloadStrategy/reloadStrategy';
 
 let client = mainClient;
@@ -83,7 +87,8 @@ ZationMainClientManager.onMainClientChange(mainClient => client = mainClient);
  * To clear the main client later you can
  * use the function: clearMainClient.
  */
-const create = (options?: ZationClientOptions,main: boolean = false): ZationClient => {
+const create = <API extends APIDefinition = APIDefinition,
+    TP extends object = any>(options?: ZationClientOptions,main: boolean = false): ZationClient<API,TP> => {
     return new ZationClient(options,main);
 };
 
@@ -153,5 +158,7 @@ export {
     ReloadStrategyBuilder,
     registerReloadStrategy,
     buildHistoryBasedStrategy,
-    buildTimeBasedListStrategy
+    buildTimeBasedListStrategy,
+    APIDefinition,
+    CustomApiDefinition
 };

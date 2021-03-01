@@ -9,16 +9,16 @@ import {ZationClient}                from "../../../../core/zationClient";
 import {ConnectTimeoutOption}        from "../../../utils/connectionUtils";
 import Package                       from "../main/package";
 
-export default class PackageBuilder
+export default class PackageBuilder<DT extends any = any>
 {
     protected readonly client: ZationClient;
 
     private readonly _receiver: string = '';
-    private _data: any = undefined;
+    private _data: DT | undefined = undefined;
     private _apiLevel: number | undefined = undefined;
     private _connectTimeout: ConnectTimeoutOption = undefined;
 
-    constructor(client: ZationClient, receiver: string, data?: any) {
+    constructor(client: ZationClient, receiver: string, data?: DT) {
         this.client = client;
         this._receiver = receiver;
         this._data = data;
@@ -64,7 +64,7 @@ export default class PackageBuilder
      * @param data
      * @default undefined (equals to {} on server param based input).
      */
-    data(data: any): PackageBuilder {
+    data(data: DT | undefined): PackageBuilder {
         this._data = data;
         return this;
     }

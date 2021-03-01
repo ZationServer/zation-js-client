@@ -28,7 +28,7 @@ export interface ChannelSubscribeInfo<M> {
     member?: DeepReadonly<M>
 }
 
-export type ChannelReactionOnPublish<M>     = (data: any,member?: DeepReadonly<M>) => void | Promise<void>;
+export type ChannelReactionOnPublish<M,D>   = (data: D,member?: DeepReadonly<M>) => void | Promise<void>;
 export type ChannelReactionOnSubscribe<M>   = (member?: DeepReadonly<M>) => void | Promise<void>;
 export type ChannelReactionOnUnsubscribe<M> = (reason: UnsubscribeReason,member?: DeepReadonly<M>) => void | Promise<void>;
 export type ChannelReactionOnKickOut<M>     = (member?: DeepReadonly<M>,code?: number | string | undefined,data?: any) => void | Promise<void>;
@@ -53,7 +53,7 @@ export enum UnsubscribeReason {
     Close
 }
 
-export default class Channel<M = string> {
+export default class Channel<M = any, PEvents = Record<string,any>> {
 
     private readonly _client: ZationClient;
     private readonly _channelEngine: ChannelEngine;
@@ -244,7 +244,7 @@ export default class Channel<M = string> {
         if(!list) return;
         (async () => {
             try {
-                await this._triggerReactionsList<ChannelReactionOnPublish<M>>(list,
+                await this._triggerReactionsList<ChannelReactionOnPublish<M,any>>(list,
                     (filter: ChFilter): boolean => filter.event === event,data,info.member);
             }
             catch (e) {}
@@ -390,8 +390,8 @@ export default class Channel<M = string> {
      * @param event
      * @param reaction
      */
-    onPublish(event: string,reaction: ChannelReactionOnPublish<M>): FullReaction<ChannelReactionOnPublish<M>> {
-        const fullReaction = new FullReaction<ChannelReactionOnPublish<M>>(reaction,{event} as ChFilter)
+    onPublish<E extends keyof PEvents>(event: E,reaction: ChannelReactionOnPublish<M,PEvents[E]>): FullReaction<ChannelReactionOnPublish<M,PEvents[E]>> {
+        const fullReaction = new FullReaction<ChannelReactionOnPublish<M,PEvents[E]>>(reaction,{event} as ChFilter)
         this._reactionMap.add(ChannelEvent.Publish, fullReaction);
         return fullReaction;
     }
@@ -406,8 +406,8 @@ export default class Channel<M = string> {
      * @param event
      * @param reaction
      */
-    oncePublish(event: string,reaction: ChannelReactionOnPublish<M>): FullReaction<ChannelReactionOnPublish<M>> {
-        const fullReaction = new FullReaction<ChannelReactionOnPublish<M>>(reaction,{event} as ChFilter,true)
+    oncePublish<E extends keyof PEvents>(event: E,reaction: ChannelReactionOnPublish<M,PEvents[E]>): FullReaction<ChannelReactionOnPublish<M,PEvents[E]>> {
+        const fullReaction = new FullReaction<ChannelReactionOnPublish<M,PEvents[E]>>(reaction,{event} as ChFilter,true)
         this._reactionMap.add(ChannelEvent.Publish, fullReaction);
         return fullReaction;
     }
@@ -418,7 +418,7 @@ export default class Channel<M = string> {
      * @param fullReaction
      * If no specific FullReaction is provided, all will be removed.
      */
-    offPublish(fullReaction?: FullReaction<ChannelReactionOnPublish<M>>): void {
+    offPublish(fullReaction?: FullReaction<ChannelReactionOnPublish<M,any>>): void {
         this._reactionMap.remove(ChannelEvent.Publish, fullReaction);
     }
 

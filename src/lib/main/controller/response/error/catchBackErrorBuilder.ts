@@ -10,8 +10,8 @@ import {AbstractBackErrorFilterBuilder} from "../../../backError/abstractBackErr
 import {ResponseReactAble}              from "../responseReactAble";
 import {mergeFunctions}                 from "../../../utils/funcUtils";
 
-export class CatchBackErrorBuilder<T extends ResponseReactAble<T,R>,R>
-    extends AbstractBackErrorFilterBuilder<CatchBackErrorBuilder<T,R>>
+export class CatchBackErrorBuilder<T extends ResponseReactAble<T,R>,R,RT = any>
+    extends AbstractBackErrorFilterBuilder<CatchBackErrorBuilder<T,R,RT>>
 {
     private readonly target : T;
 
@@ -30,13 +30,13 @@ export class CatchBackErrorBuilder<T extends ResponseReactAble<T,R>,R>
      * @param reactions
      * You also can add more than one reaction.
      */
-    react(...reactions: ResponseReactionOnError[]): R {
+    react(...reactions: ResponseReactionOnError<RT>[]): R {
         //save last tmp
         this._pushTmpFilter();
         return this.target.catchError(mergeFunctions(...reactions),...this.filter);
     }
 
-    protected self(): CatchBackErrorBuilder<T, R> {
+    protected self(): CatchBackErrorBuilder<T,R,RT> {
         return this;
     }
 }

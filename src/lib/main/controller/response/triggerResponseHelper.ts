@@ -14,7 +14,7 @@ import {FullReaction}      from "../../react/fullReaction";
 
 export class TriggerResponseHelper
 {
-    static async onError(response: Response,fullReaction: FullReaction<ResponseReactionOnError>)
+    static async onError(response: Response,fullReaction: FullReaction<ResponseReactionOnError<any>>)
     {
         const fErrors: BackError[] = ErrorFilterEngine.filterErrors(response.getErrors(false),fullReaction.getFilter() || []);
         if(fErrors.length > 0) {
@@ -22,7 +22,7 @@ export class TriggerResponseHelper
         }
     }
 
-    static async catchError(response: Response,fullReaction: FullReaction<ResponseReactionCatchError>)
+    static async catchError(response: Response,fullReaction: FullReaction<ResponseReactionCatchError<any>>)
     {
         const fErrors: BackError[] = ErrorFilterEngine.filterErrors(response.getErrors(true),fullReaction.getFilter() || []);
         if(fErrors.length > 0) {

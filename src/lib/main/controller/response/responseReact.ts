@@ -25,13 +25,13 @@ import {FullReaction}           from "../../react/fullReaction";
 import {ResponseReactionBox}    from "./responseReactionBox";
 
 
-export class ResponseReact implements ResponseReactAble<ResponseReact,ResponseReact>
+export class ResponseReact<T = any> implements ResponseReactAble<ResponseReact<T>,ResponseReact<T>>
 {
-    private readonly response: Response;
+    private readonly response: Response<T>;
     private readonly client: ZationClient;
     private preAction: Promise<void>;
 
-    constructor(response: Response,client: ZationClient) {
+    constructor(response: Response<T>,client: ZationClient) {
         this.preAction = Promise.resolve();
         this.response = response;
         this.client = client;
@@ -42,7 +42,7 @@ export class ResponseReact implements ResponseReactAble<ResponseReact,ResponseRe
      * @description
      * Returns the response.
      */
-    getResponse(): Response {
+    getResponse(): Response<T> {
         return this.response;
     }
 
@@ -65,7 +65,7 @@ export class ResponseReact implements ResponseReactAble<ResponseReact,ResponseRe
      *     .valueNotMatchesWithMinLength('name')
      *     .react((errors, response) => {})
      */
-    onError(): OnBackErrorBuilder<ResponseReact,ResponseReact>;
+    onError(): OnBackErrorBuilder<ResponseReact<T>,ResponseReact<T>,T>;
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
@@ -85,16 +85,16 @@ export class ResponseReact implements ResponseReactAble<ResponseReact,ResponseRe
      *     .valueNotMatchesWithMinLength('name')
      *     .react((errors, response) => {})
      */
-    onError(reaction: ResponseReactionOnError,...filter: BackErrorFilter[]): ResponseReact;
-    onError(reaction?: ResponseReactionOnError,...filter: BackErrorFilter[]): ResponseReact | OnBackErrorBuilder<ResponseReact,ResponseReact>
+    onError(reaction: ResponseReactionOnError<T>,...filter: BackErrorFilter[]): ResponseReact<T>;
+    onError(reaction?: ResponseReactionOnError<T>,...filter: BackErrorFilter[]): ResponseReact<T> | OnBackErrorBuilder<ResponseReact<T>,ResponseReact<T>,T>
     {
         if(reaction) {
             this.preAction = this.preAction.then(() =>
-                TriggerResponseHelper.onError(this.response,new FullReaction<ResponseReactionOnError>(reaction,filter)));
+                TriggerResponseHelper.onError(this.response,new FullReaction<ResponseReactionOnError<T>>(reaction,filter)));
             return this;
         }
         else {
-            return new OnBackErrorBuilder<ResponseReact,ResponseReact>(this);
+            return new OnBackErrorBuilder<ResponseReact<T>,ResponseReact<T>,T>(this);
         }
     }
 
@@ -115,7 +115,7 @@ export class ResponseReact implements ResponseReactAble<ResponseReact,ResponseRe
      *     .valueNotMatchesWithMinLength('name')
      *     .react((caughtErrors, response) => {})
      */
-    catchError(): CatchBackErrorBuilder<ResponseReact,ResponseReact>;
+    catchError(): CatchBackErrorBuilder<ResponseReact<T>,ResponseReact<T>,T>;
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
@@ -133,16 +133,16 @@ export class ResponseReact implements ResponseReactAble<ResponseReact,ResponseRe
      *     .valueNotMatchesWithMinLength('name')
      *     .react((caughtErrors, response) => {})
      */
-    catchError(reaction: ResponseReactionCatchError,...filter: BackErrorFilter[]): ResponseReact;
-    catchError(reaction?: ResponseReactionOnError,...filter: BackErrorFilter[]): ResponseReact | CatchBackErrorBuilder<ResponseReact,ResponseReact>
+    catchError(reaction: ResponseReactionCatchError<T>,...filter: BackErrorFilter[]): ResponseReact<T>;
+    catchError(reaction?: ResponseReactionOnError<T>,...filter: BackErrorFilter[]): ResponseReact<T> | CatchBackErrorBuilder<ResponseReact<T>,ResponseReact<T>,T>
     {
         if(reaction) {
             this.preAction = this.preAction.then(() =>
-                TriggerResponseHelper.catchError(this.response,new FullReaction<ResponseReactionCatchError>(reaction,filter)));
+                TriggerResponseHelper.catchError(this.response,new FullReaction<ResponseReactionCatchError<T>>(reaction,filter)));
             return this;
         }
         else {
-            return new CatchBackErrorBuilder<ResponseReact,ResponseReact>(this);
+            return new CatchBackErrorBuilder<ResponseReact<T>,ResponseReact<T>,T>(this);
         }
     }
 
@@ -154,11 +154,11 @@ export class ResponseReact implements ResponseReactAble<ResponseReact,ResponseRe
      * onSuccessful((result,response) => {});
      * @param reaction
      */
-    onSuccessful(reaction: ResponseReactionOnSuccessful): ResponseReact
+    onSuccessful(reaction: ResponseReactionOnSuccessful<T>): ResponseReact<T>
     {
         this.preAction = this.preAction.then(async () => {
             if(this.response.isSuccessful()) {
-                await reaction(this.response.getResult(),this.response);
+                await reaction(this.response.getResult()!,this.response);
             }
         });
         return this;
@@ -173,7 +173,7 @@ export class ResponseReact implements ResponseReactAble<ResponseReact,ResponseRe
      * onResponse((response) => {});
      * @param reaction
      */
-    onResponse(reaction:  ResponseReactionOnResponse): ResponseReact {
+    onResponse(reaction:  ResponseReactionOnResponse<T>): ResponseReact<T> {
         this.preAction = this.preAction.then(() =>
             reaction(this.response));
         return this;
@@ -185,7 +185,7 @@ export class ResponseReact implements ResponseReactAble<ResponseReact,ResponseRe
      * React with ResponseReactionBox/es.
      * @param respReactionBoxes
      */
-    reactWith(...respReactionBoxes: ResponseReactionBox[]): ResponseReact {
+    reactWith(...respReactionBoxes: ResponseReactionBox[]): ResponseReact<T> {
         this.preAction = this.preAction.then(() =>
             respReactionBoxes.forEach((box: ResponseReactionBox) =>
                 box._trigger(this.response)));
@@ -199,7 +199,7 @@ export class ResponseReact implements ResponseReactAble<ResponseReact,ResponseRe
      * Only makes sense if the request was sent without its own reaction boxes.
      * Because then the boxes from the zation client were not triggered.
      */
-    triggerClientBoxes(): ResponseReact {
+    triggerClientBoxes(): ResponseReact<T> {
         this.preAction = this.preAction.then(() =>
             this.client._triggerResponseReactions(this.response));
         return this;
@@ -210,7 +210,7 @@ export class ResponseReact implements ResponseReactAble<ResponseReact,ResponseRe
      * @description
      * Async wait for all reactions are finished and returns the ResponseReact.
      */
-    async wait(): Promise<ResponseReact> {
+    async wait(): Promise<ResponseReact<T>> {
         await this.preAction;
         return this;
     }

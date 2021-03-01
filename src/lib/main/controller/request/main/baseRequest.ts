@@ -7,14 +7,14 @@ Copyright(c) Luca Scaringella
 // noinspection TypeScriptPreferShortImport
 import {ConnectTimeoutOption} from "../../../utils/connectionUtils";
 
-export abstract class BaseRequest
+export abstract class BaseRequest<D = any>
 {
-    protected data: any;
+    protected data: D;
     protected apiLevel: number | undefined;
     private responseTimeout: null | number | undefined = undefined;
     private connectTimeout: ConnectTimeoutOption = undefined;
 
-    protected constructor(data: any) {
+    protected constructor(data: D) {
         this.data = data;
     }
 
@@ -73,7 +73,7 @@ export abstract class BaseRequest
      * @description
      * Sets the data of the request.
      */
-    setData(data: any): void {
+    setData(data: D): void {
         this.data = data;
     }
 
@@ -82,7 +82,7 @@ export abstract class BaseRequest
      * @description
      * Returns the data of the request.
      */
-    getData(): any {
+    getData(): D {
         return this.data;
     }
 

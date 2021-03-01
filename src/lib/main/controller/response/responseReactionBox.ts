@@ -87,11 +87,11 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      *     .valueNotMatchesWithMinLength('name')
      *     .react((errors, response) => {})
      */
-    onError(reaction: ResponseReactionOnError,...filter: BackErrorFilter[]): ResponseReactionBox;
-    onError(reaction?: ResponseReactionOnError,...filter: BackErrorFilter[]): ResponseReactionBox | OnBackErrorBuilder<ResponseReactionBox,ResponseReactionBox>
+    onError(reaction: ResponseReactionOnError<any>,...filter: BackErrorFilter[]): ResponseReactionBox;
+    onError(reaction?: ResponseReactionOnError<any>,...filter: BackErrorFilter[]): ResponseReactionBox | OnBackErrorBuilder<ResponseReactionBox,ResponseReactionBox>
     {
         if(reaction) {
-            const fullReaction = new FullReaction<ResponseReactionOnError>(reaction,filter);
+            const fullReaction = new FullReaction<ResponseReactionOnError<any>>(reaction,filter);
             this.map.add(MapKey.Error,fullReaction);
             this.lastReactionTmp = fullReaction;
             return this;
@@ -150,11 +150,11 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      *     .valueNotMatchesWithMinLength('name')
      *     .react((caughtErrors, response) => {})
      */
-    catchError(reaction: ResponseReactionCatchError,...filter: BackErrorFilter[]): ResponseReactionBox;
-    catchError(reaction?: ResponseReactionOnError,...filter: BackErrorFilter[]): ResponseReactionBox | CatchBackErrorBuilder<ResponseReactionBox,ResponseReactionBox>
+    catchError(reaction: ResponseReactionCatchError<any>,...filter: BackErrorFilter[]): ResponseReactionBox;
+    catchError(reaction?: ResponseReactionOnError<any>,...filter: BackErrorFilter[]): ResponseReactionBox | CatchBackErrorBuilder<ResponseReactionBox,ResponseReactionBox>
     {
         if(reaction){
-            const fullReaction = new FullReaction<ResponseReactionCatchError>(reaction,filter);
+            const fullReaction = new FullReaction<ResponseReactionCatchError<any>>(reaction,filter);
             this.map.add(MapKey.CatchError,fullReaction);
             this.lastReactionTmp = fullReaction;
             return this;
@@ -186,9 +186,9 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      * onSuccessful((result,response) => {});
      * @param reaction
      */
-    onSuccessful(reaction: ResponseReactionOnSuccessful): ResponseReactionBox
+    onSuccessful(reaction: ResponseReactionOnSuccessful<any>): ResponseReactionBox
     {
-        const fullReaction = new FullReaction<ResponseReactionOnSuccessful>(reaction,{});
+        const fullReaction = new FullReaction<ResponseReactionOnSuccessful<any>>(reaction,{});
         this.map.add(MapKey.Successful,fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
@@ -217,9 +217,9 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      * onResponse((response) => {});
      * @param reaction
      */
-    onResponse(reaction: ResponseReactionOnResponse): ResponseReactionBox
+    onResponse(reaction: ResponseReactionOnResponse<any>): ResponseReactionBox
     {
-        const fullReaction = new FullReaction<ResponseReactionOnResponse>(reaction,{});
+        const fullReaction = new FullReaction<ResponseReactionOnResponse<any>>(reaction,{});
         this.map.add(MapKey.Response,fullReaction);
         this.lastReactionTmp = fullReaction;
         return this;
@@ -261,7 +261,7 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
             if(response.isSuccessful()) {
                 const sucList = this.map.tryGet(MapKey.Successful);
                 if(sucList) {
-                    await sucList.forEach((fullReaction: FullReaction<ResponseReactionOnSuccessful>) =>
+                    await sucList.forEach((fullReaction: FullReaction<ResponseReactionOnSuccessful<any>>) =>
                         fullReaction.getReactionHandler()(response.getResult(),response));
                 }
             }
@@ -270,18 +270,18 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
                 const errorList = this.map.tryGet(MapKey.Error);
 
                 if(catchList) {
-                    await catchList.forEach((fullReaction: FullReaction<ResponseReactionCatchError>) =>
+                    await catchList.forEach((fullReaction: FullReaction<ResponseReactionCatchError<any>>) =>
                         TriggerResponseHelper.catchError(response,fullReaction));
                 }
 
                 if(errorList) {
-                    await errorList.forEachParallel((fullReaction: FullReaction<ResponseReactionOnError>) =>
+                    await errorList.forEachParallel((fullReaction: FullReaction<ResponseReactionOnError<any>>) =>
                         TriggerResponseHelper.onError(response,fullReaction));
                 }
             }
             const respList = this.map.tryGet(MapKey.Response);
             if(respList) {
-                await respList.forEachParallel(async (fullReaction: FullReaction<ResponseReactionOnResponse>) =>
+                await respList.forEachParallel(async (fullReaction: FullReaction<ResponseReactionOnResponse<any>>) =>
                     fullReaction.getReactionHandler()(response));
             }
         }

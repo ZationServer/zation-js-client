@@ -32,7 +32,7 @@ import {createDeleteModifyToken,
     getModifyTokenReaons}                               from "./modifyToken";
 import {deepCloneInstance}                              from "../../utils/cloneUtils";
 import LocalCudOperationsMemory                         from "../localCudOperationsMemory";
-import {ImmutableJson}                                  from "../../utils/typeUtils";
+import {DeepReadonly, Json}                             from '../../utils/typeUtils';
 
 type ClearOnCloseMiddleware = (code: number | string | undefined,data: any) => boolean;
 type ClearOnKickOutMiddleware = (code: number | string | undefined,data: any) => boolean;
@@ -113,13 +113,13 @@ export const enum DataEventReason {
     Copied
 }
 
-export type OnDataChange = (data: ImmutableJson,reasons: DataEventReason[],storage: DbStorage) => void | Promise<void>;
-export type OnDataTouch = (data: ImmutableJson,reasons: DataEventReason[],storage: DbStorage) => void | Promise<void>;
+export type OnDataChange<D = Json> = (data: DeepReadonly<D> | undefined,reasons: DataEventReason[],storage: DbStorage) => void | Promise<void>;
+export type OnDataTouch<D = Json> = (data: DeepReadonly<D> | undefined,reasons: DataEventReason[],storage: DbStorage) => void | Promise<void>;
 export type OnInsert = (selector: DbProcessedSelector, value: any, options: IfOption & InfoOption & TimestampOption) => void | Promise<void>;
 export type OnUpdate = (selector: DbProcessedSelector, value: any, options: InfoOption & TimestampOption) => void | Promise<void>;
 export type OnDelete = (selector: DbProcessedSelector, options: InfoOption & TimestampOption) => void | Promise<void>;
 
-export default class DbStorage {
+export default class DbStorage<D extends Json = any> {
 
     private dbStorageOptions: Required<DbStorageOptions> = {
         clearOnClose: true,
@@ -154,9 +154,9 @@ export default class DbStorage {
 
     private readonly localCudOperationsMemory = new LocalCudOperationsMemory();
 
-    private readonly dataChangeEvent: EventManager<OnDataChange> = new EventManager<OnDataChange>();
-    private readonly dataChangeCombineSeqEvent: EventManager<OnDataChange> = new EventManager<OnDataChange>();
-    private readonly dataTouchEvent: EventManager<OnDataTouch> = new EventManager<OnDataTouch>();
+    private readonly dataChangeEvent: EventManager<OnDataChange<D>> = new EventManager<OnDataChange<D>>();
+    private readonly dataChangeCombineSeqEvent: EventManager<OnDataChange<D>> = new EventManager<OnDataChange<D>>();
+    private readonly dataTouchEvent: EventManager<OnDataTouch<D>> = new EventManager<OnDataTouch<D>>();
 
     private readonly insertEvent: EventManager<OnInsert> = new EventManager<OnInsert>();
     private readonly updateEvent: EventManager<OnUpdate> = new EventManager<OnUpdate>();
@@ -478,15 +478,15 @@ export default class DbStorage {
      * it can break the whole storage.
      * If you need to modify the data you can use the getDataClone method.
      */
-    get data(): ImmutableJson {
-        return this.dbsHead.data;
+    get data(): DeepReadonly<D | undefined> {
+        return this.dbsHead.data as DeepReadonly<D>;
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * Returns a clone of the current data of this storage.
      */
-    getDataClone<T = any>(): T {
+    getDataClone(): D | undefined {
         return this.dbsHead.getDataClone();
     }
 
@@ -917,7 +917,7 @@ export default class DbStorage {
      * For example, you do four updates then this event triggers after all four updates.
      * If you have deactivated, then it will trigger for each updater separately.
      */
-    onDataChange(listener: OnDataChange,combineCudSeqOperations: boolean = true): DbStorage {
+    onDataChange(listener: OnDataChange<D>,combineCudSeqOperations: boolean = true): DbStorage {
         if(combineCudSeqOperations){
             this.dataChangeCombineSeqEvent.on(listener);
         }
@@ -949,7 +949,7 @@ export default class DbStorage {
      * For example, you do four updates then this event triggers after all four updates.
      * If you have deactivated, then it will trigger for each updater separately.
      */
-    onceDataChange(listener: OnDataChange,combineCudSeqOperations: boolean = true): DbStorage {
+    onceDataChange(listener: OnDataChange<D>,combineCudSeqOperations: boolean = true): DbStorage {
         if(combineCudSeqOperations){
             this.dataChangeCombineSeqEvent.once(listener);
         }
@@ -966,7 +966,7 @@ export default class DbStorage {
      * Can be a once or normal listener.
      * @param listener
      */
-    offDataChange(listener: OnDataChange): DbStorage {
+    offDataChange(listener: OnDataChange<any>): DbStorage {
         this.dataChangeCombineSeqEvent.off(listener);
         this.dataChangeEvent.off(listener);
         this.updateHasDataChangeListener();
@@ -984,7 +984,7 @@ export default class DbStorage {
      * then the data touch event will be triggered but not the data change event.
      * @param listener
      */
-    onDataTouch(listener: OnDataTouch): DbStorage {
+    onDataTouch(listener: OnDataTouch<D>): DbStorage {
         this.dataTouchEvent.on(listener);
         return this;
     }
@@ -1000,7 +1000,7 @@ export default class DbStorage {
      * then the data touch event will be triggered but not the data change event.
      * @param listener
      */
-    onceDataTouch(listener: OnDataTouch): DbStorage {
+    onceDataTouch(listener: OnDataTouch<D>): DbStorage {
         this.dataTouchEvent.once(listener);
         return this;
     }
@@ -1011,7 +1011,7 @@ export default class DbStorage {
      * Can be a once or normal listener.
      * @param listener
      */
-    offDataTouch(listener: OnDataTouch): DbStorage {
+    offDataTouch(listener: OnDataTouch<any>): DbStorage {
         this.dataTouchEvent.off(listener);
         return this;
     }

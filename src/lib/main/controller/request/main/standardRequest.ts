@@ -10,7 +10,7 @@ import {buildNormalControllerReq} from "./rawReqBuilderUtils";
 import {SpecialController}        from "../../controllerDefinitions";
 // noinspection ES6PreferShortImport
 
-export class StandardRequest extends BaseRequest
+export class StandardRequest<D = any> extends BaseRequest<D>
 {
     private controller: string | SpecialController;
 

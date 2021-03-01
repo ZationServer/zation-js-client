@@ -62,9 +62,11 @@ import {deepClone}                              from "../main/utils/cloneUtils";
 import ScAuthEngine                             from "../main/sc/scAuthEngine";
 import {setMainClient}                          from "./zationMainClientManager";
 import {DeepReadonly}                           from "ts-essentials";
+import {APIDefinition, ResolveAuthData}         from '../main/definitions/apiDefinition';
+import {Default}                                from '../main/utils/typeUtils';
 const stringify                               = require("fast-stringify");
 
-export class ZationClient<TP extends object = any>
+export class ZationClient<API extends APIDefinition = any,TP extends object = any>
 {
     private readonly channelEngine: ChannelEngine;
     private readonly databoxManager: DataboxManager;
@@ -306,7 +308,7 @@ export class ZationClient<TP extends object = any>
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
-    async authenticate(authData: any = undefined,connectTimeout: ConnectTimeoutOption = undefined): Promise<Response>
+    async authenticate(authData?: ResolveAuthData<API>,connectTimeout: ConnectTimeoutOption = undefined): Promise<Response>
     {
         const req = new AuthRequest(authData);
         req.setConnectTimeout(connectTimeout);
@@ -390,7 +392,7 @@ export class ZationClient<TP extends object = any>
      * @param authData The authentication credentials for the client.
      * @throws connectionAbortError
      */
-    async conAuth(authData: object): Promise<Response>
+    async conAuth(authData?: ResolveAuthData<API>): Promise<Response>
     {
         await this.connect();
         return await this.authenticate(authData);
@@ -412,6 +414,7 @@ export class ZationClient<TP extends object = any>
     }
 
     // noinspection JSUnusedGlobalSymbols
+    // @ts-ignore
     /**
      * @description
      * Returns an StandardRequestBuilder.
@@ -432,8 +435,8 @@ export class ZationClient<TP extends object = any>
      * @param controller
      * @param data
      */
-    request(controller: string | SpecialController, data: any = undefined): StandardRequestBuilder {
-        return new StandardRequestBuilder(this,controller,data);
+    request<CN extends keyof API['controllers']>(controller: CN | SpecialController, data?: API['controllers'][CN][0]) {
+        return new StandardRequestBuilder<API['controllers'][CN][0],API['controllers'][CN][1]>(this,controller as string,data);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -456,7 +459,7 @@ export class ZationClient<TP extends object = any>
      * .send();
      * @param authData
      */
-    authRequest(authData: any = undefined): AuthRequestBuilder {
+    authRequest(authData?: ResolveAuthData<API>): AuthRequestBuilder {
         const helper = new AuthRequestBuilder(this);
         helper.authData(authData);
         return helper;
@@ -484,8 +487,8 @@ export class ZationClient<TP extends object = any>
      * @param controller
      * @param checks
      */
-    validationRequest(controller: string | SpecialController,...checks: ValidationCheckPair[]): ValidationCheckRequestBuilder {
-        const helper = new ValidationCheckRequestBuilder(this,controller);
+    validationRequest<CN extends keyof API['controllers']>(controller: CN | SpecialController,...checks: ValidationCheckPair[]): ValidationCheckRequestBuilder {
+        const helper = new ValidationCheckRequestBuilder(this,controller as string);
         helper.checks(...checks);
         return helper;
     }
@@ -502,8 +505,8 @@ export class ZationClient<TP extends object = any>
      * @param receiver
      * @param data
      */
-    transmit(receiver: string,data: any = undefined): PackageBuilder {
-       return new PackageBuilder(this,receiver,data);
+    transmit<RN extends keyof API['receivers']>(receiver: RN, data?: API['receivers'][RN]) {
+       return new PackageBuilder<API['receivers'][RN]>(this,receiver as string,data);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -520,8 +523,14 @@ export class ZationClient<TP extends object = any>
      * Databox in the configuration of the server.
      * @param options
      */
-    databox(identifier: string,options: DataboxOptions = {}): Databox {
-        return new Databox(this,identifier,options);
+    databox<DN extends keyof API['databoxes']>(identifier: DN,
+                                               options: DataboxOptions<API['databoxes'][DN]['options'],
+                                                   API['databoxes'][DN]['fetchInput']> = {}) {
+        return new Databox<
+            Default<API['databoxes'][DN]['member'],string>,
+            API['databoxes'][DN]['data'],
+            API['databoxes'][DN]['options'],
+            API['databoxes'][DN]['fetchInput']>(this,identifier as string,options);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -546,8 +555,9 @@ export class ZationClient<TP extends object = any>
      * If you don't provide one, the server will use the connection API
      * level or the default API level.
      */
-    channel(identifier: string,apiLevel?: number): Channel {
-        return new Channel(this,identifier,apiLevel);
+    channel<CN extends keyof API['channels']>(identifier: CN,apiLevel?: number) {
+        return new Channel<Default<API['channels'][CN]['member'],string>,
+            Default<API['channels'][CN]['publishes'], Record<string,any>>>(this,identifier as string,apiLevel);
     }
 
     // noinspection JSUnusedGlobalSymbols

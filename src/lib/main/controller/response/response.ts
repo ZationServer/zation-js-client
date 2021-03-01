@@ -11,12 +11,12 @@ import {ZationClient}    from "../../../core/zationClient";
 import {ResponseReact}   from "./responseReact";
 import {ControllerRes}   from "../controllerDefinitions";
 
-export class Response
+export class Response<T = any>
 {
     private successful = false;
     protected readonly client: ZationClient;
 
-    private result: any = undefined;
+    private result: T | undefined = undefined;
     private readonly errors: BackError[] = [];
     private notCaughtErrors: BackError[] = [];
 
@@ -35,7 +35,7 @@ export class Response
      * Returns the result from the response.
      * Is undefined if it is not set.
      */
-    getResult(): any | undefined {
+    getResult(): T | undefined {
         return this.result;
     }
 
@@ -115,8 +115,8 @@ export class Response
      * @description
      * Returns a ResponseReact to react on the response with a fluent API.
      */
-    react(): ResponseReact {
-        return new ResponseReact(this,this.client);
+    react(): ResponseReact<T> {
+        return new ResponseReact<T>(this,this.client);
     }
 
     //Part Caught errors

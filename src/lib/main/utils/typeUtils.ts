@@ -5,6 +5,10 @@ Copyright(c) Luca Scaringella
  */
 
 export type JsonPrimitive = string | number | boolean | null;
+export type Json = JsonPrimitive | JsonObject | JsonArray | undefined;
+export type JsonObject = { [member: string]: Json };
+export interface JsonArray extends Array<Json> {}
+
 export type ImmutableJson = JsonPrimitive | ImmutableJsonObject | ImmutableJsonArray | undefined;
 export type ImmutableJsonObject = { readonly [member: string]: ImmutableJson };
 export interface ImmutableJsonArray extends ReadonlyArray<ImmutableJson> {}
@@ -22,3 +26,5 @@ interface DeepReadonlyMap<K, V> extends ReadonlyMap<DeepReadonly<K>, DeepReadonl
 type DeepReadonlyObject<T> = {
     readonly [K in keyof T]: DeepReadonly<T[K]>
 }
+
+export type Default<T,D> = T extends undefined ? D : T;

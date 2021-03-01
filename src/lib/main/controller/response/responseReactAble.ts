@@ -57,7 +57,7 @@ export interface ResponseReactAble<T extends ResponseReactAble<T,R>,R>
      *     .valueNotMatchesWithMinLength('name')
      *     .react((errors, response) => {})
      */
-    onError(reaction: ResponseReactionOnError,...filter: BackErrorFilter[]): R;
+    onError(reaction: ResponseReactionOnError<any>,...filter: BackErrorFilter[]): R;
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -94,7 +94,7 @@ export interface ResponseReactAble<T extends ResponseReactAble<T,R>,R>
      *     .valueNotMatchesWithMinLength('name')
      *     .react((caughtErrors, response) => {})
      */
-    catchError(reaction: ResponseReactionCatchError,...filter: BackErrorFilter[]): R;
+    catchError(reaction: ResponseReactionCatchError<any>,...filter: BackErrorFilter[]): R;
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -104,7 +104,7 @@ export interface ResponseReactAble<T extends ResponseReactAble<T,R>,R>
      * onSuccessful((result,response) => {});
      * @param reaction
      */
-    onSuccessful(reaction: ResponseReactionOnSuccessful): R;
+    onSuccessful(reaction: ResponseReactionOnSuccessful<any>): R;
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -115,7 +115,7 @@ export interface ResponseReactAble<T extends ResponseReactAble<T,R>,R>
      * onResponse((response) => {});
      * @param reaction
      */
-    onResponse(reaction: ResponseReactionOnResponse): R;
+    onResponse(reaction: ResponseReactionOnResponse<any>): R;
 }
 
 
