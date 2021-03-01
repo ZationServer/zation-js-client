@@ -15,7 +15,7 @@ import {DbsComparator}                                 from "../dbsComparator";
 import forint                                          from "forint";
 import {ModifyLevel, ModifyToken}                      from "../modifyToken";
 import {deepEqual}                                     from "../../../utils/deepEqual";
-import {ImmutableJson, Writeable}                      from "../../../utils/typeUtils";
+import {ImmutableJson, Writable}                       from "../../../utils/typeUtils";
 import {
     DbProcessedSelector,
     IfOptionProcessArgsValue,
@@ -47,7 +47,7 @@ export default class DbsHead implements DbsComponent {
     initDataTo(rawData: any, timestamp: number) {
         this.timestamp = timestamp;
         this.componentValue = DbDataParser.parse(rawData,timestamp);
-        (this as Writeable<DbsComponent>).data = isDbsComponent(this.componentValue) ?
+        (this as Writable<DbsComponent>).data = isDbsComponent(this.componentValue) ?
             this.componentValue.data : this.componentValue;
     }
 
@@ -119,7 +119,7 @@ export default class DbsHead implements DbsComponent {
             const newComponentValue = newValue.getComponentValue();
             const {mergedValue: mergedValue,dataChanged} = dbsMerger(this.componentValue,newComponentValue,this.valueMerger,newTimestamp);
             this.componentValue = mergedValue;
-            (this as Writeable<DbsComponent>).data = isDbsComponent(mergedValue) ? mergedValue.data : mergedValue;
+            (this as Writable<DbsComponent>).data = isDbsComponent(mergedValue) ? mergedValue.data : mergedValue;
 
             if (DbUtils.isNewerTimestamp(this.timestamp,newTimestamp)) {
                 this.timestamp = newTimestamp;
@@ -213,7 +213,7 @@ export default class DbsHead implements DbsComponent {
         if (DbUtils.checkTimestamp(this.timestamp,timestamp)) {
             const parsed = DbDataParser.parse(value,timestamp);
             this.componentValue = parsed;
-            (this as Writeable<DbsComponent>).data = isDbsComponent(parsed) ? parsed.data : parsed;
+            (this as Writable<DbsComponent>).data = isDbsComponent(parsed) ? parsed.data : parsed;
             this.timestamp = timestamp;
             mt.level = ModifyLevel.DATA_CHANGED;
         }
@@ -260,7 +260,7 @@ export default class DbsHead implements DbsComponent {
             if(mt.checkDataChange && !deepEqual(newData,this.data)){
                 mt.level = ModifyLevel.DATA_CHANGED;
             }
-            (this as Writeable<DbsComponent>).data = newData;
+            (this as Writable<DbsComponent>).data = newData;
             this.timestamp = timestamp;
         }
     }
@@ -292,7 +292,7 @@ export default class DbsHead implements DbsComponent {
 
         if (DbUtils.checkTimestamp(this.timestamp, timestamp)) {
             this.componentValue = undefined;
-            (this as Writeable<DbsComponent>).data = undefined;
+            (this as Writable<DbsComponent>).data = undefined;
             this.timestamp = timestamp;
             mt.level = ModifyLevel.DATA_CHANGED;
         }

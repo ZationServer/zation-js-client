@@ -9,4 +9,4 @@ export type ImmutableJson = JsonPrimitive | ImmutableJsonObject | ImmutableJsonA
 export type ImmutableJsonObject = { readonly [member: string]: ImmutableJson };
 export interface ImmutableJsonArray extends ReadonlyArray<ImmutableJson> {}
 
-export type Writeable<T> = { -readonly [P in keyof T]: T[P] };
+export type Writable<T> = { -readonly [P in keyof T]: T[P] };
