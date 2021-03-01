@@ -158,7 +158,7 @@ type OnCud         = (cudPackage: CudPackage) => void | Promise<void>
 type OnNewData<M>  = (db: Databox<M>) => void | Promise<void>
 type OnSignal      = (data: any) => void | Promise<void>
 
-export default class Databox<M = string> {
+export default class Databox<M = any> {
 
     private readonly identifier: string;
     private member: M | undefined;
