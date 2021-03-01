@@ -15,7 +15,7 @@ export interface ChannelSubscribeRequest {
     /**
      * member
      */
-    m?: string;
+    m?: any;
     /**
      * apiLevel
      */

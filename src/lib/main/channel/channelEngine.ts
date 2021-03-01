@@ -22,7 +22,7 @@ import {ZationClientConfig} from "../config/zationClientConfig";
 
 export class ChannelEngine
 {
-    private readonly _channels: Map<string,Set<Channel>> = new Map();
+    private readonly _channels: Map<string,Set<Channel<any>>> = new Map();
     private readonly _zc: ZationClientConfig;
     private _socket: Socket;
 
@@ -75,10 +75,13 @@ export class ChannelEngine
      * If the subscription is successful it returns the chId and fullChId.
      * @param identifier
      * @param apiLevel
-     * @param member
+     * @param chMember
      * @param notTriggerChannel
      */
-    trySubscribe(identifier: string,apiLevel?: number,member?: string,notTriggerChannel?: Channel): Promise<{chId: string, fullChId: string}> {
+    trySubscribe<M>(identifier: string,apiLevel?: number, chMember?: {member: M, memberStr: string},
+                 notTriggerChannel?: Channel<M>): Promise<{chId: string, fullChId: string}>
+    {
+        const {memberStr, member} = chMember || {};
         return new Promise((resolve, reject) => {
             this._socket.emit(CHANNEL_START_INDICATOR,{
                 c: identifier,
@@ -90,7 +93,7 @@ export class ChannelEngine
                 }
                 else {
                     //tell others.
-                    const fullChId = buildFullChId(chId,member);
+                    const fullChId = buildFullChId(chId,memberStr);
                     const channelSet = this._channels.get(chId);
                     if(channelSet){
                         for(const channel of channelSet){
@@ -100,7 +103,7 @@ export class ChannelEngine
                     }
                     if(this._zc.isDebug()) {
                         Logger.printInfo(`Client subscribed to channel: '${identifier}'${
-                            member !== undefined ? ` with member: '${member}'` : ''}.`);
+                            memberStr !== undefined ? ` with member: '${memberStr}'` : ''}.`);
                     }
                     resolve({chId,fullChId});
                 }
@@ -108,7 +111,7 @@ export class ChannelEngine
         });
     }
 
-    register(chId: string,channel: Channel) {
+    register(chId: string,channel: Channel<any>) {
         let channelSet = this._channels.get(chId);
         if(!channelSet) {
             channelSet = new Set<Channel>();
@@ -117,7 +120,7 @@ export class ChannelEngine
         channelSet.add(channel);
     }
 
-    unregister(chId: string,channel: Channel) {
+    unregister(chId: string,channel: Channel<any>) {
         const channelSet = this._channels.get(chId);
         if(channelSet){
             channelSet.delete(channel);
@@ -127,8 +130,7 @@ export class ChannelEngine
         }
     }
 
-    unsubscribe(fullChId: string, sourceChannel: Channel)
-    {
+    unsubscribe(fullChId: string, sourceChannel: Channel<any>) {
         for(const channelSet of this._channels.values()) {
             for(const channel of channelSet){
                 if(channel !== sourceChannel && channel._hasSub(fullChId)) return;
