@@ -51,14 +51,15 @@ import afterPromise                                             from "../utils/p
 import DbLocalCudOperationSequence                              from "./dbLocalCudOperationSequence";
 import {TinyEmitter}                                            from "tiny-emitter";
 import {createSimpleModifyToken}                                from "./storage/modifyToken";
-import {deepCloneInstance}                                      from "../utils/cloneUtils";
+import {deepClone, deepCloneInstance}                           from '../utils/cloneUtils';
 import LocalCudOperationsMemory                                 from "./localCudOperationsMemory";
 import {Logger}                                                 from "../logger/logger";
-import {ImmutableJson}                                          from "../utils/typeUtils";
+import {DeepReadonly, ImmutableJson}                            from '../utils/typeUtils';
 import SyncLock                                                 from '../utils/syncLock';
 import {getReloadStrategyBuilder, ReloadStrategy}               from './reloadStrategy/reloadStrategy';
 import {buildHistoryBasedStrategy}                              from './reloadStrategy/historyBasedStrategy';
 import {stringifyMember}                                        from '../utils/memberParser';
+import {deepFreeze}                                             from '../utils/deepFreeze';
 
 export interface DataboxOptions {
     /**
@@ -161,7 +162,7 @@ type OnSignal      = (data: any) => void | Promise<void>
 export default class Databox<M = any> {
 
     private readonly identifier: string;
-    private member: M | undefined;
+    private member: DeepReadonly<M> | undefined;
     private memberStr: string | undefined;
     private readonly apiLevel: number | undefined;
     private readonly socket: Socket;
@@ -347,14 +348,19 @@ export default class Databox<M = any> {
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
     async connect(member?: M,connectTimeout: ConnectTimeoutOption = undefined): Promise<void> {
+        let memberStr: string | undefined = undefined;
+        if(member !== undefined) {
+            member = deepFreeze(deepClone(member));
+            memberStr = stringifyMember(member);
+        }
+
         await ConnectionUtils.checkConnection(this.client,
             (connectTimeout === undefined ? this.dbOptions.connectTimeout: connectTimeout));
 
-        const memberStr = member != null ? stringifyMember(member) : undefined;
         if(this.initialized && memberStr !== this.memberStr) {
             await this.disconnect(true,true);
         }
-        this.member = member;
+        this.member = member as DeepReadonly<M>;
         this.memberStr = memberStr;
 
         await this._connect();
@@ -685,7 +691,7 @@ export default class Databox<M = any> {
      */
     async reset(clearLocalCudOperations: boolean = true) {
         await this.disconnect(true,clearLocalCudOperations);
-        await this.connect(this.member);
+        await this.connect(this.member as M);
     }
 
     /**
@@ -1339,7 +1345,7 @@ export default class Databox<M = any> {
     /**
      * Returns the current member.
      */
-    getCurrentMember(): M | undefined {
+    getCurrentMember(): DeepReadonly<M> | undefined {
         return this.member;
     }
 
