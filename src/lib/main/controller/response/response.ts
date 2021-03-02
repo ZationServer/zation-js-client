@@ -9,7 +9,6 @@ import {BackError}       from "../../backError/backError";
 // noinspection ES6PreferShortImport
 import {ZationClient}    from "../../../core/zationClient";
 import {ResponseReact}   from "./responseReact";
-import {ControllerRes}   from "../controllerDefinitions";
 
 export class Response<T = any>
 {
@@ -20,7 +19,7 @@ export class Response<T = any>
     private readonly errors: BackError[] = [];
     private notCaughtErrors: BackError[] = [];
 
-    constructor(rawResponse: ControllerRes,client: ZationClient) {
+    constructor(rawResponse: {backErrors?: any,result?: any},client: ZationClient) {
         this.successful = false;
         this.errors = [];
         this.client = client;
@@ -145,22 +144,18 @@ export class Response<T = any>
         }
     }
 
-    private _readRawResponse(rawRes: ControllerRes) {
-        if(typeof rawRes === 'object'){
-            const rawErrors = rawRes[0];
-            if (Array.isArray(rawErrors)) {
-                this.successful = rawErrors.length === 0;
-                let tmpRawError;
-                for(let i = 0; i < rawErrors.length; i++) {
-                    tmpRawError = rawErrors[i];
-                    if(typeof tmpRawError === 'object') {
-                        this.errors.push(new BackError(tmpRawError));
-                    }
-                }
+    private _readRawResponse({backErrors,result}: {backErrors?: any,result?: any}) {
+        if(Array.isArray(backErrors)) {
+            let tmpRawBackError;
+            for(let i = 0; i < backErrors.length; i++) {
+                tmpRawBackError = backErrors[i];
+                if (typeof tmpRawBackError === 'object')
+                    this.errors.push(new BackError(tmpRawBackError));
             }
-            this.result = rawRes[1];
+            this.successful = backErrors.length === 0;
         }
         else {
+            this.result = result;
             this.successful = true;
         }
     }

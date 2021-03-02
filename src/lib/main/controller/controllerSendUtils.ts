@@ -17,6 +17,7 @@ import {
     ControllerStandardReq,
     ControllerValidationCheckReq
 } from "./controllerDefinitions";
+import {ErrorName} from '../definitions/errorName';
 
 export function controllerRequestSend(
     client: ZationClient,
@@ -37,16 +38,11 @@ export function controllerRequestSend(
 
         client.socket.emit(CONTROLLER_EVENT,cRequest,(err,res) => {
             if(err) {
-                if(err.name === 'TimeoutError'){
-                    reject(new TimeoutError(TimeoutType.responseTimeout,err.message));
-                }
-                else {
-                    reject(err);
-                }
+                if(err.name === ErrorName.RequestProcessError) resolve(new Response({backErrors: err.backErrors},client));
+                else if(err.name === 'TimeoutError') reject(new TimeoutError(TimeoutType.responseTimeout,err.message));
+                else reject(err);
             }
-            else {
-                resolve((new Response(res,client)));
-            }
+            else resolve(new Response({result: res},client));
         },responseTimeout);
     });
 }
