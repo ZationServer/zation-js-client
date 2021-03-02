@@ -4,8 +4,8 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {ErrorName}         from "../definitions/errorName";
-import {InvalidInputError} from "../error/invalidInputError";
+import {ErrorName}             from "../definitions/errorName";
+import {BackErrorWrapperError} from "../backError/backErrorWrapperError";
 
 export default class DbError {
 
@@ -69,7 +69,15 @@ export default class DbError {
      * Returns if the input is invalid.
      * @param err
      */
-    static isInputInvalid(err: any): err is InvalidInputError {
+    static isInputInvalid(err: any): err is BackErrorWrapperError {
         return err.name === ErrorName.InvalidInput;
+    }
+
+    /**
+     * Returns if this is a fetch process error.
+     * @param err
+     */
+    static isFetchProcessError(err: any): err is BackErrorWrapperError {
+        return err.name === ErrorName.FetchProcessError;
     }
 }

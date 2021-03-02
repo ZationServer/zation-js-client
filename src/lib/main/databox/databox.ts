@@ -46,7 +46,7 @@ import {RawError}                                               from "../error/r
 import {ErrorName}                                              from "../definitions/errorName";
 import DbsHead                                                  from "./storage/components/dbsHead";
 import DbUtils                                                  from "./dbUtils";
-import {InvalidInputError}                                      from "../../main/error/invalidInputError";
+import {BackErrorWrapperError}                                  from "../backError/backErrorWrapperError";
 import afterPromise                                             from "../utils/promiseUtils";
 import DbLocalCudOperationSequence                              from "./dbLocalCudOperationSequence";
 import {TinyEmitter}                                            from "tiny-emitter";
@@ -330,7 +330,7 @@ export default class Databox<M = any,D extends Json = any,O = any,F = any> {
      * be disconnect firstly and will then connect to the new member.
      * Whenever the connection is lost, you don't need to call that method.
      * The Databox will reconnect automatically as fast as possible.
-     * @throws RawError,TimeoutError,ConnectionRequiredError,InvalidInputError,AbortSignal
+     * @throws RawError,TimeoutError,ConnectionRequiredError,BackErrorWrapperError,AbortSignal
      * @param member
      * The member can only be provided if you want to connect to a Databox Family.
      * @param connectTimeout
@@ -426,7 +426,7 @@ export default class Databox<M = any,D extends Json = any,O = any,F = any> {
             } catch (e) {
                 this._clearListenersAndReset();
                 if(e.name === ErrorName.InvalidInput){
-                    throw new InvalidInputError('Invalid init input. Failed to connect to the Databox.',e);
+                    throw new BackErrorWrapperError('Invalid options input. Failed to connect to the Databox.',e);
                 }
                 else {
                     throw new RawError('Failed to connect to the Databox.', e);
@@ -601,7 +601,7 @@ export default class Databox<M = any,D extends Json = any,O = any,F = any> {
      * if you don't want to reload this fetch later (In case of cud missed).
      * But this only will work fine if your fetches
      * do not depend on each other.
-     * @throws ConnectionRequiredError,TimeoutError,RawError,InvalidInputError,AbortSignal
+     * @throws ConnectionRequiredError,TimeoutError,RawError,BackErrorWrapperError,AbortSignal
      * To react to the error, you can use the DbError class.
      */
     async fetch(data?: F, databoxConnectTimeout: ConnectTimeoutOption = undefined, addToHistory: boolean = true): Promise<void> {
@@ -628,7 +628,7 @@ export default class Databox<M = any,D extends Json = any,O = any,F = any> {
                 this.newDataEvent.emit(this);
             } catch (e) {
                 if(e.name === ErrorName.InvalidInput) {
-                    throw new InvalidInputError('Invalid fetch input.',e);
+                    throw new BackErrorWrapperError('Invalid fetch input.',e);
                 }
                 else {
                     throw new RawError('Fetch new data failed.', e);
@@ -710,7 +710,7 @@ export default class Databox<M = any,D extends Json = any,O = any,F = any> {
      * maximum waiting time for the connection. If the timeout is reached,
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
-     * @throws ConnectionRequiredError,TimeoutError,RawError,InvalidInputError,AbortSignal
+     * @throws ConnectionRequiredError,TimeoutError,RawError,BackErrorWrapperError,AbortSignal
      */
     async reload(databoxConnectTimeout: ConnectTimeoutOption = false) {
         return this._reload(false,databoxConnectTimeout);
@@ -772,7 +772,7 @@ export default class Databox<M = any,D extends Json = any,O = any,F = any> {
                 this.fetchHistoryManager.done();
                 this.tmpReloadDataSets.clear();
                 if(e.name === ErrorName.InvalidInput){
-                    throw new InvalidInputError('Invalid fetch input in the reload process.',e);
+                    throw new BackErrorWrapperError('Invalid fetch input in the reload process.',e);
                 }
                 else {
                     throw new RawError('Fetch data to reload failed.', e);

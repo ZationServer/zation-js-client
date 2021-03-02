@@ -54,7 +54,7 @@ import DbStorage, {DataEventReason}     from "./lib/main/databox/storage/dbStora
 import Databox                          from "./lib/main/databox/databox";
 import {DbsComparator}                  from "./lib/main/databox/storage/dbsComparator";
 import {DbsValueMerger}                 from "./lib/main/databox/storage/dbsMerge";
-import {InvalidInputError}              from "./lib/main/error/invalidInputError";
+import {BackErrorWrapperError}          from "./lib/main/backError/backErrorWrapperError";
 import DbError                          from "./lib/main/databox/dbError";
 import {AbortSignal, AbortTrigger}      from "./lib/main/utils/connectionUtils";
 import {AuthRequest}                    from "./lib/main/controller/request/main/authRequest";
@@ -133,7 +133,7 @@ export {
     AbstractBackErrorFilterBuilder,
     ErrorName,
     RawError,
-    InvalidInputError,
+    BackErrorWrapperError,
     buildKeyArray,
     DbsHead,
     DbStorage,

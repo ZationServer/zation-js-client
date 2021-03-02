@@ -4,18 +4,27 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {BackError}         from "../backError/backError";
-import {ErrorFilterEngine} from "../backError/errorFilterEngine";
-import {BackErrorFilter}       from "../backError/backErrorFilter";
+import {BackError}             from "./backError";
+import {ErrorFilterEngine}     from "./errorFilterEngine";
+import {BackErrorFilter}       from "./backErrorFilter";
 
-export class InvalidInputError extends Error
+export class BackErrorWrapperError extends Error
 {
     private readonly rawError: Error;
+    private readonly backErrors: BackError[] = [];
 
     constructor(message: string,rawError: Error)
     {
         super(message);
         this.rawError = rawError;
+        const rawBackErrors = rawError['backErrors'];
+        if (Array.isArray(rawBackErrors)) {
+            let tmpRawBackError;
+            for(let i = 0; i < rawBackErrors.length; i++) {
+                tmpRawBackError = rawBackErrors[i];
+                if(typeof tmpRawBackError === 'object') this.backErrors.push(new BackError(tmpRawBackError));
+            }
+        }
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -25,11 +34,10 @@ export class InvalidInputError extends Error
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Returns the backErrors of the invalid input error.
+     * Returns the backErrors of the error.
      */
     getBackErrors(): BackError[] {
-        const errors = (this.rawError as any).backErrors;
-        return Array.isArray(errors) ? errors: [];
+        return this.backErrors;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -95,7 +103,7 @@ export class InvalidInputError extends Error
      * of each filter are countend together.
      */
     filterBackErrors(filter: BackErrorFilter[]): BackError[] {
-        return ErrorFilterEngine.filterErrors(this.getBackErrors(),filter);
+        return ErrorFilterEngine.filterErrors(this.backErrors,filter);
     }
 }
 
