@@ -53,7 +53,7 @@ export const buildTimeBasedListStrategy: ReloadStrategyBuilder<{
     disconnectTimeDelta?: number
 }> = (options = {}) => {
 
-    if(typeof options !== 'object') options = {};
+    if(typeof options !== 'object' || !options) options = {};
 
     const timestampKey = options.timestampKey ?? 'created';
     const maxFetchTries = options.maxFetchTries ?? 100;
