@@ -55,7 +55,7 @@ export interface DataboxConnectRes {
     /**
      * Reload strategy
      */
-    rs?: [string,any]
+    rs?: [string,any?]
 }
 
 export const DATABOX_START_INDICATOR = 'D>';
