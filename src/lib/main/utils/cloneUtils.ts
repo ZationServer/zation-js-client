@@ -27,7 +27,7 @@ export function deepCloneInstance(v: any): any {
     }
     newO = {};
     Object.setPrototypeOf(newO,Object.getPrototypeOf(v));
-    for (i in v) if (v.hasOwnProperty(i)){
+    for (i of Reflect.ownKeys(v)) if (v.hasOwnProperty(i)){
         newO[i] = deepCloneInstance(v[i]);
     }
     return newO;
