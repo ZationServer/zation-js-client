@@ -12,7 +12,7 @@ import {buildFullChId}                         from "./channelUtils";
 import {FullReaction}                          from "../react/fullReaction";
 import {ListMap}                               from "../container/listMap";
 import {List}                                  from "../container/list";
-import {stringifyMember}                       from '../utils/memberParser';
+import {stringifyMember}                       from '../utils/memberStringify';
 import {DeepReadonly}                          from '../utils/typeUtils';
 import {deepClone}                             from '../utils/cloneUtils';
 import {deepFreeze}                            from '../utils/deepFreeze';

@@ -58,7 +58,7 @@ import {DeepReadonly, Json}                                     from '../utils/t
 import SyncLock                                                 from '../utils/syncLock';
 import {getReloadStrategyBuilder, ReloadStrategy}               from './reloadStrategy/reloadStrategy';
 import {buildHistoryBasedStrategy}                              from './reloadStrategy/historyBasedStrategy';
-import {stringifyMember}                                        from '../utils/memberParser';
+import {stringifyMember}                                        from '../utils/memberStringify';
 import {deepFreeze}                                             from '../utils/deepFreeze';
 
 export interface DataboxOptions<O = any,F = any> {
