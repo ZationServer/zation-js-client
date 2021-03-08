@@ -51,7 +51,7 @@ import {RawError}                       from "./lib/main/error/rawError";
 import {buildKeyArray}                  from "./lib/main/databox/storage/keyArrayUtils";
 import DbsHead                          from "./lib/main/databox/storage/components/dbsHead";
 import DbStorage, {DataEventReason}     from "./lib/main/databox/storage/dbStorage";
-import Databox                          from "./lib/main/databox/databox";
+import Databox, {DataboxOptions}        from './lib/main/databox/databox';
 import {DbsComparator}                  from "./lib/main/databox/storage/dbsComparator";
 import {DbsValueMerger}                 from "./lib/main/databox/storage/dbsMerge";
 import {BackErrorWrapperError}          from "./lib/main/backError/backErrorWrapperError";
@@ -138,6 +138,7 @@ export {
     DbsHead,
     DbStorage,
     Databox,
+    DataboxOptions,
     DbsComparator,
     DbsValueMerger,
     $not,
