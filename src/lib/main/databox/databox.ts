@@ -347,7 +347,7 @@ export default class Databox<M = any,D extends Json = any,O = any,F = any> {
      * it will throw a timeout error.
      * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
      */
-    async connect(member?: M,connectTimeout: ConnectTimeoutOption = undefined): Promise<void> {
+    async connect(member?: M,connectTimeout: ConnectTimeoutOption = undefined) {
         let memberStr: string | undefined = undefined;
         if(member !== undefined) {
             member = deepFreeze(deepClone(member));
@@ -364,6 +364,7 @@ export default class Databox<M = any,D extends Json = any,O = any,F = any> {
         this.memberStr = memberStr;
 
         await this._connect();
+        return this;
     }
 
     /**
