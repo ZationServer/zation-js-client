@@ -425,12 +425,9 @@ export default class Databox<M = any,D extends Json = any,O = any,F = any> {
                 this.client._getDataboxManager().add(this);
             } catch (e) {
                 this._clearListenersAndReset();
-                if(e.name === ErrorName.InvalidInput){
-                    throw new BackErrorWrapperError('Invalid options input. Failed to connect to the Databox.',e);
-                }
-                else {
-                    throw new RawError('Failed to connect to the Databox.', e);
-                }
+                if(e.backErrors != null) throw new BackErrorWrapperError(
+                    (e.message != null ? `${e.message} ` : '') + 'Failed to connect to the Databox.',e);
+                else throw new RawError('Failed to connect to the Databox.', e);
             }
 
             if (this.dbOptions.autoFetch) {
