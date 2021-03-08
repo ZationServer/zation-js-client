@@ -51,7 +51,7 @@ import afterPromise                                             from "../utils/p
 import DbLocalCudOperationSequence                              from "./dbLocalCudOperationSequence";
 import {TinyEmitter}                                            from "tiny-emitter";
 import {createSimpleModifyToken}                                from "./storage/modifyToken";
-import {deepClone, deepCloneInstance}                           from '../utils/cloneUtils';
+import {deepClone}                                              from '../utils/cloneUtils';
 import LocalCudOperationsMemory                                 from "./localCudOperationsMemory";
 import {Logger}                                                 from "../logger/logger";
 import {DeepReadonly, Json}                                     from '../utils/typeUtils';
@@ -619,7 +619,7 @@ export default class Databox<M = any,D extends Json = any,O = any,F = any> {
                 let needCloneHead = this.dbStorages.size > 1;
                 for (let dbStorage of this.dbStorages) {
                     if (dbStorage.shouldAddFetchData(counter,dbsHead)) {
-                        dbStorage._addDataHead(needCloneHead ? deepCloneInstance(dbsHead): dbsHead);
+                        dbStorage._addDataHead(needCloneHead ? dbsHead.clone() : dbsHead);
                     }
                 }
                 this.newDataEvent.emit(this);
@@ -935,7 +935,7 @@ export default class Databox<M = any,D extends Json = any,O = any,F = any> {
      * @private
      */
     private _reloadStorages(reloadStorage: DbStorage) {
-        for (let dbStorage of this.dbStorages) {
+        for (const dbStorage of this.dbStorages) {
             dbStorage.reload(reloadStorage);
         }
     }

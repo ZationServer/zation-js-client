@@ -8,27 +8,34 @@ Copyright(c) Luca Scaringella
  * Clone a instance deep.
  * Optimize to clone db storage components.
  * @param v
+ * @param tmpCloneMap
  */
-export function deepCloneInstance(v: any): any {
-    // if not array or object or is null return self
-    if (typeof v !== 'object'||v === null) return v;
+export function refSafeDeepCloneInstance(v: any,tmpCloneMap: Map<any,any> = new Map<any, any>()): any {
+    if (typeof v !== 'object' || v === null) return v;
+    if(tmpCloneMap.has(v)) return tmpCloneMap.get(v);
     let newO, i;
     if (Array.isArray(v)) {
         let l;
         newO = [];
-        for (i = 0, l = v.length; i < l; i++) newO[i] = deepCloneInstance(v[i]);
+        tmpCloneMap.set(v,newO);
+        for (i = 0, l = v.length; i < l; i++) newO[i] = refSafeDeepCloneInstance(v[i],tmpCloneMap);
         return newO;
     }
     if (v instanceof Map) {
-        return new Map(deepCloneInstance(Array.from(v)));
+        newO = new Map(refSafeDeepCloneInstance(Array.from(v),tmpCloneMap));
+        tmpCloneMap.set(v,newO);
+        return newO;
     }
     if (v instanceof Set) {
-        return new Set(deepCloneInstance(Array.from(v)));
+        newO = new Set(refSafeDeepCloneInstance(Array.from(v),tmpCloneMap));
+        tmpCloneMap.set(v,newO);
+        return newO;
     }
     newO = {};
+    tmpCloneMap.set(v,newO);
     Object.setPrototypeOf(newO,Object.getPrototypeOf(v));
     for (i of Reflect.ownKeys(v)) if (v.hasOwnProperty(i)){
-        newO[i] = deepCloneInstance(v[i]);
+        newO[i] = refSafeDeepCloneInstance(v[i],tmpCloneMap);
     }
     return newO;
 }

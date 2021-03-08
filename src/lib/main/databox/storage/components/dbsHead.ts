@@ -16,6 +16,7 @@ import forint                                          from "forint";
 import {ModifyLevel, ModifyToken}                      from "../modifyToken";
 import {deepEqual}                                     from "../../../utils/deepEqual";
 import {ImmutableJson, Writable}                       from "../../../utils/typeUtils";
+import {refSafeDeepCloneInstance}                      from '../../../utils/cloneUtils';
 import {
     DbProcessedSelector,
     IfOptionProcessArgsValue,
@@ -35,7 +36,14 @@ export default class DbsHead implements DbsComponent {
     private valueMerger: DbsValueMerger = defaultValueMerger;
 
     constructor(rawData: any = undefined, dataTimestamp: number = 0) {
-        this.initDataTo(rawData,dataTimestamp);
+        this.initData(rawData,dataTimestamp);
+    }
+
+    /**
+     * Clones the DBS head safe.
+     */
+    clone(): DbsHead {
+        return refSafeDeepCloneInstance(this);
     }
 
     /**
@@ -44,7 +52,7 @@ export default class DbsHead implements DbsComponent {
      * @param rawData
      * @param timestamp
      */
-    initDataTo(rawData: any, timestamp: number) {
+    initData(rawData: any, timestamp: number) {
         this.timestamp = timestamp;
         this.componentValue = DbDataParser.parse(rawData,timestamp);
         (this as Writable<DbsComponent>).data = isDbsComponent(this.componentValue) ?

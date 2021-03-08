@@ -30,7 +30,6 @@ import {createDeleteModifyToken,
     createUpdateInsertModifyToken,
     ModifyLevel,
     getModifyTokenReaons}                               from "./modifyToken";
-import {deepCloneInstance}                              from "../../utils/cloneUtils";
 import LocalCudOperationsMemory                         from "../localCudOperationsMemory";
 import {DeepReadonly, Json}                             from '../../utils/typeUtils';
 
@@ -255,7 +254,7 @@ export default class DbStorage<D extends Json = any> {
     setInitialData(initialData: any) {
         this.dbStorageOptions.initialData = initialData;
         if(this.dbsHead.getComponentValue() === undefined)
-            this.dbsHead.initDataTo(initialData,0);
+            this.dbsHead.initData(initialData,0);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -388,7 +387,7 @@ export default class DbStorage<D extends Json = any> {
      * @param data
      */
     addData(data: DbsHead): DbStorage {
-        this._addDataHead(deepCloneInstance(data));
+        this._addDataHead(data.clone());
         return this;
     }
 
@@ -421,7 +420,7 @@ export default class DbStorage<D extends Json = any> {
 
     private _copyFrom(dbStorage: DbStorage,isReload: boolean): void {
         const tmpOldHead = this.dbsHead;
-        this.dbsHead = deepCloneInstance(dbStorage.getDbsHead());
+        this.dbsHead = dbStorage.getDbsHead().clone();
         this.updateCompOptions();
 
         const localCudOperations = this.localCudOperationsMemory.getAll();
