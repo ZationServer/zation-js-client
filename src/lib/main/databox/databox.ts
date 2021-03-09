@@ -54,7 +54,7 @@ import {createSimpleModifyToken}                                from "./storage/
 import {deepClone}                                              from '../utils/cloneUtils';
 import LocalCudOperationsMemory                                 from "./localCudOperationsMemory";
 import {Logger}                                                 from "../logger/logger";
-import {DeepReadonly, Json}                                     from '../utils/typeUtils';
+import {DeepReadonly, Json, Writable}                           from '../utils/typeUtils';
 import SyncLock                                                 from '../utils/syncLock';
 import {getReloadStrategyBuilder, ReloadStrategy}               from './reloadStrategy/reloadStrategy';
 import {buildHistoryBasedStrategy}                              from './reloadStrategy/historyBasedStrategy';
@@ -162,7 +162,7 @@ type OnSignal      = (data: any) => void | Promise<void>
 export default class Databox<M = any,D extends Json = any,O = any,F = any> {
 
     private readonly identifier: string;
-    private member: DeepReadonly<M> | undefined;
+    public readonly member: DeepReadonly<M> | undefined;
     private memberStr: string | undefined;
     private readonly apiLevel: number | undefined;
     private readonly socket: Socket;
@@ -360,7 +360,7 @@ export default class Databox<M = any,D extends Json = any,O = any,F = any> {
         if(this.initialized && memberStr !== this.memberStr) {
             await this.disconnect(true,true);
         }
-        this.member = member as DeepReadonly<M>;
+        (this as Writable<Databox<M,D,O,F>>).member = member as DeepReadonly<M>;
         this.memberStr = memberStr;
 
         await this._connect();
@@ -1337,14 +1337,6 @@ export default class Databox<M = any,D extends Json = any,O = any,F = any> {
      */
     getCurrentCudId(): string | undefined {
         return this.cudId;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * Returns the current member.
-     */
-    getCurrentMember(): DeepReadonly<M> | undefined {
-        return this.member;
     }
 
     // noinspection JSUnusedGlobalSymbols
