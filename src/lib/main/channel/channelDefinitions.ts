@@ -47,10 +47,6 @@ export interface ChClientOutputPublishPackage {
      */
     i: string;
     /**
-     * Member
-     */
-    m?: string;
-    /**
      * Event
      */
     e: string;
@@ -68,10 +64,6 @@ export interface ChClientOutputKickOutPackage {
      */
     i: string;
     /**
-     * Member
-     */
-    m?: string;
-    /**
      * code
      */
     c?: number | string;
@@ -88,10 +80,6 @@ export interface ChClientOutputClosePackage {
      * Channel id
      */
     i: string;
-    /**
-     * Member
-     */
-    m?: string;
     /**
      * code
      */

@@ -8,31 +8,25 @@ import {ChannelEngine}                         from "./channelEngine";
 import ConnectionUtils, {ConnectTimeoutOption} from "../utils/connectionUtils";
 // noinspection ES6PreferShortImport
 import {ZationClient}                          from "../../core/zationClient";
-import {buildFullChId}                         from "./channelUtils";
 import {FullReaction}                          from "../react/fullReaction";
 import {ListMap}                               from "../container/listMap";
 import {List}                                  from "../container/list";
 import {stringifyMember}                       from '../utils/memberStringify';
-import {DeepReadonly}                          from '../utils/typeUtils';
+import {DeepReadonly, Writable}                from '../utils/typeUtils';
 import {deepClone}                             from '../utils/cloneUtils';
 import {deepFreeze}                            from '../utils/deepFreeze';
 
 export const enum ChannelSubscribeState {
+    Unsubscribed,
     Subscribed,
     Pending
 }
 
-export interface ChannelSubscribeInfo<M> {
-    state: ChannelSubscribeState,
-    memberStr?: string,
-    member?: DeepReadonly<M>
-}
-
-export type ChannelReactionOnPublish<M,D>   = (data: D,member?: DeepReadonly<M>) => void | Promise<void>;
-export type ChannelReactionOnSubscribe<M>   = (member?: DeepReadonly<M>) => void | Promise<void>;
-export type ChannelReactionOnUnsubscribe<M> = (reason: UnsubscribeReason,member?: DeepReadonly<M>) => void | Promise<void>;
-export type ChannelReactionOnKickOut<M>     = (member?: DeepReadonly<M>,code?: number | string | undefined,data?: any) => void | Promise<void>;
-export type ChannelReactionOnClose<M>       = (member?: DeepReadonly<M>,code?: number | string | undefined,data?: any) => void | Promise<void>;
+export type ChannelReactionOnPublish<M,D>   = (data: D) => void | Promise<void>;
+export type ChannelReactionOnSubscribe<M>   = () => void | Promise<void>;
+export type ChannelReactionOnUnsubscribe<M> = (reason: UnsubscribeReason) => void | Promise<void>;
+export type ChannelReactionOnKickOut<M>     = (code?: number | string | undefined,data?: any) => void | Promise<void>;
+export type ChannelReactionOnClose<M>       = (code?: number | string | undefined,data?: any) => void | Promise<void>;
 
 const enum ChannelEvent {
     Publish,
@@ -58,8 +52,15 @@ export default class Channel<M = any, PEvents = Record<string,any>> {
     private readonly _client: ZationClient;
     private readonly _channelEngine: ChannelEngine;
 
-    private _chId?: string = undefined;
-    private readonly _states: Map<string,ChannelSubscribeInfo<M>> = new Map();
+    /**
+     * @internal
+     */
+    readonly _chId?: string;
+
+    protected _state: ChannelSubscribeState = ChannelSubscribeState.Unsubscribed;
+    public readonly member: DeepReadonly<M> | undefined;
+    private _memberStr: string | undefined;
+
     protected readonly _reactionMap: ListMap<FullReaction<any>> = new ListMap<FullReaction<any>>();
 
     private readonly _identifier: string;
@@ -73,11 +74,11 @@ export default class Channel<M = any, PEvents = Record<string,any>> {
     }
 
     /**
-     * Subscribe this channel or a specific member of this channel.
+     * Subscribe to this channel.
      * If you access a ChannelFamily you need to provide a member as a first parameter.
      * If the subscription was successful the method will not throw an error.
-     * Notice that your previous subscriptions are not cancelled,
-     * if you want this you can use the subscribeNew method.
+     * Notice that if the channel is already subscribed and you provide a different member,
+     * the previously subscribed member will be unsubscribed first.
      * If the subscription is later on lost by a connection lost or kick out
      * the client will automatically try to resubscribe in case of reconnection
      * or change of the authentication state.
@@ -101,133 +102,46 @@ export default class Channel<M = any, PEvents = Record<string,any>> {
      */
     async subscribe(member?: M,connectTimeout: ConnectTimeoutOption = undefined): Promise<void> {
         let memberStr: string | undefined = undefined;
-        let chMember: {member: M, memberStr: string} | undefined = undefined;
         if(member !== undefined) {
             member = deepFreeze(deepClone(member));
             memberStr = stringifyMember(member);
-            chMember = {member,memberStr};
         }
 
         await ConnectionUtils.checkConnection(this._client,connectTimeout);
 
-        const {chId,fullChId} = await this._channelEngine.trySubscribe
-            (this._identifier,this._apiLevel,chMember,this);
+        if(memberStr !== this._memberStr) await this.unsubscribe();
+        if(this._state === ChannelSubscribeState.Subscribed) return;
 
-        const newSub = !this._hasSubscribed(memberStr,false);
-        this._states.set(fullChId,{member: member as DeepReadonly<M> | undefined,
-            memberStr,state: ChannelSubscribeState.Subscribed});
-        this._setChId(chId);
+        (this as Writable<Channel<M>>).member = member as DeepReadonly<M> | undefined;
+        this._memberStr = memberStr;
 
-        if(newSub) this._triggerEvent<ChannelReactionOnSubscribe<M>>
-            (ChannelEvent.Subscribe,member as DeepReadonly<M> | undefined);
+        await this._channelEngine.trySubscribe(this._identifier,this._apiLevel,member,this);
+        this._state = ChannelSubscribeState.Subscribed;
+        this._triggerEvent<ChannelReactionOnSubscribe<M>>(ChannelEvent.Subscribe);
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Subscribe this channel or a specific member of this channel and
-     * unsubscribe the previous subscriptions.
-     * If you access a ChannelFamily you need to provide a member as a first parameter.
-     * If the subscription was successful the method will not throw an error.
-     * If the subscription is later on lost by a connection lost or kick out
-     * the client will automatically try to resubscribe in case of reconnection
-     * or change of the authentication state.
-     * If you don't need the subscription anymore you need to unsubscribe it to clear resources.
-     * @param member
-     * @param connectTimeout
-     * With the ConnectTimeout option, you can activate that the socket is
-     * trying to connect when it is not connected. You have five possible choices:
-     * Undefined: It will use the value from the default options.
-     * False: The action will fail and throw a ConnectionRequiredError,
-     * when the socket is not connected.
-     * Null: The socket will try to connect (if it is not connected) and
-     * waits until the connection is made, then it continues the action.
-     * Number: Same as null, but now you can specify a timeout (in ms) of
-     * maximum waiting time for the connection. If the timeout is reached,
-     * it will throw a timeout error.
-     * AbortTrigger: Same as null, but now you have the possibility to abort the wait later.
-     * @throws ConnectionRequiredError, TimeoutError, Error,AbortSignal
+     * Returns if the channel is subscribed.
+     * @param includePendingState
      */
-    async subscribeNew(member?: M,connectTimeout: ConnectTimeoutOption = undefined): Promise<void> {
-       this.unsubscribe();
-       return this.subscribe(member,connectTimeout);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * Returns if the channel has at least one subscription.
-     */
-    hasSubscription(includePending: boolean = false): boolean {
-        if(includePending){
-            return this._states.size > 0;
-        }
-        for(const info of this._states.values()){
-            if(info.state === ChannelSubscribeState.Subscribed) return true;
-        }
-        return false;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * Returns if a specific channel is subscribed.
-     * @param member
-     * @param includePending
-     */
-    hasSubscribed(member?: M, includePending: boolean = false): boolean {
-        return this._hasSubscribed(member !== undefined ? stringifyMember(member) : undefined);
-    }
-
-    /**
-     * Returns if a specific channel is subscribed.
-     * @internal
-     * @param memberStr
-     * @param includePending
-     * @private
-     */
-    private _hasSubscribed(memberStr?: string,includePending: boolean = false): boolean {
-        const info = this._states.get(buildFullChId(this._chId,memberStr));
-        return !!info && (info.state === ChannelSubscribeState.Subscribed);
+    isSubscribed(includePendingState: boolean = false): boolean {
+        return this._state === ChannelSubscribeState.Subscribed ||
+            (includePendingState && this._state === ChannelSubscribeState.Pending);
     }
 
     /**
      * Unsubscribe this channel.
-     * In case of a channel family all members or only a specific member.
      * This is important to clear resources and avoid the trying of
      * resubscribing in case of reconnections or kick-outs.
-     * @param member
      */
-    unsubscribe(member?: M) {
-        if(member === undefined) {
-            for(const [fullChId, info] of this._states){
-                this._unsubscribe(fullChId,info.member);
-            }
-        }
-        else {
-            const memberStr = stringifyMember(member);
-            for(const [fullChId, info] of this._states){
-                if(info.memberStr === memberStr) this._unsubscribe(fullChId,info.member);
-            }
-        }
-        if(this._states.size <= 0) this._deleteChId();
-    }
-
-    private _unsubscribe(fullChId: string,member?: DeepReadonly<M>) {
-        this._channelEngine.unsubscribe(fullChId,this);
-        this._states.delete(fullChId);
-        this._triggerEvent<ChannelReactionOnUnsubscribe<M>>(ChannelEvent.Unsubscribe,UnsubscribeReason.Client,member);
-    }
-
-    /**
-     * @internal
-     * @param fullChId
-     * @private
-     */
-    _triggerSubscription(fullChId: string) {
-        const info = this._states.get(fullChId);
-        if(info) {
-            const oldState = info.state;
-            info.state = ChannelSubscribeState.Subscribed;
-            if(oldState === ChannelSubscribeState.Pending)
-                this._triggerEvent<ChannelReactionOnSubscribe<M>>(ChannelEvent.Subscribe,info.member);
+    unsubscribe() {
+        if(this._state !== ChannelSubscribeState.Unsubscribed && this._chId != null) {
+            this._channelEngine.unsubscribe(this._chId,this);
+            (this as Writable<Channel<M>>).member = undefined;
+            this._memberStr = undefined;
+            this._state = ChannelSubscribeState.Unsubscribed;
+            this._triggerEvent<ChannelReactionOnUnsubscribe<M>>(ChannelEvent.Unsubscribe,UnsubscribeReason.Client);
         }
     }
 
@@ -235,17 +149,27 @@ export default class Channel<M = any, PEvents = Record<string,any>> {
      * @internal
      * @private
      */
-    _triggerPublish(memberStr: string | undefined,event: string,data: any) {
-        //check has subscribed
-        const info = this._states.get(buildFullChId(this.chId,memberStr));
-        if(!info) return;
+    _triggerResubscription() {
+        const oldState = this._state;
+        this._state = ChannelSubscribeState.Subscribed;
+        if(oldState !== ChannelSubscribeState.Subscribed)
+            this._triggerEvent<ChannelReactionOnSubscribe<M>>(ChannelEvent.Subscribe);
+    }
+
+
+    /**
+     * @internal
+     * @private
+     */
+    _triggerPublish(event: string,data: any) {
+        if(this._state !== ChannelSubscribeState.Subscribed) return;
 
         const list = this._reactionMap.tryGet(ChannelEvent.Publish);
         if(!list) return;
         (async () => {
             try {
                 await this._triggerReactionsList<ChannelReactionOnPublish<M,any>>(list,
-                    (filter: ChFilter): boolean => filter.event === event,data,info.member);
+                    (filter: ChFilter): boolean => filter.event === event,data);
             }
             catch (e) {}
         })();
@@ -255,16 +179,13 @@ export default class Channel<M = any, PEvents = Record<string,any>> {
      * @internal
      * @private
      */
-    _triggerKickOut(memberStr: string | undefined,code: number | string | undefined,data: any) {
-        const info = this._states.get(buildFullChId(this.chId,memberStr));
-        if(info){
-            const oldState = info.state;
-            info.state = ChannelSubscribeState.Pending;
-            this._triggerEvent<ChannelReactionOnKickOut<M>>(ChannelEvent.KickOut,info.member,code,data);
-            if(oldState === ChannelSubscribeState.Subscribed){
-                this._triggerEvent<ChannelReactionOnUnsubscribe<M>>
-                    (ChannelEvent.Unsubscribe,UnsubscribeReason.KickOut,info.member);
-            }
+    _triggerKickOut(code: number | string | undefined,data: any) {
+        const oldState = this._state;
+        this._state = ChannelSubscribeState.Pending;
+        this._triggerEvent<ChannelReactionOnKickOut<M>>(ChannelEvent.KickOut,code,data);
+        if(oldState === ChannelSubscribeState.Subscribed){
+            this._triggerEvent<ChannelReactionOnUnsubscribe<M>>
+                (ChannelEvent.Unsubscribe,UnsubscribeReason.KickOut);
         }
     }
 
@@ -272,19 +193,13 @@ export default class Channel<M = any, PEvents = Record<string,any>> {
      * @internal
      * @private
      */
-    _triggerClose(memberStr: string | undefined,code: number | string | undefined,data: any) {
-        const fullChId = buildFullChId(this.chId,memberStr);
-        const info = this._states.get(fullChId);
-        if(info){
-            const oldState = info.state;
-            this._states.delete(fullChId);
-            if(this._states.size <= 0) this._deleteChId();
-
-            this._triggerEvent<ChannelReactionOnClose<M>>(ChannelEvent.Close,info.member,code,data);
-            if(oldState === ChannelSubscribeState.Subscribed){
-                this._triggerEvent<ChannelReactionOnUnsubscribe<M>>
-                    (ChannelEvent.Unsubscribe,UnsubscribeReason.Close,info.member);
-            }
+    _triggerClose(code: number | string | undefined,data: any) {
+        const oldState = this._state;
+        this._state = ChannelSubscribeState.Unsubscribed;
+        this._triggerEvent<ChannelReactionOnClose<M>>(ChannelEvent.Close,code,data);
+        if(oldState === ChannelSubscribeState.Subscribed){
+            this._triggerEvent<ChannelReactionOnUnsubscribe<M>>
+            (ChannelEvent.Unsubscribe,UnsubscribeReason.Close);
         }
     }
 
@@ -293,13 +208,11 @@ export default class Channel<M = any, PEvents = Record<string,any>> {
      * @private
      */
     _triggerConnectionLost() {
-        for(const info of this._states.values()){
-            const oldState = info.state;
-            info.state = ChannelSubscribeState.Pending;
-            if(oldState === ChannelSubscribeState.Subscribed){
-                this._triggerEvent<ChannelReactionOnUnsubscribe<M>>
-                    (ChannelEvent.Unsubscribe,UnsubscribeReason.Disconnect,info.member);
-            }
+        const oldState = this._state;
+        this._state = ChannelSubscribeState.Pending;
+        if(oldState === ChannelSubscribeState.Subscribed){
+            this._triggerEvent<ChannelReactionOnUnsubscribe<M>>
+            (ChannelEvent.Unsubscribe,UnsubscribeReason.Disconnect);
         }
     }
 
@@ -328,54 +241,6 @@ export default class Channel<M = any, PEvents = Record<string,any>> {
                 catch (e) {}
             }
         });
-    }
-
-    private _setChId(id: string) {
-        if(this._chId !== undefined) return;
-        this._channelEngine.register(id,this);
-        this._chId = id;
-    }
-
-    private _deleteChId() {
-        if(this._chId !== undefined) {
-            this._channelEngine.unregister(this._chId,this);
-            this._chId = undefined;
-        }
-    }
-
-    /**
-     * @internal
-     * @param fullChId
-     * @private
-     */
-    _hasSub(fullChId: string) {
-        return this._states.has(fullChId);
-    }
-
-    /**
-     * Tries to subscribe to all pending channels that
-     * don't have a ch full id that is in the passed set.
-     * Adds all ids that have been tried to subscribe to the set.
-     * @internal
-     * @private
-     */
-    async _resubscribe(checkedFullChIds: Set<string>): Promise<void> {
-        for(const [fullChId, info] of this._states){
-            if((info.state !== ChannelSubscribeState.Pending) || checkedFullChIds.has(fullChId)) continue;
-            try {await this._channelEngine.trySubscribe(this._identifier,this._apiLevel,(info.member !== undefined ? {
-                memberStr: info.memberStr!,
-                member: info.member!
-            } : undefined));}
-            catch (_) {}
-            checkedFullChIds.add(fullChId);
-        }
-    }
-
-    /**
-     * @internal
-     */
-    get chId() {
-        return this._chId;
     }
 
     //Events
