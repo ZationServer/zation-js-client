@@ -28,7 +28,7 @@ export class StandardRequestBuilder<ID = any,OD = any>
      * @description
      * Set the data of the request.
      * @param data
-     * @default undefined (equals to {} on server param based input).
+     * @default undefined
      */
     data(data: ID): StandardRequestBuilder<ID,OD> {
         this._data = data;

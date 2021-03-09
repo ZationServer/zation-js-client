@@ -62,7 +62,7 @@ export default class PackageBuilder<DT extends any = any>
      * @description
      * Set the data of the package.
      * @param data
-     * @default undefined (equals to {} on server param based input).
+     * @default undefined
      */
     data(data: DT | undefined): PackageBuilder {
         this._data = data;
