@@ -14,7 +14,7 @@ import {dbsMerger, DbsValueMerger, defaultValueMerger, MergeResult} from "../dbs
 import {DbsComparator}                                 from "../dbsComparator";
 import forint                                          from "forint";
 import {ModifyLevel, ModifyToken}                      from "../modifyToken";
-import {deepEqual}                                     from "../../../utils/deepEqual";
+import {deepEqual}                                     from "forint";
 import {ImmutableJson, Writable}                       from "../../../utils/typeUtils";
 import {refSafeDeepCloneInstance}                      from '../../../utils/cloneUtils';
 import {

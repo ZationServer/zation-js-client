@@ -14,7 +14,7 @@ import DbsSimplePathCoordinator                        from "./dbsSimplePathCoor
 import {dbsMerger, DbsValueMerger, defaultValueMerger, MergeResult} from "../dbsMerge";
 import {DbsComparator}                                 from "../dbsComparator";
 import {RawKeyArray}                                   from "../keyArrayUtils";
-import {deepEqual}                                     from "../../../utils/deepEqual";
+import {deepEqual}                                     from "forint";
 import {ModifyLevel, ModifyToken}                      from "../modifyToken";
 import {
     DeleteProcessArgs,

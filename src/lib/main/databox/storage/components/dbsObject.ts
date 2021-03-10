@@ -13,7 +13,7 @@ import DbUtils                                         from "../../dbUtils";
 import DbsSimplePathCoordinator                        from "./dbsSimplePathCoordinator";
 import {dbsMerger, DbsValueMerger, defaultValueMerger, MergeResult} from "../dbsMerge";
 import {DbsComparator}                                 from "../dbsComparator";
-import {deepEqual}                                     from "../../../utils/deepEqual";
+import {deepEqual}                                     from "forint";
 import {ModifyLevel, ModifyToken}                      from "../modifyToken";
 import {
     DeleteProcessArgs,

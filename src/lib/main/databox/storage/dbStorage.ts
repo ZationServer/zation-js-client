@@ -24,7 +24,7 @@ import {DbsComparator}                                  from "./dbsComparator";
 import {DbsValueMerger}                                 from "./dbsMerge";
 import DbsComponent, {DbsComponentOptions}              from "./components/dbsComponent";
 import EventManager                                     from "../../utils/eventManager";
-import {deepEqual}                                      from "../../utils/deepEqual";
+import {deepEqual}                                      from "forint";
 import DbLocalCudOperationSequence                      from "../dbLocalCudOperationSequence";
 import {createDeleteModifyToken,
     createUpdateInsertModifyToken,
