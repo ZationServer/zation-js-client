@@ -4,9 +4,9 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {ZationClientOptions}                  from "./lib/core/zationClientOptions";
-import {ZationClient}                         from "./lib/core/zationClient";
-import {ZationClient as Client}               from "./lib/core/zationClient";
+import {ZationClientOptions}            from "./lib/core/zationClientOptions";
+import {ZationClient}                   from "./lib/core/zationClient";
+import {ZationClient as Client}         from "./lib/core/zationClient";
 import {ResponseReactionBox}            from "./lib/main/controller/response/responseReactionBox";
 import {EventReactionBox}               from "./lib/main/event/eventReactionBox";
 import {StandardRequest}                from "./lib/main/controller/request/main/standardRequest";
@@ -69,6 +69,8 @@ import {buildTimeBasedListStrategy}     from './lib/main/databox/reloadStrategy/
 import {
     APIDefinition,
     CustomApiDefinition,
+    Routes,
+    Route
 }                                       from './lib/main/definitions/apiDefinition';
 import {registerReloadStrategy, ReloadStrategy, ReloadStrategyBuilder} from './lib/main/databox/reloadStrategy/reloadStrategy';
 
@@ -161,5 +163,7 @@ export {
     buildHistoryBasedStrategy,
     buildTimeBasedListStrategy,
     APIDefinition,
-    CustomApiDefinition
+    CustomApiDefinition,
+    Routes,
+    Route
 };
