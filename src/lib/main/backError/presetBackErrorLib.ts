@@ -20,7 +20,7 @@ export abstract class PresetBackErrorLib<T>
      * Preset for any validation error.
      */
     validationError(): T {
-        this._presetAdd(this._zationErrorBuild
+        this._presetAdd(this._coreErrorBuild
         (ErrorType.ValidationError));
         return this.self();
     }
@@ -703,7 +703,7 @@ export abstract class PresetBackErrorLib<T>
      * Preset for any input error.
      */
     inputError(): T {
-        this._presetAdd(this._zationErrorBuild
+        this._presetAdd(this._coreErrorBuild
         (ErrorType.InputError));
         return this.self();
     }
@@ -718,7 +718,7 @@ export abstract class PresetBackErrorLib<T>
      * identifier
      */
     unknownController(): T {
-        this._presetAdd(this._zationErrorBuild
+        this._presetAdd(this._coreErrorBuild
         (ErrorType.InputError,'UnknownController'));
         return this.self();
     }
@@ -733,7 +733,7 @@ export abstract class PresetBackErrorLib<T>
      * identifier
      */
     unknownReceiver(): T {
-        this._presetAdd(this._zationErrorBuild
+        this._presetAdd(this._coreErrorBuild
         (ErrorType.InputError,'UnknownReceiver'));
         return this.self();
     }
@@ -749,7 +749,7 @@ export abstract class PresetBackErrorLib<T>
      * apiLevel
      */
     apiLevelIncompatible(): T {
-        this._presetAdd(this._zationErrorBuild
+        this._presetAdd(this._coreErrorBuild
         (ErrorType.InputError,'ApiLevelIncompatible'));
         return this.self();
     }
@@ -762,7 +762,7 @@ export abstract class PresetBackErrorLib<T>
      * is set and you had sent an auth request.
      */
     authControllerNotSet(): T {
-        this._presetAdd(this._zationErrorBuild
+        this._presetAdd(this._coreErrorBuild
         (ErrorType.InputError,'AuthControllerNotSet'));
         return this.self();
     }
@@ -773,7 +773,7 @@ export abstract class PresetBackErrorLib<T>
      * Preset for any access error.
      */
     accessError(): T {
-        this._presetAdd(this._zationErrorBuild
+        this._presetAdd(this._coreErrorBuild
         (ErrorType.AccessError));
         return this.self();
     }
@@ -788,7 +788,7 @@ export abstract class PresetBackErrorLib<T>
      * reason
      */
     accessDenied(): T {
-        this._presetAdd(this._zationErrorBuild
+        this._presetAdd(this._coreErrorBuild
         (ErrorType.AccessError,'AccessDenied'));
         return this.self();
     }
@@ -800,7 +800,7 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown if the panel authData is invalid.
      */
     invalidPanelAuthData(): T {
-        this._presetAdd(this._zationErrorBuild
+        this._presetAdd(this._coreErrorBuild
         (ErrorType.AccessError,'InvalidPanelAuthData'));
         return this.self();
     }
@@ -813,7 +813,7 @@ export abstract class PresetBackErrorLib<T>
      * but the panel is not activated.
      */
     panelDeactivated(): T {
-        this._presetAdd(this._zationErrorBuild
+        this._presetAdd(this._coreErrorBuild
         (ErrorType.InputError,'PanelDeactivated'));
         return this.self();
     }
@@ -825,7 +825,7 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown if the request is invalid.
      */
     invalidRequest(): T {
-        this._presetAdd(this._zationErrorBuild
+        this._presetAdd(this._coreErrorBuild
         (ErrorType.InputError,'InvalidRequest'));
         return this.self();
     }
@@ -837,7 +837,7 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown if the sent JSON string is invalid.
      */
     JSONParseSyntaxError(): T {
-        this._presetAdd(this._zationErrorBuild
+        this._presetAdd(this._coreErrorBuild
         (ErrorType.InputError,'JSONParseSyntaxError'));
         return this.self();
     }
@@ -853,7 +853,7 @@ export abstract class PresetBackErrorLib<T>
      * checkIndex
      */
     invalidValidationCheckStructure(): T {
-        this._presetAdd(this._zationErrorBuild
+        this._presetAdd(this._coreErrorBuild
         (ErrorType.InputError,'InvalidValidationCheckStructure'));
         return this.self();
     }
@@ -870,7 +870,7 @@ export abstract class PresetBackErrorLib<T>
      * checkIndex
      */
     pathNotResolvable(): T {
-        this._presetAdd(this._zationErrorBuild
+        this._presetAdd(this._coreErrorBuild
         (ErrorType.InputError,'PathNotResolvable'));
         return this.self();
     }
@@ -887,7 +887,7 @@ export abstract class PresetBackErrorLib<T>
      * checksCount
      */
     validationCheckLimitReached(): T {
-        this._presetAdd(this._zationErrorBuild
+        this._presetAdd(this._coreErrorBuild
         (ErrorType.InputError,'ValidationCheckLimitReached'));
         return this.self();
     }
@@ -898,7 +898,7 @@ export abstract class PresetBackErrorLib<T>
      * Preset for any code error.
      */
     codeError(): T {
-        this._presetAdd(this._zationErrorBuild
+        this._presetAdd(this._coreErrorBuild
         (ErrorType.CodeError));
         return this.self();
     }
@@ -909,7 +909,7 @@ export abstract class PresetBackErrorLib<T>
      * Preset for any system error.
      */
     systemError(): T {
-        this._presetAdd(this._zationErrorBuild
+        this._presetAdd(this._coreErrorBuild
         (ErrorType.SystemError));
         return this.self();
     }
@@ -924,7 +924,7 @@ export abstract class PresetBackErrorLib<T>
      * info (only server is running in debug mode)
      */
     unknownError(): T {
-        this._presetAdd(this._zationErrorBuild
+        this._presetAdd(this._coreErrorBuild
         (ErrorType.SystemError,'UnknownError'));
         return this.self();
     }
@@ -935,7 +935,7 @@ export abstract class PresetBackErrorLib<T>
      * Preset for any token error.
      */
     tokenError(): T {
-        this._presetAdd(this._zationErrorBuild
+        this._presetAdd(this._coreErrorBuild
         (ErrorType.TokenError));
         return this.self();
     }
@@ -970,7 +970,7 @@ export abstract class PresetBackErrorLib<T>
     }
 
     // noinspection JSMethodCanBeStatic
-    private _zationErrorBuild(type?: string,name?: string,group?: string): BackErrorFilter
+    private _coreErrorBuild(type?: string,name?: string,group?: string): BackErrorFilter
     {
         const preset: BackErrorFilter = {};
         preset.custom = false;

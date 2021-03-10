@@ -39,7 +39,7 @@ export class EventReactionBox extends ReactionBox<EventReactionBox>
     /**
      * @description
      * Creates a new EventReactionBox.
-     * This box can be linked to the zation client.
+     * This box can be linked to the client.
      */
     constructor() {
         super();

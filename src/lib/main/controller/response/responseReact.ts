@@ -18,7 +18,7 @@ import {Response}               from "./response";
 import {BackErrorFilter}        from "../../backError/backErrorFilter";
 import {TriggerResponseHelper}  from "./triggerResponseHelper";
 // noinspection ES6PreferShortImport
-import {ZationClient}           from "../../../core/zationClient";
+import {Client}                 from "../../../core/client";
 import {ResponseReactAble}      from "./responseReactAble";
 import {FullReaction}           from "../../react/fullReaction";
 // noinspection ES6PreferShortImport
@@ -28,10 +28,10 @@ import {ResponseReactionBox}    from "./responseReactionBox";
 export class ResponseReact<T = any> implements ResponseReactAble<ResponseReact<T>,ResponseReact<T>>
 {
     private readonly response: Response<T>;
-    private readonly client: ZationClient;
+    private readonly client: Client;
     private preAction: Promise<void>;
 
-    constructor(response: Response<T>,client: ZationClient) {
+    constructor(response: Response<T>,client: Client) {
         this.preAction = Promise.resolve();
         this.response = response;
         this.client = client;
@@ -197,7 +197,7 @@ export class ResponseReact<T = any> implements ResponseReactAble<ResponseReact<T
      * @description
      * Triggers all ResponseReactionBoxes attached to the client.
      * Only makes sense if the request was sent without its own reaction boxes.
-     * Because then the boxes from the zation client were not triggered.
+     * Because then the boxes from the client were not triggered.
      */
     triggerClientBoxes(): ResponseReact<T> {
         this.preAction = this.preAction.then(() =>

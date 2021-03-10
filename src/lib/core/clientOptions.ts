@@ -7,7 +7,7 @@ Copyright(c) Luca Scaringella
 import {ConnectTimeoutDefaultOption} from "../main/utils/connectionUtils";
 import TokenStore from "../main/tokenStore/tokenStore";
 
-export interface ZationClientOptions {
+export interface ClientOptions {
 
     /**
      * Boolean that indicates if the debug mode is active.
@@ -176,7 +176,7 @@ export interface ZationClientOptions {
     databoxConnectTimeout?: ConnectTimeoutDefaultOption;
 }
 
-export interface ZationClientOptionsInternal extends ZationClientOptions{
+export interface ClientOptionsInternal extends ClientOptions{
 
     debug: boolean;
     system: string;

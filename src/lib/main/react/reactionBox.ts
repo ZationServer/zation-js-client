@@ -4,14 +4,14 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {ZationClient} from "../../core/zationClient";
+import {Client} from "../../core/client";
 
 export class ReactionBox<S>
 {
     protected self: S;
 
     protected active: boolean;
-    private client: ZationClient | undefined;
+    private client: Client | undefined;
 
     constructor() {
         this.active = true;
@@ -24,7 +24,7 @@ export class ReactionBox<S>
      * @description
      * This method is used internal!
      */
-    _link(client: ZationClient) {
+    _link(client: Client) {
         this.client = client;
     }
 
@@ -44,7 +44,7 @@ export class ReactionBox<S>
      * Returns the linked client.
      * Notice that it can be undefined if no client is linked.
      */
-    getLinkedClient(): ZationClient | undefined {
+    getLinkedClient(): Client | undefined {
         return this.client;
     }
 

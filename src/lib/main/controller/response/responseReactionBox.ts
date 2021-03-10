@@ -39,7 +39,7 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
     /**
      * @description
      * Creates a new ResponseReactionBox.
-     * This box can be linked to the zation client.
+     * This box can be linked to the client.
      */
     constructor() {
         super();

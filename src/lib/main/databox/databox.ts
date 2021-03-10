@@ -39,7 +39,7 @@ import {Socket}                                                 from "../sc/sock
 import DbStorage, {DbStorageOptions, OnDataChange, OnDataTouch} from "./storage/dbStorage";
 import DbFetchHistoryManager                                    from "./dbFetchHistoryManager";
 import ObjectUtils                                              from "../utils/objectUtils";
-import {ZationClient}                                           from "../../core/zationClient";
+import {Client}                                                 from "../../core/client";
 import ConnectionUtils, {ConnectTimeoutOption}                  from "../utils/connectionUtils";
 import EventManager                                             from "../utils/eventManager";
 import {RawError}                                               from "../error/rawError";
@@ -111,7 +111,7 @@ export interface DataboxOptions<O = any,F = any> {
      * trying to connect (if it's not connected) whenever you want
      * to fetchData.
      * You have five possible choices:
-     * Undefined: It will use the value from the default options (ZationClientOptions).
+     * Undefined: It will use the value from the default options (ClientOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the Databox is not connected.
      * For the other options, it is also recommended to have activated the auto-reconnect.
@@ -166,7 +166,7 @@ export default class Databox<M = any,D extends Json = any,O = any,F = any> {
     private memberStr: string | undefined;
     private readonly apiLevel: number | undefined;
     private readonly socket: Socket;
-    private readonly client: ZationClient;
+    private readonly client: Client;
 
     private readonly dbStorages: Set<DbStorage> = new Set<DbStorage>();
     private readonly mainDbStorage: DbStorage<D>;
@@ -226,7 +226,7 @@ export default class Databox<M = any,D extends Json = any,O = any,F = any> {
         remoteOptions: undefined
     };
 
-    constructor(client: ZationClient, identifier: string, options: DataboxOptions<O,F>) {
+    constructor(client: Client, identifier: string, options: DataboxOptions<O,F>) {
         ObjectUtils.addObToOb(this.dbOptions, options, true);
         this.socket = client.socket;
         this.client = client;
@@ -337,7 +337,7 @@ export default class Databox<M = any,D extends Json = any,O = any,F = any> {
      * With the ConnectTimeout option, you can activate that the socket is
      * trying to connect when it is not connected. You have five possible choices:
      * Undefined: It will use the value from the default options
-     * (DataboxOptions and last fall back is ZationClientOptions).
+     * (DataboxOptions and last fall back is ClientOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the socket is not connected.
      * Null: The socket will try to connect (if it is not connected) and
@@ -584,7 +584,7 @@ export default class Databox<M = any,D extends Json = any,O = any,F = any> {
      * trying to connect (if it's not connected).
      * You have five possible choices:
      * Undefined: It will use the value from the default options
-     * (DataboxOptions and last fall back is ZationClientOptions).
+     * (DataboxOptions and last fall back is ClientOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the Databox is not connected.
      * Null: The Databox will try to connect (if it is not connected) and
@@ -699,7 +699,7 @@ export default class Databox<M = any,D extends Json = any,O = any,F = any> {
      * trying to connect (if it's not connected).
      * You have five possible choices:
      * Undefined: It will use the value from the default options
-     * (DataboxOptions and last fall back is ZationClientOptions).
+     * (DataboxOptions and last fall back is ClientOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the Databox is not connected.
      * Null: The Databox will try to connect (if it is not connected) and
@@ -1393,7 +1393,7 @@ export default class Databox<M = any,D extends Json = any,O = any,F = any> {
      * trying to connect (if it's not connected).
      * You have five possible choices:
      * Undefined: It will use the value from the default options
-     * (DataboxOptions and last fall back is ZationClientOptions).
+     * (DataboxOptions and last fall back is ClientOptions).
      * False: The action will fail and throw a ConnectionRequiredError,
      * when the Databox is not connected.
      * Null: The Databox will try to connect (if it is not connected) and

@@ -6,8 +6,8 @@ Copyright(c) Luca Scaringella
 
 
 // noinspection ES6PreferShortImport
-import {ZationClient}                          from "../../core/zationClient";
-import {Response}                              from "./response/response";
+import {Client}                          from "../../core/client";
+import {Response}                        from "./response/response";
 // noinspection ES6PreferShortImport
 import {TimeoutError, TimeoutType}             from "../error/timeoutError";
 import ConnectionUtils, {ConnectTimeoutOption} from "../utils/connectionUtils";
@@ -20,7 +20,7 @@ import {
 import {ErrorName} from '../definitions/errorName';
 
 export function controllerRequestSend(
-    client: ZationClient,
+    client: Client,
     cRequest: ControllerBaseReq | ControllerStandardReq | ControllerValidationCheckReq,
     responseTimeout: null | number | undefined,
     connectTimeout: ConnectTimeoutOption = undefined

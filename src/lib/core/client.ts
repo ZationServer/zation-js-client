@@ -4,14 +4,14 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {ZationClientOptions}                        from "./zationClientOptions";
+import {ClientOptions}                              from "./clientOptions";
 import {OnHandlerFunction, Socket}                  from "../main/sc/socket";
 import {Events}                                     from "../main/definitions/events";
 import {SystemController}                           from "../main/definitions/systemController";
-import {ZATION_CUSTOM_EVENT_NAMESPACE, ZationToken} from "../main/definitions/internal";
+import {ZATION_CUSTOM_EVENT_NAMESPACE, AuthToken}   from "../main/definitions/internal";
 import ConnectionUtils, {ConnectTimeoutOption}      from "../main/utils/connectionUtils";
 import {ChannelEngine}                              from "../main/channel/channelEngine";
-import {ZationClientConfig}                         from "../main/config/zationClientConfig";
+import {ClientConfig}                               from "../main/config/clientConfig";
 import {MultiList}                                  from "../main/container/multiList";
 // noinspection ES6PreferShortImport
 import {ResponseReactionBox}           from "../main/controller/response/responseReactionBox";
@@ -53,30 +53,30 @@ import {UndefinedAuthUserGroupError}            from "../main/error/undefinedAut
 import {SpecialController, ValidationCheckPair} from "../main/controller/controllerDefinitions";
 import {controllerRequestSend}                  from "../main/controller/controllerSendUtils";
 import Package, {isPackage}                     from "../main/receiver/package/main/package";
-import {receiverPackageSend}                    from "../main/receiver/receiverSendeUtils";
+import {receiverPackageSend}                    from "../main/receiver/receiverSendUtils";
 import PackageBuilder                           from "../main/receiver/package/fluent/packageBuilder";
 import Channel                                  from "../main/channel/channel";
 import Databox, {DataboxOptions}                from "../main/databox/databox";
 import DataboxManager                           from "../main/databox/databoxManager";
 import {deepClone}                              from "../main/utils/cloneUtils";
 import ScAuthEngine                             from "../main/sc/scAuthEngine";
-import {setMainClient}                          from "./zationMainClientManager";
+import {setMainClient}                          from "./mainClientManager";
 import {DeepReadonly}                           from "ts-essentials";
 import {APIDefinition, ResolveAuthData}         from '../main/definitions/apiDefinition';
 import {Default}                                from '../main/utils/typeUtils';
 const stringify                               = require("fast-stringify");
 
-export class ZationClient<API extends APIDefinition = any,TP extends object = any>
+export class Client<API extends APIDefinition = any,TP extends object = any>
 {
     private readonly channelEngine: ChannelEngine;
     private readonly databoxManager: DataboxManager;
-    private readonly zc: ZationClientConfig;
+    private readonly zc: ClientConfig;
 
     //auth
     private _userId: number | string | undefined = undefined;
     private _authUserGroup: string | undefined = undefined;
     private _signedToken: string | null = null;
-    private _plainToken: ZationToken | null = null;
+    private _plainToken: AuthToken | null = null;
 
     private readonly responseReactionMainBox: MultiList<ResponseReactionBox>;
     private readonly eventReactionMainBox: MultiList<EventReactionBox>;
@@ -96,14 +96,14 @@ export class ZationClient<API extends APIDefinition = any,TP extends object = an
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Creates a zation client.
+     * Creates a client.
      * @param settings
      * @param main
      */
-    constructor(settings?: ZationClientOptions,main: boolean = false)
+    constructor(settings?: ClientOptions, main: boolean = false)
     {
         //config
-        this.zc = new ZationClientConfig(settings,main);
+        this.zc = new ClientConfig(settings,main);
 
         this.channelEngine = new ChannelEngine(this.zc);
         this.databoxManager = new DataboxManager();
@@ -280,9 +280,9 @@ export class ZationClient<API extends APIDefinition = any,TP extends object = an
      * if the response was successful and the client is not authenticated or the response has errors.
      * At the AuthenticationFailedError you have the possibility to react exactly to the response.
      * If you prefer to do it by yourself or for advanced use cases, you should use the other method authRequest.
-     * Also notice that the zation client response reaction boxes are not triggerd.
+     * Also notice that the client response reaction boxes are not triggerd.
      * Because then you have the opportunity to react with the response on specific things
-     * then trigger the zation client response reaction boxes (using triggerClientBoxes()).
+     * then trigger the client response reaction boxes (using triggerClientBoxes()).
      * @example
      * try{
      *  await client.authenticate({userName: 'Tim', password: 'opqdjß2jdp1d'});
@@ -384,9 +384,9 @@ export class ZationClient<API extends APIDefinition = any,TP extends object = an
      * @description
      * Connect and authenticate the client
      * and returns the Response from the authentication.
-     * Notice that the zation client response reaction boxes are not triggerd.
+     * Notice that the client response reaction boxes are not triggerd.
      * Because then you have the opportunity to react with the response on specific things
-     * then trigger the zation client response reaction boxes (using response.react().triggerClientBoxes()).
+     * then trigger the client response reaction boxes (using response.react().triggerClientBoxes()).
      * @example
      * await conAndAuth({userName: 'Tim', password: 'opqdjß2jdp1d'});
      * @param authData The authentication credentials for the client.
@@ -791,7 +791,7 @@ export class ZationClient<API extends APIDefinition = any,TP extends object = an
         this._signedToken = null;
     }
 
-    private _updateToken(token: ZationToken | null, signedToken: null | string) {
+    private _updateToken(token: AuthToken | null, signedToken: null | string) {
         this._plainToken = token;
         this._signedToken = signedToken;
         if(token != null){
@@ -855,7 +855,7 @@ export class ZationClient<API extends APIDefinition = any,TP extends object = an
     /**
      * Returns the raw plain token.
      */
-    get plainToken(): ZationToken | null {
+    get plainToken(): AuthToken | null {
         return this._plainToken;
     }
 
@@ -864,7 +864,7 @@ export class ZationClient<API extends APIDefinition = any,TP extends object = an
      * Returns the raw plain token.
      * @throws AuthenticationRequiredError if the client is not authenticated.
      */
-    getPlainToken(): ZationToken {
+    getPlainToken(): AuthToken {
         if(this._plainToken != null) return this._plainToken;
         throw new AuthenticationRequiredError('To access the plain token.');
     }
@@ -1029,7 +1029,7 @@ export class ZationClient<API extends APIDefinition = any,TP extends object = an
      * responseTimeout:
      * Set the response timeout of the emit.
      * Value can be null which means the timeout is disabled or
-     * undefined then it will use the default response timeout of the zation client config,
+     * undefined then it will use the default response timeout of the client config,
      * or it can be a number that indicates the milliseconds.
      * connectTimeout:
      * With the ConnectTimeout option, you can activate that the socket is
@@ -1182,11 +1182,11 @@ export class ZationClient<API extends APIDefinition = any,TP extends object = an
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the zation client config.
+     * Returns the client config.
      * Used internally.
      * Only use this method carefully.
      */
-    getZc(): ZationClientConfig {
+    getZc(): ClientConfig {
         return this.zc;
     }
 
@@ -1196,7 +1196,7 @@ export class ZationClient<API extends APIDefinition = any,TP extends object = an
      * but the IDE can interpret the typescript information of this library.
      * @param value
      */
-    static cast(value: any): ZationClient {
-        return value as ZationClient;
+    static cast(value: any): Client {
+        return value as Client;
     }
 }

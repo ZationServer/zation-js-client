@@ -4,26 +4,26 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {ZationClientOptions, ZationClientOptionsInternal} from "../../core/zationClientOptions";
+import {ClientOptions, ClientOptionsInternal}             from "../../core/clientOptions";
 import {createLocalStorageTokenStore}                     from "../tokenStore/localStorageTokenStore";
 
 const windowDefined = typeof window === 'object';
 
-export class ZationClientConfig
+export class ClientConfig
 {
-    private _config: ZationClientOptionsInternal;
+    private _config: ClientOptionsInternal;
 
-    constructor(config?: ZationClientOptions,main: boolean = false)
+    constructor(config?: ClientOptions, main: boolean = false)
     {
         this.loadDefaults(config,main);
         this.loadSettingsFromClientPrepare();
         if(config) {
             this.addToConfig(config,true);
         }
-        ZationClientConfig._preBuildConfig(this._config);
+        ClientConfig._preBuildConfig(this._config);
     }
 
-    static _preBuildConfig(config: ZationClientOptionsInternal) {
+    static _preBuildConfig(config: ClientOptionsInternal) {
         //path slash
         if(!config.path.startsWith('/')) {
             config.path = ('/'+config.path);
@@ -52,10 +52,10 @@ export class ZationClientConfig
             (window.location.protocol === 'https:'): false;
     }
 
-    loadDefaults(customOptions?: ZationClientOptions,main: boolean = false)
+    loadDefaults(customOptions?: ClientOptions, main: boolean = false)
     {
-        const defaultSecure = ZationClientConfig.getDefaultSecure();
-        const defaultPort = ZationClientConfig.getDefaultPort(customOptions,defaultSecure);
+        const defaultSecure = ClientConfig.getDefaultSecure();
+        const defaultPort = ClientConfig.getDefaultPort(customOptions,defaultSecure);
         this._config = {
             debug: false,
             system: 'Default',
@@ -101,7 +101,7 @@ export class ZationClientConfig
     }
 
 
-    get config(): ZationClientOptionsInternal {
+    get config(): ClientOptionsInternal {
         return this._config;
     }
 

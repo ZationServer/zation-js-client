@@ -4,7 +4,7 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {ZationClient}              from "../../core/zationClient";
+import {Client}                    from "../../core/client";
 import {ConnectionRequiredError}   from "../error/connectionRequiredError";
 import {TimeoutError, TimeoutType} from "../error/timeoutError";
 import Databox                     from "../databox/databox";
@@ -19,7 +19,7 @@ export default class ConnectionUtils {
      * @param client
      * @param connectTimeout
      */
-    static async checkConnection(client: ZationClient, connectTimeout: ConnectTimeoutOption): Promise<void> {
+    static async checkConnection(client: Client, connectTimeout: ConnectTimeoutOption): Promise<void> {
 
         if(!client.isConnected()){
             connectTimeout = connectTimeout === undefined ? client.getZc().config.connectTimeout : connectTimeout;
@@ -81,7 +81,7 @@ export default class ConnectionUtils {
      * @param client
      * @param connectTimeout
      */
-    static async checkDbConnection(databox: Databox<any>, client: ZationClient, connectTimeout: ConnectTimeoutOption){
+    static async checkDbConnection(databox: Databox<any>, client: Client, connectTimeout: ConnectTimeoutOption){
 
         if(!databox.isConnected()){
             connectTimeout = connectTimeout === undefined ? client.getZc().config.databoxConnectTimeout: connectTimeout;
@@ -101,7 +101,7 @@ export default class ConnectionUtils {
      * @param client
      * @param option
      */
-    private static async waitForDbConnection(databox: Databox, client: ZationClient, option: null | number | AbortTrigger)
+    private static async waitForDbConnection(databox: Databox, client: Client, option: null | number | AbortTrigger)
     {
         return  new Promise<void>(async (resolve, reject) => {
             let dbConnectListener;

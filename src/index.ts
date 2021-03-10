@@ -4,9 +4,8 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {ZationClientOptions}            from "./lib/core/zationClientOptions";
-import {ZationClient}                   from "./lib/core/zationClient";
-import {ZationClient as Client}         from "./lib/core/zationClient";
+import {ClientOptions}                  from "./lib/core/clientOptions";
+import {Client}                         from "./lib/core/client";
 import {ResponseReactionBox}            from "./lib/main/controller/response/responseReactionBox";
 import {EventReactionBox}               from "./lib/main/event/eventReactionBox";
 import {StandardRequest}                from "./lib/main/controller/request/main/standardRequest";
@@ -25,8 +24,8 @@ import {
     setMainClient,
     clearMainClient,
     mainClient,
-    ZationMainClientManager
-} from "./lib/core/zationMainClientManager";
+    MainClientManager
+} from "./lib/core/mainClientManager";
 import {AuthenticationFailedError}      from "./lib/main/error/authenticationFailedError";
 import {UndefinedUserIdError}           from "./lib/main/error/undefinedUserIdError";
 import {UndefinedAuthUserGroupError}    from "./lib/main/error/undefinedAuthUserGroupError";
@@ -75,12 +74,12 @@ import {
 import {registerReloadStrategy, ReloadStrategy, ReloadStrategyBuilder} from './lib/main/databox/reloadStrategy/reloadStrategy';
 
 let client = mainClient;
-ZationMainClientManager.onMainClientChange(mainClient => client = mainClient);
+MainClientManager.onMainClientChange(mainClient => client = mainClient);
 
 // noinspection JSUnusedGlobalSymbols
 /**
  * @description
- * Creates a Zation client.
+ * Creates a client.
  * @param options
  * @param main
  * Indicates if the created client is the main client.
@@ -90,8 +89,8 @@ ZationMainClientManager.onMainClientChange(mainClient => client = mainClient);
  * use the function: clearMainClient.
  */
 const create = <API extends APIDefinition = APIDefinition,
-    TP extends object = any>(options?: ZationClientOptions,main: boolean = false): ZationClient<API,TP> => {
-    return new ZationClient(options,main);
+    TP extends object = any>(options?: ClientOptions, main: boolean = false): Client<API,TP> => {
+    return new Client(options,main);
 };
 
 export {
@@ -100,8 +99,7 @@ export {
     setMainClient,
     clearMainClient,
     Client,
-    ZationClient,
-    ZationClientOptions,
+    ClientOptions,
     Package,
     StandardRequest,
     AuthRequest,

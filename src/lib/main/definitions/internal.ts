@@ -4,7 +4,7 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-export interface ZationToken {
+export interface AuthToken {
     authUserGroup?: string,
     userId?: string | number,
     /**

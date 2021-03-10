@@ -5,12 +5,12 @@ Copyright(c) Luca Scaringella
  */
 
 // noinspection ES6PreferShortImport
-import {ZationClient}                           from "../../core/zationClient";
+import {Client}                                 from "../../core/client";
 import ConnectionUtils, {ConnectTimeoutOption}  from "../utils/connectionUtils";
 import {RawPackage, RECEIVER_EVENT}             from "./receiverDefinitions";
 
 export async function receiverPackageSend(
-    client: ZationClient,
+    client: Client,
     pack: RawPackage,
     connectTimeout: ConnectTimeoutOption = undefined): Promise<void>
 {

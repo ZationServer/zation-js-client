@@ -5,20 +5,20 @@ Copyright(c) Luca Scaringella
  */
 
 // noinspection ES6PreferShortImport
-import {ZationClient}                from "../../../../core/zationClient";
+import {Client}                      from "../../../../core/client";
 import {ConnectTimeoutOption}        from "../../../utils/connectionUtils";
 import Package                       from "../main/package";
 
 export default class PackageBuilder<DT extends any = any>
 {
-    protected readonly client: ZationClient;
+    protected readonly client: Client;
 
     private readonly _receiver: string = '';
     private _data: DT | undefined = undefined;
     private _apiLevel: number | undefined = undefined;
     private _connectTimeout: ConnectTimeoutOption = undefined;
 
-    constructor(client: ZationClient, receiver: string, data?: DT) {
+    constructor(client: Client, receiver: string, data?: DT) {
         this.client = client;
         this._receiver = receiver;
         this._data = data;

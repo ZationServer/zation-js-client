@@ -17,7 +17,7 @@ import {Socket}             from "../sc/socket";
 import {Logger}             from "../logger/logger";
 // noinspection ES6PreferShortImport
 import {RawError}           from "../../main/error/rawError";
-import {ZationClientConfig} from "../config/zationClientConfig";
+import {ClientConfig}       from "../config/clientConfig";
 import {DeepReadonly, Writable} from '../utils/typeUtils';
 
 const enum ChannelSetSubscribeState {
@@ -36,10 +36,10 @@ interface ChSet<M> {
 export class ChannelEngine
 {
     private readonly _channels: Map<string,ChSet<any>> = new Map();
-    private readonly _zc: ZationClientConfig;
+    private readonly _zc: ClientConfig;
     private _socket: Socket;
 
-    constructor(zc: ZationClientConfig) {
+    constructor(zc: ClientConfig) {
         this._zc = zc;
     }
 

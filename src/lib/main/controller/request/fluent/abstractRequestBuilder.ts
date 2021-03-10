@@ -15,7 +15,7 @@ import {CatchBackErrorBuilder}       from "../../response/error/catchBackErrorBu
 // noinspection ES6PreferShortImport
 import {BackErrorFilter}             from "../../../backError/backErrorFilter";
 // noinspection ES6PreferShortImport
-import {ZationClient}                from "../../../../core/zationClient";
+import {Client}                      from "../../../../core/client";
 // noinspection ES6PreferShortImport
 import {ResponseReactionBox}         from "../../response/responseReactionBox";
 // noinspection ES6PreferShortImport
@@ -26,7 +26,7 @@ import {BaseRequest}             from "../main/baseRequest";
 
 export abstract class AbstractRequestBuilder<T,RDT extends any = any> implements ResponseReactAble<AbstractRequestBuilder<T,RDT>,T>
 {
-    protected readonly client: ZationClient;
+    protected readonly client: Client;
 
     protected _apiLevel: number | undefined = undefined;
     protected _responseTimeout: null | number | undefined = undefined;
@@ -35,8 +35,8 @@ export abstract class AbstractRequestBuilder<T,RDT extends any = any> implements
     private _reactionAdded: boolean = false;
     private _addedResponseReactionBoxes: ResponseReactionBox[] = [];
 
-    protected constructor(zation: ZationClient) {
-        this.client = zation;
+    protected constructor(client: Client) {
+        this.client = client;
         this._responseReactionBox = new ResponseReactionBox();
     }
 
@@ -57,7 +57,7 @@ export abstract class AbstractRequestBuilder<T,RDT extends any = any> implements
      * @description
      * Set the timeout for the response of the request.
      * Value can be null which means the timeout is disabled or
-     * undefined then it will use the default timeout of the zation client config,
+     * undefined then it will use the default timeout of the client config,
      * or it can be a number that indicates the milliseconds.
      * @param timeout
      */

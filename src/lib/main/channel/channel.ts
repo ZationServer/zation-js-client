@@ -7,7 +7,7 @@ Copyright(c) Luca Scaringella
 import {ChannelEngine}                         from "./channelEngine";
 import ConnectionUtils, {ConnectTimeoutOption} from "../utils/connectionUtils";
 // noinspection ES6PreferShortImport
-import {ZationClient}                          from "../../core/zationClient";
+import {Client}                                from "../../core/client";
 import {FullReaction}                          from "../react/fullReaction";
 import {ListMap}                               from "../container/listMap";
 import {List}                                  from "../container/list";
@@ -49,7 +49,7 @@ export enum UnsubscribeReason {
 
 export default class Channel<M = any, PEvents = Record<string,any>> {
 
-    private readonly _client: ZationClient;
+    private readonly _client: Client;
     private readonly _channelEngine: ChannelEngine;
 
     /**
@@ -66,9 +66,9 @@ export default class Channel<M = any, PEvents = Record<string,any>> {
     private readonly _identifier: string;
     private readonly _apiLevel: number | undefined;
 
-    constructor(zation: ZationClient, identifier: string, apiLevel?: number) {
-        this._client = zation;
-        this._channelEngine = zation._getChannelEngine();
+    constructor(client: Client, identifier: string, apiLevel?: number) {
+        this._client = client;
+        this._channelEngine = client._getChannelEngine();
         this._identifier = identifier;
         this._apiLevel = apiLevel;
     }

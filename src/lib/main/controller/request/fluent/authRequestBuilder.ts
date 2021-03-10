@@ -6,14 +6,14 @@ Copyright(c) Luca Scaringella
 
 import {AbstractRequestBuilder} from "./abstractRequestBuilder";
 // noinspection ES6PreferShortImport
-import {ZationClient}           from "../../../../core/zationClient";
+import {Client}                 from "../../../../core/client";
 import {AuthRequest}            from "../main/authRequest";
 
 export class AuthRequestBuilder extends AbstractRequestBuilder<AuthRequestBuilder>
 {
     private _authData: any = undefined;
 
-    constructor(client: ZationClient) {
+    constructor(client: Client) {
         super(client);
     }
 
