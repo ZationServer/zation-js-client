@@ -8,26 +8,18 @@ import {AbstractBackErrorFilterBuilder} from "./abstractBackErrorFilterBuilder";
 import {BackErrorFilter}                from "./backErrorFilter";
 import {PresetBackErrorLib}             from "./presetBackErrorLib";
 
-export class PresetBackErrorFilter<T extends AbstractBackErrorFilterBuilder<T>> extends PresetBackErrorLib<T>
+export class PresetBackErrorFilterSelector<T extends AbstractBackErrorFilterBuilder<T>> extends PresetBackErrorLib<T>
 {
     private readonly errorFilterBuilder: T;
-    private readonly pushPreset: boolean;
 
-    constructor(errorFilterBuilder: T,pushPreset: boolean)
-    {
+    constructor(errorFilterBuilder: T,
+                private readonly onPresetSelect: (filter: BackErrorFilter) => void) {
         super();
-        this.pushPreset = pushPreset;
         this.errorFilterBuilder = errorFilterBuilder;
     }
 
-    protected _presetAdd(filter: BackErrorFilter): void
-    {
-        if(this.pushPreset) {
-            this.errorFilterBuilder.addErrorFilter(filter);
-        }
-        else {
-            this.errorFilterBuilder.setTmpFilter(filter);
-        }
+    protected applyPreset(filter: BackErrorFilter): void {
+        this.onPresetSelect(filter);
     }
 
     protected self(): T {

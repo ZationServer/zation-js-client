@@ -12,7 +12,7 @@ import {
     ResponseReactionOnResponse,
     ResponseReactionOnSuccessful
 } from "./responseReactions";
-import {TriggerResponseHelper} from "./triggerResponseHelper";
+import {ResponseTriggerHelper} from "./responseTriggerHelper";
 import {ReactionBox}           from "../../react/reactionBox";
 import {ResponseReactAble}     from "./responseReactAble";
 import {FullReaction}          from "../../react/fullReaction";
@@ -61,8 +61,8 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      * onError((errors,response) => {},{name: 'myError'})
      * //Filter errors with OnErrorBuilder
      * onError()
-     *     .presets()
-     *     .valueNotMatchesWithMinLength('name')
+     *     .preset()
+     *     .valueNotMatchesWithMinLength()
      *     .react((errors, response) => {})
      */
     onError(): OnBackErrorBuilder<ResponseReactionBox,ResponseReactionBox>;
@@ -83,12 +83,12 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      * onError((errors,response) => {},{name: 'myError'})
      * //Filter errors with OnErrorBuilder
      * onError()
-     *     .presets()
-     *     .valueNotMatchesWithMinLength('name')
+     *     .preset()
+     *     .valueNotMatchesWithMinLength()
      *     .react((errors, response) => {})
      */
-    onError(reaction: ResponseReactionOnError<any>,...filter: BackErrorFilter[]): ResponseReactionBox;
-    onError(reaction?: ResponseReactionOnError<any>,...filter: BackErrorFilter[]): ResponseReactionBox | OnBackErrorBuilder<ResponseReactionBox,ResponseReactionBox>
+    onError(reaction: ResponseReactionOnError<any>,filter?: BackErrorFilter): ResponseReactionBox;
+    onError(reaction?: ResponseReactionOnError<any>,filter?: BackErrorFilter): ResponseReactionBox | OnBackErrorBuilder<ResponseReactionBox,ResponseReactionBox>
     {
         if(reaction) {
             const fullReaction = new FullReaction<ResponseReactionOnError<any>>(reaction,filter);
@@ -128,8 +128,8 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      * catchError((caughtErrors,response) => {},{name: 'myError'})
      * //Catch filtered errors with OnErrorBuilder
      * catchError()
-     *     .presets()
-     *     .valueNotMatchesWithMinLength('name')
+     *     .preset()
+     *     .valueNotMatchesWithMinLength()
      *     .react((caughtErrors, response) => {})
      */
     catchError(): CatchBackErrorBuilder<ResponseReactionBox,ResponseReactionBox>;
@@ -146,12 +146,12 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
      * catchError((caughtErrors,response) => {},{name: 'myError'})
      * //Catch filtered errors with OnErrorBuilder
      * catchError()
-     *     .presets()
-     *     .valueNotMatchesWithMinLength('name')
+     *     .preset()
+     *     .valueNotMatchesWithMinLength()
      *     .react((caughtErrors, response) => {})
      */
-    catchError(reaction: ResponseReactionCatchError<any>,...filter: BackErrorFilter[]): ResponseReactionBox;
-    catchError(reaction?: ResponseReactionOnError<any>,...filter: BackErrorFilter[]): ResponseReactionBox | CatchBackErrorBuilder<ResponseReactionBox,ResponseReactionBox>
+    catchError(reaction: ResponseReactionCatchError<any>,filter?: BackErrorFilter): ResponseReactionBox;
+    catchError(reaction?: ResponseReactionOnError<any>,filter?: BackErrorFilter): ResponseReactionBox | CatchBackErrorBuilder<ResponseReactionBox,ResponseReactionBox>
     {
         if(reaction){
             const fullReaction = new FullReaction<ResponseReactionCatchError<any>>(reaction,filter);
@@ -271,12 +271,12 @@ export class ResponseReactionBox extends ReactionBox<ResponseReactionBox> implem
 
                 if(catchList) {
                     await catchList.forEach((fullReaction: FullReaction<ResponseReactionCatchError<any>>) =>
-                        TriggerResponseHelper.catchError(response,fullReaction));
+                        ResponseTriggerHelper.catchError(response,fullReaction));
                 }
 
                 if(errorList) {
                     await errorList.forEachParallel((fullReaction: FullReaction<ResponseReactionOnError<any>>) =>
-                        TriggerResponseHelper.onError(response,fullReaction));
+                        ResponseTriggerHelper.onError(response,fullReaction));
                 }
             }
             const respList = this.map.tryGet(MapKey.Response);

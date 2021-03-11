@@ -23,17 +23,12 @@ export class CatchBackErrorBuilder<T extends ResponseReactAble<T,R>,R,RT = any>
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Add the reactions that are triggered when the filter
-     * have filtered at least one error.
-     * If there is more than one error,
-     * the reaction wil be triggered with all filtered errors.
+     * Adds reactions that get invoked when the filter has filtered at least one error.
+     * All filtered errors are provided as an argument in the reactions.
      * @param reactions
-     * You also can add more than one reaction.
      */
     react(...reactions: ResponseReactionOnError<RT>[]): R {
-        //save last tmp
-        this._pushTmpFilter();
-        return this.target.catchError(mergeFunctions(...reactions),...this.filter);
+        return this.target.catchError(mergeFunctions(...reactions),this.buildFinalFilter());
     }
 
     protected self(): CatchBackErrorBuilder<T,R,RT> {

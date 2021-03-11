@@ -4,8 +4,6 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-type BackErrorInfo = Record<string,any> & {main ?: any};
-
 export interface DryBackError {
     /**
      * Name
@@ -30,7 +28,7 @@ export interface DryBackError {
     /**
      * Info
      */
-    i?: BackErrorInfo
+    i?: Record<string,any>
 }
 
 export class BackError
@@ -41,21 +39,20 @@ export class BackError
         this.dryBackError = dryBackError
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the name of the BackError.
+     * The name of the BackError.
      */
-    getName(): string {
+    get name(): string {
         return this.dryBackError.n;
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the group of the BackError.
+     * The group of the BackError.
+     * Multiple errors can belong to a group.
      */
-    getGroup(): string | undefined {
+    get group(): string | undefined {
         return this.dryBackError.g;
     }
 
@@ -68,41 +65,44 @@ export class BackError
         return this.dryBackError.g !== undefined;
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the type of the BackError.
+     * The type of the BackError.
+     * The error type is a very abstract topic name.
+     * Like validation error, database error, input error.
+     * @default ErrorType.NormalError
      */
-    getType(): string {
+    get type(): string {
         return this.dryBackError.t
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the description of the BackError.
-     * Is undefined if it was not sended.
+     * The description of the BackError.
+     * Contains a more detailed message about the error.
+     * Is undefined if it was not sent.
      */
-    getDescription(): string | undefined {
+    get description(): string | undefined {
         return this.dryBackError.d;
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns if the BackError is a custom-defined error.
+     * Indicates if the BackError is a custom-defined error.
      */
-    isCustom(): boolean {
+    get custom(): boolean {
         return !!this.dryBackError.c;
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the info of the BackError.
-     * If the info is not an object, it will return an empty object.
+     * The BackError info.
+     * The BackError info is a dynamic object which contains more detailed information.
+     * For example, with an valueNotMatchesWithMinLength error,
+     * the info object could include what the length of the input is and
+     * what the minimum length is.
      */
-    getInfo(): BackErrorInfo {
+    get info(): Record<string,any> {
         return this.dryBackError.i || {};
     }
 
@@ -115,43 +115,14 @@ export class BackError
         return typeof this.dryBackError.i === 'object';
     }
 
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns the main info of the BackError.
-     */
-    getMainInfo(): string | undefined {
-        return this.getInfo().main;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns if the BackError has main info.
-     */
-    hasMainInfo(): boolean {
-        return this.getInfo().main !== undefined;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns the info value form a key.
-     * Is undefined if it was not sended.
-     */
-    getInfoValue(key: string): any | undefined {
-        const info = this.getInfo();
-        return !!info ? info[key]: undefined;
-    }
-
     toString(): string
     {
         return `BackError -> \n` +
-            `   Name: ${this.getName()}\n` +
-            `   Group: ${this.getGroup() || 'No Group'}\n` +
-            `   Type: ${this.getType()}\n` +
-            `   Custom: ${this.isCustom()}\n`+
-            `   Description: ${this.getDescription() || 'Unknown'}\n`+
-            `   Info: ${typeof this.getInfo() === 'object' ? JSON.stringify(this.getInfo()): (this.getInfo() || 'Unknown')}\n`;
+            `   Name: ${this.name}\n` +
+            `   Group: ${this.group || 'No Group'}\n` +
+            `   Type: ${this.type}\n` +
+            `   Custom: ${this.custom}\n`+
+            `   Description: ${this.description || 'Unknown'}\n`+
+            `   Info: ${this.hasInfo() ? JSON.stringify(this.info) : 'Unknown'}\n`;
     }
 }

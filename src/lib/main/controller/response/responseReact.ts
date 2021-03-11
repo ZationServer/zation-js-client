@@ -16,7 +16,7 @@ import {CatchBackErrorBuilder}      from "./error/catchBackErrorBuilder";
 import {Response}               from "./response";
 // noinspection ES6PreferShortImport
 import {BackErrorFilter}        from "../../backError/backErrorFilter";
-import {TriggerResponseHelper}  from "./triggerResponseHelper";
+import {ResponseTriggerHelper}  from "./responseTriggerHelper";
 // noinspection ES6PreferShortImport
 import {Client}                 from "../../../core/client";
 import {ResponseReactAble}      from "./responseReactAble";
@@ -61,8 +61,8 @@ export class ResponseReact<T = any> implements ResponseReactAble<ResponseReact<T
      * onError((errors,response) => {},{name: 'myError'})
      * //Filter errors with OnErrorBuilder
      * onError()
-     *     .presets()
-     *     .valueNotMatchesWithMinLength('name')
+     *     .preset()
+     *     .valueNotMatchesWithMinLength()
      *     .react((errors, response) => {})
      */
     onError(): OnBackErrorBuilder<ResponseReact<T>,ResponseReact<T>,T>;
@@ -81,16 +81,16 @@ export class ResponseReact<T = any> implements ResponseReactAble<ResponseReact<T
      * onError((errors,response) => {},{name: 'myError'})
      * //Filter errors with OnErrorBuilder
      * onError()
-     *     .presets()
-     *     .valueNotMatchesWithMinLength('name')
+     *     .preset()
+     *     .valueNotMatchesWithMinLength()
      *     .react((errors, response) => {})
      */
-    onError(reaction: ResponseReactionOnError<T>,...filter: BackErrorFilter[]): ResponseReact<T>;
-    onError(reaction?: ResponseReactionOnError<T>,...filter: BackErrorFilter[]): ResponseReact<T> | OnBackErrorBuilder<ResponseReact<T>,ResponseReact<T>,T>
+    onError(reaction: ResponseReactionOnError<T>,filter?: BackErrorFilter): ResponseReact<T>;
+    onError(reaction?: ResponseReactionOnError<T>,filter?: BackErrorFilter): ResponseReact<T> | OnBackErrorBuilder<ResponseReact<T>,ResponseReact<T>,T>
     {
         if(reaction) {
             this.preAction = this.preAction.then(() =>
-                TriggerResponseHelper.onError(this.response,new FullReaction<ResponseReactionOnError<T>>(reaction,filter)));
+                ResponseTriggerHelper.onError(this.response,new FullReaction<ResponseReactionOnError<T>>(reaction,filter)));
             return this;
         }
         else {
@@ -111,8 +111,8 @@ export class ResponseReact<T = any> implements ResponseReactAble<ResponseReact<T
      * catchError((caughtErrors,response) => {},{name: 'myError'})
      * //Catch filtered errors with OnErrorBuilder
      * catchError()
-     *     .presets()
-     *     .valueNotMatchesWithMinLength('name')
+     *     .preset()
+     *     .valueNotMatchesWithMinLength()
      *     .react((caughtErrors, response) => {})
      */
     catchError(): CatchBackErrorBuilder<ResponseReact<T>,ResponseReact<T>,T>;
@@ -129,16 +129,16 @@ export class ResponseReact<T = any> implements ResponseReactAble<ResponseReact<T
      * catchError((caughtErrors,response) => {},{name: 'myError'})
      * //Catch filtered errors with OnErrorBuilder
      * catchError()
-     *     .presets()
-     *     .valueNotMatchesWithMinLength('name')
+     *     .preset()
+     *     .valueNotMatchesWithMinLength()
      *     .react((caughtErrors, response) => {})
      */
-    catchError(reaction: ResponseReactionCatchError<T>,...filter: BackErrorFilter[]): ResponseReact<T>;
-    catchError(reaction?: ResponseReactionOnError<T>,...filter: BackErrorFilter[]): ResponseReact<T> | CatchBackErrorBuilder<ResponseReact<T>,ResponseReact<T>,T>
+    catchError(reaction: ResponseReactionCatchError<T>,filter?: BackErrorFilter): ResponseReact<T>;
+    catchError(reaction?: ResponseReactionOnError<T>,filter?: BackErrorFilter): ResponseReact<T> | CatchBackErrorBuilder<ResponseReact<T>,ResponseReact<T>,T>
     {
         if(reaction) {
             this.preAction = this.preAction.then(() =>
-                TriggerResponseHelper.catchError(this.response,new FullReaction<ResponseReactionCatchError<T>>(reaction,filter)));
+                ResponseTriggerHelper.catchError(this.response,new FullReaction<ResponseReactionCatchError<T>>(reaction,filter)));
             return this;
         }
         else {

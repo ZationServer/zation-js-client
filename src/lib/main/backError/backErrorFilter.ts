@@ -4,15 +4,7 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-export interface BackErrorFilter
-{
-    name?: string[] | string,
-    group?: string[] | string,
-    type?: string[] | string,
-    info?: object[] | object,
-    infoKey?: (string | string[] )[] | string
-    infoValue?: (any | any[] )[] | any
-    custom?: boolean
-}
+import {ForintQuery} from 'forint';
+import {BackError}   from './backError';
 
-
+export type BackErrorFilter = ForintQuery<BackError>

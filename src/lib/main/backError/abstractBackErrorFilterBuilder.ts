@@ -4,18 +4,18 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-import {OrBuilder}               from "../utils/orBuilder";
-import {PairOrAndBuilder}        from "../utils/pairOrAndBuilder";
+import {ForintQuery}                         from "forint";
 // noinspection TypeScriptPreferShortImport
-import {BackErrorFilter}             from "./backErrorFilter";
-import {PresetBackErrorFilter}       from "./presetBackErrorFilter";
-import {ErrorType}                   from "../definitions/errorType";
-import {ErrorGroup}                  from "../definitions/errorGroup";
+import {BackErrorFilter}                     from "./backErrorFilter";
+import {PresetBackErrorFilterSelector}       from "./presetBackErrorFilterSelector";
+import {ErrorType}                           from "../definitions/errorType";
+import {ErrorGroup}                          from "../definitions/errorGroup";
+import {deepClone}                           from '../utils/cloneUtils';
 
 export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackErrorFilterBuilder<R>>
 {
     protected filter: BackErrorFilter[] = [];
-    protected tmpFilter: BackErrorFilter = {};
+    protected tmpFilter: BackErrorFilter & ForintQuery = {};
 
     protected abstract self(): R;
 
@@ -25,381 +25,124 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Filter errors with the same error name.
-     * More names are linked with OR.
-     * @param name
+     * Applies a filter rule to filter errors with specific names.
+     * By providing nothing, you can remove the current filter rule.
+     * Notice it will overwrite the current filtering rule for the names.
+     * @param names
      */
-    nameIs(...name: string[]): R
-    {
-        if(!Array.isArray(this.tmpFilter.name)) {
-            this.tmpFilter.name = [];
-        }
-        this.tmpFilter.name.push(...name);
+    nameIs(...names: string[]): R {
+        if(names.length === 0) delete this.tmpFilter.name;
+        else this.tmpFilter.name = AbstractBackErrorFilterBuilder._getOptimizedInQuery(names);
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Reset the filter property name.
-     * Then all names are allowed.
+     * Applies a filter rule to filter errors with specific types.
+     * By providing nothing, you can remove the current filter rule.
+     * Notice it will overwrite the current filtering rule for the types.
+     * @param types
      */
-    resetName(): R {
-        delete this.tmpFilter.name;
+    typeIs(...types: (string | ErrorType)[]): R {
+        if(types.length === 0) delete this.tmpFilter.type;
+        else this.tmpFilter.type = AbstractBackErrorFilterBuilder._getOptimizedInQuery(types);
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Filter errors with the same type.
-     * More types are linked with OR.
-     * @param type
+     * Applies a filter rule to filter errors with specific groups.
+     * By providing nothing, you can remove the current filter rule.
+     * Notice it will overwrite the current filtering rule for the groups.
+     * @param groups
      */
-    typeIs(...type: (string | ErrorType)[]): R
-    {
-        if(!Array.isArray(this.tmpFilter.type)) {
-            this.tmpFilter.type = [];
-        }
-        this.tmpFilter.type.push(...type);
+    groupIs(...groups: (string | ErrorGroup)[]): R {
+        if(groups.length === 0) delete this.tmpFilter.group;
+        else this.tmpFilter.group = AbstractBackErrorFilterBuilder._getOptimizedInQuery(groups);
+        return this.self();
+    }
+
+    /**
+     * @description
+     * Applies a filter rule to filter custom or non-custom errors.
+     * By providing nothing, you can remove the current filter rule.
+     * Notice it will overwrite the current filtering rule for custom.
+     */
+    isCustom(custom: boolean | undefined): R {
+        if(custom === undefined) delete this.tmpFilter.custom;
+        else this.tmpFilter.custom = custom;
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Reset the filter property type.
-     * Then all types are allowed.
+     * Applies a filter rule to filter errors with specific info by using a forint query.
+     * By providing nothing, you can remove the current filter rule.
+     * Notice it will overwrite the current filtering rule for the error info.
      */
-    resetType(): R {
-        delete this.tmpFilter.type;
+    infoMatches(query?: ForintQuery<{path?: any,value?: any}>): R {
+        if(query == null) delete this.tmpFilter.info;
+        else this.tmpFilter.info = query;
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Filter errors with the same group.
-     * More groups are linked with OR.
-     * @param group
+     * Adds the current filter and starts building a new one.
+     * The filters will be linked with a logical OR.
      */
-    groupIs(...group: (string | ErrorGroup)[]): R
-    {
-        if(!Array.isArray(this.tmpFilter.group)) {
-            this.tmpFilter.group = [];
-        }
-        this.tmpFilter.group.push(...group);
-        return this.self();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Reset the filter property group.
-     * Then all groups are allowed.
-     */
-    resetGroup(): R {
-        delete this.tmpFilter.group;
-        return this.self();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Filter errors with as all keys and values in the info.
-     * More info filters are linked with OR.
-     * @param obj
-     */
-    infoHas(...obj: object[]): R
-    {
-        if(!Array.isArray(this.tmpFilter.info)) {
-            this.tmpFilter.info = [];
-        }
-        // @ts-ignore
-        this.tmpFilter.info.push(...obj);
-        return this.self();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Reset the filter property info.
-     * Then all infos are allowed.
-     */
-    resetInfo(): R {
-        delete this.tmpFilter.info;
-        return this.self();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns an easy builder for the filter property info.
-     * Notice that the infos will be added to the tmpFilter with OR.
-     */
-    infoIsBuilder(): PairOrAndBuilder<R>
-    {
-        if(!Array.isArray(this.tmpFilter.info)) {
-            this.tmpFilter.info = [];
-        }
-        return new PairOrAndBuilder<R>
-        (
-            this.self(),
-            (res: object[]) => {
-                if(Array.isArray(this.tmpFilter.info)) {
-                    this.tmpFilter.info.push(...res);
-                }
-            }
-        );
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Filter erros with has this info keys.
-     * More keys are linked with AND.
-     * Every invoke will be linked with OR.
-     */
-    infoKeys(...keys: string[]): R
-    {
-        if(!Array.isArray(this.tmpFilter.infoKey)) {
-            this.tmpFilter.infoKey = [];
-        }
-        this.tmpFilter.infoKey.push(keys);
-        return this.self();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Reset the filter property infoKey.
-     * Then all info keys are allowed.
-     */
-    resetInfoKeys(): R {
-        delete this.tmpFilter.infoKey;
-        return this.self();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns an easy builder for the filter property infoKey.
-     * Notice that the info keys will be added to the tmpFilter with OR.
-     */
-    infoKeysBuilder(): OrBuilder<R,string>
-    {
-        this.tmpFilter.infoKey = [];
-        return new OrBuilder<R,string>
-        (
-            this.self(),
-            (res) =>
-            {
-                if(Array.isArray(this.tmpFilter.infoKey)) {
-                    this.tmpFilter.infoKey.push(res);
-                }
-            }
-        );
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Filter erros with has this info values.
-     * More values are linked with AND.
-     * Every invoke will be linked with OR.
-     */
-    infoValues(...values: string[]): R
-    {
-        if(!Array.isArray(this.tmpFilter.infoValue)) {
-            this.tmpFilter.infoValue = [];
-        }
-        this.tmpFilter.infoValue.push(values);
-        return this.self();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Reset the filter property infoValue.
-     * Then all info values are allowed.
-     */
-    resetInfoValues(): R {
-        delete this.tmpFilter.infoValue;
-        return this.self();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Returns an easy builder for the filter property infoValue.
-     * Notice that the info values will be added to the tmpFilter with OR.
-     */
-    infoValuesBuilder(): OrBuilder<R,string>
-    {
-        this.tmpFilter.infoValue = [];
-        return new OrBuilder<R,string>
-        (
-            this.self(),
-            (res) =>
-            {
-                if(Array.isArray(this.tmpFilter.infoValue)) {
-                    this.tmpFilter.infoValue.push(res);
-                }
-            }
-        );
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Filters custom or non-custom errors.
-     * True means the error needs to be a custom error.
-     * False means the error needs to be a non-custom error.
-     * Undefined means it doesn't matter (like a reset).
-     * Notice that the filter property custom will be reset when you calling this method.
-     */
-    custom(custom: boolean | undefined): R
-    {
-        this.tmpFilter.custom = custom;
-        return this.self();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Add the filter and beginn with new one.
-     * The filter are linked with OR so the filtered errors
-     * of each filter are counted together.
-     */
-    or(): R
-    {
-        this._pushTmpFilter();
-        //reset tmpFilter
+    or(): R {
+        this.filter.push(this.tmpFilter);
         this.tmpFilter = {};
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * @internal
      * @description
-     * Add a raw filter to the filters of this builder.
-     * The filter are linked with OR so the filtered errors
-     * of each filter are counted together.
-     * This method is used internal.
+     * Sets the current filter.
      * @example
-     * -FilterExamples-
-     * For errors with the name:
-     * {name: 'errorName1'}
-     * For errors with the names:
-     * {name: ['errorName1','errorName2']}
-     * For errors with the group:
-     * {group: 'errorGroup1'}
-     * For errors with the groups:
-     * {group: ['errorGroup1','errorGroup2']}
-     * For errors with the type:
-     * {type: 'errorType1'}
-     * For errors with the types:
-     * {type: ['errorType1','errorType2']}
-     * For errors with has all keys and values in the info:
-     * {info: {path: 'name', value: 'value'}}
-     * For errors with has at least one of all keys and values in the info:
-     * {info: [{path: 'name'},{path: 'firstName'}]}
-     * For errors with the info key:
-     * {infoKey: 'path'}
-     * For errors with at least one of the info keys:
-     * {infoKey: ['path','value']}
-     * For errors with all of the info keys:
-     * {infoKey: [['path','value']]}
-     * For errors with the info value:
-     * {infoValue: 'name'}
-     * For errors with at least one of the info values:
-     * {infoValue: ['name','firstName']}
-     * For errors with all of the info values:
-     * {infoValue: [['value1','value2']]}
-     * For custom errors:
-     * {custom: true}
-     * For non-custom errors:
-     * {custom: false}
-     * You can combine all of this properties.
+     * filter: ({name: {$in: ['name1','name2']}, info: {path: 'password'}})
+     * @param filter
      */
-    addErrorFilter(filter: BackErrorFilter): R {
-        this.filter.push(filter);
-        return this.self();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @internal
-     * @description
-     * Sets the tmp filter with of this builder.
-     * Notice that you override the tmpFilter
-     * This method is used internal.
-     * @example
-     * -FilterExamples-
-     * For errors with the name:
-     * {name: 'errorName1'}
-     * For errors with the names:
-     * {name: ['errorName1','errorName2']}
-     * For errors with the group:
-     * {group: 'errorGroup1'}
-     * For errors with the groups:
-     * {group: ['errorGroup1','errorGroup2']}
-     * For errors with the type:
-     * {type: 'errorType1'}
-     * For errors with the types:
-     * {type: ['errorType1','errorType2']}
-     * For errors with has all keys and values in the info:
-     * {info: {path: 'name', value: 'value'}}
-     * For errors with has at least one of all keys and values in the info:
-     * {info: [{path: 'name'},{path: 'firstName'}]}
-     * For errors with the info key:
-     * {infoKey: 'path'}
-     * For errors with at least one of the info keys:
-     * {infoKey: ['path','value']}
-     * For errors with all of the info keys:
-     * {infoKey: [['path','value']]}
-     * For errors with the info value:
-     * {infoValue: 'name'}
-     * For errors with at least one of the info values:
-     * {infoValue: ['name','firstName']}
-     * For errors with all of the info values:
-     * {infoValue: [['value1','value2']]}
-     * For custom errors:
-     * {custom: true}
-     * For non-custom errors:
-     * {custom: false}
-     * You can combine all of this properties.
-     */
-    setTmpFilter(filter: BackErrorFilter): R {
-        this.tmpFilter = filter;
+    setFilter(filter: BackErrorFilter): R {
+        this.tmpFilter = deepClone(filter);
         return this.self();
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns the acutally tmpFilter that you are building.
+     * Returns a clone of the current filter that you are building.
      */
-    getTmpFilter(): BackErrorFilter {
-        return this.tmpFilter;
+    getFilter(): BackErrorFilter {
+        return deepClone(this.tmpFilter);
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns an presetErrorFilter.
-     * You can use it to easy filter preset errors like
-     * validation or main errors.
-     * @param pushPreset
-     * Indicates if you want to push the preset error filter directly into the filters.
-     * If not you can modify it later with this builder.
+     * Returns an PresetBackErrorFilterSelector.
+     * You can use it to select an error filter preset.
+     * It contains a lot of presets for non-custom Zation BackErrors.
+     * The selected preset will overwrite the current filter of the builder.
      */
-    presets(pushPreset: boolean = false): PresetBackErrorFilter<R> {
-        return new PresetBackErrorFilter<R>(this.self(),pushPreset);
+    preset(): PresetBackErrorFilterSelector<R> {
+        return new PresetBackErrorFilterSelector<R>(this.self(),(filter) => {
+            this.setFilter(filter);
+        });
     }
 
-    protected _pushTmpFilter(): void {
-        this.filter.push(this.tmpFilter);
+    private static _getOptimizedInQuery<T>(value: T[]): ForintQuery {
+        return value.length === 1 ? value[0] : {$in: value};
+    }
+
+    protected buildFinalFilter(): BackErrorFilter {
+        if(this.filter.length <= 0) return this.tmpFilter;
+        return {$or: [this.tmpFilter,...this.filter]}
     }
 }

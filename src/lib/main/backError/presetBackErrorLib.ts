@@ -4,15 +4,14 @@ GitHub: LucaCode
 Copyright(c) Luca Scaringella
  */
 
-// noinspection TypeScriptPreferShortImport
 import {BackErrorFilter} from "./backErrorFilter";
-import {ErrorGroup}  from "../definitions/errorGroup";
-import {ErrorType}   from "../definitions/errorType";
+import {ErrorGroup}      from "../definitions/errorGroup";
+import {ErrorType}       from "../definitions/errorType";
 
 export abstract class PresetBackErrorLib<T>
 {
     protected abstract self(): T;
-    protected abstract _presetAdd(preset: BackErrorFilter): void;
+    protected abstract applyPreset(preset: BackErrorFilter): void;
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -20,8 +19,7 @@ export abstract class PresetBackErrorLib<T>
      * Preset for any validation error.
      */
     validationError(): T {
-        this._presetAdd(this._coreErrorBuild
-        (ErrorType.ValidationError));
+        this.applyPreset({custom: false, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -30,14 +28,14 @@ export abstract class PresetBackErrorLib<T>
      * @description
      * Preset for valueNotMatchesWithType.
      * The BackError error can be thrown by value model validation: type.
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * path
+     * value
+     * type
      */
-    valueNotMatchesWithType(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ValueNotMatchesWithType',path,value));
+    valueNotMatchesWithType(): T {
+        this.applyPreset({custom: false, name: 'ValueNotMatchesWithType', type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -46,14 +44,13 @@ export abstract class PresetBackErrorLib<T>
      * @description
      * Preset for valueLengthError.
      * The BackError error can be thrown by value model validation: minLength, maxLength and length.
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * path
+     * value
      */
-    valueLengthError(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        (undefined,path,value,ErrorGroup.ValueLengthError));
+    valueLengthError(): T {
+        this.applyPreset({custom: false, group: ErrorGroup.ValueLengthError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -64,15 +61,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by value model validation: minLength: 4.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * minLength
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    valueNotMatchesWithMinLength(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ValueNotMatchesWithMinLength',path,value,ErrorGroup.ValueLengthError));
+    valueNotMatchesWithMinLength(): T {
+        this.applyPreset({custom: false, name: 'ValueNotMatchesWithMinLength', group: ErrorGroup.ValueLengthError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -83,15 +77,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by value model validation: maxLength: 4.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * maxLength
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    valueNotMatchesWithMaxLength(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ValueNotMatchesWithMaxLength',path,value,ErrorGroup.ValueLengthError));
+    valueNotMatchesWithMaxLength(): T {
+        this.applyPreset({custom: false, name: 'ValueNotMatchesWithMaxLength', group: ErrorGroup.ValueLengthError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -102,15 +93,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by value model validation: length: 4.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * length
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    valueNotMatchesWithLength(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ValueNotMatchesWithLength',path,value,ErrorGroup.ValueLengthError));
+    valueNotMatchesWithLength(): T {
+        this.applyPreset({custom: false, name: 'ValueNotMatchesWithLength', group: ErrorGroup.ValueLengthError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -121,15 +109,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by value model validation: isLetters.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * format
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    valueNotMatchesWithLettersFormat(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ValueNotMatchesWithLettersFormat',path,value));
+    valueNotMatchesWithLettersFormat(): T {
+        this.applyPreset({custom: false, name: 'ValueNotMatchesWithLettersFormat', type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -140,15 +125,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by value model validation: charClass: 'a-zA-Z0-9'.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * regex
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    valueNotMatchesWithCharClass(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ValueNotMatchesWithCharClass',path,value));
+    valueNotMatchesWithCharClass(): T {
+        this.applyPreset({custom: false, name: 'ValueNotMatchesWithCharClass', type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -157,14 +139,13 @@ export abstract class PresetBackErrorLib<T>
      * @description
      * Preset for dateError.
      * The BackError error can be thrown by value model validation: before and after.
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * path
+     * value
      */
-    dateError(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        (undefined,path,value,ErrorGroup.DateError));
+    dateError(): T {
+        this.applyPreset({custom: false, group: ErrorGroup.DateError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -175,15 +156,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by value model validation: before: Date.now().
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * shouldBefore
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    dateIsNotBefore(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('DateIsNotBefore',path,value,ErrorGroup.DateError));
+    dateIsNotBefore(): T {
+        this.applyPreset({custom: false, name: 'DateIsNotBefore', group: ErrorGroup.DateError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -194,15 +172,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by value model validation: after: Date.now().
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * shouldAfter
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    dateIsNotAfter(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('DateIsNotAfter',path,value,ErrorGroup.DateError));
+    dateIsNotAfter(): T {
+        this.applyPreset({custom: false, name: 'DateIsNotAfter', group: ErrorGroup.DateError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -213,15 +188,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by value model validation: contains: 'hallo'.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * shouldContain
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    valueNotMatchesWithContains(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ValueNotMatchesWithContains',path,value));
+    valueNotMatchesWithContains(): T {
+        this.applyPreset({custom: false, name: 'ValueNotMatchesWithContains', type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -232,15 +204,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by value model validation: equals: 'hallo'.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * shouldEqual
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    valueNotMatchesWithEquals(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ValueNotMatchesWithEquals',path,value));
+    valueNotMatchesWithEquals(): T {
+        this.applyPreset({custom: false, name: 'ValueNotMatchesWithEquals', type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -249,14 +218,13 @@ export abstract class PresetBackErrorLib<T>
      * @description
      * Preset for numberSizeError.
      * The BackError error can be thrown by value model validation: minValue and maxValue.
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * path
+     * value
      */
-    numberSizeError(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        (undefined,path,value,ErrorGroup.NumberSizeError));
+    numberSizeError(): T {
+        this.applyPreset({custom: false, group: ErrorGroup.NumberSizeError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -267,15 +235,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by value model validation: minValue: 10.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * minValue
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    valueNotMatchesWithMinValue(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ValueNotMatchesWithMinValue',path,value,ErrorGroup.NumberSizeError));
+    valueNotMatchesWithMinValue(): T {
+        this.applyPreset({custom: false, name: 'ValueNotMatchesWithMinValue', group: ErrorGroup.NumberSizeError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -286,15 +251,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by value model validation: maxValue: 10.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * maxValue
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    valueNotMatchesWithMaxValue(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ValueNotMatchesWithMaxValue',path,value,ErrorGroup.NumberSizeError));
+    valueNotMatchesWithMaxValue(): T {
+        this.applyPreset({custom: false, name: 'ValueNotMatchesWithMaxValue', group: ErrorGroup.NumberSizeError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -303,16 +265,15 @@ export abstract class PresetBackErrorLib<T>
      * @description
      * Preset for valueNotMatchesWithRegex.
      * The BackError error can be thrown by value model validation: regex: '/^\/user\/.+/'.
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
-     * @param regexName
-     * Parameter can be used to check the regexName in the info.
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * path
+     * value
+     * regexName
+     * regex
      */
-    valueNotMatchesWithRegex(path?: string,value?: any,regexName?: string): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ValueNotMatchesWithRegex',path,value,undefined,'regexName',regexName));
+    valueNotMatchesWithRegex(): T {
+        this.applyPreset({custom: false, name: 'ValueNotMatchesWithRegex', type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -323,15 +284,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by value model validation: startsWith: 'user'.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * shouldStartWith
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    valueNotMatchesWithStartsWith(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ValueNotMatchesWithStartsWith',path,value));
+    valueNotMatchesWithStartsWith(): T {
+        this.applyPreset({custom: false, name: 'ValueNotMatchesWithStartsWith', type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -342,15 +300,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by value model validation: endsWith: 'user'.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * shouldEndWith
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    valueNotMatchesWithEndsWith(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ValueNotMatchesWithEndsWith',path,value));
+    valueNotMatchesWithEndsWith(): T {
+        this.applyPreset({custom: false, name: 'ValueNotMatchesWithEndsWith', type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -359,14 +314,13 @@ export abstract class PresetBackErrorLib<T>
      * @description
      * Preset for inError.
      * The BackError error can be thrown by value model validation: in and privateIn.
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * path
+     * value
      */
-    inError(path?: string, value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        (undefined,path,value,ErrorGroup.InError));
+    inError(): T {
+        this.applyPreset({custom: false, group: ErrorGroup.InError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -377,15 +331,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by value model validation: in: ['red','blue'].
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * values (In-Values Array)
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    valueNotMatchesWithIn(path?: string, value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ValueNotMatchesWithIn',path,value,ErrorGroup.InError));
+    valueNotMatchesWithIn(): T {
+        this.applyPreset({custom: false, name: 'ValueNotMatchesWithIn', group: ErrorGroup.InError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -394,14 +345,13 @@ export abstract class PresetBackErrorLib<T>
      * @description
      * Preset for valueNotMatchesWithPrivateIn.
      * The BackError error can be thrown by value model validation: privateIn: ['red','blue'].
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * path
+     * value
      */
-    valueNotMatchesWithPrivateIn(path?: string, value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ValueNotMatchesWithPrivateIn',path,value,ErrorGroup.InError));
+    valueNotMatchesWithPrivateIn(): T {
+        this.applyPreset({custom: false, name: 'ValueNotMatchesWithPrivateIn', group: ErrorGroup.InError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -410,14 +360,13 @@ export abstract class PresetBackErrorLib<T>
      * @description
      * Preset for byteSizeError.
      * The BackError error can be thrown by value model validation: minByteSize and maxByteSize.
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * path
+     * value
      */
-    byteSizeError(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        (undefined,path,value,ErrorGroup.ByteSizeError));
+    byteSizeError(): T {
+        this.applyPreset({custom: false, group: ErrorGroup.ByteSizeError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -428,15 +377,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by value model validation: minByteSize: 100000.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * minByteSize
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    valueNotMatchesWithMinByteSize(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ValueNotMatchesWithMinByteSize',path,value,ErrorGroup.ByteSizeError));
+    valueNotMatchesWithMinByteSize(): T {
+        this.applyPreset({custom: false, name: 'ValueNotMatchesWithMinByteSize', group: ErrorGroup.ByteSizeError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -447,15 +393,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by value model validation: maxByteSize: 100000.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * maxByteSize
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    valueNotMatchesWithMaxByteSize(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ValueNotMatchesWithMaxByteSize',path,value,ErrorGroup.ByteSizeError));
+    valueNotMatchesWithMaxByteSize(): T {
+        this.applyPreset({custom: false, name: 'ValueNotMatchesWithMaxByteSize', group: ErrorGroup.ByteSizeError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -464,14 +407,13 @@ export abstract class PresetBackErrorLib<T>
      * @description
      * Preset for contentTypeError.
      * The BackError error can be thrown by value model validation: mimeType and subType.
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * path
+     * value
      */
-    contentTypeError(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        (undefined,path,value,ErrorGroup.ContentTypeError));
+    contentTypeError(): T {
+        this.applyPreset({custom: false, group: ErrorGroup.ContentTypeError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -482,15 +424,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by value model validation: mimeType: 'image'.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * mimeType
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    valueNotMatchesWithMimeType(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ValueNotMatchesWithMimeType',path,value,ErrorGroup.ContentTypeError));
+    valueNotMatchesWithMimeType(): T {
+        this.applyPreset({custom: false, name: 'ValueNotMatchesWithMimeType', group: ErrorGroup.ContentTypeError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -501,15 +440,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by value model validation: mimeSubType: 'jpg'.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * mimeSubType
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    valueNotMatchesWithMimeSubType(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ValueNotMatchesWithMimeSubType',path,value,ErrorGroup.ContentTypeError));
+    valueNotMatchesWithMimeSubType(): T {
+        this.applyPreset({custom: false, name: 'ValueNotMatchesWithMimeSubType', group: ErrorGroup.ContentTypeError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -518,14 +454,13 @@ export abstract class PresetBackErrorLib<T>
      * @description
      * Preset for arrayLengthError.
      * The BackError error can be thrown by array model validation: length, minLength and maxLength.
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
+     * More info checks you need to do by yourself.
+     * Possibilities are:
+     * path
+     * value
      */
-    arrayLengthError(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        (undefined,path,value,ErrorGroup.ArrayLengthError));
+    arrayLengthError(): T {
+        this.applyPreset({custom: false, group: ErrorGroup.ArrayLengthError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -536,15 +471,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by array model validation: maxLength: 10.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * maxLength
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    arrayNotMatchesWithMaxLength(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ArrayNotMatchesWithMaxLength',path,value,ErrorGroup.ArrayLengthError));
+    arrayNotMatchesWithMaxLength(): T {
+        this.applyPreset({custom: false, name: 'ArrayNotMatchesWithMaxLength', group: ErrorGroup.ArrayLengthError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -555,15 +487,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by array model validation: minLength: 5.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * minLength
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    arrayNotMatchesWithMinLength(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ArrayNotMatchesWithMinLength',path,value,ErrorGroup.ArrayLengthError));
+    arrayNotMatchesWithMinLength(): T {
+        this.applyPreset({custom: false, name: 'ArrayNotMatchesWithMinLength', group: ErrorGroup.ArrayLengthError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -574,15 +503,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by array model validation: length: 10.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * length
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    arrayNotMatchesWithLength(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ArrayNotMatchesWithLength',path,value,ErrorGroup.ArrayLengthError));
+    arrayNotMatchesWithLength(): T {
+        this.applyPreset({custom: false, name: 'ArrayNotMatchesWithLength', group: ErrorGroup.ArrayLengthError, type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -593,15 +519,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by anyOf model validation.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * canBeNull
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    noAnyOfMatch(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('NoAnyOfMatch',path,value));
+    noAnyOfMatch(): T {
+        this.applyPreset({custom: false, name: 'NoAnyOfMatch', type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -612,8 +535,7 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by input validation.
      */
     inputNotAllowed(): T {
-        this._presetAdd(this._validationErrorBuild
-        ('InputNotAllowed'));
+        this.applyPreset({custom: false, name: 'InputNotAllowed', type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -624,8 +546,7 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by input validation.
      */
     inputRequired(): T {
-        this._presetAdd(this._validationErrorBuild
-        ('InputRequired'));
+        this.applyPreset({custom: false, name: 'InputRequired', type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -636,8 +557,7 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by input validation.
      */
     valueRequired(): T {
-        this._presetAdd(this._validationErrorBuild
-        ('ValueRequired'));
+        this.applyPreset({custom: false, name: 'ValueRequired', type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -648,15 +568,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by input validation.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
+     * value
      * expected
-     * @param path
-     * Parameter can be used to check the path in the info.
-     * @param value
-     * Parameter can be used to check the value in the info.
      */
-    invalidType(path?: string,value?: any): T {
-        this._presetAdd(this._validationErrorBuild
-        ('InvalidType',path,value));
+    invalidType(): T {
+        this.applyPreset({custom: false, name: 'InvalidType', type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -667,14 +584,12 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by object model validation.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
      * object
      * propertyName
-     * @param path
-     * Parameter can be used to check the path in the info.
      */
-    missingObjectProperty(path?: string): T {
-        this._presetAdd(this._validationErrorBuild
-        ('MissingObjectProperty',path));
+    missingObjectProperty(): T {
+        this.applyPreset({custom: false, name: 'MissingObjectProperty', type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -685,13 +600,11 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by object model validation.
      * More info checks you need to do by yourself.
      * Possibilities are:
+     * path
      * propertyName
-     * @param path
-     * Parameter can be used to check the path in the info.
      */
-    unknownObjectProperty(path?: string): T {
-        this._presetAdd(this._validationErrorBuild
-        ('UnknownObjectProperty',path));
+    unknownObjectProperty(): T {
+        this.applyPreset({custom: false, name: 'UnknownObjectProperty', type: ErrorType.ValidationError});
         return this.self();
     }
 
@@ -703,8 +616,7 @@ export abstract class PresetBackErrorLib<T>
      * Preset for any input error.
      */
     inputError(): T {
-        this._presetAdd(this._coreErrorBuild
-        (ErrorType.InputError));
+        this.applyPreset({custom: false, type: ErrorType.InputError});
         return this.self();
     }
 
@@ -718,8 +630,7 @@ export abstract class PresetBackErrorLib<T>
      * identifier
      */
     unknownController(): T {
-        this._presetAdd(this._coreErrorBuild
-        (ErrorType.InputError,'UnknownController'));
+        this.applyPreset({custom: false, type: ErrorType.InputError, name: 'UnknownController'});
         return this.self();
     }
 
@@ -733,8 +644,7 @@ export abstract class PresetBackErrorLib<T>
      * identifier
      */
     unknownReceiver(): T {
-        this._presetAdd(this._coreErrorBuild
-        (ErrorType.InputError,'UnknownReceiver'));
+        this.applyPreset({custom: false, type: ErrorType.InputError, name: 'UnknownReceiver'});
         return this.self();
     }
 
@@ -749,8 +659,7 @@ export abstract class PresetBackErrorLib<T>
      * apiLevel
      */
     apiLevelIncompatible(): T {
-        this._presetAdd(this._coreErrorBuild
-        (ErrorType.InputError,'ApiLevelIncompatible'));
+        this.applyPreset({custom: false, type: ErrorType.InputError, name: 'ApiLevelIncompatible'});
         return this.self();
     }
 
@@ -762,8 +671,7 @@ export abstract class PresetBackErrorLib<T>
      * is set and you had sent an auth request.
      */
     authControllerNotSet(): T {
-        this._presetAdd(this._coreErrorBuild
-        (ErrorType.InputError,'AuthControllerNotSet'));
+        this.applyPreset({custom: false, type: ErrorType.InputError, name: 'AuthControllerNotSet'});
         return this.self();
     }
 
@@ -773,8 +681,7 @@ export abstract class PresetBackErrorLib<T>
      * Preset for any access error.
      */
     accessError(): T {
-        this._presetAdd(this._coreErrorBuild
-        (ErrorType.AccessError));
+        this.applyPreset({custom: false, type: ErrorType.AccessError});
         return this.self();
     }
 
@@ -788,8 +695,7 @@ export abstract class PresetBackErrorLib<T>
      * reason
      */
     accessDenied(): T {
-        this._presetAdd(this._coreErrorBuild
-        (ErrorType.AccessError,'AccessDenied'));
+        this.applyPreset({custom: false, type: ErrorType.AccessError, name: 'AccessDenied'});
         return this.self();
     }
 
@@ -800,8 +706,7 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown if the panel authData is invalid.
      */
     invalidPanelAuthData(): T {
-        this._presetAdd(this._coreErrorBuild
-        (ErrorType.AccessError,'InvalidPanelAuthData'));
+        this.applyPreset({custom: false, type: ErrorType.AccessError, name: 'InvalidPanelAuthData'});
         return this.self();
     }
 
@@ -813,8 +718,7 @@ export abstract class PresetBackErrorLib<T>
      * but the panel is not activated.
      */
     panelDeactivated(): T {
-        this._presetAdd(this._coreErrorBuild
-        (ErrorType.InputError,'PanelDeactivated'));
+        this.applyPreset({custom: false, type: ErrorType.InputError, name: 'PanelDeactivated'});
         return this.self();
     }
 
@@ -825,20 +729,7 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown if the request is invalid.
      */
     invalidRequest(): T {
-        this._presetAdd(this._coreErrorBuild
-        (ErrorType.InputError,'InvalidRequest'));
-        return this.self();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @description
-     * Preset for JSONParseSyntaxError.
-     * The BackError error can be thrown if the sent JSON string is invalid.
-     */
-    JSONParseSyntaxError(): T {
-        this._presetAdd(this._coreErrorBuild
-        (ErrorType.InputError,'JSONParseSyntaxError'));
+        this.applyPreset({custom: false, type: ErrorType.InputError, name: 'InvalidRequest'});
         return this.self();
     }
 
@@ -853,8 +744,7 @@ export abstract class PresetBackErrorLib<T>
      * checkIndex
      */
     invalidValidationCheckStructure(): T {
-        this._presetAdd(this._coreErrorBuild
-        (ErrorType.InputError,'InvalidValidationCheckStructure'));
+        this.applyPreset({custom: false, type: ErrorType.InputError, name: 'InvalidValidationCheckStructure'});
         return this.self();
     }
 
@@ -870,8 +760,7 @@ export abstract class PresetBackErrorLib<T>
      * checkIndex
      */
     pathNotResolvable(): T {
-        this._presetAdd(this._coreErrorBuild
-        (ErrorType.InputError,'PathNotResolvable'));
+        this.applyPreset({custom: false, type: ErrorType.InputError, name: 'PathNotResolvable'});
         return this.self();
     }
 
@@ -887,8 +776,7 @@ export abstract class PresetBackErrorLib<T>
      * checksCount
      */
     validationCheckLimitReached(): T {
-        this._presetAdd(this._coreErrorBuild
-        (ErrorType.InputError,'ValidationCheckLimitReached'));
+        this.applyPreset({custom: false, type: ErrorType.InputError, name: 'ValidationCheckLimitReached'});
         return this.self();
     }
 
@@ -898,8 +786,7 @@ export abstract class PresetBackErrorLib<T>
      * Preset for any code error.
      */
     codeError(): T {
-        this._presetAdd(this._coreErrorBuild
-        (ErrorType.CodeError));
+        this.applyPreset({custom: false, type: ErrorType.CodeError});
         return this.self();
     }
 
@@ -909,8 +796,7 @@ export abstract class PresetBackErrorLib<T>
      * Preset for any system error.
      */
     systemError(): T {
-        this._presetAdd(this._coreErrorBuild
-        (ErrorType.SystemError));
+        this.applyPreset({custom: false, type: ErrorType.SystemError});
         return this.self();
     }
 
@@ -921,11 +807,10 @@ export abstract class PresetBackErrorLib<T>
      * The BackError error can be thrown by any unknown error on the server.
      * More info checks you need to do by yourself.
      * Possibilities are:
-     * info (only server is running in debug mode)
+     * info (The Exception only available when server runs in debug mode.)
      */
     unknownError(): T {
-        this._presetAdd(this._coreErrorBuild
-        (ErrorType.SystemError,'UnknownError'));
+        this.applyPreset({custom: false, type: ErrorType.SystemError, name: 'UnknownError'});
         return this.self();
     }
 
@@ -935,54 +820,7 @@ export abstract class PresetBackErrorLib<T>
      * Preset for any token error.
      */
     tokenError(): T {
-        this._presetAdd(this._coreErrorBuild
-        (ErrorType.TokenError));
+        this.applyPreset({custom: false, type: ErrorType.TokenError});
         return this.self();
-    }
-
-    // noinspection JSMethodCanBeStatic
-    private _validationErrorBuild(name?: string,path?: string,value?: any,group?: string,opInfoKey?: string, opInfoValue?: any): BackErrorFilter
-    {
-        const preset: BackErrorFilter = {};
-        preset.custom = false;
-        preset.type = ErrorType.ValidationError;
-        if(name) {
-            preset.name = name;
-        }
-        if(path || value)
-        {
-            let info = {};
-            if(path){
-                info['path'] = path;
-            }
-            if(value){
-                info['value'] = value;
-            }
-            if(opInfoKey !== undefined && opInfoValue !== undefined) {
-                info[opInfoKey] = opInfoValue;
-            }
-            preset.info = [info];
-        }
-        if(group) {
-            preset.group = group;
-        }
-        return preset;
-    }
-
-    // noinspection JSMethodCanBeStatic
-    private _coreErrorBuild(type?: string,name?: string,group?: string): BackErrorFilter
-    {
-        const preset: BackErrorFilter = {};
-        preset.custom = false;
-        if(name) {
-            preset.name = name;
-        }
-        if(type) {
-            preset.type = type;
-        }
-        if(group) {
-            preset.group = group;
-        }
-        return preset;
     }
 }

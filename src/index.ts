@@ -40,9 +40,9 @@ import {AbstractRequestBuilder}         from "./lib/main/controller/request/flue
 import {AuthRequestBuilder}             from "./lib/main/controller/request/fluent/authRequestBuilder";
 import {StandardRequestBuilder}         from "./lib/main/controller/request/fluent/standardRequestBuilder";
 import {ValidationCheckRequestBuilder}  from "./lib/main/controller/request/fluent/validationCheckRequestBuilder";
-import {ErrorFilterEngine}              from "./lib/main/backError/errorFilterEngine";
 import {PresetBackErrorLib}             from "./lib/main/backError/presetBackErrorLib";
 import {BackErrorFilter}                from "./lib/main/backError/backErrorFilter";
+import {filterBackErrors}               from './lib/main/backError/errorFilterEngine';
 import {BackError}                      from "./lib/main/backError/backError";
 import {AbstractBackErrorFilterBuilder} from "./lib/main/backError/abstractBackErrorFilterBuilder";
 import {ErrorName}                      from "./lib/main/definitions/errorName";
@@ -125,7 +125,7 @@ export {
     AuthRequestBuilder,
     StandardRequestBuilder,
     ValidationCheckRequestBuilder,
-    ErrorFilterEngine,
+    filterBackErrors,
     PresetBackErrorLib,
     BackErrorFilter,
     BackError,

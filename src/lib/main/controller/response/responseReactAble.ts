@@ -33,8 +33,8 @@ export interface ResponseReactAble<T extends ResponseReactAble<T,R>,R>
      * onError((errors,response) => {},{name: 'myError'})
      * //Filter errors with OnErrorBuilder
      * onError()
-     *     .presets()
-     *     .valueNotMatchesWithMinLength('name')
+     *     .preset()
+     *     .valueNotMatchesWithMinLength()
      *     .react((errors, response) => {})
      */
     onError(): OnBackErrorBuilder<T,R>;
@@ -53,11 +53,11 @@ export interface ResponseReactAble<T extends ResponseReactAble<T,R>,R>
      * onError((errors,response) => {},{name: 'myError'})
      * //Filter errors with OnErrorBuilder
      * onError()
-     *     .presets()
-     *     .valueNotMatchesWithMinLength('name')
+     *     .preset()
+     *     .valueNotMatchesWithMinLength()
      *     .react((errors, response) => {})
      */
-    onError(reaction: ResponseReactionOnError<any>,...filter: BackErrorFilter[]): R;
+    onError(reaction: ResponseReactionOnError<any>,filter?: BackErrorFilter): R;
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -72,8 +72,8 @@ export interface ResponseReactAble<T extends ResponseReactAble<T,R>,R>
      * catchError((caughtErrors,response) => {},{name: 'myError'})
      * //Catch filtered errors with OnErrorBuilder
      * catchError()
-     *     .presets()
-     *     .valueNotMatchesWithMinLength('name')
+     *     .preset()
+     *     .valueNotMatchesWithMinLength()
      *     .react((caughtErrors, response) => {})
      */
     catchError(): CatchBackErrorBuilder<T,R>;
@@ -90,11 +90,11 @@ export interface ResponseReactAble<T extends ResponseReactAble<T,R>,R>
      * catchError((caughtErrors,response) => {},{name: 'myError'})
      * //Catch filtered errors with OnErrorBuilder
      * catchError()
-     *     .presets()
-     *     .valueNotMatchesWithMinLength('name')
+     *     .preset()
+     *     .valueNotMatchesWithMinLength()
      *     .react((caughtErrors, response) => {})
      */
-    catchError(reaction: ResponseReactionCatchError<any>,...filter: BackErrorFilter[]): R;
+    catchError(reaction: ResponseReactionCatchError<any>,filter?: BackErrorFilter): R;
 
     // noinspection JSUnusedGlobalSymbols
     /**

@@ -121,8 +121,8 @@ export abstract class AbstractRequestBuilder<T,RDT extends any = any> implements
      * onError((errors,response) => {},{name: 'myError'})
      * //Filter errors with OnErrorBuilder
      * onError()
-     *     .presets()
-     *     .valueNotMatchesWithMinLength('name')
+     *     .preset()
+     *     .valueNotMatchesWithMinLength()
      *     .react((errors, response) => {})
      */
     onError(): OnBackErrorBuilder<AbstractRequestBuilder<T>,T>;
@@ -141,15 +141,15 @@ export abstract class AbstractRequestBuilder<T,RDT extends any = any> implements
      * onError((errors,response) => {},{name: 'myError'})
      * //Filter errors with OnErrorBuilder
      * onError()
-     *     .presets()
-     *     .valueNotMatchesWithMinLength('name')
+     *     .preset()
+     *     .valueNotMatchesWithMinLength()
      *     .react((errors, response) => {})
      */
-    onError(reaction: ResponseReactionOnError<RDT>,...filter: BackErrorFilter[]): T;
-    onError(reaction?: ResponseReactionOnError<RDT>,...filter: BackErrorFilter[]): T | OnBackErrorBuilder<AbstractRequestBuilder<T>,T>
+    onError(reaction: ResponseReactionOnError<RDT>,filter?: BackErrorFilter): T;
+    onError(reaction?: ResponseReactionOnError<RDT>,filter?: BackErrorFilter): T | OnBackErrorBuilder<AbstractRequestBuilder<T>,T>
     {
         if(reaction) {
-            this._responseReactionBox.onError(reaction,...filter);
+            this._responseReactionBox.onError(reaction,filter);
             this._reactionAdded = true;
             return this.self();
         }
@@ -171,8 +171,8 @@ export abstract class AbstractRequestBuilder<T,RDT extends any = any> implements
      * catchError((caughtErrors,response) => {},{name: 'myError'})
      * //Catch filtered errors with OnErrorBuilder
      * catchError()
-     *     .presets()
-     *     .valueNotMatchesWithMinLength('name')
+     *     .preset()
+     *     .valueNotMatchesWithMinLength()
      *     .react((caughtErrors, response) => {})
      */
     catchError(): CatchBackErrorBuilder<AbstractRequestBuilder<T>,T>;
@@ -189,15 +189,15 @@ export abstract class AbstractRequestBuilder<T,RDT extends any = any> implements
      * catchError((caughtErrors,response) => {},{name: 'myError'})
      * //Catch filtered errors with OnErrorBuilder
      * catchError()
-     *     .presets()
-     *     .valueNotMatchesWithMinLength('name')
+     *     .preset()
+     *     .valueNotMatchesWithMinLength()
      *     .react((caughtErrors, response) => {})
      */
-    catchError(reaction: ResponseReactionCatchError<RDT>,...filter: BackErrorFilter[]): T;
-    catchError(reaction?: ResponseReactionOnError<RDT>,...filter: BackErrorFilter[]): T | CatchBackErrorBuilder<AbstractRequestBuilder<T>,T>
+    catchError(reaction: ResponseReactionCatchError<RDT>,filter?: BackErrorFilter): T;
+    catchError(reaction?: ResponseReactionOnError<RDT>,filter?: BackErrorFilter): T | CatchBackErrorBuilder<AbstractRequestBuilder<T>,T>
     {
         if(reaction) {
-            this._responseReactionBox.catchError(reaction,...filter);
+            this._responseReactionBox.catchError(reaction,filter);
             this._reactionAdded = true;
             return this.self();
         }
