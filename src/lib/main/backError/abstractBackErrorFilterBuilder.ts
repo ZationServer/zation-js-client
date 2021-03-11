@@ -83,7 +83,7 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
      * By providing nothing, you can remove the current filter rule.
      * Notice it will overwrite the current filtering rule for the error info.
      */
-    infoMatches(query?: ForintQuery<{path?: any,value?: any}>): R {
+    infoMatches(query?: ForintQuery | {path?: string,value?: any}): R {
         if(query == null) delete this.tmpFilter.info;
         else this.tmpFilter.info = query;
         return this.self();
