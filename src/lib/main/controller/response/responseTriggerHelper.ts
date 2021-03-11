@@ -7,7 +7,7 @@ Copyright(c) Luca Scaringella
 import {Response}          from "./response";
 import {ResponseReactionCatchError, ResponseReactionOnError} from "./responseReactions";
 import {FullReaction}      from "../../react/fullReaction";
-import {filterBackErrors}  from '../../backError/errorFilterEngine';
+import {filterBackErrors}  from '../../backError/filterBackErrors';
 
 export class ResponseTriggerHelper
 {

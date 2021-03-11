@@ -42,7 +42,7 @@ import {StandardRequestBuilder}         from "./lib/main/controller/request/flue
 import {ValidationCheckRequestBuilder}  from "./lib/main/controller/request/fluent/validationCheckRequestBuilder";
 import {PresetBackErrorLib}             from "./lib/main/backError/presetBackErrorLib";
 import {BackErrorFilter}                from "./lib/main/backError/backErrorFilter";
-import {filterBackErrors}               from './lib/main/backError/errorFilterEngine';
+import {filterBackErrors}               from './lib/main/backError/filterBackErrors';
 import {BackError}                      from "./lib/main/backError/backError";
 import {AbstractBackErrorFilterBuilder} from "./lib/main/backError/abstractBackErrorFilterBuilder";
 import {ErrorName}                      from "./lib/main/definitions/errorName";

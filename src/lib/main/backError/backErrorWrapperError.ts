@@ -6,7 +6,7 @@ Copyright(c) Luca Scaringella
 
 import {BackError}             from "./backError";
 import {BackErrorFilter}       from "./backErrorFilter";
-import {filterBackErrors}      from './errorFilterEngine';
+import {filterBackErrors}      from './filterBackErrors';
 
 export class BackErrorWrapperError extends Error
 {
