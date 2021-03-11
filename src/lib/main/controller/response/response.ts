@@ -63,11 +63,11 @@ export class Response<T = any>
      * @description
      * Returns the errors of the response.
      * If there is no error it returns an empty array.
-     * @param notCaught
+     * @param onlyNotCaught
      * If true then it returns only the not caught errors.
      */
-    getErrors(notCaught: boolean = true): BackError[] {
-        if(notCaught) {
+    getErrors(onlyNotCaught: boolean = true): BackError[] {
+        if(onlyNotCaught) {
             return this.notCaughtErrors;
         }
         else {
@@ -79,11 +79,11 @@ export class Response<T = any>
     /**
      * @description
      * Checks if the response has errors.
-     * @param notCaught
+     * @param onlyNotCaught
      * If true then it checks only the not caught errors.
      */
-    hasErrors(notCaught: boolean = true): boolean {
-        if(notCaught) {
+    hasErrors(onlyNotCaught: boolean = true): boolean {
+        if(onlyNotCaught) {
             return this.notCaughtErrors.length > 0;
         }
         else {
@@ -95,11 +95,11 @@ export class Response<T = any>
     /**
      * @description
      * Returns the error count of the response.
-     * @param notCaught
+     * @param onlyNotCaught
      * If true then it only counts the not caught errors.
      */
-    errorCount(notCaught: boolean = true): number {
-        if(notCaught) {
+    errorCount(onlyNotCaught: boolean = true): number {
+        if(onlyNotCaught) {
             return this.notCaughtErrors.length;
         }
         else {
