@@ -82,13 +82,14 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
     /**
      * @description
      * Applies a filter rule to filter errors with specific info-paths.
+     * The info property 'path' is often used in BackErrors of type ValidationErrors.
      * By providing nothing, you can remove the current filter rule.
      * Notice it will overwrite the current filtering rule for the error info-paths.
      * @param paths
      */
     atPath(...paths: string[]): R {
         if(paths.length === 0) this.tmpPathFilter = undefined;
-        else this.tmpPathFilter = paths;
+        else this.tmpPathFilter = AbstractBackErrorFilterBuilder._getOptimizedInQuery(paths);
         return this.self();
     }
 
