@@ -28,7 +28,7 @@ export class OnBackErrorBuilder<T extends ResponseReactAble<T,R>,R,RT = any>
      * @param reactions
      */
     react(...reactions: ResponseReactionOnError<RT>[]): R {
-        return this.target.onError(mergeFunctions(...reactions),this.buildFinalFilter());
+        return this.target.onError(mergeFunctions(...reactions),this.buildFilter());
     }
 
     protected self(): OnBackErrorBuilder<T,R,RT> {

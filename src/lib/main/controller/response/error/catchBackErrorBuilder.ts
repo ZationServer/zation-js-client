@@ -28,7 +28,7 @@ export class CatchBackErrorBuilder<T extends ResponseReactAble<T,R>,R,RT = any>
      * @param reactions
      */
     react(...reactions: ResponseReactionOnError<RT>[]): R {
-        return this.target.catchError(mergeFunctions(...reactions),this.buildFinalFilter());
+        return this.target.catchError(mergeFunctions(...reactions),this.buildFilter());
     }
 
     protected self(): CatchBackErrorBuilder<T,R,RT> {

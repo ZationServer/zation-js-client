@@ -17,6 +17,8 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
     protected orFilterList?: BackErrorFilter[];
     protected tmpFilter: BackErrorFilter & ForintQuery = {};
 
+    protected tmpPathFilter?: string[];
+
     protected abstract self(): R;
 
     protected constructor() {}
@@ -29,7 +31,7 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
      * Notice it will overwrite the current filtering rule for the names.
      * @param names
      */
-    nameIs(...names: string[]): R {
+    withName(...names: string[]): R {
         if(names.length === 0) delete this.tmpFilter.name;
         else this.tmpFilter.name = AbstractBackErrorFilterBuilder._getOptimizedInQuery(names);
         return this.self();
@@ -43,7 +45,7 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
      * Notice it will overwrite the current filtering rule for the types.
      * @param types
      */
-    typeIs(...types: (string | ErrorType)[]): R {
+    withType(...types: (string | ErrorType)[]): R {
         if(types.length === 0) delete this.tmpFilter.type;
         else this.tmpFilter.type = AbstractBackErrorFilterBuilder._getOptimizedInQuery(types);
         return this.self();
@@ -57,21 +59,36 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
      * Notice it will overwrite the current filtering rule for the groups.
      * @param groups
      */
-    groupIs(...groups: (string | ErrorGroup)[]): R {
+    withGroup(...groups: (string | ErrorGroup)[]): R {
         if(groups.length === 0) delete this.tmpFilter.group;
         else this.tmpFilter.group = AbstractBackErrorFilterBuilder._getOptimizedInQuery(groups);
         return this.self();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @description
      * Applies a filter rule to filter custom or non-custom errors.
      * By providing nothing, you can remove the current filter rule.
      * Notice it will overwrite the current filtering rule for custom.
      */
-    isCustom(custom: boolean | undefined): R {
-        if(custom === undefined) delete this.tmpFilter.custom;
+    withCustom(custom?: boolean): R {
+        if(custom == null) delete this.tmpFilter.custom;
         else this.tmpFilter.custom = custom;
+        return this.self();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @description
+     * Applies a filter rule to filter errors with specific info-paths.
+     * By providing nothing, you can remove the current filter rule.
+     * Notice it will overwrite the current filtering rule for the error info-paths.
+     * @param paths
+     */
+    atPath(...paths: string[]): R {
+        if(paths.length === 0) this.tmpPathFilter = undefined;
+        else this.tmpPathFilter = paths;
         return this.self();
     }
 
@@ -82,7 +99,7 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
      * By providing nothing, you can remove the current filter rule.
      * Notice it will overwrite the current filtering rule for the error info.
      */
-    infoMatches(query?: ForintQuery & {path?: string,value?: any}): R {
+    withInfo(query?: ForintQuery & {path?: string,value?: any}): R {
         if(query == null) delete this.tmpFilter.info;
         else this.tmpFilter.info = query;
         return this.self();
@@ -95,6 +112,7 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
      * The filters will be linked with a logical OR.
      */
     or(): R {
+        this._commitPathFilter();
         if(!this.orFilterList) this.orFilterList = [this.tmpFilter];
         else this.orFilterList.push(this.tmpFilter);
 
@@ -110,18 +128,19 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
      * filter: ({name: {$in: ['name1','name2']}, info: {path: 'password'}})
      * @param filter
      */
-    setFilter(filter: BackErrorFilter): R {
+    setCurrentFilter(filter: BackErrorFilter): R {
         this.tmpFilter = deepClone(filter);
         return this.self();
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * @description
-     * Returns a clone of the current filter that you are building.
+     * Builds the BackErrorFilter.
      */
-    getFilter(): BackErrorFilter {
-        return deepClone(this.tmpFilter);
+    buildFilter(): BackErrorFilter {
+        this._commitPathFilter();
+        if(!this.orFilterList) return this.tmpFilter;
+        return {$or: [...this.orFilterList,this.tmpFilter]}
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -134,16 +153,21 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
      */
     preset(): PresetBackErrorFilterSelector<R> {
         return new PresetBackErrorFilterSelector<R>(this.self(),(filter) => {
-            this.setFilter(filter);
+            this.tmpFilter = filter;
         });
+    }
+
+    private _commitPathFilter() {
+        if(this.tmpPathFilter == null) return;
+        if(this.tmpFilter.info !== undefined) {
+            const temp = this.tmpFilter.info;
+            this.tmpFilter.info = {$and: [temp,{path: this.tmpPathFilter}]};
+        }
+        else this.tmpFilter.info = {path: this.tmpPathFilter};
+        this.tmpPathFilter = undefined;
     }
 
     private static _getOptimizedInQuery<T>(value: T[]): ForintQuery {
         return value.length === 1 ? value[0] : {$in: value};
-    }
-
-    protected buildFinalFilter(): BackErrorFilter {
-        if(!this.orFilterList) return this.tmpFilter;
-        return {$or: [...this.orFilterList,this.tmpFilter]}
     }
 }
