@@ -7,4 +7,4 @@ Copyright(c) Luca Scaringella
 import {ForintQuery} from 'forint';
 import {BackError}   from './backError';
 
-export type BackErrorFilter = ForintQuery<BackError>
+export type BackErrorFilter = ForintQuery<BackError> & Record<any,any>
