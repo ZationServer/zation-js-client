@@ -14,13 +14,12 @@ import {deepClone}                           from '../utils/cloneUtils';
 
 export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackErrorFilterBuilder<R>>
 {
-    protected filter: BackErrorFilter[] = [];
+    protected orFilterList?: BackErrorFilter[];
     protected tmpFilter: BackErrorFilter & ForintQuery = {};
 
     protected abstract self(): R;
 
-    protected constructor() {
-    }
+    protected constructor() {}
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -83,7 +82,7 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
      * By providing nothing, you can remove the current filter rule.
      * Notice it will overwrite the current filtering rule for the error info.
      */
-    infoMatches(query?: ForintQuery | {path?: string,value?: any}): R {
+    infoMatches(query?: ForintQuery & {path?: string,value?: any}): R {
         if(query == null) delete this.tmpFilter.info;
         else this.tmpFilter.info = query;
         return this.self();
@@ -96,7 +95,9 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
      * The filters will be linked with a logical OR.
      */
     or(): R {
-        this.filter.push(this.tmpFilter);
+        if(!this.orFilterList) this.orFilterList = [this.tmpFilter];
+        else this.orFilterList.push(this.tmpFilter);
+
         this.tmpFilter = {};
         return this.self();
     }
@@ -142,7 +143,7 @@ export abstract class AbstractBackErrorFilterBuilder<R extends AbstractBackError
     }
 
     protected buildFinalFilter(): BackErrorFilter {
-        if(this.filter.length <= 0) return this.tmpFilter;
-        return {$or: [this.tmpFilter,...this.filter]}
+        if(!this.orFilterList) return this.tmpFilter;
+        return {$or: [...this.orFilterList,this.tmpFilter]}
     }
 }
